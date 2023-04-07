@@ -1,0 +1,42 @@
+<%- include('layout/header') -%>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>LAPORAN KINERJA PEGAWAI</h4>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="phone" name="phone" required>
+                                    <button type="button" class="btn btn-outline-secondary" id="send-otp">Send
+                                        OTP</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="otp">One-Time Password (OTP)</label>
+                                <input type="number" class="form-control" id="otp" name="otp" required />
+                                <small class="form-text text-muted">A One-Time Password (OTP) has been sent to your
+                                    registered
+                                    email address or mobile number.</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                    </div>
+                    <!-- <p><% token %></p> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+       var token = '<%= token %>';
+       var hostwa = '<%= hostwa %>'
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.js"></script>
+    <script src="/asset/js/login.js"></script>
+    <%- include('layout/footer') -%>

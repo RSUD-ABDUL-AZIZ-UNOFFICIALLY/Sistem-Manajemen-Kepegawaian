@@ -10,6 +10,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nik: {
+        allowNull: false,
+        primaryKey: true,
+        unique: true,
         type: Sequelize.INTEGER
       },
       tgl_lahir: {
@@ -18,7 +21,19 @@ module.exports = {
       nama: {
         type: Sequelize.STRING
       },
+      dep: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Departemens'
+          },
+          key: 'id',
+        },
+      },
       wa: {
+        allowNull: false,
+        primaryKey: true,
+        unique: true,
         type: Sequelize.STRING
       },
       createdAt: {

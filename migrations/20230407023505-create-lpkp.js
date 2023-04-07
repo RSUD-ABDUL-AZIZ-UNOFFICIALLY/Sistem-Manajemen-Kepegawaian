@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('lpkps', {
+    await queryInterface.createTable('Lpkps', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,7 +10,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nik: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'users'
+          },
+          key: 'nik',
+        }
       },
       rak: {
         type: Sequelize.STRING
@@ -23,7 +29,7 @@ module.exports = {
       },
       satuan: {
         type: Sequelize.ENUM,
-        values: ['Dokumen', 'Laporan', '']
+        values: ['Dokumen', 'Laporan', '-']
       },
       waktu: {
         type: Sequelize.INTEGER
@@ -39,6 +45,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('lpkps');
+    await queryInterface.dropTable('Lpkps');
   }
 };
