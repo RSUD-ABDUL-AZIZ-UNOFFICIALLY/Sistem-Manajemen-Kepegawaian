@@ -73,15 +73,10 @@
     });
     // Kirim data ke API
     $.ajax({
-      url: hostwa +'/api/wa/send',
+      url: '/api/send-otp',
       method: 'POST',
-      headers: {
-        "Authorization": "Bearer "+token,
-        "Content-Type": "application/json"
-      },
       data: JSON.stringify({
-        "message": "Kode OTP Anda adalah 123456",
-        "telp": phone
+        "phone": phone
       }),
       success: function(response) {
         // Tampilkan pesan sukses dari response API menggunakan SweetAlert2
