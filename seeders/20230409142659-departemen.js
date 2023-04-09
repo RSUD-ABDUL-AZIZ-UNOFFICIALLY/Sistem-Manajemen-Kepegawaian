@@ -12,9 +12,18 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    return queryInterface.bulkInsert('Departemen', [{
-      bidang: 'Umum dan Kepegawaian',
-    }]);
+    return queryInterface.bulkInsert("Departemens", [
+      {
+        bidang: "Umum dan Kepegawaian",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        bidang: "Perencanaan dan Keuangan",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
   },
 
   async down(queryInterface, Sequelize) {
@@ -24,6 +33,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    return queryInterface.bulkDelete("Departemen", null, {});
+    return queryInterface.bulkDelete("Departemens", null, {});
   },
 };
