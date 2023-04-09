@@ -12,14 +12,9 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    return queryInterface.bulkInsert("Departemen", [
-      {
-        bidang: "Dokter Spesialis",
-      },
-      {
-        bidang: "UMUM DAN KEPEGAWAIAN",
-      },
-    ]);
+    return queryInterface.bulkInsert('Departemen', [{
+      bidang: 'Umum dan Kepegawaian',
+    }]);
   },
 
   async down(queryInterface, Sequelize) {
