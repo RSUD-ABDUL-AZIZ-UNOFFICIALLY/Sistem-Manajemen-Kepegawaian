@@ -10,5 +10,6 @@ const api = require('../controllers/api');
 
 router.get('/', controller.login);
 router.post('/api/send-otp', api.sendOtp);
+router.post('/api/verify-otp', api.verifyOtp);
 
 module.exports = router;
