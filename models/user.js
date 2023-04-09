@@ -11,12 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.belongsTo(models.Departemen, {
+        foreignKey: 'dep',
+        as: 'departemen'
+      })
     }
   }
   User.init({
     nik: DataTypes.INTEGER,
     tgl_lahir: DataTypes.DATE,
     nama: DataTypes.STRING,
+    dep: DataTypes.INTEGER,
     wa: DataTypes.STRING
   }, {
     sequelize,
