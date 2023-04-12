@@ -37,7 +37,7 @@
           text: 'You have successfully logged in.',
         }).then(() => {
           // Redirect ke halaman setelah login berhasil
-          window.location.href = 'dashboard.html';
+          window.location.href = '/daily';
         });
       },
       error: function(xhr, status, error) {
