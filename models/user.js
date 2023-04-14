@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     tgl_lahir: DataTypes.DATE,
     nama: DataTypes.STRING,
     dep: DataTypes.INTEGER,
+    jab: DataTypes.STRING(300),
     wa: DataTypes.STRING
   }, {
     sequelize,
