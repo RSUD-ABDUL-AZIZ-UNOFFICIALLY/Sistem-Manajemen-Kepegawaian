@@ -30,6 +30,9 @@ module.exports = {
           key: 'id',
         },
       },
+      jab: {
+        type: Sequelize.STRING(300),
+      },
       wa: {
         allowNull: false,
         primaryKey: true,
