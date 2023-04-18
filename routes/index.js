@@ -9,6 +9,11 @@ const api = require('../controllers/api');
 // })
 
 router.get('/', controller.login);
+router.get('/dashboard', controller.dashboard);
+router.get('/daily', controller.daily);
+router.get('/monthly', controller.monthly);
+router.get('/report', controller.report);
+
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
 

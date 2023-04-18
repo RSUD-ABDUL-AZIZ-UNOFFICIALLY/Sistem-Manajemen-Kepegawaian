@@ -1,0 +1,64 @@
+<%- include('admin/head'); %>
+    <%- include('admin/header'); %>
+        <div class="container-fluid">
+            <!-- /.card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Employee Work Productivity Report</h3>
+                    <br>
+                    <hr>
+                    <div class="form-group">
+                        <input type="month" class="form-control" id="InputTanggal" name="start"
+                        min="2023-03">
+                      </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                    <table class="table table-bordered table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>Date</th>
+                                <th>Details Of Work Activities/Duty</th>
+                                <th>Volume</th>
+                                <th>Unit</th>
+                                <th>Completion Time</th>
+                                <th style="width: 40px">Edit / Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>11-4-2014</td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                                <td>1</td>
+                                <td><span class="tag tag-success">Laporan</span></td>
+                                <td>30 <span> Minutes</span></td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>11-4-2014</td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                                <td>1</td>
+                                <td><span class="tag tag-success">Laporan</span></td>
+                                <td>30 <span> Minutes</span></td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+                <div class="row no-print">
+                    <div class="col-12">
+                      <button type="button" class="btn btn-success float-right"><i class="fa-regular fa-paper-plane"></i> Submit
+                      </button>
+                      <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
+                        <i class="fas fa-download"></i> Generate PDF
+                      </button>
+                    </div>
+                  </div>
+            </div>
+            <!-- /.card -->
+        </div>
+        <%- include('admin/footer'); %>
