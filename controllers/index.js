@@ -5,6 +5,14 @@ module.exports ={
         }
         res.render('login', data)
     },
+    profile: (req, res) => {
+        let data = {
+            title: "Profile | LKP",
+            page: "Profile",
+            username: "Fakry"
+        }
+        res.render('profile', data)
+    },
     dashboard: (req, res) => {
         let data = {
             title: "Dasboard | LKP",
