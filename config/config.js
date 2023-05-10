@@ -13,8 +13,9 @@ module.exports = {
         "password": DB_PASSWORD,
         "database": DB_NAME,
         "host": DB_HOST,
-        "dialect": DB_DIALECT
-    },
+        "dialect": DB_DIALECT,
+        "timezone": '+07:00'
+        },
     "test": {
         "username": DB_USERNAME,
         "password": DB_PASSWORD,
