@@ -2,18 +2,18 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers');
 const api = require('../controllers/api');
-
+const middleware = require('../middleware');
 // router.get('/', (req, res) => {
 //     // res.send('Hello World!')
 //     res.render('login', { title: "login" })
 // })
 
 router.get('/', controller.login);
-router.get('/dashboard', controller.dashboard);
-router.get('/daily', controller.daily);
-router.get('/monthly', controller.monthly);
-router.get('/report', controller.report);
-router.get('/profile', controller.profile);
+router.get('/daily', middleware.login, controller.daily);
+router.get('/monthly', middleware.login, controller.monthly);
+router.get('/report', middleware.login, controller.report);
+router.get('/profile', middleware.login, controller.profile);
+router.get('/logout', controller.logout);
 
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
