@@ -1,33 +1,41 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable("Users", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       nik: {
         allowNull: false,
         primaryKey: true,
         unique: true,
-        type: Sequelize.INTEGER
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      JnsKel: {
+        type: Sequelize.ENUM,
+        values: ['Laki-laki', 'Perempuan']
+      },
+      nip: {
+        type: Sequelize.STRING(300),
       },
       tgl_lahir: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY,
       },
       nama: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       dep: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'Departemens'
+            tableName: "Departemens",
           },
-          key: 'id',
+          key: "id",
         },
       },
       jab: {
@@ -37,19 +45,19 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         unique: true,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
-  }
+    await queryInterface.dropTable("Users");
+  },
 };

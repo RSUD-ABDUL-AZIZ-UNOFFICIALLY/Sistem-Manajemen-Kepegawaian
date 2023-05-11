@@ -18,7 +18,7 @@ module.exports = {
       include: { model: Departemen, as: "departemen" },
     });
     let departemen = await Departemen.findAll({});
-    let atasan = await User.findAll({});
+    let atasan = await User.findAll();
     let bos = await Atasan.findOne({
       where: { user: getUser.nik },
     });
@@ -30,7 +30,7 @@ module.exports = {
       });
       bos = namaBos.nama;
     }
-    console.log(bos);
+    console.log(atasan);
     let data = {
       title: "Profile | LKP",
       page: "Profile",

@@ -13,6 +13,8 @@ module.exports = {
         nama: body.nama,
         dep: body.dep,
         jab: body.jab,
+        tgl_lahir: body.tgl_lahir,
+        nip: body.nip,
       },
       {
         where: {
@@ -20,28 +22,31 @@ module.exports = {
         },
       }
     );
-    let atasan = await Atasan.update(
-      {
-        bos: body.bos,
-      },
-      {
-        where: {
-          user: decoded.id,
+    try {
+      let atasan = await Atasan.update(
+        {
+          bos: body.atasan,
         },
+        {
+          where: {
+            user: decoded.id,
+          },
+        }
+      );
+      if (atasan == 0) {
+        await Atasan.create({
+          user: decoded.id,
+          bos: body.atasan,
+        });
       }
-    );
-    if (atasan == 0) {
-      atasan = await Atasan.create({
-        user: decoded.id,
-        bos: body.atasan,
-      });
+    } catch (error) {
+      
     }
+   
 
     return res.status(200).json({
       error: false,
       message: body,
-      user: user,
-        atasan: atasan,
     });
   },
 };

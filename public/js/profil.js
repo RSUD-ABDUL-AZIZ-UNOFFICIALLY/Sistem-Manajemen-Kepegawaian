@@ -10,6 +10,8 @@ $( document ).ready(function() {
             jab : $('#jab').val(),
             atasan : $('#atasan').val(),
             bos : $('#bos').val(),
+            tgl_lahir: $('#tgl_lahir').val(),
+            nip: $('#nip').val(),
         };
         console.log(data);
         if ($('#atasan').val() == "") {
@@ -27,6 +29,12 @@ $( document ).ready(function() {
             data: data,
           success: function(response) {
             console.log(response);
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'Data berhasil diubah',
+              })
+              return;
           },
           error: function(error) {
             // console.log(error);

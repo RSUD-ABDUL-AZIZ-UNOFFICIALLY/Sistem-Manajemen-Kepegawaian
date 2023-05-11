@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init({
     nik: DataTypes.INTEGER,
+    nip: DataTypes.INTEGER,
+    jnsKel: DataTypes.ENUM('Laki-laki', 'Perempuan'),
     tgl_lahir: DataTypes.DATE,
     nama: DataTypes.STRING,
     dep: DataTypes.INTEGER,

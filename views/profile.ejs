@@ -17,8 +17,21 @@
               class="form-control"
               id="nik"
               name="nik"
-              value='<%= user.nik %>''
+              value='<%= user.nik %>'
               disabled
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-sm-2 col-form-label">NIP</label>
+          <div class="col-sm-10">
+            <input
+              type="number"
+              class="form-control"
+              id="nip"
+              name="nip"
+              value='<%= user.nip %>'
+              
             />
           </div>
         </div>
@@ -53,7 +66,22 @@
         </div>
         <div class="form-group row">
           <label for="jab" class="col-sm-2 col-form-label"
-            >Jabatan</label
+            >Date of birth</label
+          >
+          <div class="col-sm-10">
+            <input
+              type="date"
+              class="form-control"
+              id="tgl_lahir"
+              name="tgl_lahir"
+              placeholder="Jabatan"
+              value='<%= user.tgl_lahir %>'
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="jab" class="col-sm-2 col-form-label"
+            >Position</label
           >
           <div class="col-sm-10">
             <input
@@ -62,13 +90,13 @@
               id="jab"
               name="jab"
               placeholder="Jabatan"
-              value=<%= user.jab %>
+              value='<%= user.jab %>'
             />
           </div>
         </div>
         <div class="form-group row">
           <label for="inputEmail3" class="col-sm-2 col-form-label"
-            >Atasan</label
+            >Direct supervisor</label
           >
           <div class="col-sm-10">
             <select class="form-control select2" id="atasan">
