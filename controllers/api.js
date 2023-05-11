@@ -73,9 +73,10 @@ module.exports = {
       .catch((error) => {
         console.log(error);
       });
+     
       await Otp.create({
         token: otp,
-        wa: body.phone,
+        wa: body.phone
       });
       return res.status(200).json({
         error: false,
@@ -105,8 +106,9 @@ module.exports = {
     // waktu sekarang + 5 menit
     let now = new Date();
     let fiveMinutesLater = new Date(now.getTime() + 5 * 60000);
-
-    if (checkOtp.createdAt < fiveMinutesLater) {
+    // apahah waktu create time lebih dari 5 menit dari sekarang
+    
+    if (fiveMinutesLater < checkOtp.createdAt) {
       return res.status(401).json({
         error: true,
         message: "OTP expired",
