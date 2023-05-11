@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const { Otp, User } = require("../models");
+const e = require("express");
 const secretKey = process.env.JWT_SECRET_KEY;
 const payload = {
   gid: "Server Side",
@@ -66,17 +67,17 @@ module.exports = {
         data: data,
       };
       axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-     
+        .request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       await Otp.create({
         token: otp,
-        wa: body.phone
+        wa: body.phone,
       });
       return res.status(200).json({
         error: false,
@@ -105,10 +106,11 @@ module.exports = {
     }
     // waktu sekarang + 5 menit
     let now = new Date();
-    let fiveMinutesLater = new Date(now.getTime() + 5 * 60000);
-    // apahah waktu create time lebih dari 5 menit dari sekarang
-    
-    if (fiveMinutesLater < checkOtp.createdAt) {
+    let createdAt = new Date(checkOtp.createdAt); // Ganti dengan nilai yang sesuai dari createdAt
+    let diff = (now.getTime() - createdAt.getTime()) / 1000; // Menghitung selisih waktu dalam detik
+    if (diff < 300) {
+    } else {
+      console.log("createdAt lebih dari 5 menit yang lalu");
       return res.status(401).json({
         error: true,
         message: "OTP expired",
