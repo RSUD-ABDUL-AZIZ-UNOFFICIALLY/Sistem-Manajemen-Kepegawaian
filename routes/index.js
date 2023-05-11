@@ -19,6 +19,8 @@ router.get('/logout', middleware.logout);
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
 
-router.post('/api/updateProfile', ajax.updateProfile);
+router.post('/api/updateProfile', middleware.login, ajax.updateProfile);
+router.post('/api/progress', middleware.login, ajax.progress);
+router.get('/api/monthly', middleware.login, ajax.monthly);
 
 module.exports = router;

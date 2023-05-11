@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     nik: DataTypes.INTEGER,
     nip: DataTypes.INTEGER,
     jnsKel: DataTypes.ENUM('Laki-laki', 'Perempuan'),
-    tgl_lahir: DataTypes.DATE,
+    tgl_lahir: DataTypes.DATEONLY,
     nama: DataTypes.STRING,
     dep: DataTypes.INTEGER,
     jab: DataTypes.STRING(300),

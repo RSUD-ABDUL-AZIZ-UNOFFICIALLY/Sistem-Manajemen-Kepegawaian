@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       tgl: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       volume: {
         type: Sequelize.INTEGER

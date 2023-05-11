@@ -42,35 +42,29 @@ module.exports = {
     };
     res.render("profile", data);
   },
-  dashboard: (req, res) => {
-    let token = req.cookies.token;
-    let decoded = jwt.verify(token, secretKey);
-    let data = {
-      title: "Dasboard | LKP",
-      page: "Dashboard",
-      token: decoded,
-    };
-    res.render("dashboard", data);
-  },
   daily: (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
-    console.log(decoded);
+    let datenow = new Date().toISOString().slice(0, 10);
     let data = {
       title: "Dasboard | LKP",
       page: "Daily Progress",
-
       token: decoded,
+      datenow: datenow,
     };
     res.render("daily", data);
   },
   monthly: (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
+// datey yyyy mm
+    let datey = new Date().toISOString().slice(0, 7);
+    console.log(datey);
     let data = {
       title: "Dasboard | LKP",
       page: "Monthly Progress",
       token: decoded,
+      date: datey
     };
     res.render("monthly", data);
   },
