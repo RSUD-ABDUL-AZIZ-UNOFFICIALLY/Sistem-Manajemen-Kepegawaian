@@ -7,7 +7,7 @@
     </div>
     <!-- /.card-header -->
     <!-- form start -->
-    <form class="form-horizontal">
+    <form id="profil" class="form-horizontal">
       <div class="card-body">
         <div class="form-group row">
           <label for="inputEmail3" class="col-sm-2 col-form-label">NIK</label>
@@ -15,8 +15,9 @@
             <input
               type="number"
               class="form-control"
-              id="inputEmail3"
-              placeholder="NIK"
+              id="nik"
+              name="nik"
+              value='<%= user.nik %>''
               disabled
             />
           </div>
@@ -29,37 +30,39 @@
             <input
               type="text"
               class="form-control"
-              id="inputEmail3"
+              id="nama"
+              name="nama"
               placeholder="Full Name"
+              value='<%= user.nama %>'
             />
           </div>
         </div>
         <div class="form-group row">
-          <label for="inputEmail3" class="col-sm-2 col-form-label"
+          <label for="departemen" class="col-sm-2 col-form-label"
             >Departeman</label
           >
           <div class="col-sm-10">
-            <select class="form-control select2">
-              <option selected="selected">Alabama</option>
-              <option>Alaska</option>
-              <option>California</option>
-              <option>Delaware</option>
-              <option>Tennessee</option>
-              <option>Texas</option>
-              <option>Washington</option>
+            <select class="form-control select2" id="departemen">
+              <option selected="selected" value='<%= user.dep%>' ><%= user.departemen.bidang%></option>
+              <% for(let i=0; i<departemen.length; i++) { %>
+                <option value='<%= departemen[i].id %>' ><%= departemen[i].bidang %></option>
+              <% } %>
+          
             </select>
           </div>
         </div>
         <div class="form-group row">
-          <label for="inputEmail3" class="col-sm-2 col-form-label"
+          <label for="jab" class="col-sm-2 col-form-label"
             >Jabatan</label
           >
           <div class="col-sm-10">
             <input
               type="text"
               class="form-control"
-              id="inputEmail3"
-              placeholder="Full Name"
+              id="jab"
+              name="jab"
+              placeholder="Jabatan"
+              value=<%= user.jab %>
             />
           </div>
         </div>
@@ -68,14 +71,11 @@
             >Atasan</label
           >
           <div class="col-sm-10">
-            <select class="form-control select2">
-              <option selected="selected">Alabama</option>
-              <option>Alaska</option>
-              <option>California</option>
-              <option>Delaware</option>
-              <option>Tennessee</option>
-              <option>Texas</option>
-              <option>Washington</option>
+            <select class="form-control select2" id="atasan">
+              <option selected="selected" value=<%= bos%>><%= bos%></option>
+              <% for(let i=0; i<atasan.length; i++) { %>
+                <option value='<%= atasan[i].nik %>' ><%= atasan[i].nama %></option>
+              <% } %>
             </select>
           </div>
         </div>
@@ -94,5 +94,6 @@
 </div>
 
 <!-- /.container-fluid -->
-
+<%- include('admin/script'); %>
+<script src="/asset/js/profil.js"></script>
 <%- include('admin/footer'); %>

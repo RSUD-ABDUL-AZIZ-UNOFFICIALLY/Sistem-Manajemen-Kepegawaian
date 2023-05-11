@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
+const { User, Departemen, Atasan } = require("../models");
+const { Op } = require("sequelize");
 
 module.exports = {
   login: (req, res) => {
@@ -8,13 +10,35 @@ module.exports = {
     };
     res.render("login", data);
   },
-  profile: (req, res) => {
+  profile: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
+    let getUser = await User.findOne({
+      where: { nik: decoded.id },
+      include: { model: Departemen, as: "departemen" },
+    });
+    let departemen = await Departemen.findAll({});
+    let atasan = await User.findAll({});
+    let bos = await Atasan.findOne({
+      where: { user: getUser.nik },
+    });
+    if (!bos) {
+      bos = "";
+    } else {
+      let namaBos = await User.findOne({
+        where: { nik: bos.bos },
+      });
+      bos = namaBos.nama;
+    }
+    console.log(bos);
     let data = {
       title: "Profile | LKP",
       page: "Profile",
       token: decoded,
+      user: getUser,
+      departemen: departemen,
+      atasan: atasan,
+      bos: bos,
     };
     res.render("profile", data);
   },
@@ -59,9 +83,5 @@ module.exports = {
       token: decoded,
     };
     res.render("report", data);
-  },
-  logout: (req, res) => {
-    res.clearCookie("token");
-    res.redirect("/");
   },
 };

@@ -1,0 +1,36 @@
+</div>
+<!-- /.content-wrapper -->
+
+</div>
+<!-- ./wrapper -->
+<!-- ./wrapper -->
+<!-- Jquery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- tambahkan tautan script Bootstrap -->
+<!-- <script src="/asset/js/bootstrap.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+   <!-- SweetAlert2 JS -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+const currentLocation = location.href;
+const menuItem = document.querySelectorAll('.nav-link');
+const menuLength = menuItem.length
+for (let i = 0; i < menuLength; i++) {
+    if (menuItem[i].href === currentLocation) {
+        menuItem[i].className = "nav-link active"
+    }
+}
+</script>
+<!-- Select2 -->
+<script src="/asset/js/select2.full.js"></script>
+<script>
+ //Initialize Select2 Elements
+ $('.select2').select2()
+
+//Initialize Select2 Elements
+$('.select2bs4').select2({
+  theme: 'bootstrap4'
+})
+</script>
+<!-- AdminLTE App -->
+<!-- <script src="/asset/js/adminlte.js"></script> -->
