@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Lpkp.init({
     nik: DataTypes.INTEGER,
-    rak: DataTypes.STRING,
+    rak: DataTypes.STRING(512),
     tgl: DataTypes.DATEONLY,
     volume: DataTypes.INTEGER,
     satuan: DataTypes.ENUM('Dokumen', 'Laporan', '-'),

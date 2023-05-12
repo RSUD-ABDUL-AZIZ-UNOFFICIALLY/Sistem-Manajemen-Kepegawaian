@@ -47,6 +47,13 @@ module.exports = {
         unique: true,
         type: Sequelize.STRING,
       },
+      status: {
+        type: Sequelize.ENUM,
+        values: ['PNS', 'PPPK', 'Non ASN']
+      },
+      email: {
+        type: Sequelize.STRING(300),
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -19,7 +19,7 @@ module.exports = {
         }
       },
       rak: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(512)
       },
       tgl: {
         type: Sequelize.DATEONLY
