@@ -85,4 +85,19 @@ module.exports = {
       data: data,
     });
   },
+  deleteLpkp: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let body = req.query;
+    await Lpkp.destroy({
+      where: {
+        id: body.id,
+        nik: decoded.id,
+      },
+    });
+    return res.status(200).json({
+      error: false,
+      message: "success",
+    });
+  },
 };

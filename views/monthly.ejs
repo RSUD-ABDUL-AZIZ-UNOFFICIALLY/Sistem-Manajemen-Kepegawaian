@@ -1,97 +1,151 @@
-<%- include('admin/head'); %>
-    <%- include('admin/header'); %>
-        <div class="container-fluid">
-            <!-- /.card -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Employee Work Productivity Report</h3>
-                    <br>
-                    <hr>
-                    <div class="form-group">
-                        <input type="month" class="form-control" id="InputTanggal" name="start"
-                        min="2023-03" value='<%= date %>'>
-                      </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body table-responsive p-0" style="height: 300px;">
-                    <table class="table table-bordered table-head-fixed text-nowrap">
-                        <thead>
-                            <tr>
-                                <th style="width: 10px">#</th>
-                                <th>Date</th>
-                                <th>Details Of Work Activities/Duty</th>
-                                <th>Volume</th>
-                                <th>Unit</th>
-                                <th>Completion Time</th>
-                                <th style="width: 40px">Edit / Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.card-body -->
-                <div class="row no-print">
-                    <div class="col-12">
-                      <button type="button" class="btn btn-success float-right"><i class="fa-regular fa-paper-plane"></i> Submit
-                      </button>
-                      <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                        <i class="fas fa-download"></i> Generate PDF
-                      </button>
-                    </div>
-                  </div>
-            </div>
-            <!-- /.card -->
-        </div>
-        
-      <div class="modal fade" id="modal-default">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Default Modal</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>One fine body&hellip;</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
+<%- include('admin/head'); %> <%- include('admin/header'); %>
+<div class="container-fluid">
+  <!-- /.card -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Employee Work Productivity Report</h3>
+      <br />
+      <hr />
+      <div class="form-group">
+        <input
+          type="month"
+          class="form-control"
+          id="InputTanggal"
+          name="start"
+          min="2023-03"
+          value="<%= date %>"
+        />
       </div>
-      <!-- /.modal -->
-      <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-    Launch demo modal
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body table-responsive p-0">
+      <table class="table table-bordered table-head-fixed text-nowrap">
+        <thead>
+          <tr>
+            <th style="width: 10px">#</th>
+            <th>Date</th>
+            <th>Details Of Work Activities/Duty</th>
+            <th>Volume</th>
+            <th>Unit</th>
+            <th>Completion Time</th>
+            <th style="width: 40px">Edit / Delete</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+    <hr />
+    <div class="container-fluid">
+      <p>Monthly Performance Achievements </p>
+      <p>Work Productivity</p>
+      <p>Work Productivity</p>
+      <div class="row">
+        <div class="col-sm-8">
+          Monthly Performance Achievements
         </div>
-        <div class="modal-body">
-          ...
+        <div class="col-sm-3" id="total-nilai">
+          One of three columns
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+      <div class="row">
+        <div class="col-sm-8">
+          Kategori <%= date %>
+        </div>
+        <div class="col-sm-3">
+          One of three columns
         </div>
       </div>
     </div>
   </div>
-        <%- include('admin/script'); %>
-        <script src="/asset/js/monthly.js"></script>
-        <%- include('admin/footer'); %>
+  <div class="row no-print">
+    <div class="col-12">
+      <button type="button" class="btn btn-success float-right">
+        <i class="fa-regular fa-paper-plane"></i> Submit
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary float-right"
+        style="margin-right: 5px"
+      >
+        <i class="fas fa-download"></i> Generate PDF
+      </button>
+    </div>
+  </div>
+  <!-- /.card -->
+</div>
+
+<div class="modal fade" id="modal-default">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Default Modal</h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- Button trigger modal -->
+<button
+  type="button"
+  class="btn btn-primary"
+  data-toggle="modal"
+  data-target="#exampleModalLong"
+>
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModalLong"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLongTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('admin/script'); %>
+<script src="/asset/js/monthly.js"></script>
+<%- include('admin/footer'); %>

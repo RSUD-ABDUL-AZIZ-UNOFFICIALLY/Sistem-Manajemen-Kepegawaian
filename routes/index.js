@@ -22,5 +22,6 @@ router.post('/api/verify-otp', api.verifyOtp);
 router.post('/api/updateProfile', middleware.login, ajax.updateProfile);
 router.post('/api/progress', middleware.login, ajax.progress);
 router.get('/api/monthly', middleware.login, ajax.monthly);
+router.delete('/api/monthly', middleware.login, ajax.deleteLpkp);
 
 module.exports = router;

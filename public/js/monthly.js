@@ -1,3 +1,31 @@
+function hapus(data, id) {
+  // kode yang akan dijalankan saat tombol diklik
+  console.log('Data yang dikirimkan: ' + data);
+  
+  $.ajax({
+    url: '/api/monthly?id=' + data,
+      method: 'delete',
+    success: function(response) {
+      console.log(response);
+      var rows = $("tbody > tr");
+      rows.eq(id).remove();
+    },
+    error: function(error) {
+      // console.log(error);
+    }
+  });
+  // remove row from table by index id
+  // var total = 0;
+  // var tdNilai = document.querySelectorAll("#tabel-data td:nth-child(6)");
+  // for (var i = 0; i < tdNilai.length; i++) {
+  //   total += parseInt(tdNilai[i].textContent);
+  //   console.log(tdNilai[i].textContent);
+  // }
+  
+  // Menampilkan total pada kolom "Total"
+  // var kolomTotal = document.querySelector("#total-nilai");
+  // kolomTotal.textContent = total;
+}
 $(document).ready(function () {
   let monthly = $("#InputTanggal").val();
   console.log(monthly);
@@ -17,10 +45,9 @@ $(document).ready(function () {
         row.append($("<td>" + response.data[i].volume + "</td>"));
         row.append($("<td>" + response.data[i].satuan + "</td>"));
         row.append($("<td>" + response.data[i].waktu + "</td>"));
-        row.append($("<td>" + '<button type="button" class="btn btn-outline-danger"><i class="fa fa-trash"></i></button>'+' <button type="button" class="btn btn-success toastrDefaultSuccess"><i class="fa fa-pencil"></i></button>' + "</td>"));       
+        row.append($("<td>" + '<button type="button" class="btn btn-outline-danger"  onclick="hapus('+response.data[i].id+','+ i+')"><i class="fa fa-trash"></i></button>'+' <button type="button" class="btn btn-success toastrDefaultSuccess"><i class="fa fa-edit"></i></button>' + "</td>"));       
         $("tbody").append(row);
       }
-      
     },
     error: function(error) {
       // console.log(error);
@@ -54,8 +81,9 @@ $(document).ready(function () {
         // console.log(error);
       }
     });
-    $('#myModal').on('shown.bs.modal', function () {
-      $('#myInput').trigger('focus')
-    })
+    
+    // $('#myModal').on('shown.bs.modal', function () {
+    //   $('#myInput').trigger('focus')
+    // })
   });
 });
