@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
+const { User } = require("../models");
 
 module.exports = {
-    login: (req, res, next) => {
+    login: async (req, res, next) => {
         try {
             const token = req.cookies.token;
             if (!token) {
@@ -9,12 +10,21 @@ module.exports = {
             }
             const secretKey = process.env.JWT_SECRET_KEY;
             const decoded = jwt.verify(token, secretKey);
+            let getUser = await User.findOne({
+                where: {
+                    nik: decoded.id
+                }
+            });
+            if (!getUser) {
+                res.clearCookie("token");
+                return res.redirect('/');
+            }
 
             next();
         } catch (err) {
+            res.clearCookie("token");
             return res.redirect('/');
         }
-
     },
     checkLogin: (req, res, next) => {
         try {
