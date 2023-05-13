@@ -14,7 +14,7 @@ module.exports = {
         primaryKey: true,
         unique: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT(16),
       },
       JnsKel: {
         type: Sequelize.ENUM,

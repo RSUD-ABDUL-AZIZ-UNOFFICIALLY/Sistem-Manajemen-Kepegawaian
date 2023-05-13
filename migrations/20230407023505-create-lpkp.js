@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nik: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT(16),
         references: {
           model: {
             tableName: 'users'
