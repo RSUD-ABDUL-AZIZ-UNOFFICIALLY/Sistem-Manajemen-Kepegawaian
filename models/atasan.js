@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Atasan.hasOne(models.User, {
+        foreignKey: 'id',
+        as: 'bio'
+      })
+
     }
   }
   Atasan.init({

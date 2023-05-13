@@ -40,13 +40,34 @@ module.exports = {
           bos: body.atasan,
         });
       }
-    } catch (error) {
-      
-    }
+    } catch (error) {}
     return res.status(200).json({
       error: false,
       message: body,
     });
+  },
+  getAnggota: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      let data = await Atasan.findAll({
+        include: [
+          {
+            model: User,
+            as: "bio",
+          },
+        ],
+        where: {
+          bos: decoded.id,
+        },
+        attributes: ["user"],
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data,
+      });
+    } catch (error) {}
   },
   progress: async (req, res) => {
     let token = req.cookies.token;
@@ -68,8 +89,7 @@ module.exports = {
   monthly: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
-   let queryparams= req.query;
-   console.log(queryparams.date);
+    let queryparams = req.query;
 
     let data = await Lpkp.findAll({
       where: {
@@ -83,6 +103,58 @@ module.exports = {
       error: false,
       message: queryparams,
       data: data,
+    });
+  },
+  getScore: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let queryparams = req.query;
+
+    let data = await Lpkp.findAll({
+      where: {
+        nik: decoded.id,
+        tgl: {
+          [Op.startsWith]: queryparams.date,
+        },
+      },
+    });
+
+    let sumWaktu = 0;
+    for (let i = 0; i < data.length; i++) {
+      sumWaktu += data[i].waktu;
+    }
+    // IF(sumWaktu>7999;"BAIK";IF(sumWaktu>7379;"CUKUP";IF(sumWaktu>6719;"KURANG";IF(sumWaktu>0;"WKE MINIMAL TIDAK TERPENUHI";))))
+    let kategori = "";
+    if (sumWaktu > 7999) {
+      kategori = "BAIK";
+    } else if (sumWaktu > 7379) {
+      kategori = "CUKUP";
+    } else if (sumWaktu > 6719) {
+      kategori = "KURANG";
+    } else if (sumWaktu > 0) {
+      kategori = "WKE MINIMAL TIDAK TERPENUHI";
+    }
+    // IF(F41>7999;"100%";IF(F41>7379;"90%";IF(F41>6719;"80%";IF(F41>0;"0%";))))
+    let tpp = "";
+    if (sumWaktu > 7999) {
+      tpp = "100%";
+    } else if (sumWaktu > 7379) {
+      tpp = "90%";
+    } else if (sumWaktu > 6719) {
+      tpp = "80%";
+    } else if (sumWaktu > 0) {
+      tpp = "0%";
+    }
+
+    return res.status(200).json({
+      error: false,
+      message: "success",
+      data: {
+        capaian: sumWaktu,
+        kategori: kategori,
+        tpp: tpp,
+
+      },
     });
   },
   deleteLpkp: async (req, res) => {

@@ -20,8 +20,11 @@ router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
 
 router.post('/api/updateProfile', middleware.login, ajax.updateProfile);
+router.get('/api/getAnggota', middleware.login, ajax.getAnggota);
+
 router.post('/api/progress', middleware.login, ajax.progress);
 router.get('/api/monthly', middleware.login, ajax.monthly);
+router.get('/api/monthly/score', middleware.login, ajax.getScore);
 router.delete('/api/monthly', middleware.login, ajax.deleteLpkp);
 
 module.exports = router;
