@@ -94,7 +94,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        bidang: " Ruang Nifas",
+        bidang: "Ruang Nifas",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
