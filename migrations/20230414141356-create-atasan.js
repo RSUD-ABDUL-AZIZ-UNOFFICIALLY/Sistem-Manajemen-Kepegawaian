@@ -14,7 +14,7 @@ module.exports = {
         primaryKey: true,
         references: {
           model: {
-            tableName: 'users'
+            tableName: 'Users'
           },
           key: 'nik',
         }
@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.BIGINT(16),
         references: {
           model: {
-            tableName: 'users'
+            tableName: 'Users'
           },
           key: 'nik',
         }
