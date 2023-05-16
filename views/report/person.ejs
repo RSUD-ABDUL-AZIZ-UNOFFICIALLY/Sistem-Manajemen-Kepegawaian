@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <title>Laporan Produktivitas Kerja Pegawai</title>
+    <style>
+       @page {
+      size: A4;
+      margin: 10;
+    }
+    /* body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      box-sizing: border-box;
+    } */
+    /* Style untuk konten halaman */
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      table th {
+        background-color: #f2f2f2;
+      }
+      
+      th:nth-child(1), td:nth-child(1) {
+  width: 10px;
+}
+
+th:nth-child(2), td:nth-child(2) {
+  width: 30px;
+}
+
+th:nth-child(3), td:nth-child(3) {
+  width: 250px;
+}
+th:nth-child(4), td:nth-child(4) {
+  width: 100px;
+}
+th:nth-child(5), td:nth-child(5) {
+  width: 100px;
+}
+th:nth-child(6), td:nth-child(6) {
+  width: 100px;
+}
+
+
+      h1,
+      h2 {
+        margin-top: 0;
+      }
+      tfoot th {
+        background-color: #ffffff; /* ubah warna latar belakang */
+        text-align: center;
+      }
+      /* Tabel 2 */
+      table.header {
+        width: 50%;
+        margin-bottom: 10px;
+        border: none;
+        /* border: 1px solid #ddd; */
+        /* border-collapse: collapse; */
+      }
+
+      table.header th,
+      table.header td {
+        padding: 1px;
+        text-align: left;
+        border: none;
+        /* border: 1px solid #ddd; */
+      }
+
+      table.header th {
+        background-color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="text-center ">LAPORAN PRODUKTIVITAS KERJA PEGAWAI</div>
+    <table class="header">
+      <tr>
+        <th>NAMA</th>
+        <td>:EKO SUDARMONO, S.A.P.</td>
+      </tr>
+      <tr>
+        <th>NIP</th>
+        <td>:198310092007011007</td>
+      </tr>
+      <tr>
+        <th>JABATAN</th>
+        <td>:Analis Kepegawaian Ahli Pertama (8)</td>
+      </tr>
+      <tr>
+        <th>UNIT KERJA</th>
+        <td>:Bagian Umum dan Kepegawaian</td>
+      </tr>
+      <tr>
+        <th>PERIODE</th>
+        <td>:1 Januari 2020</td>
+      </tr>
+    </table>
+
+    <table>
+      <thead>
+        <tr>
+          <th>NO</th>
+          <th>HARI / TANGGAL</th>
+          <th>RINCIAN AKTIVITAS KERJA/TUGAS</th>
+          <th>VOLUME KEGIATAN</th>
+          <th>SATUAN KEGIATAN</th>
+          <th>WAKTU PENYELESAIAN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% data.forEach(item => { %>
+        <tr>
+          <td><%= item.id %></td>
+          <td><%= item.name %></td>
+          <td><%= item.name %></td>
+          <td><%= item.name %></td>
+          <td><%= item.age %></td>
+          <td><%= item.age %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="5">Capaian Kinerja</th>
+          <td>84%</td>
+        </tr>
+        <tr>
+          <th colspan="5">Kategori</th>
+          <td>84%</td>
+        </tr>
+        <tr>
+          <th colspan="5">Besaran TPP dari Produktivitas Kerja</th>
+          <td>84%</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="title">LAPORAN</div>
+    <div class="date">Singkawang, 28 April 2023</div>
+    <table>
+      <tr>
+        <th>MENGETAHUI</th>
+        <th>ATASAN LANGSUNG</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="signature">
+            <div class="name">F. FILICITY YOSSI KARTINI, SS., M.A.P.</div>
+            <div class="nip">NIP. 196406191986031021</div>
+          </div>
+        </td>
+        <td>
+          <div class="signature">
+            <div class="name">EKO SUDARMONO, S.A.P.</div>
+            <div class="nip">NIP. 198310092007011007</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <script>
+      window.onload = function() {
+  window.print();
+}
+    </script>
+  </body>
+</html>

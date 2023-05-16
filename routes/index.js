@@ -4,6 +4,7 @@ const controller = require('../controllers');
 const api = require('../controllers/api');
 const middleware = require('../middleware');
 const ajax = require('../controllers/ajax');
+const report = require('../controllers/report');
 // router.get('/', (req, res) => {
 //     // res.send('Hello World!')
 //     res.render('login', { title: "login" })
@@ -26,5 +27,7 @@ router.post('/api/progress', middleware.login, ajax.progress);
 router.get('/api/monthly', middleware.login, ajax.monthly);
 router.get('/api/monthly/score', middleware.login, ajax.getScore);
 router.delete('/api/monthly', middleware.login, ajax.deleteLpkp);
+
+router.get('/api/report', middleware.login, report.person);
 
 module.exports = router;

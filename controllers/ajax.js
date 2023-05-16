@@ -98,6 +98,7 @@ module.exports = {
           [Op.startsWith]: queryparams.date,
         },
       },
+      order: [["tgl", "ASC"]],
     });
     return res.status(200).json({
       error: false,

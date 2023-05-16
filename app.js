@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use(cookieParser())
 
-const ejs = require('ejs');
+// const ejs = require('ejs');
 app.set('view engine', 'ejs');
 const path = require('path');
 
