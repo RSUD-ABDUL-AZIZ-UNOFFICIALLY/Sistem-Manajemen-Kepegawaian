@@ -41,7 +41,7 @@ function getTabel(newDateValue) {
       for (var i = 0; i < response.data.length; i++) {
         var row = $("<tr>");
         row.append($("<td>" + i + "</td>"));
-        row.append($("<td>" + response.data[i].tgl + "</td>"));
+        row.append($("<td>" + response.data[i].day + "</td>"));
         row.append($("<td>" + response.data[i].rak + "</td>"));
         row.append($("<td>" + response.data[i].volume + "</td>"));
         row.append($("<td>" + response.data[i].satuan + "</td>"));
@@ -80,3 +80,8 @@ $(document).ready(function () {
   // GET SCORE
   getScore(monthly);
 });
+
+function cetak() {
+  let monthly = $("#InputTanggal").val();
+  window.open("/api/report?date=" + monthly, "_blank");
+}

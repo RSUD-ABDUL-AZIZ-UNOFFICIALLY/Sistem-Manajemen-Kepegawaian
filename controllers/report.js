@@ -1,69 +1,57 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Departemen, Atasan } = require("../models");
+const { User, Departemen, Lpkp, Atasan } = require("../models");
 const { Op } = require("sequelize");
-const ejs = require('ejs');
-const path = require('path');
-const pdf = require('html-pdf');
+const { convertdate } = require("../helper");
 
 module.exports = {
-    person: (req, res) => {
+  person: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let query = req.query;
+    // convert date to month name and year
+    let dateString = new Date(query.date).toLocaleString("en-us", {
+      month: "long",
+      year: "numeric",
+    });
+    let user = await User.findOne({
+      where: {
+        nik: decoded.id,
+      },
+      include: [
+        {
+          model: Departemen,
+          as: "departemen",
+        },
+      ],
+    });
+    let progress = await Lpkp.findAll({
+      where: {
+        nik: decoded.id,
+        tgl: {
+          [Op.startsWith]: query.date,
+        },
+      },
+      order: [["tgl", "ASC"]],
+    });
+    for (var i = 0; i < progress.length; i++) {
+      var tanggalFormat = convertdate(progress[i].tgl);
+      progress[i].tanggal = tanggalFormat;
+      progress[i].no = i + 1;
+    }
+
     let data = {
-      title: "login | LKP",
+      title: "Laporan Produktivitas Kerja Pegawai",
+      user: user,
+      periode: dateString,
+      progress: progress,
       data: [
-        {id: 1, name: 'John', age: 30},
-        {id: 2, name: 'Jane', age: 25},
-        {id: 3, name: 'Bob', age: 40},
-        {id: 4, name: 'Sarah', age: 35},
-      ]
-      
+        { id: 1, name: "John", age: 30 },
+        { id: 2, name: "Jane", age: 25 },
+        { id: 3, name: "Bob", age: 40 },
+        { id: 4, name: "Sarah", age: 35 },
+      ],
     };
-
-
     res.render("report/person", data);
-    // const filePath = path.join(__dirname, '../views/report/person.ejs');
-
-    // // render file HTML dengan data
-    // ejs.renderFile(filePath, data , (err, html) => {
-    //   if (err) {
-    //     console.log(err);
-    //     return;
-    //   }
-  
-    //   // konfigurasi untuk pembuatan PDF
-    //   const options = {
-    //     format: 'Letter',// allowed units: A3, A4, A5, Legal, Letter, Tabloid
-    //     zoomFactor: 'fit',
-    //     orientation: 'portrait', // portrait or landscape
-    //     border: { 
-    //       top: '0.5in', // allowed units: mm, cm, in, px
-    //     //   right: '0.5in',
-    //       bottom: '0.5in',
-    //       left: '0.5in'
-    //     },
-    //     // header: {
-    //     //   height: '20mm',
-    //     //   contents: '<div style="text-align: center;">LAPORAN PRODUKTIVITAS KERJA PEGAWAI</div>'
-    //     // },
-    //     footer: {
-    //       height: '20mm'
-    //     }
-    //   };
-  
-    //   // buat PDF dari HTML yang sudah dirender
-    //   pdf.create(html, options).toStream((err, stream) => {
-    //     if (err) {
-    //       console.log(err);
-    //       return;
-    //     }
-  
-    //     // atur header untuk menampilkan attachment PDF
-    //     res.setHeader('Content-Type', 'application/pdf');
-    //     res.setHeader('Content-Disposition', 'attachment; filename=example.pdf');
-  
-    //     // kirim respon berupa stream PDF
-    //     stream.pipe(res);
-    //   });
-    // });
   },
 };
