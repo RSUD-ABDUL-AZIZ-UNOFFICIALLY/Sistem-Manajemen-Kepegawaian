@@ -9,6 +9,8 @@ module.exports = {
     console.log(body.nama);
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
+    try {
+
     let user = await User.update(
       {
         nama: body.nama,
@@ -23,6 +25,14 @@ module.exports = {
         },
       }
     );
+    } catch (error) {
+      // show error update data
+      return res.status(400).json({
+        error: true,
+        message: "data tidak valid",
+      });
+    }
+
     try {
       let atasan = await Atasan.update(
         {

@@ -23,11 +23,21 @@ module.exports = {
           {
             model: Departemen,
             as: "departemen",
+            
           },
-         
         ],
       });
-      console.log(user);
+      let nik_atasan = await Atasan.findOne({
+        where: {
+          user: decoded.id,
+        },
+      });
+      let atasan = await User.findOne({
+        where: {
+          nik: nik_atasan.bos,
+        }
+      })
+      console.log(atasan);
       let progress = await Lpkp.findAll({
         where: {
           nik: decoded.id,
@@ -48,16 +58,12 @@ module.exports = {
         user: user,
         periode: dateString,
         progress: progress,
-        data: [
-          { id: 1, name: "John", age: 30 },
-          { id: 2, name: "Jane", age: 25 },
-          { id: 3, name: "Bob", age: 40 },
-          { id: 4, name: "Sarah", age: 35 },
-        ],
+        atasan: atasan,
       };
       return  res.render("report/person", data);
     } catch (error) {
-      return res.redirect("/profile");
+      console.log(error);
+      // return res.redirect("/profile");
     }
    
     

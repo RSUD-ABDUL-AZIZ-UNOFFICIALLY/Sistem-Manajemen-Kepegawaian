@@ -1,29 +1,55 @@
-const jwt = require('jsonwebtoken');
-const { User } = require("../models");
+const jwt = require("jsonwebtoken");
+const { User, Atasan } = require("../models");
 
 module.exports = {
     login: async (req, res, next) => {
         try {
             const token = req.cookies.token;
             if (!token) {
-                return res.redirect('/');
+                return res.redirect("/");
             }
             const secretKey = process.env.JWT_SECRET_KEY;
             const decoded = jwt.verify(token, secretKey);
             let getUser = await User.findOne({
                 where: {
-                    nik: decoded.id
-                }
+                    nik: decoded.id,
+                },
             });
+            let getAtasan = await Atasan.findOne({
+                where: {
+                    user: getUser.nik,
+                },
+            });
+          
+            if (!getAtasan) {
+                // set cookie
+                let data = {
+                    "pesan" : "You don't have a supervisor yet, please complete your profile data.",
+                    "status" : "warning",
+                    "title" : "Warning,",
+                    "url" : "/profile",
+                }
+                data = JSON.stringify(data);
+                // console.log('Data:', data);
+                const encodedData = btoa(data);
+                console.log('Encoded Data:', encodedData);
+                res.cookie("status", encodedData, {
+                    // maxAge 5 minutes
+                    maxAge: 1000 * 60 * 5,
+                    // httpOnly: true,
+                });
+            }else{
+            res.clearCookie("status");
+            }
             if (!getUser) {
                 res.clearCookie("token");
-                return res.redirect('/');
+                return res.redirect("/");
             }
 
             next();
         } catch (err) {
             res.clearCookie("token");
-            return res.redirect('/');
+            return res.redirect("/");
         }
     },
     checkLogin: (req, res, next) => {
@@ -33,7 +59,7 @@ module.exports = {
             const decoded = jwt.verify(token, secretKey);
             // echo(decoded);
             if (decoded) {
-                return res.redirect('/daily');
+                return res.redirect("/daily");
             }
             next();
         } catch (err) {
@@ -44,5 +70,5 @@ module.exports = {
     logout: (req, res) => {
         res.clearCookie("token");
         res.redirect("/");
-      },
+    },
 };

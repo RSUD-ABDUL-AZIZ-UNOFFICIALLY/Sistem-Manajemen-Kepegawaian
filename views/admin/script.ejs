@@ -13,16 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
    <!-- SweetAlert2 JS -->
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-const currentLocation = location.href;
-const menuItem = document.querySelectorAll('.nav-link');
-const menuLength = menuItem.length
-for (let i = 0; i < menuLength; i++) {
-    if (menuItem[i].href === currentLocation) {
-        menuItem[i].className = "nav-link active"
-    }
-}
-</script>
+<script src="/asset/js/admin.js"></script>
 <!-- Select2 -->
 <script src="/asset/js/select2.full.js"></script>
 <script>
@@ -34,5 +25,6 @@ $('.select2bs4').select2({
   theme: 'bootstrap4'
 })
 </script>
+
 <!-- AdminLTE App -->
 <!-- <script src="/asset/js/adminlte.js"></script> -->

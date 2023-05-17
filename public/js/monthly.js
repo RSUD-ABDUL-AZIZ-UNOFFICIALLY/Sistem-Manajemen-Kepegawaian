@@ -85,3 +85,12 @@ function cetak() {
   let monthly = $("#InputTanggal").val();
   window.open("/api/report?date=" + monthly, "_blank");
 }
+
+function submit() {
+  Swal.fire({
+    icon: 'success',
+    title: 'Succeed',
+    text: 'Progress saved successfully',
+  })
+    return;
+}

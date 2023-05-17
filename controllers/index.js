@@ -30,7 +30,13 @@ module.exports = {
       });
       bos = namaBos.nama;
     }
-    console.log(atasan);
+    if (!getUser.dep) {
+      getUser.dep = "";
+      // push departemen in user
+      getUser.departemen = {
+        bidang: "-",
+      };
+    }
     let data = {
       title: "Profile | LKP",
       page: "Profile",
