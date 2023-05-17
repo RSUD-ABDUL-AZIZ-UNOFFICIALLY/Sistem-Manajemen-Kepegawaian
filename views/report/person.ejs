@@ -11,109 +11,111 @@
     <link rel="stylesheet" href="/asset/css/report1.css" />
   </head>
   <body>
-    <div class="text-center fw-bold">LAPORAN PRODUKTIVITAS KERJA PEGAWAI</div>
-    <br />
-    <table class="header">
-      <tr>
-        <th>NAMA</th>
-        <td><span>: </span><span><%= user.nama %></span></td>
-      </tr>
-      <tr>
-        <th>NIP</th>
-        <td><span>: </span><span><%= user.nip %></span></td>
-      </tr>
-      <tr>
-        <th>JABATAN</th>
-        <td><span>: </span><span><%= user.jab %></span></td>
-      </tr>
-      <tr>
-        <th>UNIT KERJA</th>
-        <td><span>: </span><span><%= user.departemen.bidang %></span></td>
-      </tr>
-      <tr>
-        <th>PERIODE</th>
-        <td><span>: </span> <span><%= periode %></span></td>
-      </tr>
-    </table>
+    <div class="page">
+      <div class="text-center fw-bold">LAPORAN PRODUKTIVITAS KERJA PEGAWAI</div>
+      <br />
+      <table class="header">
+        <tr>
+          <th>NAMA</th>
+          <td><span>: </span><span><%= user.nama %></span></td>
+        </tr>
+        <tr>
+          <th>NIP</th>
+          <td><span>: </span><span><%= user.nip %></span></td>
+        </tr>
+        <tr>
+          <th>JABATAN</th>
+          <td><span>: </span><span><%= user.jab %></span></td>
+        </tr>
+        <tr>
+          <th>UNIT KERJA</th>
+          <td><span>: </span><span><%= user.departemen.bidang %></span></td>
+        </tr>
+        <tr>
+          <th>PERIODE</th>
+          <td><span>: </span> <span><%= periode %></span></td>
+        </tr>
+      </table>
 
-    <table>
-      <thead>
+      <table>
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>HARI / TANGGAL</th>
+            <th>RINCIAN AKTIVITAS KERJA/TUGAS</th>
+            <th>VOLUME KEGIATAN</th>
+            <th>SATUAN KEGIATAN</th>
+            <th>WAKTU PENYELESAIAN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% progress.forEach(item => { %>
+          <tr>
+            <td><%= item.no %></td>
+            <td><%= item.tanggal %></td>
+            <td><%= item.rak %></td>
+            <td><%= item.volume %></td>
+            <td><%= item.satuan %></td>
+            <td><%= item.waktu %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="5">Capaian Kinerja</th>
+            <td>84%</td>
+          </tr>
+          <tr>
+            <th colspan="5">Kategori</th>
+            <td>84%</td>
+          </tr>
+          <tr>
+            <th colspan="5">Besaran TPP dari Produktivitas Kerja</th>
+            <td>84%</td>
+          </tr>
+        </tfoot>
+      </table>
+      <br />
+      <table class="foots">
         <tr>
-          <th>NO</th>
-          <th>HARI / TANGGAL</th>
-          <th>RINCIAN AKTIVITAS KERJA/TUGAS</th>
-          <th>VOLUME KEGIATAN</th>
-          <th>SATUAN KEGIATAN</th>
-          <th>WAKTU PENYELESAIAN</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% progress.forEach(item => { %>
-        <tr>
-          <td><%= item.no %></td>
-          <td><%= item.tanggal %></td>
-          <td><%= item.rak %></td>
-          <td><%= item.volume %></td>
-          <td><%= item.satuan %></td>
-          <td><%= item.waktu %></td>
-        </tr>
-        <% }); %>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th colspan="5">Capaian Kinerja</th>
-          <td>84%</td>
+          <th>
+            <br />
+            Mengetahui
+            <br />
+            Atasan Langsung,
+          </th>
+          <th>
+            <div class="date">Singkawang, 28 April 2023</div>
+            <br />
+            Yang Membuat Laporan,
+          </th>
         </tr>
         <tr>
-          <th colspan="5">Kategori</th>
-          <td>84%</td>
+          <td>
+            <div class="signature">
+              <br />
+              <br />
+              <br />
+              <div class="name">F. FILICITY YOSSI KARTINI, SS., M.A.P.</div>
+              <div class="nip"><span>NIP. </span>196406191986031021</div>
+            </div>
+          </td>
+          <td>
+            <div class="signature">
+              <br />
+              <br />
+              <br />
+              <div class="name"><%= user.nama %></div>
+              <div class="nip"><span>NIP. </span> <%= user.nip %></div>
+            </div>
+          </td>
         </tr>
-        <tr>
-          <th colspan="5">Besaran TPP dari Produktivitas Kerja</th>
-          <td>84%</td>
-        </tr>
-      </tfoot>
-    </table>
-    <br />
-    <table class="foots">
-      <tr>
-        <th>
-          <br />
-          Mengetahui
-          <br />
-          Atasan Langsung,
-        </th>
-        <th>
-          <div class="date">Singkawang, 28 April 2023</div>
-          <br />
-          Yang Membuat Laporan,
-        </th>
-      </tr>
-      <tr>
-        <td>
-          <div class="signature">
-            <br />
-            <br />
-            <br />
-            <div class="name">F. FILICITY YOSSI KARTINI, SS., M.A.P.</div>
-            <div class="nip"><span>NIP. </span>196406191986031021</div>
-          </div>
-        </td>
-        <td>
-          <div class="signature">
-            <br />
-            <br />
-            <br />
-            <div class="name"><%= user.nama %></div>
-            <div class="nip"><span>NIP. </span> <%= user.nip %></div>
-          </div>
-        </td>
-      </tr>
-    </table>
+      </table>
+    </div>
     <script>
-      // window.onload = function () {
-      //   window.print();
-      // };
+      window.onload = function () {
+        window.print();
+      };
     </script>
   </body>
 </html>

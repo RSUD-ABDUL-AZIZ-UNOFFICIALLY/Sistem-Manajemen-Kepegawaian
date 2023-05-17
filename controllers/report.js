@@ -14,44 +14,52 @@ module.exports = {
       month: "long",
       year: "numeric",
     });
-    let user = await User.findOne({
-      where: {
-        nik: decoded.id,
-      },
-      include: [
-        {
-          model: Departemen,
-          as: "departemen",
+    try {
+      let user = await User.findOne({
+        where: {
+          nik: decoded.id,
         },
-      ],
-    });
-    let progress = await Lpkp.findAll({
-      where: {
-        nik: decoded.id,
-        tgl: {
-          [Op.startsWith]: query.date,
+        include: [
+          {
+            model: Departemen,
+            as: "departemen",
+          },
+         
+        ],
+      });
+      console.log(user);
+      let progress = await Lpkp.findAll({
+        where: {
+          nik: decoded.id,
+          tgl: {
+            [Op.startsWith]: query.date,
+          },
         },
-      },
-      order: [["tgl", "ASC"]],
-    });
-    for (var i = 0; i < progress.length; i++) {
-      var tanggalFormat = convertdate(progress[i].tgl);
-      progress[i].tanggal = tanggalFormat;
-      progress[i].no = i + 1;
+        order: [["tgl", "ASC"]],
+      });
+      for (var i = 0; i < progress.length; i++) {
+        var tanggalFormat = convertdate(progress[i].tgl);
+        progress[i].tanggal = tanggalFormat;
+        progress[i].no = i + 1;
+      }
+  
+      let data = {
+        title: "Laporan Produktivitas Kerja Pegawai",
+        user: user,
+        periode: dateString,
+        progress: progress,
+        data: [
+          { id: 1, name: "John", age: 30 },
+          { id: 2, name: "Jane", age: 25 },
+          { id: 3, name: "Bob", age: 40 },
+          { id: 4, name: "Sarah", age: 35 },
+        ],
+      };
+      return  res.render("report/person", data);
+    } catch (error) {
+      return res.redirect("/profile");
     }
-
-    let data = {
-      title: "Laporan Produktivitas Kerja Pegawai",
-      user: user,
-      periode: dateString,
-      progress: progress,
-      data: [
-        { id: 1, name: "John", age: 30 },
-        { id: 2, name: "Jane", age: 25 },
-        { id: 3, name: "Bob", age: 40 },
-        { id: 4, name: "Sarah", age: 35 },
-      ],
-    };
-    res.render("report/person", data);
+   
+    
   },
 };

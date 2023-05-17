@@ -21,6 +21,7 @@ module.exports = {
       },
       bos: {
         type: Sequelize.BIGINT(16),
+        primaryKey: true,
         references: {
           model: {
             tableName: 'Users'
