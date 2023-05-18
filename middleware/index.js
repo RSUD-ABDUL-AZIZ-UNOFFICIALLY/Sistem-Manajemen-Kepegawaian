@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { User, Atasan } = require("../models");
+const { Buffer } = require('buffer');
 
 module.exports = {
     login: async (req, res, next) => {
@@ -34,7 +35,7 @@ module.exports = {
                 }
                 data = JSON.stringify(data);
                 // console.log('Data:', data);
-                const encodedData = btoa(data);
+                const encodedData = Buffer.from(data).toString('base64');
                 res.cookie("status", encodedData, {
                     // maxAge 5 minutes
                     maxAge: 1000 * 60 * 5,
