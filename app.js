@@ -18,9 +18,9 @@ app.use(cookieParser())
 app.set('view engine', 'ejs');
 const path = require('path');
 
-app.use("/asset/js/", express.static(path.join(__dirname + '/Public/js/')));
-app.use("/asset/img/", express.static(path.join(__dirname + '/Public/img/')));
-app.use("/asset/css/", express.static(path.join(__dirname + '/Public/css/')));
+app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/')));
+app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/')));
+app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));
 
 const routes = require('./routes');
 app.use('/', routes);

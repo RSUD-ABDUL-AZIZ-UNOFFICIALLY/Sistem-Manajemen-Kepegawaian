@@ -32,7 +32,6 @@ module.exports = {
                 data = JSON.stringify(data);
                 // console.log('Data:', data);
                 const encodedData = btoa(data);
-                console.log('Encoded Data:', encodedData);
                 res.cookie("status", encodedData, {
                     // maxAge 5 minutes
                     maxAge: 1000 * 60 * 5,
