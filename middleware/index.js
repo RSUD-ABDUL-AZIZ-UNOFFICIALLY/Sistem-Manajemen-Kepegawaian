@@ -15,12 +15,15 @@ module.exports = {
                     nik: decoded.id,
                 },
             });
+            if (!getUser) {
+                res.clearCookie("token");
+                return res.redirect("/");
+            }
             let getAtasan = await Atasan.findOne({
                 where: {
                     user: getUser.nik,
                 },
             });
-          
             if (!getAtasan) {
                 // set cookie
                 let data = {
@@ -40,11 +43,6 @@ module.exports = {
             }else{
             res.clearCookie("status");
             }
-            if (!getUser) {
-                res.clearCookie("token");
-                return res.redirect("/");
-            }
-
             next();
         } catch (err) {
             res.clearCookie("token");
