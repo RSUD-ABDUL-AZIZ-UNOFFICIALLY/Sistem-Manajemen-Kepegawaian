@@ -35,7 +35,7 @@ module.exports = {
                 res.cookie("status", encodedData, {
                     // maxAge 5 minutes
                     maxAge: 1000 * 60 * 5,
-                    // httpOnly: true,
+                    httpOnly: false,
                 });
             }else{
             res.clearCookie("status");

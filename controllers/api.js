@@ -134,7 +134,7 @@ module.exports = {
     // set cookie
     res.cookie("token", token, {
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      // httpOnly: true,
+      httpOnly: false,
     });
     return res.status(200).json({
       error: false,
