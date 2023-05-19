@@ -56,22 +56,22 @@
             <td><%= item.rak %></td>
             <td><%= item.volume %></td>
             <td><%= item.satuan %></td>
-            <td><%= item.waktu %></td>
+            <td class="text-end" ><span style=" float: left;"> <%= item.waktu %></span> Menit</td>
           </tr>
           <% }); %>
         </tbody>
         <tfoot>
           <tr>
             <th colspan="5">Capaian Kinerja</th>
-            <td>84%</td>
+            <td><span><%= capaian %></span></td>
           </tr>
           <tr>
             <th colspan="5">Kategori</th>
-            <td>84%</td>
+            <td><span><%= kategori %></span></td>
           </tr>
           <tr>
             <th colspan="5">Besaran TPP dari Produktivitas Kerja</th>
-            <td>84%</td>
+            <td><span><%= tpp %></span></td>
           </tr>
         </tfoot>
       </table>
@@ -85,7 +85,7 @@
             Atasan Langsung,
           </th>
           <th>
-            <div class="date">Singkawang, 28 April 2023</div>
+            <div class="date">Singkawang, <span><%= lastDate %></span></div>
             <br />
             Yang Membuat Laporan,
           </th>
