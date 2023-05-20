@@ -22,6 +22,7 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "sequelize": "^6.30.0",
-    "sequelize-cli": "^6.6.0"
+    "sequelize-cli": "^6.6.0",
+    "serve-favicon": "^2.5.0"
   }
 }
