@@ -1,7 +1,7 @@
 {
-    "name": "PROPEL",
-    "short_name": "Performance Rating and Optimization Platform for Exceptional Leadership",
-    "description": "Abdul Aziz Staff Performance Scoring Optimization Platform",
+    "name": "RSUD Performance Rating",
+    "short_name": "Abdul Aziz Performance Rating",
+    "description": "Abdul Aziz Staff Performance Rating and Optimization Platform for Exceptional Leadership",
     "icons": [
       {
         "src": "/asset/img/icon.png",
