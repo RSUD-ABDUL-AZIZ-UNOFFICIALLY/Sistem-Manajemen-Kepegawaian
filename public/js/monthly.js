@@ -87,10 +87,25 @@ function cetak() {
 }
 
 function submit() {
-  Swal.fire({
-    icon: 'success',
-    title: 'Succeed',
-    text: 'Progress saved successfully',
-  })
+  let monthly = $("#InputTanggal").val();
+// ajax post
+  $.ajax({
+    url: "/api/monthly",
+    method: "POST",
+    data: {
+      monthly: monthly,
+    },
+    success: function (response) {
+      console.log(response);
+      Swal.fire({
+        icon: 'success',
+        title: response.message,
+        text: response.data,
+      })
+    },
+    error: function (error) {
+      // console.log(error);
+    },
+  });
     return;
 }

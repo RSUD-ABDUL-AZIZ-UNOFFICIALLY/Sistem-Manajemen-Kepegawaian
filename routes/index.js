@@ -27,6 +27,7 @@ router.post('/api/progress', middleware.login, ajax.progress);
 router.get('/api/monthly', middleware.login, ajax.monthly);
 router.get('/api/monthly/score', middleware.login, ajax.getScore);
 router.delete('/api/monthly', middleware.login, ajax.deleteLpkp);
+router.post('/api/monthly', middleware.login, ajax.createReport);
 
 router.get('/api/report', middleware.login, report.person);
 
