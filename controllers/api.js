@@ -45,14 +45,18 @@ module.exports = {
           message: "Your number has not been registered in our system",
         });
       }
+      let jnsKel = (user.jnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
       let otp = Math.floor(10000 + Math.random() * 90000);
+      console.log(jnsKel);
       let data = JSON.stringify({
         message:
-          "Hi " +
+          "Halo " +
+          jnsKel +
+          " " +
           user.nama +
           "\n" +
-          "Kode OTP Anda adalah " +
-          otp +
+          "Kode OTP anda adalah " +
+          "*"+otp+"*" +
           "\n" +
           "Kode ini akan kadaluarsa dalam 5 menit.",
         telp: body.phone,
