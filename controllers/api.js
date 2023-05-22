@@ -47,7 +47,6 @@ module.exports = {
       }
       let jnsKel = (user.jnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
       let otp = Math.floor(10000 + Math.random() * 90000);
-      console.log(jnsKel);
       let data = JSON.stringify({
         message:
           "Halo " +
