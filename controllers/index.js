@@ -74,13 +74,25 @@ module.exports = {
     };
     res.render("monthly", data);
   },
-  report: (req, res) => {
+  report: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
+    let getUser = await User.findOne({
+      where: { nik: decoded.id },
+      include: { model: Departemen, as: "departemen" },
+    });
+    let departemen = await Departemen.findAll({});
+    if (!getUser.dep) {
+      return res.redirect("/profile");
+    }
+    let datey = new Date().toISOString().slice(0, 7);
     let data = {
       title: "Dasboard | LKP",
       page: "Monthly Progress",
       token: decoded,
+      user: getUser,
+      departemen: departemen,
+      date: datey
     };
     res.render("report", data);
   },

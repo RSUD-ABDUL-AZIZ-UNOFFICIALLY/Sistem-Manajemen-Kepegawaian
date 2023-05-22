@@ -1,5 +1,75 @@
-<%- include('admin/head'); %>
-<%- include('admin/header'); %>
+<%- include('admin/head'); %> <%- include('admin/header'); %>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Employee Work Productivity Report</h3>
+    <br />
+    <hr />
+    <div class="container">
+      <div class="row g-2 justify-content-center">
+        <div class="col-3">
+          <div class="form-group">
+            <input
+              type="month"
+              class="form-control"
+              id="InputTanggal"
+              name="start"
+              min="2023-03"
+              value="<%= date %>"
+            />
+          </div>
+        </div>
+        <div class="col-5">
+          <select class="form-control select2" id="departemen">
+            <option selected="selected" value='<%= user.dep%>' ><%= user.departemen.bidang%></option>
+            <% for(let i=0; i<departemen.length; i++) { %>
+              <option value='<%= departemen[i].id %>' ><%= departemen[i].bidang %></option>
+            <% } %>
+        
+          </select>
+        </div>
+        <div class="col-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              PNS
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+            <label class="form-check-label" for="flexCheckChecked">
+              PPPK
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+            <label class="form-check-label" for="flexCheckChecked">
+              Non ASN
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<%- include('admin/script'); %>
-<%- include('admin/footer'); %>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body table-responsive p-0">
+    <table class="table table-bordered table-head-fixed text-nowrap">
+      <thead>
+        <tr>
+          <th style="width: 10px">#</th>
+          <th>NAMA</th>
+          <th>NIP</th>
+          <th>JABATAN</th>
+          <th>CAPAIAN KINERJA (MENIT)</th>
+          <th>KATEGORI</th>
+          <th>BESARAN TPP DARI PRODUKTIVITAS KERJA</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <!-- /.card-body -->
+  <hr />
+</div>
+
+<%- include('admin/script'); %> <%- include('admin/footer'); %>
