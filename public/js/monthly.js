@@ -39,8 +39,9 @@ function getTabel(newDateValue) {
       var rows = $("tbody > tr");
       rows.remove();
       for (var i = 0; i < response.data.length; i++) {
+        var nomor = i+1
         var row = $("<tr>");
-        row.append($("<td>" + i + "</td>"));
+        row.append($("<td>" + nomor + "</td>"));
         row.append($("<td>" + response.data[i].tgl + "</td>"));
         row.append($("<td>" + response.data[i].rak + "</td>"));
         row.append($("<td>" + response.data[i].volume + "</td>"));
