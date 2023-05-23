@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
 const { User, Departemen, Atasan, Lpkp, Rekap } = require("../models");
 const { Op, sequelize } = require("sequelize");
+const { get } = require("../routes");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
@@ -266,12 +267,67 @@ let pesan = "";
       // Jika terjadi kesalahan, rollback transaksi
       console.error("Transaksi gagal:", error);
     }
-    
-
     return res.status(200).json({
       error: false,
       message: "success",
       data: pesan
     });
   },
+  getReport: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let queryparams = req.query;
+    let PNS =(queryparams.satusPNS == "true") ? 'PNS' : '';
+    let PPPK =(queryparams.satusPPPK == "true") ? 'PPPK' : '';
+    let NonASN =(queryparams.satusNonASN == "true") ? 'Non ASN' : '';
+    console.log(NonASN);
+    try {
+      let getUser= await User.findAll({
+        where: {
+          [Op.and]: [
+            { dep: queryparams.dep },
+            { [Op.or]: [{ status: NonASN }, { status: PPPK },{ status: PNS }] },
+          ]
+        },
+      });
+      console.log(getUser.length);
+      let getRekap = await Rekap.findAll({
+        where: {
+          nik: {
+            [Op.in]: getUser.map((item) => item.nik),
+          },
+          periode: {
+            [Op.startsWith]: queryparams.date,
+          },
+        },
+      });
+      let data = [];
+      for (let i = 0; i < getRekap.length; i++) {
+        pushData = {
+          nik: getRekap[i].nik,
+          nama: getUser[i].nama,
+          nip: getUser[i].nip,
+          jab: getUser[i].jab,
+          capaian: getRekap[i].capaian,
+          kategori: getRekap[i].kategori,
+          tpp: getRekap[i].tpp,
+          periode: getRekap[i].periode,
+        };
+        data.push(pushData);
+      }
+
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data,
+      });
+          
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+  }
 };

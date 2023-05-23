@@ -35,7 +35,6 @@ function getTabel(newDateValue) {
     url: "/api/monthly?date=" + newDateValue,
     method: "GET",
     success: function (response) {
-      console.log(response);
       var rows = $("tbody > tr");
       rows.remove();
       for (var i = 0; i < response.data.length; i++) {
