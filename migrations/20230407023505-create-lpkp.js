@@ -29,7 +29,7 @@ module.exports = {
       },
       satuan: {
         type: Sequelize.ENUM,
-        values: ['Dokumen', 'Laporan', '-']
+        values: ['Kegiatan','Dokumen', 'Laporan', '-']
       },
       waktu: {
         type: Sequelize.INTEGER

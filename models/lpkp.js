@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     rak: DataTypes.STRING(512),
     tgl: DataTypes.DATEONLY,
     volume: DataTypes.INTEGER,
-    satuan: DataTypes.ENUM('Dokumen', 'Laporan', '-'),
+    satuan: DataTypes.ENUM('Kegiatan','Dokumen', 'Laporan', '-'),
     waktu: DataTypes.INTEGER
   }, {
     sequelize,
