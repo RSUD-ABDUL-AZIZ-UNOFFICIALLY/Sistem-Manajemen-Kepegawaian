@@ -11,7 +11,6 @@ module.exports = {
       },
       nik: {
         allowNull: false,
-        primaryKey: true,
         unique: true,
         primaryKey: true,
         type: Sequelize.BIGINT(16),
@@ -56,11 +55,12 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
+ 
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
     });
   },
