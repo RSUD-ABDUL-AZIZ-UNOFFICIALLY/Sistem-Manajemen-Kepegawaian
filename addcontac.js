@@ -1,12 +1,12 @@
 const { User, Profile } = require("./models");
 const { Op } = require("sequelize");
-const axios = require('axios');
+const axios = require("axios");
 const { use } = require("express/lib/application");
 
-async function getUser(){
+async function getUser() {
   let user = await User.findAll({
-    limit: 10,
-    offset: 110,
+    limit: 200,
+    offset: 400,
     order: [["id", "ASC"]],
   });
   console.log(user.length);
@@ -18,46 +18,69 @@ async function getUser(){
       },
     });
     if (!profile) {
+      user[i].nama = await updateNama(user[i].nama);
       count++;
-      saveContak(user[i]);
+      console.log(user[i].nama);
+      // await saveContak(user[i]);
     }
   }
   console.log(count);
 
-  return user;
+  return ;
 }
 getUser();
-async function saveContak(user){
+async function saveContak(user) {
   let tgl = user.tgl_lahir.split("-");
-  let data = { 
-     "name": user.nama,  
-     "phoneNumber": user.wa,  
-     "email": user.email,  
-     "organizations": {      
-        "name": "RSUD dr. Abdul Aziz",     
-        "title": user.jab,   
-      }, 
-     "birthdays": {    
-        "day": tgl[2],     
-        "month": tgl[1],    
-        "year": tgl[0]  
-      },  
-     "bio": "NIK : "+ user.nik
-    };
-    console.log(data);
-let config = {
-  method: 'post',
-  maxBodyLength: Infinity,
-  url: 'http://localhost:8000/api/contact/',
-  data : data
-};
+  let data = {
+    name: user.nama,
+    phoneNumber: user.wa,
+    email: user.email,
+    organizations: {
+      name: "RSUD dr. Abdul Aziz",
+      title: user.jab,
+    },
+    birthdays: {
+      day: tgl[2],
+      month: tgl[1],
+      year: tgl[0],
+    },
+    bio: "NIK : " + user.nik,
+  };
+  console.log(data);
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "http://localhost:8000/api/contact/",
+    data: data,
+  };
 
-let post = await axios.request(config)
-console.log(post.data.data);
-await Profile.create({
-  nik: user.nik,
-  url: post.data.data.photos[0].url,
-});
+  let post = await axios.request(config);
+  console.log(post.data.data);
+  await Profile.create({
+    nik: user.nik,
+    url: post.data.data.photos[0].url,
+  });
 }
 
+// mengubah format nama dan gelar
+async function updateNama(nama) {
+  // let nama = "FITHRI NUR'AINI, A.Md.,Far";
+  // Membagi nama menjadi array kata-kata
+  let kataKata = nama.split(" ");
 
+  // Mengubah format huruf pada setiap kata
+  for (let i = 0; i < kataKata.length; i++) {
+    let kata = kataKata[i];
+    let hurufPertama = kata.charAt(0).toUpperCase();
+    let hurufSisa = kata.slice(1).toLowerCase();
+    kataKata[i] = hurufPertama + hurufSisa;
+  }
+
+  // Menggabungkan kata-kata menjadi format nama yang diinginkan
+  let formatNama = kataKata.join(" ");
+  return formatNama;
+}
+// updateNama("FITHRI NUR'AINI, A.Md.Far");
+// updateNama("OETARI DESTIANA, A.Md.Kep");
+// updateNama("NURUL ALFIANI");
+// OETARI DESTIANA, A.Md.Kep
