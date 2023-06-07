@@ -5,8 +5,8 @@ const { use } = require("express/lib/application");
 
 async function getUser() {
   let user = await User.findAll({
-    limit: 200,
-    offset: 400,
+    limit: 100,
+    offset: 600,
     order: [["id", "ASC"]],
   });
   console.log(user.length);
