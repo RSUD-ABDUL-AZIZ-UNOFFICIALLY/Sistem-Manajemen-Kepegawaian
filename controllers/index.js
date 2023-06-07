@@ -18,7 +18,12 @@ module.exports = {
       include: { model: Departemen, as: "departemen" },
     });
     let departemen = await Departemen.findAll({});
-    let atasan = await User.findAll();
+    let atasan = await User.findAll({
+      order: [
+        ["nama", "ASC"],
+      ],
+      attributes: ["nik", "nama", "jab", "status"],
+    });
     let bos = await Atasan.findOne({
       where: { user: getUser.nik },
     });
