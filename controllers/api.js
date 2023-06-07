@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const { Otp, User } = require("../models");
 const e = require("express");
-const secretKey = process.env.JWT_SECRET_KEY;
+const secretKey = process.env.SECRET_WA;
 const payload = {
   gid: "Server Side",
 };
@@ -11,7 +11,7 @@ module.exports = {
   sendOtp: async (req, res) => {
     try {
       let body = req.body;
-      let token = jwt.sign(payload, secretKey, { expiresIn: 60 });
+      let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
       let user = await User.findOne({
         where: {
           wa: body.phone,
