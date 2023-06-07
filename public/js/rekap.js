@@ -47,4 +47,6 @@ $(document).ready(function () {
             // console.log(error);
         }
     });
+
+    // $('#tbReport').DataTable();
   }

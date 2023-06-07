@@ -289,6 +289,9 @@ let pesan = "";
           ]
         },
         attributes: ["nik", "nama", "nip", "jab", "status"],
+        order: [
+          ["nama", "ASC"],
+        ],
       });
       let data = [];
       for (let i = 0; i < getUser.length; i++) {
