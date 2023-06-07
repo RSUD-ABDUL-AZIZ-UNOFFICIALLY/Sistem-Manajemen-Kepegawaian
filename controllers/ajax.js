@@ -1,8 +1,8 @@
+"use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Departemen, Atasan, Lpkp, Rekap } = require("../models");
-const { Op, sequelize } = require("sequelize");
-const { get } = require("../routes");
+const { User, Atasan, Lpkp, Rekap } = require("../models");
+const { Op, } = require("sequelize");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
@@ -280,7 +280,6 @@ let pesan = "";
     let PNS =(queryparams.satusPNS == "true") ? 'PNS' : '';
     let PPPK =(queryparams.satusPPPK == "true") ? 'PPPK' : '';
     let NonASN =(queryparams.satusNonASN == "true") ? 'Non ASN' : '';
-    console.log(NonASN);
     try {
       let getUser= await User.findAll({
         where: {
@@ -289,34 +288,51 @@ let pesan = "";
             { [Op.or]: [{ status: NonASN }, { status: PPPK },{ status: PNS }] },
           ]
         },
-      });
-      console.log(getUser.length);
-      let getRekap = await Rekap.findAll({
-        where: {
-          nik: {
-            [Op.in]: getUser.map((item) => item.nik),
-          },
-          periode: {
-            [Op.startsWith]: queryparams.date,
-          },
-        },
+        attributes: ["nik", "nama", "nip", "jab", "status"],
       });
       let data = [];
-      for (let i = 0; i < getRekap.length; i++) {
-        pushData = {
-          nik: getRekap[i].nik,
-          nama: getUser[i].nama,
-          nip: getUser[i].nip,
-          jab: getUser[i].jab,
-          capaian: getRekap[i].capaian,
-          kategori: getRekap[i].kategori,
-          tpp: getRekap[i].tpp,
-          periode: getRekap[i].periode,
-        };
+      for (let i = 0; i < getUser.length; i++) {
+        let getfind = await Rekap.findOne({
+          where: {
+            nik: getUser[i].nik,
+            periode: {
+              [Op.startsWith]: queryparams.date,
+            },
+          },
+        });
+        console.log("getfind");
+        console.log(getfind);
+        getUser[i].state = 0;
+        let pushData 
+        if (getfind == null) {
+           pushData = {
+            nik: getUser[i].nik,
+            nama: getUser[i].nama,
+            nip: getUser[i].nip,
+            jab: getUser[i].jab,
+            status: getUser[i].status,
+            capaian: 0,
+            kategori: "",
+            tpp: 0,
+            periode: "",
+            state: 0,
+          };
+        } else {
+           pushData = {
+            nik: getUser[i].nik,
+            nama: getUser[i].nama,
+            nip: getUser[i].nip,
+            jab: getUser[i].jab,
+            status: getUser[i].status,
+            capaian: getfind.capaian,
+            kategori: getfind.kategori,
+            tpp: getfind.tpp,
+            periode: getfind.periode,
+            state: 1,
+          };
+        }
         data.push(pushData);
       }
-
-
       return res.status(200).json({
         error: false,
         message: "success",
@@ -324,6 +340,7 @@ let pesan = "";
       });
           
     } catch (error) {
+      console.log(error);
       return res.status(500).json({
         error: true,
         message: error.message,
