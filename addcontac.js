@@ -1,7 +1,6 @@
 const { User, Profile } = require("./models");
 const { Op } = require("sequelize");
 const axios = require("axios");
-const { use } = require("express/lib/application");
 
 async function getUser() {
   let user = await User.findAll({
