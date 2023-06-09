@@ -20,7 +20,7 @@ async function getUser() {
       user[i].nama = await updateNama(user[i].nama);
       count++;
       console.log(user[i].nama);
-      // await saveContak(user[i]);
+      await saveContak(user[i]);
     }
   }
   console.log(count);
