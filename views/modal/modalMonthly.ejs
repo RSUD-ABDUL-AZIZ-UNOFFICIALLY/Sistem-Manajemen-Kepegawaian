@@ -1,0 +1,56 @@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Activity</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="Progress" class="form-horizontal">
+                <div class="card-body">
+                    <input type="hidden" class="form-control" id="InputId" placeholder="Number unit" required>
+                  <div class="form-group">
+                    <label for="InputTanggal">Tanggal</label>
+                    <input type="date" class="form-control" id="InputTgl" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="InputActivities">Details Of Work Activities/Duty</label>
+                    
+                    <textarea class="form-control" rows="3" id="InputActivities" placeholder="Activities ..." required autocomplete="on"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="InputVolume">Activity Volume</label>
+                    <input type="number" class="form-control" id="InputVolume" placeholder="Number unit" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="Unit">Activity Unit</label>
+                      <select class="custom-select form-control" id="InputUnit">
+                        <option value="-">-</option>
+                        <option value="Dokumen">Dokumen</option>
+                        <option value="Laporan">Laporan</option>
+                        <option value="Kegiatan">Kegiatan</option>
+                      </select>
+                    </div>
+                  <div class="form-group">
+                    <label for="InputCompletion">Completion Time</label>
+                    <div class="input-group mb-3">
+                      <input type="number" class="form-control" id="InputCompletion" placeholder="Minutes" required>
+                      <div class="input-group-append">
+                        <span class="input-group-text">Minutes</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>

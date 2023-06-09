@@ -54,8 +54,13 @@ function getTabel(newDateValue) {
               "," +
               i +
               ')"><i class="fa fa-trash"></i></button>' +
-              // ' <button type="button" class="btn btn-success toastrDefaultSuccess"><i class="fa fa-edit"></i></button>' +
-              "</td>"
+              '<button type="button" class="btn btn-outline-success ml-2"  onclick="edit(' +
+              response.data[i].id +
+              "," +
+              i +
+              ')"><i class="fa fa-pencil"></i></button>' +
+              "</td>" 
+
           )
         );
         $("tbody").append(row);
@@ -109,3 +114,28 @@ function submit() {
   });
     return;
 }
+
+function edit(data, id) {
+  $.ajax({
+    url: "/api/monthly/activity?id=" + data,
+    method: "GET",
+    success: function (response) {
+      $("#InputTgl").val(response.data.tgl);
+      $("#InputActivities").val(response.data.rak);
+      $("#InputVolume").val(response.data.volume);
+      $("#InputUnit").val(response.data.satuan);
+      $("#InputCompletion").val(response.data.waktu);
+      $("#InputId").val(response.data.id);
+    },
+    error: function (error) {
+      // console.log(error);
+    },
+  });
+  $('#exampleModal').modal('show');
+  
+}
+$( document ).ready(function() {
+  console.log( "ready!" );
+  // $('#exampleModal').modal('show');
+});
+
