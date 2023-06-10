@@ -91,6 +91,17 @@ module.exports = {
       satuan: body.satuan,
       waktu: body.waktu,
     });
+    let date = body.tgl.split("-");
+    let ket = date[0] + date[1] + decoded.id;
+    try {
+      let id = await Rekap.destroy({
+        where: {
+          ket: ket,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
     return res.status(200).json({
       error: false,
       message: "success",
@@ -167,10 +178,27 @@ module.exports = {
       },
     });
   },
-  deleteLpkp: async (req, res) => {
+  deleteActivity: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let body = req.query;
+    let getLpkp = await Lpkp.findOne({
+      where: {
+        id: body.id,
+        nik: decoded.id,
+      },
+    });
+    let date = getLpkp.tgl.split("-");
+    let ket = date[0] + date[1] + decoded.id;
+    try {
+      let id = await Rekap.destroy({
+        where: {
+          ket: ket,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
     await Lpkp.destroy({
       where: {
         id: body.id,
@@ -395,6 +423,17 @@ let pesan = "";
         },
       }
     );
+    let date = body.tgl.split("-");
+    let ket = date[0] + date[1] + decoded.id;
+    try {
+      let id = await Rekap.destroy({
+        where: {
+          ket: ket,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
     return res.status(200).json({
       error: false,
       message: "success",

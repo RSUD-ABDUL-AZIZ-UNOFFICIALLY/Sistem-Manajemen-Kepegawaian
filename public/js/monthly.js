@@ -1,8 +1,15 @@
+$(document).ready(function () {
+  let monthly = $("#InputTanggal").val();
+  // GET TABEL
+  getTabel(monthly);
+  // GET SCORE
+  getScore(monthly);
+});
 function hapus(data, id) {
   // kode yang akan dijalankan saat tombol diklik
 
     $.ajax({
-      url: "/api/monthly?id=" + data,
+      url: "/api/monthly/activity?id=" + data,
       method: "delete",
       success: function (response) {
         console.log(response);
@@ -77,13 +84,6 @@ $("#InputTanggal").on("change", function () {
   var newDateValue = $(this).val();
   getTabel(newDateValue);
   getScore(newDateValue);
-});
-$(document).ready(function () {
-  let monthly = $("#InputTanggal").val();
-  // GET TABEL
-  getTabel(monthly);
-  // GET SCORE
-  getScore(monthly);
 });
 
 function cetak() {

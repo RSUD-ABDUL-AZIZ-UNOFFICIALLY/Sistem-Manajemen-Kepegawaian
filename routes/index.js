@@ -26,11 +26,11 @@ router.get('/api/getAnggota', middleware.login, ajax.getAnggota);
 router.post('/api/progress', middleware.login, ajax.progress);
 router.get('/api/monthly', middleware.login, ajax.monthly);
 router.get('/api/monthly/score', middleware.login, ajax.getScore);
-router.delete('/api/monthly', middleware.login, ajax.deleteLpkp);
 router.post('/api/monthly', middleware.login, ajax.createReport);
 router.get('/api/monthly/report', middleware.login, ajax.getReport);
 router.get('/api/monthly/activity', middleware.login, ajax.getActivity);
 router.post('/api/monthly/activity', middleware.login, ajax.updateActivity);
+router.delete('/api/monthly/activity', middleware.login, ajax.deleteActivity);
 
 router.get('/api/report', middleware.login, report.person);
 
