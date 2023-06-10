@@ -7,8 +7,22 @@ $(document).ready(function () {
 });
 function hapus(data, id) {
   // kode yang akan dijalankan saat tombol diklik
-
-    $.ajax({
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire(
+        'Deleted!',
+        'Your file has been deleted.',
+        'success'
+      )
+       $.ajax({
       url: "/api/monthly/activity?id=" + data,
       method: "delete",
       success: function (response) {
@@ -20,6 +34,9 @@ function hapus(data, id) {
         // console.log(error);
       },
     });
+    }
+  })
+   
   let monthly = $("#InputTanggal").val();
   getScore(monthly);
 }

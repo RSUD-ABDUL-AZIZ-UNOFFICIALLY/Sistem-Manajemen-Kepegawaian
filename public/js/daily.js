@@ -23,6 +23,8 @@ $( document ).ready(function() {
                 icon: 'success',
                 title: 'Succeed',
                 text: 'Progress saved successfully',
+                showConfirmButton: false,
+                timer: 1500
               })
               $("#InputActivities").val("");
               $("#InputVolume").val("");
