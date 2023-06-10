@@ -374,7 +374,37 @@ let pesan = "";
         data: error,
       });
     }
-    
-    
   },
+  updateActivity: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let body = req.body;
+    try {
+    await Lpkp.update(
+      {
+        rak: body.rak,
+        tgl: body.tgl,
+        volume: body.volume,
+        satuan: body.satuan,
+        waktu: body.waktu,
+      },
+      {
+        where: {
+          nik: decoded.id,
+          id: body.id,
+        },
+      }
+    );
+    return res.status(200).json({
+      error: false,
+      message: "success",
+    });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
+  }
 };

@@ -22,7 +22,7 @@ function getScore(monthly) {
     url: "/api/monthly/score?date=" + monthly,
     method: "GET",
     success: function (response) {
-      console.log(response);
+      // console.log(response);
       $("#capaian").text(response.data.capaian);
       $("#kategori").text(response.data.kategori);
       $("#tpp").text(response.data.tpp);
@@ -30,7 +30,7 @@ function getScore(monthly) {
   });
 }
 function getTabel(newDateValue) {
-  console.log(newDateValue);
+  // console.log(newDateValue);
   $.ajax({
     url: "/api/monthly?date=" + newDateValue,
     method: "GET",
@@ -101,7 +101,7 @@ function submit() {
       monthly: monthly,
     },
     success: function (response) {
-      console.log(response);
+      // console.log(response);
       Swal.fire({
         icon: 'success',
         title: response.message,
@@ -134,8 +134,39 @@ function edit(data, id) {
   $('#exampleModal').modal('show');
   
 }
-$( document ).ready(function() {
-  console.log( "ready!" );
-  // $('#exampleModal').modal('show');
+
+$('#UpdateProgress').submit(function(event) {
+  // event.preventDefault(); // Mencegah form untuk melakukan submit pada halaman baru
+
+  let data = {
+    id: $('#InputId').val(),
+    tgl: $('#InputTgl').val(),
+    rak: $('#InputActivities').val(),
+    volume : $('#InputVolume').val(),
+    satuan : $('#InputUnit').val(),
+    waktu : $('#InputCompletion').val()
+  };
+  console.log(data);
+
+  $.ajax({
+    url: '/api/monthly/activity',
+      method: 'POST',
+      data: data,
+    success: function(response) {
+      console.log(response);
+      Swal.fire({
+          icon: 'success',
+          title: 'Succeed',
+          text: 'Progress saved successfully',
+        })
+        $("#InputActivities").val("");
+        $("#InputVolume").val("");
+        $("#InputCompletion").val("");
+          return;
+    },
+    error: function(error) {
+      // console.log(error);
+    }
+  });
 });
 
