@@ -10,7 +10,7 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let query = req.query;
     // convert date to month name and year
-    let dateString = new Date(query.date).toLocaleString("en-us", {
+    let dateString = new Date(query.date).toLocaleString("id-ID", {
       month: "long",
       year: "numeric",
     });
