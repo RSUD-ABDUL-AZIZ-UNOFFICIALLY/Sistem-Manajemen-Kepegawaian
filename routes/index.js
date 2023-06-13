@@ -31,6 +31,7 @@ router.get('/api/monthly/report', middleware.login, ajax.getReport);
 router.get('/api/monthly/activity', middleware.login, ajax.getActivity);
 router.post('/api/monthly/activity', middleware.login, ajax.updateActivity);
 router.delete('/api/monthly/activity', middleware.login, ajax.deleteActivity);
+router.get('/api/monthly/signaute', middleware.login, ajax.getSignaute);
 
 router.get('/api/report', middleware.login, report.person);
 

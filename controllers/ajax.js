@@ -1,9 +1,10 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Atasan, Lpkp, Rekap } = require("../models");
+const { User, Atasan, Lpkp, Rekap, Aprovement } = require("../models");
 const { Op, } = require("sequelize");
 const { get } = require("express/lib/response");
+const { convertdate,convertdatetime } = require("../helper");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
@@ -438,6 +439,66 @@ let pesan = "";
       error: false,
       message: "success",
     });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
+  },
+  getSignaute: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let queryparams = req.query;
+    let stausUser, stausAtasan;
+    try {
+      let UserSign = await Rekap.findOne({
+        where: {
+          nik: queryparams.nik,
+          periode: {
+            [Op.startsWith]: queryparams.periode,
+          },
+        },
+        attributes: ['createdAt']
+      });
+      if (UserSign == null) {
+        stausUser = 0;
+      } else {
+        stausUser = 1;
+        UserSign = convertdatetime(UserSign.createdAt);
+      }
+      let AtasanSign = await Aprovement.findOne({
+        where: {
+          nik: queryparams.nik,
+          tglberkas: {
+            [Op.startsWith]: queryparams.periode,
+          },
+        },
+      });
+      if (AtasanSign == null) {
+        stausAtasan = 0;
+      } else {
+        if (AtasanSign.status_aprove == "true") {
+          stausAtasan = 1;
+          AtasanSign = convertdatetime(AtasanSign.updatedAt);
+        } else {
+          stausAtasan = 0;
+        }
+      }
+      let data = {
+        stausUser: stausUser,
+        UserSign: UserSign,
+        stausAtasan: stausAtasan,
+        AtasanSign: AtasanSign,
+
+      };
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data
+      });
     } catch (error) {
       return res.status(500).json({
         error: true,
