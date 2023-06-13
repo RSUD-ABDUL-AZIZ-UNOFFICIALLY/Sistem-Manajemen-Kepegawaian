@@ -451,7 +451,7 @@ let pesan = "";
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let queryparams = req.query;
-    let stausUser, stausAtasan;
+    let user, stausUser, aprovUser, atasan, stausAtasan, aprovAtasan;
     try {
       let UserSign = await Rekap.findOne({
         where: {
@@ -460,13 +460,18 @@ let pesan = "";
             [Op.startsWith]: queryparams.periode,
           },
         },
-        attributes: ['createdAt']
       });
       if (UserSign == null) {
         stausUser = 0;
       } else {
         stausUser = 1;
-        UserSign = convertdatetime(UserSign.createdAt);
+        user = await User.findOne({
+          where: {
+            nik: queryparams.nik,
+          },
+          attributes: ["nama", "nip", "jab"],
+        });
+        aprovUser = convertdatetime(UserSign.createdAt);
       }
       let AtasanSign = await Aprovement.findOne({
         where: {
@@ -481,17 +486,34 @@ let pesan = "";
       } else {
         if (AtasanSign.status_aprove == "true") {
           stausAtasan = 1;
-          AtasanSign = convertdatetime(AtasanSign.updatedAt);
+          atasan = await Atasan.findOne({
+            where: {
+              user: AtasanSign.nik,
+            },
+          });
+          let bos = await User.findOne({
+            where: {
+              nik: atasan.bos,
+            },
+            attributes: ["nama", "nip", "jab"],
+          });
+          atasan = bos;
+          aprovAtasan = convertdatetime(AtasanSign.updatedAt);
         } else {
           stausAtasan = 0;
         }
       }
       let data = {
         stausUser: stausUser,
-        UserSign: UserSign,
+        aprovUser: {
+          user: user,
+          date: aprovUser,
+        },
         stausAtasan: stausAtasan,
-        AtasanSign: AtasanSign,
-
+        aprovAtasan: {
+          atasan: atasan,
+          date: aprovAtasan,
+        }
       };
 
       return res.status(200).json({

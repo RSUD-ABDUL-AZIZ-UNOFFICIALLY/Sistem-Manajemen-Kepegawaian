@@ -9,7 +9,13 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="/asset/css/report1.css" />
+    <script type="text/javascript" src="/asset/js/lib/qrcode.min.js"></script>
+    <script
+      type="text/javascript"
+      src="/asset/js/lib/qr-code-styling.js"
+    ></script>
   </head>
+
   <body>
     <div class="page">
       <div class="text-center fw-bold">LAPORAN PRODUKTIVITAS KERJA PEGAWAI</div>
@@ -17,23 +23,23 @@
       <table class="header">
         <tr>
           <th>NAMA</th>
-          <td><span>: </span><span><%= user.nama %></span></td>
+          <td><span>: </span><span> <%= user.nama %> </span></td>
         </tr>
         <tr>
           <th>NIP</th>
-          <td><span>: </span><span><%= user.nip %></span></td>
+          <td><span>: </span><span> <%= user.nip %> </span></td>
         </tr>
         <tr>
           <th>JABATAN</th>
-          <td><span>: </span><span><%= user.jab %></span></td>
+          <td><span>: </span><span> <%= user.jab %> </span></td>
         </tr>
         <tr>
           <th>UNIT KERJA</th>
-          <td><span>: </span><span><%= user.departemen.bidang %></span></td>
+          <td><span>: </span><span> <%= user.departemen.bidang %> </span></td>
         </tr>
         <tr>
           <th>PERIODE</th>
-          <td><span>: </span> <span><%= periode %></span></td>
+          <td><span>: </span> <span> <%= periode %> </span></td>
         </tr>
       </table>
 
@@ -49,29 +55,31 @@
           </tr>
         </thead>
         <tbody>
-          <% progress.forEach(item => { %>
+          <% progress.forEach(item=> { %>
           <tr>
             <td><%= item.no %></td>
             <td><%= item.tanggal %></td>
             <td><%= item.rak %></td>
             <td><%= item.volume %></td>
             <td><%= item.satuan %></td>
-            <td class="text-end" ><span style=" float: left;"> <%= item.waktu %></span> Menit</td>
+            <td class="text-end">
+              <span style="float: left"> <%= item.waktu %> </span> Menit
+            </td>
           </tr>
           <% }); %>
         </tbody>
         <tfoot>
           <tr>
             <th colspan="5">Capaian Kinerja</th>
-            <td><span><%= capaian %></span></td>
+            <td><span> <%= capaian %> </span></td>
           </tr>
           <tr>
             <th colspan="5">Kategori</th>
-            <td><span><%= kategori %></span></td>
+            <td><span> <%= kategori %> </span></td>
           </tr>
           <tr>
             <th colspan="5">Besaran TPP dari Produktivitas Kerja</th>
-            <td><span><%= tpp %></span></td>
+            <td><span> <%= tpp %> </span></td>
           </tr>
         </tfoot>
       </table>
@@ -85,7 +93,7 @@
             Atasan Langsung,
           </th>
           <th>
-            <div class="date">Singkawang, <span><%= lastDate %></span></div>
+            <div class="date">Singkawang, <span> <%= lastDate %> </span></div>
             <br />
             Yang Membuat Laporan,
           </th>
@@ -94,28 +102,38 @@
           <td>
             <div class="signature">
               <br />
-              <br />
-              <br />
-              <div class="name"><span><%= atasan.nama %></span></div>
-              <div class="nip"><span>NIP. </span><%= atasan.nip %></div>
+              <div id="qrcodeAtasan"></div>
+              <div class="name fw-bold"><span> <%= atasan.nama %> </span></div>
+              <div class="nip">
+                <span>NIP. </span>
+                <%= atasan.nip %>
+              </div>
             </div>
           </td>
           <td>
             <div class="signature">
               <br />
+              <div
+                id="qrcodeUser"
+                style="text-align: center; margin: 0 auto"
+              ></div>
               <br />
-              <br />
-              <div class="name"><%= user.nama %></div>
-              <div class="nip"><span>NIP. </span> <%= user.nip %></div>
+              <div class="name fw-bold"><%= user.nama %></div>
+              <div class="nip">
+                <span>NIP. </span>
+                <%= user.nip %>
+              </div>
             </div>
           </td>
         </tr>
       </table>
     </div>
+    <!-- Jquery -->
+    <script src="/asset/js/lib/jquery-3.6.0.min.js"></script>
     <script>
-      window.onload = function () {
-        window.print();
-      };
+      let nik = "<%= user.nik %>";
+      let periode ="<%= periode %>"
     </script>
+    <script type="text/javascript" src="/asset/js/report/signature.js"></script>
   </body>
 </html>
