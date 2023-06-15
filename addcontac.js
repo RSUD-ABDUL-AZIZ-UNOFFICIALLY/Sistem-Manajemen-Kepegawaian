@@ -4,8 +4,8 @@ const axios = require("axios");
 
 async function getUser() {
   let user = await User.findAll({
-    limit: 100,
-    offset: 600,
+    limit: 10,
+    offset: 670,
     order: [["id", "ASC"]],
   });
   console.log(user.length);
