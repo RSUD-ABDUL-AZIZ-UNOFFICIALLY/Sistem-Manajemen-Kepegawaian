@@ -1,10 +1,3 @@
-let signatureUser =
-  "<%= user.nama %> Telah Membuat Laporan 2023-06-09 12:16:37";
-let signatureAtasan =
-  "<%= atasan.nama %> Telah Mengetahui Laporan 2023-06-10 12:16:37";
-
-
-
 function QRUser(message) {
   new QRCode("qrcodeUser", {
     text: message,

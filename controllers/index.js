@@ -43,7 +43,7 @@ module.exports = {
       };
     }
     let data = {
-      title: "Profile | LKP",
+      title: "Profile | LPKP",
       page: "Profile",
       token: decoded,
       user: getUser,
@@ -58,7 +58,7 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let datenow = new Date().toISOString().slice(0, 10);
     let data = {
-      title: "Dasboard | LKP",
+      title: "Dasboard | LPKP",
       page: "Daily Progress",
       token: decoded,
       datenow: datenow,
@@ -72,7 +72,7 @@ module.exports = {
     let datey = new Date().toISOString().slice(0, 7);
     console.log(datey);
     let data = {
-      title: "Dasboard | LKP",
+      title: "Dasboard | LPKP",
       page: "Monthly Progress",
       token: decoded,
       date: datey
@@ -92,7 +92,7 @@ module.exports = {
     }
     let datey = new Date().toISOString().slice(0, 7);
     let data = {
-      title: "Dasboard | LKP",
+      title: "Dasboard | LPKP",
       page: "Monthly Progress",
       token: decoded,
       user: getUser,
@@ -100,5 +100,17 @@ module.exports = {
       date: datey
     };
     res.render("report", data);
+  },
+  approvement: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let datey = new Date().toISOString().slice(0, 7);
+    let data = {
+      title: "approvement | LPKP",
+      page: "Approvement",
+      token: decoded,
+      date: datey
+    };
+    res.render("approvement", data);
   },
 };

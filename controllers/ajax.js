@@ -8,7 +8,6 @@ const { convertdate,convertdatetime } = require("../helper");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
-    console.log(body.nama);
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     try {
@@ -224,7 +223,6 @@ module.exports = {
 
     var lastDay = new Date(year, month + 1, 0).getDate();
     var periodedate = periode + "-" + lastDay;
-    console.log(lastDay);
 
     let data = await Lpkp.findAll({
       where: {
@@ -333,8 +331,6 @@ let pesan = "";
             },
           },
         });
-        console.log("getfind");
-        console.log(getfind);
         getUser[i].state = 0;
         let pushData 
         if (getfind == null) {
@@ -446,6 +442,74 @@ let pesan = "";
         data: error,
       });
     }
+  },
+  getApprovement: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let queryparams = req.query;
+    let getAnggota = await Atasan.findAll({ 
+      where: {
+        bos: decoded.id,
+      }
+    }); 
+    let data = [];
+    for (let i = 0; i < getAnggota.length; i++) {
+      let getfind = await Rekap.findOne({
+        where: {
+          nik: getAnggota[i].user,
+          periode: {
+            [Op.startsWith]: queryparams.periode,
+          },
+        },
+      });
+      let getUser = await User.findOne({
+        where: {
+          nik: getAnggota[i].user,
+        },
+      });
+      if(getfind != null){
+        let getApprovement = await Aprovement.findOne({
+          where: {
+            nik: getAnggota[i].user,
+            tglberkas: {
+              [Op.startsWith]: queryparams.periode,
+            },
+          },
+        });
+      data.push({
+        nik: getAnggota[i].user,
+        nama: getUser.nama,
+        nip: getUser.nip,
+        jab: getUser.jab,
+        status: getUser.status,
+        capaian: getfind.capaian,
+        kategori: getfind.kategori,
+        tpp: getfind.tpp,
+        periode: getfind.periode,
+        state: 1,
+        aprovement: getApprovement,
+      });
+      }else{
+        data.push({
+          nik: getAnggota[i].user,
+          nama: getUser.nama,
+          nip: getUser.nip,
+          jab: getUser.jab,
+          status: getUser.status,
+          capaian: 0,
+          kategori: "",
+          tpp: 0,
+          periode: "",
+          state: 0,
+        });
+      }
+    }
+    return res.status(200).json({
+      error: false,
+      message: "success",
+      data: data
+    });
+    
   },
   getSignaute: async (req, res) => {
     let token = req.cookies.token;

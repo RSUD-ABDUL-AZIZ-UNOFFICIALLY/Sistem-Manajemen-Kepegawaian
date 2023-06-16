@@ -1,0 +1,47 @@
+<%- include('admin/head'); %> 
+<%- include('admin/header'); %>
+<div class="container-fluid">
+  <div class="card card-primary">
+    <div class="card-header">
+      <h3 class="card-title">Persetujuan Periode</h3>
+      <h3 class="">     
+        <div class="form-group">
+        <input
+          type="month"
+          class="form-control"
+          id="InputTanggal"
+          name="start"
+          min="2023-03"
+          value="<%= date %>"
+        />
+      </div></h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body table-responsive p-1">
+      <table class="table table-bordered table-head-fixed text-nowrap">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>capaian</th>
+            <th>kategori</th>
+            <th>Status</th>
+            <th>Persetujuan</th>
+          </tr>
+        </thead>
+        <tbody>
+      
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+
+    <div class="card-footer"></div>
+    <!-- /.card-footer -->
+  </div>
+
+  
+</div>
+<%- include('admin/script'); %> 
+<script src="/asset/js/aprovement.js"></script>
+<%- include('admin/footer'); %>
