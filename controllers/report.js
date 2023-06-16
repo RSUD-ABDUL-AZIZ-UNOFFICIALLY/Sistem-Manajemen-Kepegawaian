@@ -122,10 +122,11 @@ module.exports = {
     let text = buff.toString('ascii');
     let query = JSON.parse(text);
     // convert date to month name and year
-    let dateString = new Date(query.date).toLocaleString("id-ID", {
+    let dateString = new Date(query.periode).toLocaleString("id-ID", {
       month: "long",
       year: "numeric",
     });
+    console.log(query);
     try {
       let user = await User.findOne({
         where: {
@@ -199,7 +200,7 @@ module.exports = {
         tpp = "0%";
       }
   // last date month
-  let lastDate = new Date(query.date);
+      let lastDate = new Date(query.periode);
   lastDate.setMonth(lastDate.getMonth() + 1);
   lastDate.setDate(lastDate.getDate() - 1);
   lastDate = lastDate.toLocaleString("id-ID", {
@@ -219,7 +220,7 @@ module.exports = {
         tpp: tpp,
         lastDate: lastDate,
       };
-      return  res.render("report/person", data);
+      return res.render("report/results", data);
     } catch (error) {
       console.log(error);
       // return res.redirect("/profile");
