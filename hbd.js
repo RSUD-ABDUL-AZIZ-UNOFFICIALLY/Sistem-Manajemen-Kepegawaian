@@ -74,10 +74,10 @@ Fakhry Hizballah Al S.T`,
     }
    
 }
-// let onlyDate = new Date().toISOString().slice(0, 10);
-// let date = onlyDate.slice(5, 10);
-// console.log(date);
-// getHbd(date);
+let onlyDate = new Date().toISOString().slice(0, 10);
+let date = onlyDate.slice(5, 10);
+console.log(date);
+getHbd(date);
 // getHbd(date);
 
 cron.schedule('0 6 * * *', () => {
@@ -86,5 +86,5 @@ cron.schedule('0 6 * * *', () => {
     let onlyDate = new Date().toISOString().slice(0, 10);
     let date = onlyDate.slice(5, 10);
     console.log(date);
-    // getHbd(date);
+    getHbd(date);
   });
