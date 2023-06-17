@@ -1,87 +1,75 @@
 <%- include('admin/head'); %> <%- include('admin/header'); %>
-<div class="container-fluid">
-  <!-- /.card -->
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title">Employee Work Productivity Report</h3>
-      <br />
-      <hr />
-      <div class="form-group">
-        <input
-          type="month"
-          class="form-control"
-          id="InputTanggal"
-          name="start"
-          min="2023-03"
-          value="<%= date %>"
-        />
-      </div>
-    </div>
-    <!-- /.card-header -->
-    <div class="card-body table-responsive p-0">
-      <table class="table table-bordered table-head-fixed text-nowrap">
-        <thead>
-          <tr>
-            <th style="width: 10px">#</th>
-            <th>Date</th>
-            <th>Details Of Work Activities/Duty</th>
-            <th>Volume</th>
-            <th>Unit</th>
-            <th>Completion Time</th>
-            <th style="width: 40px">Delete</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <!-- /.card-body -->
-    <hr />
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-6">
-          Monthly Performance Achievements
+      <!-- /.card -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Employee Work Productivity Report</h3>
+          <br />
+          <hr />
+          <div class="form-group">
+            <input type="month" class="form-control" id="InputTanggal" name="start" min="2023-03" value="<%= date %>" />
+          </div>
         </div>
-        <div class="col-sm-5" >
-          Minute<span id="capaian" class="float-left">0</span> 
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+          <table class="table table-bordered table-head-fixed text-nowrap">
+            <thead>
+              <tr>
+                <th style="width: 10px">#</th>
+                <th>Date</th>
+                <th>Details Of Work Activities/Duty</th>
+                <th>Volume</th>
+                <th>Unit</th>
+                <th>Completion Time</th>
+                <th style="width: 40px">Delete</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+        <hr />
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              Monthly Performance Achievements
+            </div>
+            <div class="col-sm-5">
+              Minute<span id="capaian" class="float-left">0</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              Category
+            </div>
+            <div class="col-sm-5">
+              <span id="kategori" class="float-left">-</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              Employee Income Benefits
+            </div>
+            <div class="col-sm-5">
+              <span id="tpp" class="float-left">-</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm-6">
-          Category
-        </div>
-        <div class="col-sm-5">
-          <span id="kategori" class="float-left">-</span> 
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6">
-          Employee Income Benefits
-        </div>
-        <div class="col-sm-5">
-          <span id="tpp" class="float-left">-</span> 
+      <div class="row no-print">
+        <div class="col-12">
+          <button type="button" class="btn btn-success float-right" onclick="submit()">
+            <i class="fa-regular fa-paper-plane"></i> Submit
+          </button>
+          <button type="button" class="btn btn-primary float-right" style="margin-right: 5px" onclick="cetak()">
+            <i class="fas fa-print"></i> Print
+          </button>
         </div>
       </div>
+      <!-- /.card -->
     </div>
-  </div>
-  <div class="row no-print">
-    <div class="col-12">
-      <button type="button" class="btn btn-success float-right" onclick="submit()" >
-        <i class="fa-regular fa-paper-plane"></i> Submit
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary float-right"
-        style="margin-right: 5px"
-        onclick="cetak()"
-      >
-        <i class="fas fa-print"></i> Print
-      </button>
-    </div>
-  </div>
-  <!-- /.card -->
-</div>
-<!-- /.container-fluid -->
-<%- include('modal/modalMonthly'); %>
-<%- include('admin/script'); %>
-<script src="/asset/js/monthly.js"></script>
-<%- include('admin/footer'); %>
+    <!-- /.container-fluid -->
+    <%- include('modal/modalMonthly'); %>
+      <%- include('admin/script'); %>
+        <script src="/asset/js/monthly.js"></script>
+        <%- include('admin/footer'); %>
