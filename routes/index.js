@@ -14,6 +14,7 @@ router.get('/',middleware.checkLogin, controller.login);
 router.get('/daily', middleware.login, controller.daily);
 router.get('/monthly', middleware.login, controller.monthly);
 router.get('/approvement', middleware.login, controller.approvement);
+router.get('/review', middleware.login, controller.review);
 router.get('/report', middleware.login, controller.report);
 router.get('/profile', middleware.login, controller.profile);
 router.get('/logout', middleware.logout);
@@ -34,6 +35,7 @@ router.post('/api/monthly/activity', middleware.login, ajax.updateActivity);
 router.delete('/api/monthly/activity', middleware.login, ajax.deleteActivity);
 router.get('/api/monthly/signaute', middleware.login, ajax.getSignaute);
 router.get('/api/monthly/approvement', middleware.login, ajax.getApprovement);
+router.post('/api/monthly/approvement', middleware.login, ajax.signature);
 
 
 router.get('/api/report', middleware.login, report.person);

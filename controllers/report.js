@@ -3,6 +3,7 @@ const secretKey = process.env.JWT_SECRET_KEY;
 const { User, Departemen, Lpkp, Atasan } = require("../models");
 const { Op } = require("sequelize");
 const { convertdate } = require("../helper");
+const { redirect } = require("express/lib/response");
 
 module.exports = {
   person: async (req, res) => {
@@ -118,9 +119,16 @@ module.exports = {
   results: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
-    let buff = new Buffer(req.query.periode, 'base64');
-    let text = buff.toString('ascii');
-    let query = JSON.parse(text);
+    let query
+    try {
+      let buff = new Buffer(req.query.periode, 'base64');
+      let text = buff.toString('ascii');
+      query = JSON.parse(text);
+    } catch (error) {
+      return res.redirect("/");
+
+    }
+
     // convert date to month name and year
     let dateString = new Date(query.periode).toLocaleString("id-ID", {
       month: "long",
@@ -223,7 +231,6 @@ module.exports = {
       return res.render("report/results", data);
     } catch (error) {
       console.log(error);
-      // return res.redirect("/profile");
     }
    
     

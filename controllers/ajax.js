@@ -99,6 +99,27 @@ module.exports = {
           ket: ket,
         },
       });
+      let findApprove = await Aprovement.findOne({
+        where: {
+          nik: decoded.id,
+          tglberkas: {
+            [Op.startsWith]: date[0] + "-" + date[1],
+          },
+          status_aprove: "true",
+        },
+      });
+      if (findApprove != null) {
+        await Aprovement.update(
+          {
+            status_aprove: "false",
+          },
+          {
+            where: {
+              id: findApprove.id,
+            },
+          }
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -196,6 +217,27 @@ module.exports = {
           ket: ket,
         },
       });
+      let findApprove = await Aprovement.findOne({
+        where: {
+          nik: decoded.id,
+          tglberkas: {
+            [Op.startsWith]: date[0] + "-" + date[1],
+          },
+          status_aprove: "true",
+        },
+      });
+      if (findApprove != null) {
+        await Aprovement.update(
+          {
+            status_aprove: "false",
+          },
+          {
+            where: {
+              id: findApprove.id,
+            },
+          }
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -428,6 +470,27 @@ let pesan = "";
           ket: ket,
         },
       });
+      let findApprove = await Aprovement.findOne({
+        where: {
+          nik: decoded.id,
+          tglberkas: {
+            [Op.startsWith]: date[0] + "-" + date[1],
+          },
+          status_aprove: "true",
+        },
+      });
+      if (findApprove != null) {
+        await Aprovement.update(
+          {
+            status_aprove: "false",
+          },
+          {
+            where: {
+              id: findApprove.id,
+            },
+          }
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -474,6 +537,7 @@ let pesan = "";
             tglberkas: {
               [Op.startsWith]: queryparams.periode,
             },
+            status_aprove: "true",
           },
         });
       data.push({
@@ -543,6 +607,7 @@ let pesan = "";
           tglberkas: {
             [Op.startsWith]: queryparams.periode,
           },
+          status_aprove: "true",
         },
       });
       if (AtasanSign == null) {
@@ -550,14 +615,9 @@ let pesan = "";
       } else {
         if (AtasanSign.status_aprove == "true") {
           stausAtasan = 1;
-          atasan = await Atasan.findOne({
-            where: {
-              user: AtasanSign.nik,
-            },
-          });
           let bos = await User.findOne({
             where: {
-              nik: atasan.bos,
+              nik: AtasanSign.bos,
             },
             attributes: ["nama", "nip", "jab"],
           });
@@ -592,5 +652,29 @@ let pesan = "";
         data: error,
       });
     }
-  }
+  },
+  signature: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let body = req.body;
+    try {
+      let Approve = await Aprovement.create({
+        nik: body.nik,
+        bos: decoded.id,
+        tglberkas: body.periode,
+        status_aprove: body.status,
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: Approve
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
+  },
 };

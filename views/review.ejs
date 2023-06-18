@@ -1,0 +1,87 @@
+<%- include('admin/head'); %>
+<%- include('admin/header'); %>
+<div class="container-fluid">
+    <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-primary"><%= userpage %></h3>
+          <br>
+          <h3 class="card-title"><%= periode %></h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        
+          <div class="card-body">
+            <div class="card-body table-responsive p-1">
+              <table class="table table-bordered table-head-fixed text-nowrap">
+                <thead>
+                  <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Date</th>
+                    <th>Details Of Work Activities/Duty</th>
+                    <th>Volume</th>
+                    <th>Unit</th>
+                    <th>Completion Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(var i=0; i<lpkp.length; i++) {%>
+                    <!-- <li><%= lpkp[i].nik %></li> -->
+                    <tr>
+                      <td><%= i+1 %></td>
+                      <td><%= lpkp[i].tgl %></td>
+                      <td><%= lpkp[i].rak %></td>
+                      <td><%= lpkp[i].volume %></td>
+                      <td><%= lpkp[i].satuan %></td>
+                      <td><%= lpkp[i].waktu %></td>
+                    </tr>
+                 <% } %>
+                </tbody>
+              </table>
+            </div>
+            <hr />
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  Monthly Performance Achievements
+                </div>
+                <div class="col-sm-5" >
+                  Minute<span id="capaian" class="float-left"><%= score.total %> </span> 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  Category
+                </div>
+                <div class="col-sm-5">
+                  <span id="kategori" class="float-left"><%= score.kategori %></span> 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  Employee Income Benefits
+                </div>
+                <div class="col-sm-5">
+                  <span id="tpp" class="float-left"><%= score.capaian %></span> 
+             
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->     
+          </div>
+          <!-- /.card-body -->
+
+          <div class="card-footer">
+            <button type="button" class="btn btn-success float-right" onclick="submit()">
+              <i class="fa-solid fa-signature"></i> Approved
+            </button>
+          </div>
+      </div>
+</div>
+<%- include('admin/script'); %>
+<script>
+  let nik = "<%= user.nik %>";
+  let periode = "<%= date %>";
+  
+</script>
+<script src="/asset/js/review.js"></script>
+<%- include('admin/footer'); %>
