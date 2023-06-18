@@ -237,6 +237,11 @@ module.exports = {
         bidang: "Gudang Barang",
         createdAt: new Date(),
         updatedAt: new Date(),
+      },
+      {
+        bidang: "Instalasi Pemeliharaan Sarana Rumah Sakit (IPSRS)",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     ]);
   },
