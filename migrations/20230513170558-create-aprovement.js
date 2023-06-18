@@ -20,6 +20,15 @@ module.exports = {
           key: 'nik',
         }
       },
+      bos: {
+        type: Sequelize.BIGINT(16),
+        references: {
+          model: {
+            tableName: 'Users'
+          },
+          key: 'nik',
+        }
+      },
       tglberkas: {
         type: Sequelize.DATEONLY
       },

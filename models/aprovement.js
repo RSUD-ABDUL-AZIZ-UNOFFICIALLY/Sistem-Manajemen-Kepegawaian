@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Aprovement.init({
     nik: DataTypes.INTEGER,
+    bos: DataTypes.INTEGER,
     tglberkas: DataTypes.DATEONLY,
     status_aprove: DataTypes.ENUM('true', 'false')
   }, {
