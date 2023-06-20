@@ -22,9 +22,9 @@ $( document ).ready(function() {
             Swal.fire({
                 icon: 'success',
                 title: 'Succeed',
-                text: 'Progress saved successfully',
+              text: 'Kegiatan berhasil disimpan',
                 showConfirmButton: false,
-                timer: 1500
+              timer: 2000
               })
               $("#InputActivities").val("");
               $("#InputVolume").val("");

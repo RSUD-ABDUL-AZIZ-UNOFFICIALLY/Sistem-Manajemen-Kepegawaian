@@ -20,7 +20,7 @@ module.exports = {
       if (!user) {
         let data = JSON.stringify({
           message:
-            "Sorry, your number is not registered in our system. Please contact IT to register.",
+            "Maaf, nomor Anda tidak terdaftar di sistem kami. Silahkan hubungi IT RSUD dr. Abdul Aziz untuk mendaftar.",
           telp: body.phone,
         });
         let config = {
@@ -42,7 +42,7 @@ module.exports = {
           });
         return res.status(404).json({
           error: true,
-          message: "Your number has not been registered in our system",
+          message: "Nomor Anda belum terdaftar di sistem kami",
         });
       }
       let jnsKel = (user.jnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
@@ -84,7 +84,7 @@ module.exports = {
       });
       return res.status(200).json({
         error: false,
-        message: "Please check on your whatsapp.",
+        message: "Silahkan cek whatsapp anda untuk mendapatkan kode OTP",
       });
     } catch (error) {
       return res.status(500).json({
@@ -113,10 +113,9 @@ module.exports = {
     let diff = (now.getTime() - createdAt.getTime()) / 1000; // Menghitung selisih waktu dalam detik
     if (diff < 300) {
     } else {
-      console.log("createdAt lebih dari 5 menit yang lalu");
       return res.status(401).json({
         error: true,
-        message: "OTP expired",
+        message: "OTP kedaluwarsa",
       });
     }
     let user = await User.findOne({
@@ -141,7 +140,7 @@ module.exports = {
     });
     return res.status(200).json({
       error: false,
-      message: "welcome, " + user.nama + "",
+      message: "Selamat datang, " + user.nama + "!",
     });
   },
 };

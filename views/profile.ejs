@@ -1,127 +1,92 @@
 <%- include('admin/head'); %> <%- include('admin/header'); %>
-<div class="container-fluid">
-  <!-- Horizontal Form -->
-  <div class="card card-info">
-    <div class="card-header">
-      <h3 class="card-title">My Profile</h3>
-    </div>
-    <!-- /.card-header -->
-    <!-- form start -->
-    <form id="profil" class="form-horizontal">
-      <div class="card-body">
-        <div class="form-group row">
-          <label for="inputEmail3" class="col-sm-2 col-form-label">NIK</label>
-          <div class="col-sm-10">
-            <input
-              type="number"
-              class="form-control"
-              id="nik"
-              name="nik"
-              value='<%= user.nik %>'
-              disabled
-            />
-          </div>
+    <div class="container-fluid">
+      <!-- Horizontal Form -->
+      <div class="card card-info">
+        <div class="card-header">
+          <h3 class="card-title">Profil saya</h3>
         </div>
-        <div class="form-group row">
-          <label for="inputEmail3" class="col-sm-2 col-form-label">NIP</label>
-          <div class="col-sm-10">
-            <input
-              type="number"
-              class="form-control"
-              id="nip"
-              name="nip"
-              value='<%= user.nip %>'
-              
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="inputEmail3" class="col-sm-2 col-form-label"
-            >Full Name</label
-          >
-          <div class="col-sm-10">
-            <input
-              type="text"
-              class="form-control"
-              id="nama"
-              name="nama"
-              placeholder="Full Name"
-              value='<%= user.nama %>'
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="departemen" class="col-sm-2 col-form-label"
-            >Departeman</label
-          >
-          <div class="col-sm-10">
-            <select class="form-control select2" id="departemen">
-              <option selected="selected" value='<%= user.dep%>' ><%= user.departemen.bidang%></option>
-              <% for(let i=0; i<departemen.length; i++) { %>
-                <option value='<%= departemen[i].id %>' ><%= departemen[i].bidang %></option>
-              <% } %>
-          
-            </select>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="jab" class="col-sm-2 col-form-label"
-            >Date of birth</label
-          >
-          <div class="col-sm-10">
-            <input
-              type="date"
-              class="form-control"
-              id="tgl_lahir"
-              name="tgl_lahir"
-              placeholder="Jabatan"
-              value='<%= user.tgl_lahir %>'
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="jab" class="col-sm-2 col-form-label"
-            >Position</label
-          >
-          <div class="col-sm-10">
-            <input
-              type="text"
-              class="form-control"
-              id="jab"
-              name="jab"
-              placeholder="Jabatan"
-              value='<%= user.jab %>'
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="inputEmail3" class="col-sm-2 col-form-label"
-            >Direct supervisor</label
-          >
-          <div class="col-sm-10">
-            <select class="form-control select2" id="atasan">
-              <option selected="selected" value=<%= bos%>><%= bos%></option>
-              <% for(let i=0; i<atasan.length; i++) { %>
-                <option value='<%= atasan[i].nik %>' ><%= atasan[i].nama %> - <%= atasan[i].jab %></option>
-              <% } %>
-            </select>
-          </div>
-        </div>
-       
-      </div>
-      <!-- /.card-body -->
-      <div class="card-footer">
-        <button type="submit" class="btn btn-primary float-right">
-          Update
-        </button>
-      </div>
-      <!-- /.card-footer -->
-    </form>
-  </div>
-  <!-- /.card -->
-</div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form id="profil" class="form-horizontal">
+          <div class="card-body">
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">NIK</label>
+              <div class="col-sm-10">
+                <input type="number" class="form-control" id="nik" name="nik" value='<%= user.nik %>' disabled />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">NIP</label>
+              <div class="col-sm-10">
+                <input type="number" class="form-control" id="nip" name="nip" placeholder="Nomor Identitas Pegawai"  value='<%= user.nip %>' />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Nama lengkap</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama lengkap dengan gelar"
+                  value='<%= user.nama %>' />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="departemen" class="col-sm-2 col-form-label">Departemen</label>
+              <div class="col-sm-10">
+                <select class="form-control select2" id="departemen">
+                  <option selected="selected" value='<%= user.dep%>'>
+                    <%= user.departemen.bidang%>
+                  </option>
+                  <% for(let i=0; i<departemen.length; i++) { %>
+                    <option value='<%= departemen[i].id %>'>
+                      <%= departemen[i].bidang %>
+                    </option>
+                    <% } %>
 
-<!-- /.container-fluid -->
-<%- include('admin/script'); %>
-<script src="/asset/js/profil.js"></script>
-<%- include('admin/footer'); %>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="jab" class="col-sm-2 col-form-label">Tanggal lahir</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir" placeholder="Tanggal lahir"
+                  value='<%= user.tgl_lahir %>' />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="jab" class="col-sm-2 col-form-label">Jabatan</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="jab" name="jab" placeholder="Jabatan"
+                  value='<%= user.jab %>' />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Atasan langsung</label>
+              <div class="col-sm-10">
+                <select class="form-control select2" id="atasan">
+                  <option selected="selected" value=<%=bos%>><%= bos%>
+                  </option>
+                  <% for(let i=0; i<atasan.length; i++) { %>
+                    <option value='<%= atasan[i].nik %>'>
+                      <%= atasan[i].nama %> - <%= atasan[i].jab %>
+                    </option>
+                    <% } %>
+                </select>
+              </div>
+            </div>
+
+          </div>
+          <!-- /.card-body -->
+          <div class="card-footer">
+            <button type="submit" class="btn btn-primary float-right">
+              Simpan
+            </button>
+          </div>
+          <!-- /.card-footer -->
+        </form>
+      </div>
+      <!-- /.card -->
+    </div>
+
+    <!-- /.container-fluid -->
+    <%- include('admin/script'); %>
+      <script src="/asset/js/profil.js"></script>
+      <%- include('admin/footer'); %>
