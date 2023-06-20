@@ -39,6 +39,8 @@ async function getQR() {
             }
             if (response.data.stausAtasan) {
                 let message = response.data.aprovAtasan.atasan.nama + " telah menyetujui laporan periode " + decoded.periode + " Pada tanggal " + response.data.aprovAtasan.date;
+                $("#nameAtasan").text(response.data.aprovAtasan.atasan.nama);
+                $("#nipAtasan").text("NIP. " + response.data.aprovAtasan.atasan.nip);
                 QRAtasan(message);
             }
         }
