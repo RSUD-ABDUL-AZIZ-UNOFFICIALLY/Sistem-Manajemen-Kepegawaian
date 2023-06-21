@@ -35,10 +35,10 @@ module.exports = {
         axios
           .request(config)
           .then((response) => {
-            // console.log(JSON.stringify(response.data));
+       
           })
           .catch((error) => {
-            // console.log(error);
+            console.log(error);
           });
         return res.status(404).json({
           error: true,

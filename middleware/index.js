@@ -34,7 +34,6 @@ module.exports = {
                     "url" : "/profile",
                 }
                 data = JSON.stringify(data);
-                // console.log('Data:', data);
                 const encodedData = Buffer.from(data).toString('base64');
                 res.cookie("status", encodedData, {
                     // maxAge 5 minutes
@@ -90,9 +89,7 @@ module.exports = {
                     "url" : host+"/asset/img/cowok.png",
                 }
                 data = JSON.stringify(data);
-                // console.log( data);
                 const encodedData = Buffer.from(data).toString('base64');
-                console.log(encodedData);
             }
     
             next();

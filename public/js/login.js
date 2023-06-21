@@ -29,8 +29,6 @@
         otp: otp,
       },
       success: function(response) {
-        console.log(response);
-        // Tampilkan pesan sukses dari response API menggunakan SweetAlert2
         swal.fire({
           icon: 'success',
           title: response.message,

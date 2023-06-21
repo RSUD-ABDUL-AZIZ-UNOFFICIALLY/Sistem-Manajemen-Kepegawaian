@@ -10,15 +10,12 @@ $( document ).ready(function() {
             satuan : $('#Unit').val(),
             waktu : $('#InputCompletion').val()
         };
-        console.log(data);
         
-    
         $.ajax({
           url: '/api/progress',
             method: 'POST',
             data: data,
           success: function(response) {
-            console.log(response);
             Swal.fire({
                 icon: 'success',
                 title: 'Succeed',
