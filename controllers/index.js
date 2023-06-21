@@ -69,7 +69,7 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let datey = new Date().toISOString().slice(0, 7);
-    console.log(datey);
+
     let data = {
       title: "Dasboard | LPKP",
       page: "Monthly Progress",

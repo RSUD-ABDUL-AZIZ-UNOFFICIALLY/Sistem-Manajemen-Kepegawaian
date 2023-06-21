@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="card card-primary">
         <div class="card-header">
-          <h3 class="card-title">Work productivity</h3>
+          <h3 class="card-title">Produktivitas kerja</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -14,16 +14,16 @@
               <input type="date" class="form-control" id="Tanggal" value='<%= datenow %>' required>
             </div>
             <div class="form-group">
-              <label for="InputActivities">Details Of Work Activities/Duty</label>
+              <label for="InputActivities">Rincian Kegiatan Kerja/Tugas</label>
               
-              <textarea class="form-control" rows="3" id="InputActivities" placeholder="Activities ..." required autocomplete="on"></textarea>
+              <textarea class="form-control" rows="3" id="InputActivities" placeholder="contoh 'Hand Over pasien' " required autocomplete="on"></textarea>
             </div>
             <div class="form-group">
-              <label for="InputVolume">Activity Volume</label>
-              <input type="number" class="form-control" id="InputVolume" placeholder="Number unit" required>
+              <label for="InputVolume">Volume Aktivitas</label>
+              <input type="number" class="form-control" id="InputVolume" placeholder="Banyak aktivitas" required>
             </div>
             <div class="form-group">
-                <label for="Unit">Activity Unit</label>
+                <label for="Unit">Satuan Kegiatan</label>
                 <select class="custom-select form-control" id="Unit">
                   <option value="-">-</option>
                   <option value="Dokumen">Dokumen</option>
@@ -35,11 +35,11 @@
                 </select>
               </div>
             <div class="form-group">
-              <label for="InputCompletion">Completion Time</label>
+              <label for="InputCompletion">Waktu penyelesaian</label>
               <div class="input-group mb-3">
-                <input type="number" class="form-control" id="InputCompletion" placeholder="Minutes" required>
+                <input type="number" class="form-control" id="InputCompletion" placeholder="Total waktu penyelesaian kerja" required>
                 <div class="input-group-append">
-                  <span class="input-group-text">Minutes</span>
+                  <span class="input-group-text"> Menit</span>
                 </div>
               </div>
             </div>
@@ -47,7 +47,7 @@
           <!-- /.card-body -->
 
           <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
           </div>
         </form>
       </div>

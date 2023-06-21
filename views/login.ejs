@@ -1,56 +1,40 @@
 <%- include('layout/header') -%>
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h4>EMPLOYEE PERFORMANCE REPORT</h4>
-        </div>
-        <div class="card-body">
-          <form>
-            <div class="form-group">
-              <label for="phone" class="form-label">Phone Number</label>
-              <div class="input-group">
-                <input
-                  type="number"
-                  class="form-control"
-                  id="phone"
-                  name="phone"
-                  autocomplete="on"
-                  required
-                />
-                <button
-                  type="button"
-                  class="btn btn-outline-secondary"
-                  id="send-otp"
-                >
-                  Send OTP
-                </button>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="text-center mb-4">  
+            <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Logo" height="50">
+            <h5 class="card-title mt-2">LAPORAN KINERJA KARYAWAN</h5>
+          </div>
+            <form>
+              <div class="form-group">
+                <label for="phone" class="form-label">Nomor Whatsapp</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="phone" name="phone" autocomplete="on" required />
+                  <button type="button" class="btn btn-outline-secondary" id="send-otp">
+                    Minta OTP
+                  </button>
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="otp">One-Time Password (OTP)</label>
-              <input
-                type="number"
-                class="form-control"
-                id="otp"
-                name="otp"
-                required
-              />
-              <small class="form-text text-muted"
-                >A One-Time Password (OTP) has been sent to your registered
-                email address or mobile number.</small
-              >
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-          </form>
+              <div class="form-group">
+                <label for="otp">One-Time Password (OTP)</label>
+                <input type="number" class="form-control" id="otp" name="otp" required />
+                <div class="mt-3 text-justify">
+                  <p class="card-text text-muted"><small>One-Time Password (OTP) telah dikirim ke nomor Whatsapp Anda yang
+                    terdaftar.</small></p>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary float-end">Login</button>   
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="installModal" tabindex="-1" aria-labelledby="installModalLabel" aria-hidden="true">
+  <!-- Modal -->
+  <div class="modal fade" id="installModal" tabindex="-1" aria-labelledby="installModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -67,41 +51,43 @@
       </div>
     </div>
   </div>
-<script src="/asset/js/lib/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-<!-- SweetAlert2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.js"></script>
-<script src="/asset/js/login.js"></script>
-<script>
+  <script src="/asset/js/lib/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.js"></script>
+  <script src="/asset/js/login.js"></script>
+  <script>
     let deferredPrompt;
-const installModal = new bootstrap.Modal(document.getElementById('installModal'));
+    const installModal = new bootstrap.Modal(document.getElementById('installModal'));
 
-window.addEventListener('beforeinstallprompt', (event) => {
-  event.preventDefault();
-  deferredPrompt = event;
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
 
-  // Menampilkan modal secara otomatis
-  installModal.show();
+      // Menampilkan modal secara otomatis
+      installModal.show();
 
-  const installButton = document.getElementById('installButton');
-  installButton.addEventListener('click', () => {
-    installApp();
-  });
-});
+      const installButton = document.getElementById('installButton');
+      installButton.addEventListener('click', () => {
+        installApp();
+      });
+    });
 
-function installApp() {
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === 'accepted') {
-      console.log('Aplikasi diinstal');
-    } else {
-      console.log('Pengguna menolak untuk menginstal aplikasi');
+    function installApp() {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('Aplikasi diinstal');
+        } else {
+          console.log('Pengguna menolak untuk menginstal aplikasi');
+        }
+        deferredPrompt = null;
+        // Menyembunyikan modal setelah proses instalasi selesai
+        installModal.hide();
+      });
     }
-    deferredPrompt = null;
-    // Menyembunyikan modal setelah proses instalasi selesai
-    installModal.hide();
-  });
-}
 
-</script>
-<%- include('layout/footer') -%>
+  </script>
+  <%- include('layout/footer') -%>

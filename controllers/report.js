@@ -134,7 +134,6 @@ module.exports = {
       month: "long",
       year: "numeric",
     });
-    console.log(query);
     try {
       let user = await User.findOne({
         where: {

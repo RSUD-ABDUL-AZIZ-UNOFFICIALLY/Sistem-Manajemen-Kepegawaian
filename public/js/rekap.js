@@ -1,6 +1,5 @@
 $(document).ready(function () {
     getRekap();
-    console.log(satusPPPK)
     $("#satusNonASN").change(function() {
         getRekap();
       });

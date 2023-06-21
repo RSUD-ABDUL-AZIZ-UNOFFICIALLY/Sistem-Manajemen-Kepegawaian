@@ -16,7 +16,7 @@
       swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Phone number must be at least 10 characters!',
+        text: 'Nomor Whatsapp minimal harus 10 karakter!',
       });
       return;
     }
@@ -29,12 +29,10 @@
         otp: otp,
       },
       success: function(response) {
-        console.log(response);
-        // Tampilkan pesan sukses dari response API menggunakan SweetAlert2
         swal.fire({
           icon: 'success',
           title: response.message,
-          text: 'You have successfully logged in.',
+          text: 'Anda telah berhasil masuk.',
         }).then(() => {
           // Redirect ke halaman setelah login berhasil
           window.location.href = '/daily';
@@ -49,26 +47,6 @@
         });
       },
     });
-
-    // Cek OTP yang dimasukkan
-    // Jika OTP sesuai, maka login berhasil
-    // Jika OTP tidak sesuai, maka login gagal
-    // if (otp === '123456') { // Ganti dengan kode OTP yang sesuai
-    //   swal.fire({
-    //     icon: 'success',
-    //     title: 'Welcome, ' + phone + '!',
-    //     text: 'You have successfully logged in.',
-    //   }).then(() => {
-    //     // Redirect ke halaman setelah login berhasil
-    //     window.location.href = 'dashboard.html';
-    //   });
-    // } else {
-    //   swal.fire({
-    //     icon: 'error',
-    //     title: 'Oops...',
-    //     text: 'Incorrect OTP!',
-    //   });
-    // }
   });
 
   // button send-otp click function
@@ -79,13 +57,17 @@
       swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Phone number must be at least 10 characters!',
+        text: 'Nomor Whatsapp minimal harus 10 karakter!',
       });
       return;
     }
     // Tampilkan SweetAlert2 loading
+    $(this).prop('disabled', true); // Menonaktifkan tombol
+    setTimeout(function () {
+      $('button').prop('disabled', false); // Mengaktifkan tombol setelah 30 detik
+    }, 30000);
     swal.fire({
-      title: 'Sending OTP...',
+      title: 'Sedang mengirim OTP',
       allowOutsideClick: false,
       onBeforeOpen: () => {
         swal.showLoading();

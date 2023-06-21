@@ -17,7 +17,6 @@ var tahun = tanggal.getFullYear();
 // Format tanggal ke dalam "hari, DD-MM-YYYY"
 var tanggalFormat = namaHari[hari] + ", " + ("0" + tanggalAngka).slice(-2) + "-" + ("0" + bulan).slice(-2) + "-" + tahun;
 
-// console.log(tanggalFormat);
   return tanggalFormat;
 }
 function convertdatetime(tanggalInput) {

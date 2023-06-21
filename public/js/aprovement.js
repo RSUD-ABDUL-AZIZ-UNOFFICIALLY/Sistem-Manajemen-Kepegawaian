@@ -1,14 +1,11 @@
 $(document).ready(function () {
   let periode = $("#InputTanggal").val();
-  console.log(periode);
-  console.log("ready!");
   // GET TABEL
   getTabel(periode);
 });
 $("#InputTanggal").on("change", function () {
   // Get the new value of the input field
   var newDateValue = $(this).val();
-  console.log(newDateValue);
   getTabel(newDateValue);
 });
 function getTabel(periode) {

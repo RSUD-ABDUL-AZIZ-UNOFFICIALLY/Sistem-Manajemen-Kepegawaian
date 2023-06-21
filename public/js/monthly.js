@@ -26,7 +26,6 @@ function hapus(data, id) {
       url: "/api/monthly/activity?id=" + data,
       method: "delete",
       success: function (response) {
-        console.log(response);
         var rows = $("tbody > tr");
         rows.eq(id).remove();
       },
@@ -54,7 +53,7 @@ function getScore(monthly) {
   });
 }
 function getTabel(newDateValue) {
-  // console.log(newDateValue);
+
   $.ajax({
     url: "/api/monthly?date=" + newDateValue,
     method: "GET",
@@ -118,7 +117,6 @@ function submit() {
       monthly: monthly,
     },
     success: function (response) {
-      // console.log(response);
       Swal.fire({
         icon: 'success',
         title: response.message,
@@ -126,7 +124,7 @@ function submit() {
       })
     },
     error: function (error) {
-      // console.log(error);
+      console.log(error);
     },
   });
     return;
@@ -145,7 +143,7 @@ function edit(data, id) {
       $("#InputId").val(response.data.id);
     },
     error: function (error) {
-      // console.log(error);
+      console.log(error);
     },
   });
   $('#exampleModal').modal('show');
@@ -170,7 +168,6 @@ $('#UpdateProgress').submit(function(event) {
       method: 'POST',
       data: data,
     success: function(response) {
-      console.log(response);
       Swal.fire({
           icon: 'success',
           title: 'Succeed',
@@ -182,7 +179,7 @@ $('#UpdateProgress').submit(function(event) {
           return;
     },
     error: function(error) {
-      // console.log(error);
+      console.log(error);
     }
   });
 });
