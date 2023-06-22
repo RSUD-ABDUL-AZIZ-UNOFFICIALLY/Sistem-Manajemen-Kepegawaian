@@ -79,7 +79,7 @@ dr. Achmad Hardin, Sp. PD`,
 // getHbd(date);
 // getHbd(date);
 
-cron.schedule('0 6 * * *', () => {
+cron.schedule('0 9 * * *', () => {
     // Kode yang akan dijalankan setiap jam 6 pagi
     console.log('Cron job berjalan pada jam 6 pagi!');
     let onlyDate = new Date().toISOString().slice(0, 10);
