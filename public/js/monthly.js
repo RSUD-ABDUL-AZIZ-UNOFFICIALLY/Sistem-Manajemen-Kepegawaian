@@ -171,7 +171,7 @@ $('#UpdateProgress').submit(function(event) {
       Swal.fire({
           icon: 'success',
           title: 'Succeed',
-          text: 'Progress saved successfully',
+          text: 'Progres berhasil dikirim ke atasan anda',
         })
         $("#InputActivities").val("");
         $("#InputVolume").val("");
