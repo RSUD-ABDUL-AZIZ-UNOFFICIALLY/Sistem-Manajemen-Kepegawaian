@@ -24,7 +24,7 @@ $(document).ready(function () {
     if ($("#departemen").val() == "") {
      return Swal.fire({
         icon: "error",
-        text: "The department field must be filled in.",
+        text: "Bidang departemen harus diisi.",
       });
     }
 

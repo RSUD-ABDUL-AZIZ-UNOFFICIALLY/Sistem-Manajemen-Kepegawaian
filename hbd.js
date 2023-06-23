@@ -46,16 +46,15 @@ Semoga penuh berkah, diberikan kesehatan yang baik, dimurahkan rezeki dan dianug
 Semoga hari ini semanis dirimu
 
 Ttd,
-Pengelola Tekologi Informasi RSUD dr. ABDUL AZIZ KOTA SINGKAWANG
+Direktur RSUD dr. ABDUL AZIZ KOTA SINGKAWANG
 
-
-Fakhry Hizballah Al S.T`,
+dr. Achmad Hardin, Sp. PD`,
             telp: `${wa}`,
         });
           console.log(send);
         let config = {
             method: "post",
-            url: process.env.HOSTWA + "/api/wa/send",
+            url: process.env.HOSTWA2 + "/api/wa/send",
             headers: {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",
@@ -74,13 +73,13 @@ Fakhry Hizballah Al S.T`,
     }
    
 }
-let onlyDate = new Date().toISOString().slice(0, 10);
-let date = onlyDate.slice(5, 10);
-console.log(date);
-getHbd(date);
+// let onlyDate = new Date().toISOString().slice(0, 10);
+// let date = onlyDate.slice(5, 10);
+// console.log(date);
+// getHbd(date);
 // getHbd(date);
 
-cron.schedule('0 6 * * *', () => {
+cron.schedule('0 9 * * *', () => {
     // Kode yang akan dijalankan setiap jam 6 pagi
     console.log('Cron job berjalan pada jam 6 pagi!');
     let onlyDate = new Date().toISOString().slice(0, 10);
