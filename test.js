@@ -18,7 +18,7 @@ async function findUser(status, dep) {
             telp: element.wa
         });
         console.log(data)
-        await sendWa(data);
+        // await sendWa(data);
     });
     console.log(users.length)
     return;
