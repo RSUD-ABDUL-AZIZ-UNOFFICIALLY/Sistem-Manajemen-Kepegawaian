@@ -36,6 +36,9 @@ router.delete('/api/monthly/activity', middleware.login, ajax.deleteActivity);
 router.get('/api/monthly/signaute', middleware.login, ajax.getSignaute);
 router.get('/api/monthly/approvement', middleware.login, ajax.getApprovement);
 router.post('/api/monthly/approvement', middleware.login, ajax.signature);
+router.get('/api/template', middleware.login, ajax.getTemplate);
+router.post('/api/template', middleware.login, ajax.createTemplate);
+router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
 
 router.get('/api/report', middleware.login, report.person);

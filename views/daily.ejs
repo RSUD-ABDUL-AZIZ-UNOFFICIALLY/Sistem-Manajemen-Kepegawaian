@@ -48,10 +48,18 @@
 
           <div class="card-footer">
             <button type="submit" class="btn btn-primary">Simpan</button>
+            <button type="button" class="btn btn-info float-right" style="margin-right: 5px" onclick="lihat()">
+              <i class="fa-solid fa-note-sticky"></i> Lihat Template
+            </button>
+            <button type="button" class="btn btn-success float-right" style="margin-right: 5px" onclick="simpan()">
+              <i class="fa-solid fa-file-circle-plus"></i> Simpan Template
+            </button>
           </div>
         </form>
       </div>
 </div>
 <%- include('admin/script'); %>
+<%- include('modal/modalTemplate'); %>
 <script src="/asset/js/daily.js"></script>
+<script src="/asset/js/template.js"></script>
 <%- include('admin/footer'); %>

@@ -1,10 +1,10 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Atasan, Lpkp, Rekap, Aprovement } = require("../models");
+const { User, Atasan, Lpkp, Rekap, Aprovement, Template } = require("../models");
 const { Op, } = require("sequelize");
 const { get } = require("express/lib/response");
-const { convertdate,convertdatetime } = require("../helper");
+const { convertdate, convertdatetime } = require("../helper");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
@@ -50,7 +50,7 @@ module.exports = {
           bos: body.atasan,
         });
       }
-    } catch (error) {}
+    } catch (error) { }
     return res.status(200).json({
       error: false,
       message: body,
@@ -77,7 +77,7 @@ module.exports = {
         message: "success",
         data: data,
       });
-    } catch (error) {}
+    } catch (error) { }
   },
   progress: async (req, res) => {
     let token = req.cookies.token;
@@ -301,7 +301,7 @@ module.exports = {
     } else if (sumWaktu > 0) {
       tpp = 0;
     }
-let pesan = "";
+    let pesan = "";
     try {
       let id = await Rekap.findOne({
         where: {
@@ -331,7 +331,7 @@ let pesan = "";
               nik: decoded.id,
             },
           });
-          pesan = "Progress updated successfully";
+        pesan = "Progress updated successfully";
       }
     } catch (error) {
       // Jika terjadi kesalahan, rollback transaksi
@@ -347,15 +347,15 @@ let pesan = "";
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let queryparams = req.query;
-    let PNS =(queryparams.satusPNS == "true") ? 'PNS' : '';
-    let PPPK =(queryparams.satusPPPK == "true") ? 'PPPK' : '';
-    let NonASN =(queryparams.satusNonASN == "true") ? 'Non ASN' : '';
+    let PNS = (queryparams.satusPNS == "true") ? 'PNS' : '';
+    let PPPK = (queryparams.satusPPPK == "true") ? 'PPPK' : '';
+    let NonASN = (queryparams.satusNonASN == "true") ? 'Non ASN' : '';
     try {
-      let getUser= await User.findAll({
+      let getUser = await User.findAll({
         where: {
           [Op.and]: [
             { dep: queryparams.dep },
-            { [Op.or]: [{ status: NonASN }, { status: PPPK },{ status: PNS }] },
+            { [Op.or]: [{ status: NonASN }, { status: PPPK }, { status: PNS }] },
           ]
         },
         attributes: ["nik", "nama", "nip", "jab", "status"],
@@ -374,9 +374,9 @@ let pesan = "";
           },
         });
         getUser[i].state = 0;
-        let pushData 
+        let pushData
         if (getfind == null) {
-           pushData = {
+          pushData = {
             nik: getUser[i].nik,
             nama: getUser[i].nama,
             nip: getUser[i].nip,
@@ -389,7 +389,7 @@ let pesan = "";
             state: 0,
           };
         } else {
-           pushData = {
+          pushData = {
             nik: getUser[i].nik,
             nama: getUser[i].nama,
             nip: getUser[i].nip,
@@ -409,7 +409,7 @@ let pesan = "";
         message: "success",
         data: data,
       });
-          
+
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -447,57 +447,57 @@ let pesan = "";
     let decoded = jwt.verify(token, secretKey);
     let body = req.body;
     try {
-    await Lpkp.update(
-      {
-        rak: body.rak,
-        tgl: body.tgl,
-        volume: body.volume,
-        satuan: body.satuan,
-        waktu: body.waktu,
-      },
-      {
-        where: {
-          nik: decoded.id,
-          id: body.id,
+      await Lpkp.update(
+        {
+          rak: body.rak,
+          tgl: body.tgl,
+          volume: body.volume,
+          satuan: body.satuan,
+          waktu: body.waktu,
         },
-      }
-    );
-    let date = body.tgl.split("-");
-    let ket = date[0] + date[1] + decoded.id;
-    try {
-      let id = await Rekap.destroy({
-        where: {
-          ket: ket,
-        },
-      });
-      let findApprove = await Aprovement.findOne({
-        where: {
-          nik: decoded.id,
-          tglberkas: {
-            [Op.startsWith]: date[0] + "-" + date[1],
+        {
+          where: {
+            nik: decoded.id,
+            id: body.id,
           },
-          status_aprove: "true",
-        },
-      });
-      if (findApprove != null) {
-        await Aprovement.update(
-          {
-            status_aprove: "false",
+        }
+      );
+      let date = body.tgl.split("-");
+      let ket = date[0] + date[1] + decoded.id;
+      try {
+        let id = await Rekap.destroy({
+          where: {
+            ket: ket,
           },
-          {
-            where: {
-              id: findApprove.id,
+        });
+        let findApprove = await Aprovement.findOne({
+          where: {
+            nik: decoded.id,
+            tglberkas: {
+              [Op.startsWith]: date[0] + "-" + date[1],
             },
-          }
-        );
+            status_aprove: "true",
+          },
+        });
+        if (findApprove != null) {
+          await Aprovement.update(
+            {
+              status_aprove: "false",
+            },
+            {
+              where: {
+                id: findApprove.id,
+              },
+            }
+          );
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-    return res.status(200).json({
-      error: false,
-      message: "success",
-    });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+      });
     } catch (error) {
       return res.status(500).json({
         error: true,
@@ -510,11 +510,11 @@ let pesan = "";
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let queryparams = req.query;
-    let getAnggota = await Atasan.findAll({ 
+    let getAnggota = await Atasan.findAll({
       where: {
         bos: decoded.id,
       }
-    }); 
+    });
     let data = [];
     for (let i = 0; i < getAnggota.length; i++) {
       let getfind = await Rekap.findOne({
@@ -530,7 +530,7 @@ let pesan = "";
           nik: getAnggota[i].user,
         },
       });
-      if(getfind != null){
+      if (getfind != null) {
         let getApprovement = await Aprovement.findOne({
           where: {
             nik: getAnggota[i].user,
@@ -540,20 +540,20 @@ let pesan = "";
             status_aprove: "true",
           },
         });
-      data.push({
-        nik: getAnggota[i].user,
-        nama: getUser.nama,
-        nip: getUser.nip,
-        jab: getUser.jab,
-        status: getUser.status,
-        capaian: getfind.capaian,
-        kategori: getfind.kategori,
-        tpp: getfind.tpp,
-        periode: getfind.periode,
-        state: 1,
-        aprovement: getApprovement,
-      });
-      }else{
+        data.push({
+          nik: getAnggota[i].user,
+          nama: getUser.nama,
+          nip: getUser.nip,
+          jab: getUser.jab,
+          status: getUser.status,
+          capaian: getfind.capaian,
+          kategori: getfind.kategori,
+          tpp: getfind.tpp,
+          periode: getfind.periode,
+          state: 1,
+          aprovement: getApprovement,
+        });
+      } else {
         data.push({
           nik: getAnggota[i].user,
           nama: getUser.nama,
@@ -573,7 +573,7 @@ let pesan = "";
       message: "success",
       data: data
     });
-    
+
   },
   getSignaute: async (req, res) => {
     let token = req.cookies.token;
@@ -677,4 +677,108 @@ let pesan = "";
       });
     }
   },
+  createTemplate: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let body = req.body;
+    if (body.kegiatan == '') {
+      return res.status(400).json({
+        error: true,
+        message: "Kegiatan tidak boleh kosong",
+      });
+    }
+    try {
+      body.nik = decoded.id;
+      console.log(body);
+      let addTemplate = await Template.create(body);
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: {
+          template: addTemplate,
+          title: "Templat berhasil disimpan",
+        }
+      });
+    } catch (error) {
+      // console.log(error);
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
+  },
+  getTemplate: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let query = req.query;
+    if (query.id == undefined) {
+      try {
+        let getTemplate = await Template.findAll({
+          where: {
+            nik: decoded.id,
+          },
+        });
+        return res.status(200).json({
+          error: false,
+          message: "success",
+          data: {
+            nama: decoded.nama,
+            template: getTemplate
+          }
+        });
+      } catch (error) {
+        return res.status(500).json({
+          error: true,
+          message: "error",
+          data: error,
+        });
+      }
+    } else {
+      try {
+        let getTemplate = await Template.findOne({
+          where: {
+            nik: decoded.id,
+            id: query.id,
+          },
+        });
+        return res.status(200).json({
+          error: false,
+          message: "success",
+          data: getTemplate
+        });
+      }
+      catch (error) {
+        return res.status(500).json({
+          error: true,
+          message: "error",
+          data: error,
+        });
+      }
+    }
+  },
+  deleteTemplate: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let body = req.query;
+    try {
+      let deleteTemplate = await Template.destroy({
+        where: {
+          nik: decoded.id,
+          id: body.id,
+        },
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: deleteTemplate
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
+  }
 };
