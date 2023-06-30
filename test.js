@@ -1,6 +1,6 @@
 "use strict";
 const { sendWa } = require('./helper/message.js')
-const { User, Profile } = require("./models");
+const { User, Profile, Atasan } = require("./models");
 const { Op } = require("sequelize");
 
 async function findUser(status, dep) {
@@ -23,7 +23,15 @@ async function findUser(status, dep) {
     console.log(users.length)
     return;
 }
-findUser('PNS', null)
+async function findSubmitUser() {
+    let atasan = await Atasan.findAll();
+    console.log(atasan.length)
+    atasan.forEach(element => {
+        console.log(element.user)
+    });
+}
+findSubmitUser()
+// findUser('PNS', null)
 async function findUserHBD() {
     let date = new Date();
     let month = date.getMonth() + 1;
