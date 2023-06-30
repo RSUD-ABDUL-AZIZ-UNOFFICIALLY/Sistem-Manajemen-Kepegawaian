@@ -43,6 +43,18 @@ module.exports = {
             }else{
             res.clearCookie("status");
             }
+            let newToken = jwt.sign({
+                id: decoded.id,
+                nama: decoded.nama,
+                wa: decoded.wa,
+            },
+                secretKey, { expiresIn: 60 * 60 * 24 * 7 }
+            );
+            // set cookie
+            res.cookie("token", newToken, {
+                maxAge: 1000 * 60 * 60 * 24 * 7,
+                httpOnly: false,
+            });
             next();
         } catch (err) {
             res.clearCookie("token");

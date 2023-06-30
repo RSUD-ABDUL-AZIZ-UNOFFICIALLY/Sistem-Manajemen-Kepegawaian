@@ -5,10 +5,6 @@ const api = require('../controllers/api');
 const middleware = require('../middleware');
 const ajax = require('../controllers/ajax');
 const report = require('../controllers/report');
-// router.get('/', (req, res) => {
-//     // res.send('Hello World!')
-//     res.render('login', { title: "login" })
-// })
 
 router.get('/',middleware.checkLogin, controller.login);
 router.get('/daily', middleware.login, controller.daily);
