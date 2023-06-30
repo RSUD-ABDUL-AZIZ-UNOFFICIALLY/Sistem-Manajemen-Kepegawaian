@@ -1,7 +1,30 @@
-<%- include('admin/head'); %> <%- include('admin/header'); %>
-    <div class="container-fluid">
-      <!-- /.card -->
-      <div class="card">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+ 
+  <%- include('template/head'); %>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <%- include('template/navbar'); %>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <%- include('template/sidebar'); %>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <%- include('template/content-header'); %>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+       <!-- /.card -->
+       <div class="card">
         <div class="card-header">
           <h3 class="card-title">Laporan Produktivitas Kerja Karyawan</h3>
           <br />
@@ -67,9 +90,19 @@
         </div>
       </div>
       <!-- /.card -->
-    </div>
-    <!-- /.container-fluid -->
-    <%- include('modal/modalMonthly'); %>
-      <%- include('admin/script'); %>
-        <script src="/asset/js/monthly.js"></script>
-        <%- include('admin/footer'); %>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+
+  </footer>
+
+</div>
+<!-- ./wrapper -->
+<%- include('modal/modalMonthly'); %>
+<%- include('template/footer'); %>
+<script src="/asset/js/monthly.js"></script>
+</body>
+</html>
