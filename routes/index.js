@@ -5,6 +5,7 @@ const api = require('../controllers/api');
 const middleware = require('../middleware');
 const ajax = require('../controllers/ajax');
 const report = require('../controllers/report');
+const tracker = require('../controllers/tracker');
 
 router.get('/',middleware.checkLogin, controller.login);
 router.get('/daily', middleware.login, controller.daily);
@@ -39,5 +40,7 @@ router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
 router.get('/api/report', middleware.login, report.person);
 router.get('/api/report/preview', middleware.login, report.results);
+
+router.post('/api/tracker', middleware.login, tracker.index);
 
 module.exports = router;
