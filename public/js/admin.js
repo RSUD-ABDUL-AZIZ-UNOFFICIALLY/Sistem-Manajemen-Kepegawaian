@@ -68,9 +68,9 @@ async function tracker() {
       userAgent: navigator.userAgent,
       vendor: navigator.vendor,
       os: navigator.platform,
-      ip: ip.query,
-      as: ip.as,
-      isp: ip.isp,
+      ip: ip.ip,
+      as: ip.asn,
+      isp: ip.org,
       city: ip.city,
       batteryLevel: bat.level
     },
@@ -78,11 +78,10 @@ async function tracker() {
 
     }
   });
-
 }
 function getIP() {
   return $.ajax({
-    url: "http://ip-api.com/json/",
+    url: "https://ipapi.co/json",
     method: "GET",
     success: function (data) {
 
