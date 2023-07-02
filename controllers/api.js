@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const { Otp, User } = require("../models");
-const e = require("express");
 const secretKey = process.env.SECRET_WA;
 const payload = {
   gid: "Server Side",
@@ -45,7 +44,7 @@ module.exports = {
           message: "Nomor Anda belum terdaftar di sistem kami",
         });
       }
-      let jnsKel = (user.jnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
+      let jnsKel = (user.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
       let otp = Math.floor(10000 + Math.random() * 90000);
       let data = JSON.stringify({
         message:
