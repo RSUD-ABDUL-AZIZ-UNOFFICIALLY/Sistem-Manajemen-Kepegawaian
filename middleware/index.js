@@ -28,7 +28,7 @@ module.exports = {
             if (!getAtasan) {
                 // set cookie
                 let data = {
-                    "pesan" : "You don't have a supervisor yet, please complete your profile data.",
+                    "pesan": "Biodata anda belum lengkap, harap lengkapi profil Anda.",
                     "status" : "warning",
                     "title" : "Warning,",
                     "url" : "/profile",
