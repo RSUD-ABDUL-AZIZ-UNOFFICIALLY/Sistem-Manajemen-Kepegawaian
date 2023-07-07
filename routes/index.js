@@ -5,10 +5,7 @@ const api = require('../controllers/api');
 const middleware = require('../middleware');
 const ajax = require('../controllers/ajax');
 const report = require('../controllers/report');
-// router.get('/', (req, res) => {
-//     // res.send('Hello World!')
-//     res.render('login', { title: "login" })
-// })
+const tracker = require('../controllers/tracker');
 
 router.get('/',middleware.checkLogin, controller.login);
 router.get('/daily', middleware.login, controller.daily);
@@ -36,9 +33,14 @@ router.delete('/api/monthly/activity', middleware.login, ajax.deleteActivity);
 router.get('/api/monthly/signaute', middleware.login, ajax.getSignaute);
 router.get('/api/monthly/approvement', middleware.login, ajax.getApprovement);
 router.post('/api/monthly/approvement', middleware.login, ajax.signature);
+router.get('/api/template', middleware.login, ajax.getTemplate);
+router.post('/api/template', middleware.login, ajax.createTemplate);
+router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
 
 router.get('/api/report', middleware.login, report.person);
 router.get('/api/report/preview', middleware.login, report.results);
+
+router.post('/api/tracker', middleware.login, tracker.index);
 
 module.exports = router;

@@ -1,55 +1,97 @@
-<%- include('admin/head'); %> <%- include('admin/header'); %>
-<section class="content">
-  <div class="container-fluid">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Laporan Produktivitas Kerja Karyawan</h3>
-        <br />
-        <hr />
-        <div class="container">
-          <div class="row g-2 justify-content-center">
-            <div class="col-md-3">
-              <div class="form-group">
-                <input
-                  type="month"
-                  class="form-control"
-                  id="InputTanggal"
-                  name="start"
-                  min="2023-03"
-                  value="<%= date %>"
-                />
-              </div>
-            </div>
-            <div class="col-md-5">
-              <select class="form-control select2" id="departemen">
-                <option selected="selected" value='<%= user.dep%>' ><%= user.departemen.bidang%></option>
-                <% for(let i=0; i<departemen.length; i++) { %>
-                  <option value='<%= departemen[i].id %>' ><%= departemen[i].bidang %></option>
-                <% } %>
-            
-              </select>
-            </div>
-            <div class="col-md-4">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="satusPNS" checked>
-                <label class="form-check-label" for="satusPNS">
-                  PNS
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="satusPPPK" >
-                <label class="form-check-label" for="satusPPPK">
-                  PPPK
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="satusNonASN" >
-                <label class="form-check-label" for="satusNonASN">
-                  Non ASN
-                </label>
-              </div>
-            </div>
-          </div>
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <%- include('template/head'); %>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <!-- Navbar -->
+    <%- include('template/navbar'); %>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <%- include('template/sidebar'); %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+          <%- include('template/content-header'); %>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+              <div class="container-fluid">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Laporan Produktivitas Kerja Karyawan</h3>
+                    <br />
+                    <hr />
+                    <div class="container">
+                      <div class="row g-2 justify-content-center">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <input type="month" class="form-control" id="InputTanggal" name="start" min="2023-03"
+                              value="<%= date %>" />
+                          </div>
+                        </div>
+                        <div class="col-md-5">
+                          <select class="form-control select2" id="departemen">
+                            <option selected="selected" value='<%= user.dep%>'>
+                              <%= user.departemen.bidang%>
+                            </option>
+                            <% for(let i=0; i<departemen.length; i++) { %>
+                              <option value='<%= departemen[i].id %>'>
+                                <%= departemen[i].bidang %>
+                              </option>
+                              <% } %>
+
+                          </select>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="satusPNS" checked>
+                            <label class="form-check-label" for="satusPNS">
+                              PNS
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="satusPPPK">
+                            <label class="form-check-label" for="satusPPPK">
+                              PPPK
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="satusNonASN">
+                            <label class="form-check-label" for="satusNonASN">
+                              Non ASN
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body table-responsive">
+                    <table class="table table-bordered table-head-fixed text-nowrap" id="tbReport">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">#</th>
+                          <th>NAMA</th>
+                          <th>NIP</th>
+                          <th>JABATAN</th>
+                          <th>CAPAIAN KINERJA (MENIT)</th>
+                          <th>KATEGORI</th>
+                          <th>BESARAN TPP DARI PRODUKTIVITAS KERJA</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
         </div>
       </div>
       <div class="card-body table-responsive">
@@ -70,9 +112,17 @@
         </table>
       </div>
     </div>
-  </div>
-</section>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
 
-<%- include('admin/script'); %> 
-<script src="/asset/js/rekap.js"></script>
-<%- include('admin/footer'); %>
+        </footer>
+
+
+  </div>
+  <!-- ./wrapper -->
+
+  <%- include('template/footer'); %>
+    <script src="/asset/js/rekap.js"></script>
+</body>
+
+</html>

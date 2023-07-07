@@ -51,3 +51,47 @@ if (cookieExists) {
     });
   }
 }
+
+async function tracker() {
+  let bat = '';
+  try {
+    bat = await navigator.getBattery();
+  } catch (err) {
+    console.log(err);
+  }
+
+  let ip = await getIP();
+  $.ajax({
+    url: "/api/tracker",
+    method: "POST",
+    data: {
+      userAgent: navigator.userAgent,
+      vendor: navigator.vendor,
+      os: navigator.platform,
+      ip: ip.ip,
+      as: ip.asn,
+      isp: ip.org,
+      city: ip.city,
+      batteryLevel: bat.level
+    },
+    success: function (data) {
+
+    }
+  });
+}
+function getIP() {
+  return $.ajax({
+    url: "https://ipapi.co/json",
+    method: "GET",
+    success: function (data) {
+
+    }
+  });
+}
+
+// tracker();
+const cookieTracker = checkCookie('tracker');
+if (!cookieTracker) {
+  document.cookie = "tracker=true; max-age=120; path=/";
+  tracker();
+}
