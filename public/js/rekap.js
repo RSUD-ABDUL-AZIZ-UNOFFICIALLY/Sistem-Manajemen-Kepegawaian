@@ -32,7 +32,6 @@ $(document).ready(function () {
             for (var i = 0; i < response.data.length; i++) {
               var nomor = i+1
               var row = $("<tr>"); 
-              console.log(response.data[i]);
               if (response.data[i].state == 0) {
                  row = $("<tr class='table-danger'>"); 
               } else if (response.data[i].state == 1) {
