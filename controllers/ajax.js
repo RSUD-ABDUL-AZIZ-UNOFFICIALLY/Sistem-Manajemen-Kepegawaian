@@ -389,7 +389,29 @@ module.exports = {
             state: 0,
           };
         } else {
-          pushData = {
+          let approve = await Aprovement.findOne({
+            where: {
+              nik: getUser[i].nik,
+              tglberkas: {
+                [Op.startsWith]: queryparams.date,
+              },
+              status_aprove: "true",
+            },
+            order: [
+              // Will escape title and validate DESC against a list of valid direction parameters
+              ['createdAt', 'DESC'],
+            ],
+          });
+          let findBos
+          if (approve != null) {
+            findBos = await User.findOne({
+              where: {
+                nik: approve.bos,
+              },
+              attributes: ["nama", "nip", "jab"],
+            });
+          }
+           pushData = {
             nik: getUser[i].nik,
             nama: getUser[i].nama,
             nip: getUser[i].nip,
@@ -399,7 +421,8 @@ module.exports = {
             kategori: getfind.kategori,
             tpp: getfind.tpp,
             periode: getfind.periode,
-            state: 1,
+            state: (approve == null) ? 1 : 2,
+            bos: findBos
           };
         }
         data.push(pushData);
