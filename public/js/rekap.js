@@ -31,7 +31,16 @@ $(document).ready(function () {
             rows.remove();
             for (var i = 0; i < response.data.length; i++) {
               var nomor = i+1
-              var row = $("<tr>");
+              var row = $("<tr>"); 
+              console.log(response.data[i]);
+              if (response.data[i].state == 0) {
+                 row = $("<tr class='table-danger'>"); 
+              } else if (response.data[i].state == 1) {
+                 row = $("<tr class='table-warning'>");
+              } else if (response.data[i].state == 2) {
+                    // row = $("<tr class='table-teal-400'>");
+                    row = $("<tr class='table-success'>");
+            }
               row.append($("<td>" + nomor + "</td>"));
               row.append($("<td>" + response.data[i].nama + "</td>"));
               row.append($("<td>" + response.data[i].nip + "</td>"));
@@ -39,6 +48,13 @@ $(document).ready(function () {
               row.append($("<td>" + response.data[i].capaian + "</td>"));
               row.append($("<td>" + response.data[i].kategori + "</td>"));
               row.append($("<td>" + response.data[i].tpp + "</td>"));
+              if (response.data[i].state == 0) {
+                row.append($("<td>" + "Belum di kirim" + "</td>"));
+                } else if (response.data[i].state == 1) {
+                row.append($("<td>" + "Belum Disetujui" + "</td>"));
+                } else if (response.data[i].state == 2) {
+                row.append($("<td>" + "Disetujui " + response.data[i].bos.nama + "</td>"));
+                }
               $("tbody").append(row);
             }
             },
