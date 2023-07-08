@@ -80,32 +80,35 @@ module.exports = {
         res.clearCookie("token");
         res.redirect("/");
     },
-    Profile: async (req, res, next) => {
+    checkProfile: async (req, res, next) => {
         try {
             const token = req.cookies.token;
             const secretKey = process.env.JWT_SECRET_KEY;
             const decoded = jwt.verify(token, secretKey);
+            const host = req.get("host");
             let getFoto = await Profile.findOne({
                 where: {
                     nik: decoded.id,
                 },
             });
-            if (!getFoto) {
-                // get host name
-                const host = req.get("host");
-                // set cookie
-                let data = {
-                    "pesan" : "You don't have a profile picture yet, please complete your profile data.",
-                    "status" : "warning",
-                    "title" : "Warning,",
+            let data = {
                     "url" : host+"/asset/img/cowok.png",
-                }
-                data = JSON.stringify(data);
-                const encodedData = Buffer.from(data).toString('base64');
             }
-    
+            if (getFoto) {
+                // get host name
+                data.url = getFoto.url;
+            }
+            data = JSON.stringify(data);
+            let encodedData = Buffer.from(data).toString('base64');
+            console.log(data);
+            console.log(encodedData);
+            res.cookie("profile", encodedData, {
+                maxAge: 1000 * 60 * 60 * 24 * 7,
+                httpOnly: false,
+            });
             next();
-        } catch (err) {
+        } catch (error) {
+            console.log(error);
             next();
         }
     }

@@ -89,9 +89,23 @@ function getIP() {
   });
 }
 
-// tracker();
 const cookieTracker = checkCookie('tracker');
 if (!cookieTracker) {
   document.cookie = "tracker=true; max-age=120; path=/";
   tracker();
 }
+
+const cookieToken = checkCookie('profile');
+if (cookieToken) {
+  let cookieTokenValue = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("profile"))
+    .split("=")[1];
+  let parser = decodeURIComponent(cookieTokenValue);
+  let decodedData = window.atob(parser);
+  let data = JSON.parse(decodedData);
+  imgUser = document.getElementById("imgUser");
+  imgUser.src = data.url;
+}
+// const decodedData = window.atob(decodedCookie);
+// const data = JSON.parse(decodedData);

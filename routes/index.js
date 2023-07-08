@@ -8,8 +8,8 @@ const report = require('../controllers/report');
 const tracker = require('../controllers/tracker');
 
 router.get('/',middleware.checkLogin, controller.login);
-router.get('/daily', middleware.login, controller.daily);
-router.get('/monthly', middleware.login, controller.monthly);
+router.get('/daily', middleware.login, middleware.checkProfile, controller.daily);
+router.get('/monthly', middleware.login, middleware.checkProfile, controller.monthly);
 router.get('/approvement', middleware.login, controller.approvement);
 router.get('/review', middleware.login, controller.review);
 router.get('/report', middleware.login, controller.report);
@@ -19,7 +19,7 @@ router.get('/logout', middleware.logout);
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
 
-router.post('/api/updateProfile', middleware.login, middleware.Profile, ajax.updateProfile);
+router.post('/api/updateProfile', middleware.login, ajax.updateProfile);
 router.get('/api/getAnggota', middleware.login, ajax.getAnggota);
 
 router.post('/api/progress', middleware.login, ajax.progress);
