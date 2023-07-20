@@ -29,8 +29,21 @@ function convertdatetime(tanggalInput) {
   let seconds = date.getSeconds();
   return day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
 }
+function generateUID(length) {
+  // Generate a random number between 100000 and 999999
+  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  var uid = '';
+  
+  for (var i = 0; i < length; i++) {
+    var randomIndex = Math.floor(Math.random() * chars.length);
+    uid += chars[randomIndex];
+  }
+  
+  return uid;
+}
 
 module.exports = {
     convertdate,
-    convertdatetime
+    convertdatetime,
+    generateUID
 }

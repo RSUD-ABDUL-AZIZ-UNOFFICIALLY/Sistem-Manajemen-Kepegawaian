@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Tiket.hasOne(models.Complaint, {
+        foreignKey: 'noTiket',
+        as: 'complain'
+      })
     }
   }
   Tiket.init({

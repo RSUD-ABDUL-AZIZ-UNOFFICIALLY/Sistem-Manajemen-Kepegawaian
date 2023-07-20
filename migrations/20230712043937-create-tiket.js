@@ -10,7 +10,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       noTiket: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        references: {
+          model: {
+            tableName: "Complaints",
+          },
+          key: "noTiket",
+        },
       },
       nama: {
         type: Sequelize.STRING

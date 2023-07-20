@@ -6,6 +6,7 @@ const middleware = require('../middleware');
 const ajax = require('../controllers/ajax');
 const report = require('../controllers/report');
 const tracker = require('../controllers/tracker');
+const complaint = require('../controllers/complaint');
 
 router.get('/',middleware.checkLogin, controller.login);
 router.get('/daily', middleware.login, middleware.checkProfile, controller.daily);
@@ -14,6 +15,7 @@ router.get('/approvement', middleware.login, controller.approvement);
 router.get('/review', middleware.login, controller.review);
 router.get('/report', middleware.login, controller.report);
 router.get('/profile', middleware.login, controller.profile);
+router.get('/helpdesk', middleware.login, controller.helpDesk);
 router.get('/logout', middleware.logout);
 
 router.post('/api/send-otp', api.sendOtp);
@@ -42,5 +44,8 @@ router.get('/api/report', middleware.login, report.person);
 router.get('/api/report/preview', middleware.login, report.results);
 
 router.post('/api/tracker', middleware.login, tracker.index);
+
+router.post('/api/complaint', middleware.login, complaint.addTiket);
+router.get('/api/complaint', middleware.login, complaint.getTiket);
 
 module.exports = router;

@@ -20,7 +20,7 @@ module.exports = {
             return res.status(500).json({
                 error: true,
                 message: "error",
-                data: error,
+                data: err,
             });
         }
     }

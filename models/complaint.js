@@ -11,13 +11,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Complaint.belongsTo(models.Tiket, {
+        foreignKey: 'noTiket',
+        as: 'tiket'
+      }),
+      Complaint.hasOne(models.User, {
+        foreignKey: 'nik',
+        as: 'user'
+      })
+      Complaint.belongsTo(models.Departemen, {
+        foreignKey: 'dep',
+        as: 'departemen'
+      })
     }
   }
   Complaint.init({
     noTiket: DataTypes.STRING,
+    nik: DataTypes.BIGINT,
     nama: DataTypes.STRING,
     noHp: DataTypes.STRING,
-    dep: DataTypes.STRING,
+    dep: DataTypes.INTEGER,
     topic: DataTypes.STRING,
     kendala: DataTypes.STRING
   }, {

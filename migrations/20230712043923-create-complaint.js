@@ -10,7 +10,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       noTiket: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
+        primaryKey: true,
+      },
+      nik: {
+        type: Sequelize.BIGINT(16),
+        references: {
+          model: {
+            tableName: 'Users'
+          },
+          key: 'nik',
+        }
       },
       nama: {
         type: Sequelize.STRING
@@ -19,7 +30,13 @@ module.exports = {
         type: Sequelize.STRING
       },
       dep: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: "Departemens",
+          },
+          key: "id",
+        },
       },
       topic: {
         type: Sequelize.STRING

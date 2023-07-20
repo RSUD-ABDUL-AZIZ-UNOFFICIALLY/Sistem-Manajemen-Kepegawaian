@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <%- include('template/head'); %>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <!-- Navbar -->
+    <%- include('template/navbar'); %>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <%- include('template/sidebar'); %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+          <%- include('template/content-header'); %>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+              <div class="container-fluid">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Dukungan TI</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <!-- form start -->
+                  <form id="lapor" class="form-horizontal">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="InputActivities">Rincian kendala atau masalah yang dihadapi</label>
+                        <textarea class="form-control" rows="3" id="kendala"
+                          placeholder="contoh 'Printer x macet' " required autocomplete="on"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="InputVolume">Departeman</label>
+                        <select class="form-control select2" id="departemen">
+                          <option selected="selected" value='<%= user.dep%>'>
+                            <%= user.departemen.bidang%>
+                          </option>
+                          <% for(let i=0; i<departemen.length; i++) { %>
+                            <option value='<%= departemen[i].id %>'>
+                              <%= departemen[i].bidang %>
+                            </option>
+                            <% } %>
+
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="topic">Topic</label>
+                        <select class="custom-select form-control" id="topic">
+                          <option value="-">-</option>
+                          <option value="Printer">Printer</option>
+                          <option value="Komputer">Komputer</option>
+                          <option value="Internet">Internet</option>
+                          <option value="SIMRS">SIMRS</option>
+                          <option value="Aplikasi Lainnya">Aplikasi Lainnya</option>
+                          <option value="Lainnya">Lainnya</option>
+                        </select>
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+
+                    <div class="card-footer">
+                      <button type="submit" class="btn btn-primary">Kirim</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- /.container-fluid -->
+            </section>
+            <section class="content">
+              <div class="container-fluid">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Riwayat Pengaduan</h3>
+                  </div>
+                  <!-- /.card-header -->
+                    <div class="card-body">
+                      <input type="month" class="form-control" id="riwayatDate" name="start" min="2023-03" />
+                      <br>
+                      <div class="card-body table-responsive p-0">
+                        <table class="table table-bordered table-head-fixed text-nowrap">
+                          <thead>
+                            <tr>
+                              <th style="width: 10px">#</th>
+                              <th>Tanggal</th>
+                              <th>No Tiket</th>
+                              <th>Rincian kendala atau masalah yang dihadapi</th>
+                              <th>Topic</th>
+                              <th style="width: 40px">Lihat Status</th>
+                            </tr>
+                          </thead>
+                          <tbody></tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+              </div>
+              <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer"></footer>
+  </div>
+  <!-- ./wrapper -->
+  <%- include('modal/modalTemplate'); %> <%- include('template/footer'); %>
+      <script src="/asset/js/helpdesk.js"></script>
+</body>
+
+</html>
