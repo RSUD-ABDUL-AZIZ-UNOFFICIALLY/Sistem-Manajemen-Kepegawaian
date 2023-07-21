@@ -203,5 +203,5 @@ module.exports = {
       departemen: departemen,
     };
     res.render("helpdesk", data);
-  }
+  },
 };

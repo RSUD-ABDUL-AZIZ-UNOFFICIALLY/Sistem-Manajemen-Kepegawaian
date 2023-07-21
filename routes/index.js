@@ -47,5 +47,6 @@ router.post('/api/tracker', middleware.login, tracker.index);
 
 router.post('/api/complaint', middleware.login, complaint.addTiket);
 router.get('/api/complaint', middleware.login, complaint.getTiket);
+router.get('/api/complaint/detail', middleware.login, complaint.getStatus);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
 const { Complaint, Tiket,sequelize } = require("../models");
+const { Op } = require("sequelize");
 const {generateUID} = require("../helper");
 
 
@@ -15,13 +16,15 @@ module.exports = {
             body.noTiket = generateUID(7);
             body.nama= decoded.nama;
             body.status= "open";
-            body.noHp= decoded.wa;      
-                await Complaint.create(body);
+            body.noHp= decoded.wa;  
+            body.keteranagn= "Di sampaikan ke bagian terkait";    
+            let data = await Complaint.create(body);
+            let dataTiket = await Tiket.create(body);
                 await t.commit();
             return res.status(200).json({
                 error: false,
                 message: "success",
-                data: body
+                data: data
             });
         } catch (err) {
             console.log(err);
@@ -44,8 +47,33 @@ module.exports = {
                 where: {
                     nik: query.nik,
                     createdAt: {
-                        [Op.startsWith]: queryparams.date,
+                        [Op.startsWith]: query.date,
                       },
+                }
+            });
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: data
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                error: true,
+                message: "error",
+                data: err,
+            });
+        }
+    },
+    getStatus: async (req, res) => {
+        let token = req.cookies.token;
+        let decoded = jwt.verify(token, secretKey);
+        let query = req.query;
+        try {
+            query.nik = decoded.id;
+            let data = await Tiket.findAll({
+                where: {
+                    noTiket: query.tiket
                 }
             });
             return res.status(200).json({
