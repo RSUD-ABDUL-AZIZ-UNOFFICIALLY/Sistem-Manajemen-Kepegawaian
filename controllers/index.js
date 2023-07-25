@@ -204,4 +204,14 @@ module.exports = {
     };
     res.render("helpdesk", data);
   },
+  helpDeskAdmin: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "HelpDesk | LPKP",
+      page: "Dukungan IT",
+      token: decoded,
+    };
+    res.render("admin/helpdesk", data);
+  },
 };

@@ -23,7 +23,6 @@ $('#lapor').submit(function(event) {
         method: 'POST',
         data: data,
         success: function(response) {
-        console.log(response);
             Swal.fire({
                 icon: 'success',
                 title: 'Succeed',
@@ -109,12 +108,10 @@ function getTabel(newDateValue) {
   }
 
   function lihat(noTiket) {
-    console.log(noTiket);
     $.ajax({
         url: "/api/complaint/detail?tiket="+noTiket,
         method: "GET",
         success: function (response) {
-            console.log(response);
             $('#statusModalLabel').html('Lihat Tiket ' + noTiket);
             try {
                 $('#list-group').empty();
@@ -132,7 +129,6 @@ function getTabel(newDateValue) {
     $('#statusModal').modal('show');
   }
   function listTiket(data) {
-    console.log(data);
     let litst = $('#list-group');
     litst.empty();
     data.forEach((element) => {
@@ -154,4 +150,73 @@ function getTabel(newDateValue) {
         );
     }
     );
+    let action = $('#action');
+    action.empty();
+    if (data.length == 1){
+      action.append(
+        '<button type="button" class="btn btn-outline-danger m-1 float-right" onclick="tutupTiket(\''+ data[0].noTiket +'\')"><i class="fa fa-times"></i> Tutup Tiket</button>' 
+      );
+    }
+    action.append(
+      // set btn di sebelah kiri footer modal
+      '<button type="button" class="btn btn-outline-success float-right m-1" onclick="selesaiTiket(\''+ data[0].noTiket +'\')"><i class="fa fa-check"></i> Selesai Tiket</button>' 
+    );
+    // find status == selesai
+    let selesai = data.find(element => element.status == 'Selesai');
+    let tutup = data.find(element => element.status == 'Tutup');
+    if (selesai != undefined || tutup != undefined){
+      action.empty();
+    }
+  }
+
+  function selesaiTiket(noTiket){
+    $.ajax({
+      url: "/api/complaint/status",
+      method: "POST",
+      data: {
+        noTiket: noTiket,
+        keteranagn: 'Masalah telah di selesaikan',
+        status: 'Selesai'
+      },
+      success: function (response) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Succeed',
+          text: 'Tiket berhasil di selesaikan',
+          showConfirmButton: false,
+          timer: 2000
+        })
+        $('#statusModal').modal('hide');
+        return;
+      },
+      error: function (error) {
+        console.log(error);
+      },
+    });
+  }
+
+  function tutupTiket(noTiket){
+    $.ajax({
+      url: "/api/complaint/status",
+      method: "POST",
+      data: {
+        noTiket: noTiket,
+        keteranagn: 'Masalah di batalkan',
+        status: 'Tutup'
+      },
+      success: function (response) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Succeed',
+          text: 'Tiket berhasil di tutup',
+          showConfirmButton: false,
+          timer: 2000
+        })
+        $('#statusModal').modal('hide');
+        return;
+      },
+      error: function (error) {
+        console.log(error);
+      },
+    });
   }

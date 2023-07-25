@@ -11,11 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Complaint.belongsTo(models.Tiket, {
+      Complaint.hasMany(models.Tiket, {
+        sourceKey: 'noTiket' ,
         foreignKey: 'noTiket',
-        as: 'tiket'
-      }),
+   
+        }),
       Complaint.hasOne(models.User, {
+        sourceKey: 'nik',
         foreignKey: 'nik',
         as: 'user'
       })

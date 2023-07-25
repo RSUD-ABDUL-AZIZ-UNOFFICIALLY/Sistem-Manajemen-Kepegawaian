@@ -18,6 +18,8 @@ router.get('/profile', middleware.login, controller.profile);
 router.get('/helpdesk', middleware.login, controller.helpDesk);
 router.get('/logout', middleware.logout);
 
+router.get('/helpDeskAdmin', middleware.login, controller.helpDeskAdmin);
+
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
 
@@ -48,5 +50,8 @@ router.post('/api/tracker', middleware.login, tracker.index);
 router.post('/api/complaint', middleware.login, complaint.addTiket);
 router.get('/api/complaint', middleware.login, complaint.getTiket);
 router.get('/api/complaint/detail', middleware.login, complaint.getStatus);
+router.post('/api/complaint/status', middleware.login, complaint.setStatus);
+router.get('/api/complaint/all', middleware.login, complaint.getAllTiket);
+router.get('/api/complaint/updateTiket', middleware.login, complaint.getUpdateTiket);
 
 module.exports = router;
