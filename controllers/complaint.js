@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
+const groupIT = process.env.GROUP_IT;
 const { Complaint, Tiket, User, Departemen, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const {generateUID} = require("../helper");
