@@ -34,6 +34,12 @@ module.exports = {
       periode: {
         type: Sequelize.DATEONLY
       },
+      dep: {
+        type: Sequelize.STRING
+      },
+      jab: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

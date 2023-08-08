@@ -1,7 +1,7 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Atasan, Lpkp, Rekap, Aprovement, Template } = require("../models");
+const { User, Atasan, Lpkp, Rekap, Aprovement, Template , Departemen} = require("../models");
 const { Op, } = require("sequelize");
 const { get } = require("express/lib/response");
 const { convertdate, convertdatetime } = require("../helper");
@@ -308,7 +308,18 @@ module.exports = {
           ket: ket,
         },
       });
+    console.log(id);
       if (id == null) {
+        let user = await User.findOne({
+          where: {
+            nik: decoded.id,
+          },
+        });
+        let dep = await Departemen.findOne({
+          where: {
+            id: user.dep,
+          },
+        });
         await Rekap.create({
           nik: decoded.id,
           capaian: sumWaktu,
@@ -316,6 +327,8 @@ module.exports = {
           tpp: tpp,
           ket: ket,
           periode: periodedate,
+          dep: dep.bidang,
+          jab: user.jab,
         });
         pesan = "Progress saved successfully";
       } else {
