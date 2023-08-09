@@ -6,7 +6,6 @@ $(document).ready(function () {
   getScore(monthly);
 });
 function hapus(data, id) {
-  // kode yang akan dijalankan saat tombol diklik
   Swal.fire({
     title: 'Are you sure?',
     text: "You won't be able to revert this!",
@@ -26,8 +25,10 @@ function hapus(data, id) {
       url: "/api/monthly/activity?id=" + data,
       method: "delete",
       success: function (response) {
-        var rows = $("tbody > tr");
-        rows.eq(id).remove();
+        // let rows = $("tbody > tr");
+        // rows.eq(id).remove();
+        getTabel(monthly);
+        getScore(monthly);
       },
       error: function (error) {
         // console.log(error);
@@ -58,11 +59,11 @@ function getTabel(newDateValue) {
     url: "/api/monthly?date=" + newDateValue,
     method: "GET",
     success: function (response) {
-      var rows = $("tbody > tr");
+      let rows = $("tbody > tr");
       rows.remove();
-      for (var i = 0; i < response.data.length; i++) {
-        var nomor = i+1
-        var row = $("<tr>");
+      for (let i = 0; i < response.data.length; i++) {
+        let nomor = i + 1
+        let row = $("<tr>");
         row.append($("<td>" + nomor + "</td>"));
         row.append($("<td>" + response.data[i].tgl + "</td>"));
         row.append($("<td>" + response.data[i].rak + "</td>"));
@@ -97,7 +98,7 @@ function getTabel(newDateValue) {
 // Listen for change event on the date input field
 $("#InputTanggal").on("change", function () {
   // Get the new value of the input field
-  var newDateValue = $(this).val();
+  let newDateValue = $(this).val();
   getTabel(newDateValue);
   getScore(newDateValue);
 });
