@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Biodatas', {
+    await queryInterface.createTable('Pejabats', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,16 +18,10 @@ module.exports = {
           key: 'nik',
         }
       },
-      alamat: {
-        type: Sequelize.STRING
+      jabtan: {
+        type: Sequelize.STRING,
+        primaryKey: true
       },
-      pangkat: {
-        type: Sequelize.STRING
-      },
-      marital: {
-        type: Sequelize.STRING
-      },
-      
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -39,6 +33,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Biodatas');
+    await queryInterface.dropTable('Pejabats');
   }
 };

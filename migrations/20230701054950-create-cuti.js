@@ -18,14 +18,23 @@ module.exports = {
           key: 'nik',
         }
       },
-      alamat: {
-        type: Sequelize.STRING
+      type_cuti: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Jns_cuti'
+          },
+          key: 'id',
+        }
       },
-      pangkat: {
-        type: Sequelize.STRING
+      mulai: {
+        type: Sequelize.DATEONLY
       },
-      stasus: {
-        type: Sequelize.STRING
+      samapi: {
+        type: Sequelize.DATEONLY
+      },
+      jumlah: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
