@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Jns_cuti', {
+    await queryInterface.createTable('Jns_cutis', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,7 +13,14 @@ module.exports = {
         type: Sequelize.STRING
       },
       max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
+      },
+      total: {
+        type: Sequelize.INTEGER
+      },
+      status: {
+        type: Sequelize.ENUM,
+        values: ['PNS', 'PPPK', 'Non ASN']
       },
       createdAt: {
         allowNull: false,
@@ -26,6 +33,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Jns_cuti');
+    await queryInterface.dropTable('Jns_cutis');
   }
 };

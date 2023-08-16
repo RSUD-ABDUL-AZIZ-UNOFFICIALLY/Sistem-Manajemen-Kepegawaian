@@ -27,7 +27,13 @@ module.exports = {
       marital: {
         type: Sequelize.STRING
       },
-      
+      golongan_darah: {
+        type: Sequelize.ENUM,
+        values: ['A', 'B', 'AB', 'O']
+      },
+      jns_kerja: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -36,7 +42,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    },
+      {
+        indexes: [
+          {
+            unique: true,
+            fields: ['nik']
+          }
+        ]
+      });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Biodatas');

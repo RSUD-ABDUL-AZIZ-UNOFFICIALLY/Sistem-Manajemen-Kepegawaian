@@ -37,6 +37,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    },
+      {
+        indexes: [
+          {
+            unique: true,
+            fields: ['user', 'bos']
+          }
+        ]
     });
   },
   async down(queryInterface, Sequelize) {
