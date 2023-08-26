@@ -2,16 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Atasans', {
+    await queryInterface.createTable('Cutis', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user: {
+      nik: {
         type: Sequelize.BIGINT(16),
-        primaryKey: true,
         references: {
           model: {
             tableName: 'Users'
@@ -19,15 +18,26 @@ module.exports = {
           key: 'nik',
         }
       },
-      bos: {
-        type: Sequelize.BIGINT(16),
-        primaryKey: true,
+      type_cuti: {
+        type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'Users'
+            tableName: 'Jns_cutis'
           },
-          key: 'nik',
+          key: 'id',
         }
+      },
+      mulai: {
+        type: Sequelize.DATEONLY
+      },
+      samapi: {
+        type: Sequelize.DATEONLY
+      },
+      jumlah: {
+        type: Sequelize.INTEGER
+      },
+      keterangan: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -37,17 +47,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    },
-      {
-        indexes: [
-          {
-            unique: true,
-            fields: ['user', 'bos']
-          }
-        ]
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Atasans');
+    await queryInterface.dropTable('Cutis');
   }
 };
