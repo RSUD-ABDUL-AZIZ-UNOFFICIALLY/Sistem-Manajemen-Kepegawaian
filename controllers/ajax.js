@@ -308,9 +308,9 @@ module.exports = {
         nik: decoded.id,
       },
     });
-    let date = getLpkp.tgl.split("-");
-    let ket = date[0] + date[1] + decoded.id;
     try {
+      let date = getLpkp.tgl.split("-");
+      let ket = date[0] + date[1] + decoded.id;
       let id = await Rekap.destroy({
         where: {
           ket: ket,
@@ -340,15 +340,25 @@ module.exports = {
     } catch (error) {
       console.log(error);
     }
-    await Lpkp.destroy({
+    let delLpkp = await Lpkp.destroy({
       where: {
         id: body.id,
         nik: decoded.id,
       },
     });
+    if (delLpkp == 0) {
+      return res.status(204).json({
+        error: true,
+        message: "data not found",
+        data: delLpkp
+      });
+
+    }
+    console.log(delLpkp)
     return res.status(200).json({
       error: false,
       message: "success",
+      data: delLpkp
     });
   },
   createReport: async (req, res) => {
