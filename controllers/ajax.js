@@ -1,10 +1,11 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen } = require("../models");
+const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen, Profile } = require("../models");
 const { Op, where, } = require("sequelize");
-const { get } = require("express/lib/response");
+const fs = require('fs');
 const { convertdate, convertdatetime } = require("../helper");
+const { uploadImage } = require("../helper/upload");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
@@ -114,6 +115,43 @@ module.exports = {
         error: true,
         message: "error",
         data: error,
+      });
+    }
+  },
+  postPic: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    try {
+      // get path file
+      let path = req.file.path;
+      // get base64
+      let dataUpload = await uploadImage(path);
+      console.log(dataUpload.data.url);
+      // update data
+      let profil = await Profile.update(
+        {
+          url: dataUpload.data.url,
+        },
+        {
+          where: {
+            nik: decoded.id,
+          },
+        }
+      );
+      fs.unlinkSync(path);
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: dataUpload,
+        profil: profil
+      });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
       });
     }
   },

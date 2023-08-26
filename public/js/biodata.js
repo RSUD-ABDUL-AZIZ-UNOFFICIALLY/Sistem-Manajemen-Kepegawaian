@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    console.log("ready! biodata.js");
+    getProfilePic();
     $.ajax({
         url: "/api/getBiodata",
         method: "GET",
@@ -20,6 +20,7 @@ $(document).ready(function () {
             });
         },
     });
+
 });
 
 $("#biodata").submit(function (event) {
@@ -54,3 +55,63 @@ $("#biodata").submit(function (event) {
         },
     });
 })
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#preview').attr('src', e.target.result).show();
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#profilePic").change(function () {
+    readURL(this);
+});
+
+
+
+function getProfilePic() {
+    let src = $("#imgUser").attr("src");
+    $("#preview").attr("src", src);
+}
+
+$("#profilePicForm").submit(function (event) {
+    event.preventDefault(); // Mencegah form untuk melakukan submit pada halaman baru
+    let formData = new FormData();
+    formData.append("image", $("#profilePic")[0].files[0]);
+    console.log(formData)
+
+
+    // kiriman data ke /api/postPic
+    $.ajax({
+        url: "/api/postPic",
+        method: "POST",
+        data: formData,
+        mimeType: "multipart/form-data",
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log(response)
+            Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: "Foto berhasil diubah",
+            });
+            // clear file input
+            $("#profilePic")[0].files[0] = null;
+        },
+        error: function (error) {
+            console.error(error)
+            Swal.fire({
+                icon: "error",
+                title: "Gagal",
+                text: "Foto gagal diubah",
+            });
+        },
+    });
+
+});
