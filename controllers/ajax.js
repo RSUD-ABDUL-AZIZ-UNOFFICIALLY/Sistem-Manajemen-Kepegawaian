@@ -1,8 +1,8 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Atasan, Lpkp, Rekap, Aprovement, Template , Departemen} = require("../models");
-const { Op, } = require("sequelize");
+const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen } = require("../models");
+const { Op, where, } = require("sequelize");
 const { get } = require("express/lib/response");
 const { convertdate, convertdatetime } = require("../helper");
 module.exports = {
@@ -55,6 +55,67 @@ module.exports = {
       error: false,
       message: body,
     });
+  },
+  updateBiodata: async (req, res) => {
+    try {
+      let body = req.body;
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      console.log(body);
+      console.log(decoded);
+      let updateBio = await Biodatas.update(body, {
+        where: {
+          nik: decoded.id
+        },
+      });
+      console.log(updateBio);
+      // validasi jika data tidak valid
+      if (updateBio[0] == 0) {
+        updateBio = await Biodatas.create({
+          nik: decoded.id,
+          ...body
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: updateBio,
+      });
+    } catch (error) {
+      console.error(error)
+      return res.status(400).json({
+        error: false,
+        message: "error",
+        data: error.message
+      })
+    }
+  },
+  getBiodata: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    try {
+      let data = await Biodatas.findOne({
+        where: {
+          nik: decoded.id,
+        },
+      });
+      if (data == null) {
+        return res.status(404).json({
+          error: true,
+          message: "biodata tidak ada",
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
   },
   getAnggota: async (req, res) => {
     try {

@@ -21,6 +21,8 @@ router.post('/api/verify-otp', api.verifyOtp);
 
 router.post('/api/updateProfile', middleware.login, ajax.updateProfile);
 router.get('/api/getAnggota', middleware.login, ajax.getAnggota);
+router.post('/api/updateBiodata', middleware.login, ajax.updateBiodata);
+router.get('/api/getBiodata', middleware.login, ajax.getBiodata);
 
 router.post('/api/progress', middleware.login, ajax.progress);
 router.get('/api/monthly', middleware.login, ajax.monthly);

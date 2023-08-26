@@ -11,6 +11,8 @@ module.exports = {
       },
       nik: {
         type: Sequelize.BIGINT(16),
+        primaryKey: true,
+        unique: true,
         references: {
           model: {
             tableName: 'Users'
@@ -42,15 +44,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    },
-      {
-        indexes: [
-          {
-            unique: true,
-            fields: ['nik']
-          }
-        ]
-      });
+    });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Biodatas');
