@@ -21,8 +21,10 @@ app.use(cookieParser())
 // const ejs = require('ejs');
 app.set('view engine', 'ejs');
 Sentry.init({
-    dsn: "https://e7b2c72ec250968aab5ad58c1898e434@o1253817.ingest.sentry.io/4505720857755648",
+    dsn: process.env.SENTRY_DSN,
+    profilesSampleRate: 1.0,
     integrations: [
+        new ProfilingIntegration(),
         // enable HTTP calls tracing
         new Sentry.Integrations.Http({ tracing: true }),
         // enable Express.js middleware tracing
