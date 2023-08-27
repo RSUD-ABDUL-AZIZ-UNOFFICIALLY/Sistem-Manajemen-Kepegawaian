@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require('express');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var favicon = require('serve-favicon');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const favicon = require('serve-favicon');
 const app = express();
 const path = require('path');
 
@@ -11,6 +11,8 @@ const http = require('http');
 const server = http.createServer(app);
 const morgan = require('morgan');
 const Sentry = require('@sentry/node');
+const { ProfilingIntegration } = require('@sentry/profiling-node');
+
 app.use(morgan('dev'));
 app.use(express.json());
 
@@ -18,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use(cookieParser())
 
-// const ejs = require('ejs');
+
 app.set('view engine', 'ejs');
 Sentry.init({
     dsn: process.env.SENTRY_DSN,
