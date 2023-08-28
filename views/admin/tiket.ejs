@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <%- include('../template/head'); %>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <!-- Navbar -->
+    <%- include('../template/navbar'); %>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <%- include('../template/sidebar'); %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+          <%- include('../template/content-header'); %>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+              <div class="container-fluid">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Riwayat Tiket : </h3>
+                    <h2 class="card-title" id="id"><%= id %></h2>
+                  </div>
+                  <!-- /.card-header -->
+                    <div class="card-body">
+                      <h3 class="mt-4 mb-3"><%= topic.kendala %> ( <%= topic.topic %> )</h3>
+                      
+                      <br>
+                      <div class="card-body table-responsive p-0">
+                        <table class="table table-bordered table-head-fixed text-nowrap">
+                          <thead>
+                            <tr>
+                              <th style="width: 10px">#</th>
+                              <th>Tanggal</th>
+                              <th>Nama</th>
+                              <th>Keteranagn</th>
+                              <th>status</th>
+                            </tr>
+                          </thead>
+                          <tbody></tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+              </div>
+              <!-- /.container-fluid -->
+            </section>
+            <section class="content">
+              <div class="container-fluid">
+                <div class="card">
+                  <div class="card-header">
+                    <h1 class="card-title">Update Status</h1>
+                  </div>
+                  <div class="card-body">
+                    <form id="updateTiket" class="form-horizontal">
+                      <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                          <option value="">Pilih Status</option>
+                          <option value="Proses">Proses</option>
+                          <option value="Selesai">Selesai</option>
+                          <option value="Tutup">Tutup</option>
+                        </select>
+                      </div>
+                      <div class="mb-3">
+                        <label for="notes" class="form-label">Catatan</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="4"></textarea>
+                      </div>
+                      <button type="submit" id="fsubmit" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer"></footer>
+  </div>
+  <!-- ./wrapper -->
+  <%- include('../template/footer'); %>
+      <script src="/asset/js/admin/tiket.js"></script>
+</body>
+
+</html>
