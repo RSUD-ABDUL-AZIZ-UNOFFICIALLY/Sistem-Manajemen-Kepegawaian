@@ -1,10 +1,11 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Atasan, Lpkp, Rekap, Aprovement, Template } = require("../models");
-const { Op, } = require("sequelize");
-const { get } = require("express/lib/response");
+const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen, Profile } = require("../models");
+const { Op, where, } = require("sequelize");
+const fs = require('fs');
 const { convertdate, convertdatetime } = require("../helper");
+const { uploadImage } = require("../helper/upload");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
@@ -55,6 +56,104 @@ module.exports = {
       error: false,
       message: body,
     });
+  },
+  updateBiodata: async (req, res) => {
+    try {
+      let body = req.body;
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      console.log(body);
+      console.log(decoded);
+      let updateBio = await Biodatas.update(body, {
+        where: {
+          nik: decoded.id
+        },
+      });
+      console.log(updateBio);
+      // validasi jika data tidak valid
+      if (updateBio[0] == 0) {
+        updateBio = await Biodatas.create({
+          nik: decoded.id,
+          ...body
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: updateBio,
+      });
+    } catch (error) {
+      console.error(error)
+      return res.status(400).json({
+        error: false,
+        message: "error",
+        data: error.message
+      })
+    }
+  },
+  getBiodata: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    try {
+      let data = await Biodatas.findOne({
+        where: {
+          nik: decoded.id,
+        },
+      });
+      if (data == null) {
+        return res.status(404).json({
+          error: true,
+          message: "biodata tidak ada",
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
+  },
+  postPic: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    try {
+      // get path file
+      let path = req.file.path;
+      // get base64
+      let dataUpload = await uploadImage(path);
+      console.log(dataUpload.data.url);
+      // update data
+      let profil = await Profile.update(
+        {
+          url: dataUpload.data.url,
+        },
+        {
+          where: {
+            nik: decoded.id,
+          },
+        }
+      );
+      fs.unlinkSync(path);
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: dataUpload,
+        profil: profil
+      });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
   },
   getAnggota: async (req, res) => {
     try {
@@ -209,9 +308,9 @@ module.exports = {
         nik: decoded.id,
       },
     });
-    let date = getLpkp.tgl.split("-");
-    let ket = date[0] + date[1] + decoded.id;
     try {
+      let date = getLpkp.tgl.split("-");
+      let ket = date[0] + date[1] + decoded.id;
       let id = await Rekap.destroy({
         where: {
           ket: ket,
@@ -241,15 +340,25 @@ module.exports = {
     } catch (error) {
       console.log(error);
     }
-    await Lpkp.destroy({
+    let delLpkp = await Lpkp.destroy({
       where: {
         id: body.id,
         nik: decoded.id,
       },
     });
+    if (delLpkp == 0) {
+      return res.status(204).json({
+        error: true,
+        message: "data not found",
+        data: delLpkp
+      });
+
+    }
+    console.log(delLpkp)
     return res.status(200).json({
       error: false,
       message: "success",
+      data: delLpkp
     });
   },
   createReport: async (req, res) => {
@@ -308,7 +417,18 @@ module.exports = {
           ket: ket,
         },
       });
+    console.log(id);
       if (id == null) {
+        let user = await User.findOne({
+          where: {
+            nik: decoded.id,
+          },
+        });
+        let dep = await Departemen.findOne({
+          where: {
+            id: user.dep,
+          },
+        });
         await Rekap.create({
           nik: decoded.id,
           capaian: sumWaktu,
@@ -316,6 +436,8 @@ module.exports = {
           tpp: tpp,
           ket: ket,
           periode: periodedate,
+          dep: dep.bidang,
+          jab: user.jab,
         });
         pesan = "Progress saved successfully";
       } else {

@@ -23,7 +23,9 @@ module.exports = (sequelize, DataTypes) => {
     kategori: DataTypes.ENUM('BAIK', 'CUKUP', 'KURANG','WKE MINIMAL TIDAK TERPENUHI'),
     tpp: DataTypes.INTEGER,
     ket: DataTypes.STRING,
-    periode: DataTypes.DATE
+    periode: DataTypes.DATE,
+    dep: DataTypes.STRING,
+    jab: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Rekap',

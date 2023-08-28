@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Rekaps', {
+    await queryInterface.createTable('Biodatas', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,6 +11,8 @@ module.exports = {
       },
       nik: {
         type: Sequelize.BIGINT(16),
+        primaryKey: true,
+        unique: true,
         references: {
           model: {
             tableName: 'Users'
@@ -18,26 +20,20 @@ module.exports = {
           key: 'nik',
         }
       },
-      capaian: {
-        type: Sequelize.INTEGER
+      alamat: {
+        type: Sequelize.STRING
       },
-      kategori: {
+      pangkat: {
+        type: Sequelize.STRING
+      },
+      marital: {
+        type: Sequelize.STRING
+      },
+      golongan_darah: {
         type: Sequelize.ENUM,
-        values: ['BAIK', 'CUKUP', 'KURANG','WKE MINIMAL TIDAK TERPENUHI']
+        values: ['A', 'B', 'AB', 'O']
       },
-      tpp: {
-        type: Sequelize.INTEGER
-      },
-      ket: {
-        type: Sequelize.STRING
-      },
-      periode: {
-        type: Sequelize.DATEONLY
-      },
-      dep: {
-        type: Sequelize.STRING
-      },
-      jab: {
+      jns_kerja: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -51,6 +47,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Rekaps');
+    await queryInterface.dropTable('Biodatas');
   }
 };

@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Rekaps', {
+    await queryInterface.createTable('Pendidikans', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,27 +18,23 @@ module.exports = {
           key: 'nik',
         }
       },
-      capaian: {
-        type: Sequelize.INTEGER
-      },
-      kategori: {
-        type: Sequelize.ENUM,
-        values: ['BAIK', 'CUKUP', 'KURANG','WKE MINIMAL TIDAK TERPENUHI']
-      },
-      tpp: {
-        type: Sequelize.INTEGER
-      },
-      ket: {
+      tingkat: {
         type: Sequelize.STRING
       },
-      periode: {
+      jurusan: {
+        type: Sequelize.STRING
+      },
+      sekolah: {
+        type: Sequelize.STRING
+      },
+      tempat: {
+        type: Sequelize.STRING
+      },
+      nomor_ijazah: {
+        type: Sequelize.STRING
+      },
+      tahun_lulus: {
         type: Sequelize.DATEONLY
-      },
-      dep: {
-        type: Sequelize.STRING
-      },
-      jab: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -51,6 +47,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Rekaps');
+    await queryInterface.dropTable('Pendidikans');
   }
 };
