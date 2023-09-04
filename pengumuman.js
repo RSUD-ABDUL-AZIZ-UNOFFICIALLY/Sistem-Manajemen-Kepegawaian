@@ -52,8 +52,10 @@ async function submit(status, tanggal) {
         if (index !== -1) {
             console.log(users[index].nama + ' ' + users[index].nik)
             if (process.argv[4] == "kirim") {
-                await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel)
-                console.log('kirim email')
+                setTimeout(async () => {
+                    await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel);
+                    console.log('kirim email setelah 2 detik');
+                }, 2000); // Jeda 2 detik (2000 milidetik)
             }
         }
     }
