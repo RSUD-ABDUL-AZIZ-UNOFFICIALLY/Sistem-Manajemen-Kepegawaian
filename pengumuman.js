@@ -50,10 +50,15 @@ async function submit(status, tanggal) {
     for (let vaule of data) {
         let index = users.findIndex(item => item.nik === vaule);
         if (index !== -1) {
-            console.log(users[index].nama + ' ' + users[index].nik)
+            console.log(users[index].nama + ' ' + users[index].nik + ' ' + users[index].email)
             if (process.argv[4] == "kirim") {
-                await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel)
-                console.log('kirim email')
+                try {
+                    await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel)
+                    console.log('kirim email')
+                } catch (error) {
+                    console.log("error kirim email")
+                }
+
             }
         }
     }
