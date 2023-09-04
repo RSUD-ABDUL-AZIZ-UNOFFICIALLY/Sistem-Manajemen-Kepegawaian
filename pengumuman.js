@@ -52,10 +52,8 @@ async function submit(status, tanggal) {
         if (index !== -1) {
             console.log(users[index].nama + ' ' + users[index].nik)
             if (process.argv[4] == "kirim") {
-                setTimeout(async () => {
-                    await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel);
-                    console.log('kirim email setelah 2 detik');
-                }, 2000); // Jeda 2 detik (2000 milidetik)
+                await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel)
+                console.log('kirim email')
             }
         }
     }
@@ -99,7 +97,7 @@ async function kirimEmailLaporan(nama, email, month, JnsKel) {
         },
         data: data,
     };
-    axios.request(config)
+    return await axios.request(config)
 }
 // console.log(bulan('2021-08'))
 // kirimEmailLaporan('Lady Cleophila Mardhatillah', 'falehry88@gmail.com', bulan('2023-08'), 'Perempuan')
