@@ -52,7 +52,7 @@ async function submit(status, tanggal) {
         if (index !== -1) {
             console.log(users[index].nama + ' ' + users[index].nik)
             if (process.argv[4] == "kirim") {
-                kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel)
+                await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel)
                 console.log('kirim email')
             }
         }
