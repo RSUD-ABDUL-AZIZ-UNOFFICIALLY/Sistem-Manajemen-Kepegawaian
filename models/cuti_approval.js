@@ -15,11 +15,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Cuti_approval.init({
+    id_cuti: DataTypes.INTEGER,
     nik: DataTypes.BIGINT,
-    type_cuti: DataTypes.INTEGER,
-    mulai: DataTypes.DATEONLY,
-    sampai: DataTypes.DATEONLY,
-    jumlah: DataTypes.INTEGER,
+    departement: DataTypes.STRING,
+    jabatan: DataTypes.STRING,
+    pangkat: DataTypes.STRING,
+    approve_date: DataTypes.DATE,
+    status: DataTypes.ENUM('Disetujui', 'Diolak', 'Menunggu'),
     keterangan: DataTypes.STRING
   }, {
     sequelize,

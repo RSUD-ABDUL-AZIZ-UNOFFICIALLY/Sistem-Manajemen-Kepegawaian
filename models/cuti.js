@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Cuti.init({
+    nik: DataTypes.BIGINT(16),
     type_cuti: DataTypes.INTEGER,
     mulai: DataTypes.DATEONLY,
     samapi: DataTypes.DATEONLY,
