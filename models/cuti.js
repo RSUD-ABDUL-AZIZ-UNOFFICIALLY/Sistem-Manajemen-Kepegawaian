@@ -15,10 +15,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Cuti.init({
-    nik: DataTypes.BIGINT,
-    max: DataTypes.INTEGER,
-    total: DataTypes.INTEGER,
-    status: DataTypes.ENUM('PNS', 'PPPK', 'Non ASN')
+    type_cuti: DataTypes.INTEGER,
+    mulai: DataTypes.DATEONLY,
+    samapi: DataTypes.DATEONLY,
+    jumlah: DataTypes.INTEGER,
+    keterangan: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Cuti',
