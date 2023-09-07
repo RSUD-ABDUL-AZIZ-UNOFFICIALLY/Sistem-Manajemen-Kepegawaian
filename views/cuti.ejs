@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <%- include('template/head'); %>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <!-- Navbar -->
+    <%- include('template/navbar'); %>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <%- include('template/sidebar'); %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+          <%- include('template/content-header'); %>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+              <div class="container-fluid">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Formuli Pengajuan Cuti</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <!-- form start -->
+                  <form id="Cuti" class="form-horizontal">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="Unit">Jenis Cuti</label>
+                        <select class="custom-select form-control " id="jnsCuti">
+                          <option> Pilih Jenis Cuti</option>
+                        </select>
+                      </div>
+                      <!-- /.form group -->
+                      <!-- Date range -->
+                      <div class="form-group">
+                        <label>Pilih Tanggal pengahuan cuti</label>
+
+                        <div class="input-group">
+                          <div class="row">
+                            <div class="col-8">
+                              <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text"> <i class="far fa-calendar-alt"></i></span>
+                                </div>
+                                <input type="text" class="form-control float-right" id="reservation" required disabled>
+
+                              </div>
+                            </div>
+                            <div class="col-4">
+                              <div class="input-group mb-3">
+                                <input type="number" id="totalReservation" class="form-control float-right" required
+                                  disabled>
+                                <div class="input-group-append">
+                                  <span class="input-group-text">Hari</span>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+                      <div class="form-group">
+                        <label for="InputActivities">Alasan Cuti</label>
+                        <textarea class="form-control" rows="3" id="alasanCuti" placeholder="contoh 'Pulang Kampung' "
+                          required autocomplete="on"></textarea>
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+
+                    <div class="card-footer">
+                      <button type="submit" id="btnSubmit" class="btn btn-primary">Ajukan</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer"></footer>
+  </div>
+  <!-- ./wrapper -->
+  <%- include('template/footer'); %>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="/asset/js/cuti.js"></script>
+</body>
+
+</html>

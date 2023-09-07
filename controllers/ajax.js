@@ -1,7 +1,7 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen, Profile } = require("../models");
+const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen, Profile, Jns_cuti } = require("../models");
 const { Op, where, } = require("sequelize");
 const fs = require('fs');
 const { convertdate, convertdatetime } = require("../helper");
@@ -925,5 +925,62 @@ module.exports = {
         data: error,
       });
     }
-  }
+  },
+  getJns_cuti: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    try {
+      let user = await User.findOne({
+        where: {
+          nik: decoded.id,
+        },
+        attributes: ["status"],
+      });
+      let getJenisCuti = await Jns_cuti.findAll({
+        where: {
+          status: user.status,
+        },
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: getJenisCuti
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
+  },
+  getBiodata: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    try {
+      let getBiodata = await Biodatas.findOne({
+        where: {
+          nik: decoded.id,
+        },
+      });
+      if (getBiodata == null) {
+        return res.status(404).json({
+          error: true,
+          message: "biodata tidak ada",
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: getBiodata
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
+  },
+
 };

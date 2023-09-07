@@ -186,5 +186,17 @@ module.exports = {
       }
     };
     res.render("review", data);
-  }
+  },
+  cuti: (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let datenow = new Date().toISOString().slice(0, 10);
+    let data = {
+      title: "Dasboard | LPKP",
+      page: "Daily Progress",
+      token: decoded,
+      datenow: datenow,
+    };
+    res.render("cuti", data);
+  },
 };

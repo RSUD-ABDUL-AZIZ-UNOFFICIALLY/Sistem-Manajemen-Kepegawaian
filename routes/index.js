@@ -15,6 +15,7 @@ router.get('/approvement', middleware.login, controller.approvement);
 router.get('/review', middleware.login, controller.review);
 router.get('/report', middleware.login, controller.report);
 router.get('/profile', middleware.login, middleware.checkProfile, controller.profile);
+router.get('/cuti', middleware.login, controller.cuti);
 router.get('/logout', middleware.logout);
 
 router.post('/api/send-otp', api.sendOtp);
@@ -40,6 +41,8 @@ router.post('/api/monthly/approvement', middleware.login, ajax.signature);
 router.get('/api/template', middleware.login, ajax.getTemplate);
 router.post('/api/template', middleware.login, ajax.createTemplate);
 router.delete('/api/template', middleware.login, ajax.deleteTemplate);
+router.get('/api/getBiodata', middleware.login, ajax.getBiodata);
+router.get('/api/cuti/jns', middleware.login, ajax.getJns_cuti);
 
 
 router.get('/api/report', middleware.login, report.person);
