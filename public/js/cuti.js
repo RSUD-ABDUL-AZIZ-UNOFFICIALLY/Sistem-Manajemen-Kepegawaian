@@ -46,7 +46,6 @@ $.ajax({
         });
     },
     error: function (error) {
-        // console.log(error);
     }
 });
 $('#jnsCuti').change(function () {
@@ -95,15 +94,37 @@ $('#jnsCuti').change(function () {
 // on button submit 
 $('#Cuti').submit(function (event) {
     event.preventDefault();
-    console.log('submit');
-    let reservation = $('#reservation').val();
-    console.log(mulaicuti);
-    console.log(akhircuti);
     let datafrom = {
         type_cuti: $('#jnsCuti').val(),
         mulai: mulaicuti,
         samapi: akhircuti,
-        keterangan: $('#keterangan').val()
+        jumlah: $('#totalReservation').val(),
+        keterangan: $('#alasanCuti').val(),
+        maxCuti: maxCuti,
     };
+    console.log(datafrom);
+    $.ajax({
+        url: '/api/cuti',
+        method: 'POST',
+        data: datafrom,
+        success: function (response) {
+            console.log(response);
+            Swal.fire({
+                icon: 'success',
+                title: 'Succeed',
+                text: 'Cuti berhasil disimpan',
+                showConfirmButton: false,
+                timer: 2000
+            })
+            // $('#jnsCuti').val('');
+            // $('#reservation').val('');
+            // $('#totalReservation').val('');
+            // $('#keterangan').val('');
+            return;
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
 });
 

@@ -41,8 +41,9 @@ router.post('/api/monthly/approvement', middleware.login, ajax.signature);
 router.get('/api/template', middleware.login, ajax.getTemplate);
 router.post('/api/template', middleware.login, ajax.createTemplate);
 router.delete('/api/template', middleware.login, ajax.deleteTemplate);
-router.get('/api/getBiodata', middleware.login, ajax.getBiodata);
+
 router.get('/api/cuti/jns', middleware.login, ajax.getJns_cuti);
+router.post('/api/cuti', middleware.login, ajax.postCuti);
 
 
 router.get('/api/report', middleware.login, report.person);

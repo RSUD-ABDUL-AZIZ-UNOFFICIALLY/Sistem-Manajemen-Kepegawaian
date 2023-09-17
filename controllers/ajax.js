@@ -1,8 +1,8 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen, Profile, Jns_cuti } = require("../models");
-const { Op, where, } = require("sequelize");
+const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen, Profile, Jns_cuti, Cuti, Cuti_approval } = require("../models");
+const { Op, sequelize } = require("sequelize");
 const fs = require('fs');
 const { convertdate, convertdatetime } = require("../helper");
 const { uploadImage } = require("../helper/upload");
@@ -954,33 +954,68 @@ module.exports = {
       });
     }
   },
-  getBiodata: async (req, res) => {
+  postCuti: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
+    let body = req.body;
+    // let sisaCuti = await Cuti.findAll({
+    //   where: {
+    //     nik: decoded.id,
+    //     type_cuti: body.type_cuti,
+    //   },
+    //   attributes: ["jumlah"],
+    // });
+    let Boss = await Atasan.findOne({
+      where: {
+        user: decoded.id,
+      },
+      include: [
+        {
+          model: User,
+          as: "atasanLangsung",
+          include: [
+            {
+              model: Departemen,
+              as: "departemen",
+            },
+          ],
+        }
+      ],
+    });
+    const t = await sequelize.transaction();
     try {
-      let getBiodata = await Biodatas.findOne({
-        where: {
-          nik: decoded.id,
-        },
-      });
-      if (getBiodata == null) {
-        return res.status(404).json({
-          error: true,
-          message: "biodata tidak ada",
-        });
-      }
+
+      let saveCuti = await Cuti.create({
+        nik: decoded.id,
+        type_cuti: body.type_cuti,
+        mulai: body.mulai,
+        samapi: body.samapi,
+        jumlah: body.jumlah,
+        keterangan: body.keterangan,
+      }, { transaction: t });
+      let aproveCuti = await Aprovement.create({
+        id_cuti: saveCuti.id,
+        nik: Boss.data.atasanLangsung.nik,
+        departement: Boss.data.atasanLangsung.departemen.bidang,
+        jabatan: Boss.data.atasanLangsung.jab,
+        status: 'Menunggu',
+      }, { transaction: t });
+      await t.commit();
       return res.status(200).json({
         error: false,
         message: "success",
-        data: getBiodata
+        data: aproveCuti,
+        saveCuti: saveCuti
       });
     } catch (error) {
+      await t.rollback();
       return res.status(500).json({
         error: true,
         message: "error",
-        data: error,
+        data: error.message,
       });
     }
+
   },
 
 };
