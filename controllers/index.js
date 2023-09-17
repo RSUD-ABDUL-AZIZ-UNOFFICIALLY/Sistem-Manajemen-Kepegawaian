@@ -214,4 +214,14 @@ module.exports = {
     };
     res.render("admin/helpdesk", data);
   },
+  getContact: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "Contact | LPKP",
+      page: "Contact",
+      token: decoded,
+    };
+    res.render("contact", data);
+  }
 };

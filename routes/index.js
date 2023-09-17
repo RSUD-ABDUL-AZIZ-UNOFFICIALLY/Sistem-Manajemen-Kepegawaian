@@ -16,6 +16,7 @@ router.get('/monthly', middleware.login, middleware.checkProfile, controller.mon
 router.get('/approvement', middleware.login, controller.approvement);
 router.get('/review', middleware.login, controller.review);
 router.get('/report', middleware.login, controller.report);
+router.get('/contact', middleware.login, controller.getContact); 
 
 router.get('/helpdesk', middleware.login, controller.helpDesk);
 
@@ -49,6 +50,7 @@ router.get('/api/template', middleware.login, ajax.getTemplate);
 router.post('/api/template', middleware.login, ajax.createTemplate);
 router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
+router.get('/api/contact/user', middleware.login, ajax.getProfiles);
 
 router.get('/api/report', middleware.login, report.person);
 router.get('/api/report/preview', middleware.login, report.results);
