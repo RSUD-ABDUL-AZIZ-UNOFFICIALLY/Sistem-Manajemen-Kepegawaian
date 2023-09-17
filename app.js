@@ -12,8 +12,8 @@ const server = http.createServer(app);
 const morgan = require('morgan');
 const Sentry = require('@sentry/node');
 const { ProfilingIntegration } = require('@sentry/profiling-node');
-
-app.use(morgan('dev'));
+const MORGAN_FORMAT = process.env.MORGAN_FORMAT || 'dev';
+app.use(morgan(MORGAN_FORMAT));
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));

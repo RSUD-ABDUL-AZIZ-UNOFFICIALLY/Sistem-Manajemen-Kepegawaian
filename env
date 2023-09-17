@@ -20,3 +20,7 @@ SENTRY_DSN=""
 
 HOSTMAIL=""
 SECRET_MAIL=""
+MORGAN_FORMAT="dev"
+# MORGAN_FORMAT="combined" || "common" || "dev" || "short" || "tiny"
+NODE_ENV="development"
+
