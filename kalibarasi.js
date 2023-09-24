@@ -66,6 +66,8 @@ function findSimilarity(param, data) {
                 tgl_lahir: i.tgl_lahir,
                 jk: i.jk,
                 jbtn: i.jbtn,
+                tmp_lahir: i.tmp_lahir,
+                photo: i.photo,
                 persentase: persentaseKecocokanTerbaik
             };
         }
@@ -76,33 +78,30 @@ function findSimilarity(param, data) {
 const { User } = require("./models");
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 const secretKey = process.env.SECRET_KHNZA;
 const payload = {
     gid: "Server Side",
 };
-// {
-//     "nama": "TARUNA PRATAMA FITRA",
-//     "no_ktp": "0000000000000000",
-//     "jk": "Pria",
-//     "tmp_lahir": "-",
-//     "tgl_lahir": "1993-09-01",
-//     "photo": "pages/pegawai/photo/"
-// }
 async function findUser() {
     let users = await User.findAll({
-        attributes: ['nik', 'nama', 'tgl_lahir'],
+        attributes: ['nik', 'nama', 'tgl_lahir', 'JnsKel'],
         // where: {
         //     status: 'PNS'
         // },
-        // limit: 10
+        // limit: 5
     })
     // console.log(users)
+    let tidakAda = [];
+    let under = [];
     let obj = parsing(users)
     for (let i of obj) {
         // console.log(i)
+        let jk = i.JnsKel == 'Laki-laki' ? 'Pria' : 'Wanita'
         let x = await cari(i)
         if (x.length == 0) {
             console.log('tidak ada')
+            tidakAda.push(i)
         } else {
             let y = findSimilarity(i.nama, x)
             console.log("data Mirip di kanza ada " + x.length + "|" + i.nama + "| kemiripan :" + y.persentase + "%");
@@ -110,17 +109,28 @@ async function findUser() {
                 nik: i.nik,
                 nama: i.nama,
                 tgl_lahir: i.tgl_lahir,
+                jk: jk,
                 nik_khnza: y.nik,
                 nama_khnza: y.nama,
                 jk_khnza: y.jk,
                 jbtn_khnza: y.jbtn,
                 tgl_lahir_khnza: y.tgl_lahir,
+                tmp_lahir_khnza: y.tmp_lahir,
+                photo_khnza: y.photo,
                 persentase: y.persentase
             }
-            console.log(hasil)
+            if (y.persentase < 55) {
+                under.push(hasil)
+            } else {
+                console.log(hasil)
+                updateData(hasil)
+            }
         }
-
     }
+    fs.writeFileSync("./tidakAda.json", JSON.stringify(tidakAda));
+    fs.writeFileSync("./under.json", JSON.stringify(under));
+    console.log('Under 55% : ' + under.length)
+    console.log('Tidak ada : ' + tidakAda.length)
 }
 findUser()
 
@@ -130,7 +140,8 @@ function parsing(data) {
         let obj = {
             nik: i.nik,
             nama: i.nama,
-            tgl_lahir: i.tgl_lahir
+            tgl_lahir: i.tgl_lahir,
+            JnsKel: i.JnsKel
         }
         result.push(obj)
     }
@@ -163,7 +174,7 @@ async function find(nama) {
     let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
     let config = {
         method: "GET",
-        url: process.env.HOSTKHNZA + "/api/users/cari?search=" + nama,
+        url: process.env.HOSTKHNZA + "/api/users/cari?search=" + nama + "&limit=100",
         headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
@@ -171,5 +182,30 @@ async function find(nama) {
     };
     let hasil = await axios(config)
     return hasil.data
+}
+async function updateData(data) {
+    let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+    let upload = JSON.stringify(
+        {
+            "nama": data.nama_khnza,
+            "no_ktp": `${data.nik}`,
+            "jk": data.jk,
+            "tmp_lahir": data.tmp_lahir_khnza,
+            "tgl_lahir": data.tgl_lahir,
+            "photo": "pages/pegawai/photo/"
+        });
+    console.log(upload)
+    let config = {
+        method: "PUT",
+        url: process.env.HOSTKHNZA + "/api/users/update/" + data.nik_khnza,
+        headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+        },
+        data: upload
+    };
+    let hasil = await axios(config)
+    console.log(hasil.data)
+    return hasil
 }
 // find('nurul')
