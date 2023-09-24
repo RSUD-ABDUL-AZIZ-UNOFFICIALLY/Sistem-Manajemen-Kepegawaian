@@ -4,3 +4,5 @@
 /public/cache/*
 !/public/cache/.gitkeep
 .env prod
+under.json
+tidakAda.json
