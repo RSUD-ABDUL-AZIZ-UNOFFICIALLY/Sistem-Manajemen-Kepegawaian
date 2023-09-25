@@ -68,6 +68,7 @@ function findSimilarity(param, data) {
                 jbtn: i.jbtn,
                 tmp_lahir: i.tmp_lahir,
                 photo: i.photo,
+                no_ktp: i.no_ktp,
                 persentase: persentaseKecocokanTerbaik
             };
         }
@@ -110,12 +111,13 @@ async function findUser() {
                 nama: i.nama,
                 tgl_lahir: i.tgl_lahir,
                 jk: jk,
-                nik_khnza: y.nik,
+                nip_khnza: y.nik,
                 nama_khnza: y.nama,
                 jk_khnza: y.jk,
                 jbtn_khnza: y.jbtn,
                 tgl_lahir_khnza: y.tgl_lahir,
                 tmp_lahir_khnza: y.tmp_lahir,
+                no_ktp_khnza: y.no_ktp,
                 photo_khnza: y.photo,
                 persentase: y.persentase
             }
