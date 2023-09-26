@@ -157,11 +157,34 @@ module.exports = {
         },
       };
       let hasil = await axios(config);
-      console.log(hasil.data.data[0].nik)
-      return res.status(200).json({
-        error: false,
-        message: decoded.id,
-      });
+      if (hasil.data.data.length === 0) {
+        return res.status(401).json({
+          error: true,
+          message: "Anda belum terdaftar di sistem SIMRS",
+        });
+      }
+      let configpass = {
+        method: "get",
+        url: process.env.HOSTKHNZA + "/api/users/password/" + hasil.data.data[0].nik,
+        headers: {
+          Authorization: "Bearer " + Bearertoken,
+          "Content-Type": "application/json",
+        },
+      };
+      try {
+        let pass = await axios(configpass);
+        return res.status(200).json({
+          error: false,
+          message: "Anda sudah terdaftar di sistem SIMRS",
+          data: pass.data.data
+        });
+
+      } catch (err) {
+        return res.status(401).json({
+          error: true,
+          message: "Akun anda belum memiliki password di SIMRS",
+        });
+      }
     } catch (error) {
       return res.status(500).json({
         error: false,
