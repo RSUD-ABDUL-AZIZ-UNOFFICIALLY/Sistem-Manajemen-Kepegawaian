@@ -46,7 +46,6 @@ async function findPassword(nip) {
     };
     try {
         let hasil = await axios(config)
-        console.log(hasil.data.data)
         return hasil.data.data
     }
     catch (error) {
