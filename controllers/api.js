@@ -142,4 +142,32 @@ module.exports = {
       message: "Selamat datang, " + user.nama + "!",
     });
   },
+  getUserSimrs: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+
+    let Bearertoken = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+    try {
+      let config = {
+        method: "get",
+        url: process.env.HOSTKHNZA + "/api/users/cari?search=" + decoded.id + "&limit=1",
+        headers: {
+          Authorization: "Bearer " + Bearertoken,
+          "Content-Type": "application/json",
+        },
+      };
+      let hasil = await axios(config);
+      console.log(hasil.data.data[0].nik)
+      return res.status(200).json({
+        error: false,
+        message: decoded.id,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: false,
+        message: error.message,
+      });
+    }
+
+  }
 };
