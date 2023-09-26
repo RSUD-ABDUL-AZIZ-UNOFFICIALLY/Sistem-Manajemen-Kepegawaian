@@ -31,14 +31,17 @@ module.exports = {
           },
           data: data,
         };
-        axios
-          .request(config)
-          .then((response) => {
+        console.log(config)
+        // axios
+        //   .request(config)
+        //   .then((response) => {
        
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //   });
+        let kirimpsenan = await axios(config)
+        console.log(kirimpsenan)
         return res.status(404).json({
           error: true,
           message: "Nomor Anda belum terdaftar di sistem kami",
@@ -68,14 +71,15 @@ module.exports = {
         },
         data: data,
       };
-      axios
-        .request(config)
-        .then((response) => {
-          console.log(JSON.stringify(response.data));
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      // axios
+      //   .request(config)
+      //   .then((response) => {
+      //     console.log(JSON.stringify(response.data));
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+      let kirimpsenan = axios(config)
 
       await Otp.create({
         token: otp,
@@ -86,6 +90,7 @@ module.exports = {
         message: "Silahkan cek whatsapp anda untuk mendapatkan kode OTP",
       });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({
         error: true,
         message: error.message,
