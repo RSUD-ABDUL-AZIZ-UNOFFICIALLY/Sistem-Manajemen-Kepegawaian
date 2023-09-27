@@ -1,4 +1,3 @@
-
 function unique(array) {
     let uniqueArray = [];
     for (let i of array) {
@@ -165,11 +164,7 @@ async function cari(obj) {
         let hasil = await find(i)
         result.push(hasil.data)
     }
-    // console.log(result)
     let uniqueArray = unique(result);
-    // console.log(result.length)
-    // console.log(uniqueArray.length)
-    // console.log(uniqueArray)
     return uniqueArray[0];
 }
 async function find(nama) {
