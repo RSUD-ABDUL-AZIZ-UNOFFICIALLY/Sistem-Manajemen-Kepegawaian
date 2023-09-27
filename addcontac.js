@@ -49,7 +49,7 @@ async function saveContak(user) {
   let config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "http://localhost:8000/api/contact/",
+    url: process.env.HOSTCONTACT+"api/contact/",
     data: data,
   };
 
