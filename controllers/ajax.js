@@ -1,8 +1,8 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen, Profile, Jns_cuti, Cuti, Cuti_approval } = require("../models");
-const { Op, sequelize } = require("sequelize");
+const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen, Profile, Jns_cuti, Cuti, sequelize, Cuti_approval } = require("../models");
+const { Op } = require("sequelize");
 const fs = require('fs');
 const { convertdate, convertdatetime } = require("../helper");
 const { uploadImage } = require("../helper/upload");
@@ -958,13 +958,13 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let body = req.body;
-    // let sisaCuti = await Cuti.findAll({
-    //   where: {
-    //     nik: decoded.id,
-    //     type_cuti: body.type_cuti,
-    //   },
-    //   attributes: ["jumlah"],
-    // });
+    let sisaCuti = await Cuti.findAll({
+      where: {
+        nik: decoded.id,
+        type_cuti: body.type_cuti,
+      },
+      attributes: ["jumlah"],
+    });
     let Boss = await Atasan.findOne({
       where: {
         user: decoded.id,
@@ -993,29 +993,137 @@ module.exports = {
         jumlah: body.jumlah,
         keterangan: body.keterangan,
       }, { transaction: t });
-      let aproveCuti = await Aprovement.create({
+      let aproveCuti = await Cuti_approval.create({
         id_cuti: saveCuti.id,
-        nik: Boss.data.atasanLangsung.nik,
-        departement: Boss.data.atasanLangsung.departemen.bidang,
-        jabatan: Boss.data.atasanLangsung.jab,
-        status: 'Menunggu',
+        nik: Boss.atasanLangsung.nik,
+        departement: Boss.atasanLangsung.departemen.bidang,
+        jabatan: Boss.atasanLangsung.jab,
+        status: 'Menunggu'
       }, { transaction: t });
       await t.commit();
       return res.status(200).json({
         error: false,
         message: "success",
+        boss: Boss,
         data: aproveCuti,
         saveCuti: saveCuti
       });
     } catch (error) {
       await t.rollback();
-      return res.status(500).json({
+      console.log(error);
+      return res.status(400).json({
         error: true,
         message: "error",
         data: error.message,
       });
     }
-
   },
+  getRiwayatCuti: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let { tahun } = req.query;
+    try {
+      let data = await Cuti.findAll({
+        where: {
+          nik: decoded.id,
+          createdAt: {
+            [Op.startsWith]: tahun,
+          },
+        },
+        include: [
+          {
+            model: Jns_cuti,
+            as: "jenis_cuti",
+            attributes: ["type_cuti"],
+          },
+          {
+            model: Cuti_approval,
+            as: "approval",
+            attributes: ["status", "approve_date", "nik", "keterangan"],
+            include: [
+              {
+                model: User,
+                as: "user",
+                attributes: ["nama", "nip", "jab"],
+              },
+            ],
+          }
+        ],
+        order: [
+          ['createdAt', 'ASC'],
+        ],
+      });
+      if (data.length == 0) {
+        return res.status(404).json({
+          error: true,
+          message: "data not found",
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getAnggotaCuti: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let { tahun } = req.query;
+    try {
+      let data = await Cuti_approval.findAll({
+        where: {
+          nik: decoded.id,
+          createdAt: {
+            [Op.startsWith]: tahun,
+          },
+        },
+        include: [
+          {
+            model: Cuti,
+            as: "data_cuti",
+            include: [
+              {
+                model: Jns_cuti,
+                as: "jenis_cuti",
+                attributes: ["type_cuti"],
+              },
+              {
+                model: User,
+                as: "user",
+                attributes: ["nama", "nip", "jab"],
+              },
+            ],
+          },
+        ],
+        order: [
+          ['createdAt', 'ASC'],
+        ],
+      });
+      if (data.length == 0) {
+        return res.status(404).json({
+          error: true,
+          message: "data not found",
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  }
 
 };

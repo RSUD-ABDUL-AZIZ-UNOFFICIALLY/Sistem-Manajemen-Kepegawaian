@@ -116,10 +116,10 @@ $('#Cuti').submit(function (event) {
                 showConfirmButton: false,
                 timer: 2000
             })
-            // $('#jnsCuti').val('');
-            // $('#reservation').val('');
-            // $('#totalReservation').val('');
-            // $('#keterangan').val('');
+            $('#jnsCuti').val('');
+            $('#reservation').val('');
+            $('#totalReservation').val('');
+            $('#keterangan').val('');
             return;
         },
         error: function (error) {
@@ -128,3 +128,52 @@ $('#Cuti').submit(function (event) {
     });
 });
 
+
+$(document).ready(function () {
+    let tahun = $('#tahun').val();
+    getRiwayatCuti(tahun);
+});
+$('#tahun').change(function () {
+    let tahun = $(this).val();
+    let rows = $("tbody > tr");
+    rows.remove();
+    getRiwayatCuti(tahun);
+});
+async function getRiwayatCuti(tahun) {
+    let data = await $.ajax({
+        url: '/api/cuti/riwayat?tahun=' + tahun,
+        method: 'GET',
+        success: function (response) {
+            console.log(response);
+            parsingDataCuti(response.data);
+            return response.data;
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+    return data;
+}
+function parsingDataCuti(data) {
+    let rows = $("tbody > tr");
+    rows.remove();
+    for (let i of data) {
+        let nomor = data.indexOf(i) + 1;
+        let tmulai = i.mulai.split("-");
+        let tanggalmulai = tmulai[2] + "/" + tmulai[1] + "/" + tmulai[0];
+        let tsampai = i.samapi.split("-");
+        let tanggalsampai = tsampai[2] + "/" + tsampai[1] + "/" + tsampai[0];
+
+        let row = $("<tr>");
+        row.append($("<td>" + nomor + "</td>"));
+        row.append($("<td>" + tanggalmulai + " - " + tanggalsampai + "</td>"));
+        row.append($("<td>" + i.jenis_cuti.type_cuti + "</td>"));
+        row.append($("<td>" + i.jumlah + "</td>"));
+        row.append($("<td>" + i.keterangan + "</td>"));
+        row.append($("<td>" + i.approval.status + "</td>"));
+        row.append($("<td>" + i.approval.approve_date + "</td>"));
+        row.append($("<td>" + i.approval.user.nama + "</td>"));
+        row.append($("<td>" + i.approval.keterangan + "</td>"));
+        $("tbody").append(row);
+    }
+}

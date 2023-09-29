@@ -11,7 +11,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-
+      Cuti.hasOne(models.Jns_cuti, {
+        foreignKey: 'id',
+        sourceKey: 'type_cuti',
+        as: 'jenis_cuti'
+      })
+      Cuti.hasOne(models.Cuti_approval, {
+        foreignKey: 'id_cuti',
+        sourceKey: 'id',
+        as: 'approval'
+      })
+      Cuti.hasOne(models.User, {
+        foreignKey: 'nik',
+        sourceKey: 'nik',
+        as: 'user'
+      })
     }
   }
   Cuti.init({
