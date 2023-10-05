@@ -48,6 +48,7 @@ router.get('/api/cuti/jns', middleware.login, ajax.getJns_cuti);
 router.post('/api/cuti', middleware.login, ajax.postCuti);
 router.get('/api/cuti/riwayat', middleware.login, ajax.getRiwayatCuti);
 router.get('/api/cuti/approvementcuti', middleware.login, ajax.getAnggotaCuti);
+router.post('/api/cuti/approvementcuti', middleware.login, ajax.updateCuti);
 
 
 router.get('/api/report', middleware.login, report.person);

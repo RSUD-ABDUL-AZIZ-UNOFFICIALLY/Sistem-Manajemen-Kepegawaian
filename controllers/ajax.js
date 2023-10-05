@@ -1124,6 +1124,41 @@ module.exports = {
         data: error.message,
       });
     }
-  }
+  },
+  updateCuti: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let { id, keterangan, status } = req.body;
+    try {
+      let timeNowWib = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Jakarta",
+      });
+      let data = await Cuti_approval.update(
+        {
+          status: status,
+          keterangan: keterangan,
+          approve_date: timeNowWib
+        },
+        {
+          where: {
+            id: id,
+            nik: decoded.id,
+          },
+        }
+      );
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+
+  },
 
 };
