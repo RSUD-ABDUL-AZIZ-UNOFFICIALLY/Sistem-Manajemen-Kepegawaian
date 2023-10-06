@@ -187,6 +187,7 @@ module.exports = {
     };
     res.render("review", data);
   },
+
   cuti: (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
@@ -210,5 +211,42 @@ module.exports = {
       datenow: datenow,
     };
     res.render("approvalcuti", data);
+  },
+  helpDesk: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let getUser = await User.findOne({
+      where: { nik: decoded.id },
+      include: { model: Departemen, as: "departemen" },
+    });
+    let departemen = await Departemen.findAll({});
+    let data = {
+      title: "HelpDesk | LPKP",
+      page: "Dukungan IT",
+      token: decoded,
+      user: getUser,
+      departemen: departemen,
+    };
+    res.render("helpdesk", data);
+  },
+  helpDeskAdmin: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "HelpDesk | LPKP",
+      page: "Dukungan IT",
+      token: decoded,
+    };
+    res.render("admin/helpdesk", data);
+  },
+  getContact: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "Contact | LPKP",
+      page: "Contact",
+      token: decoded,
+    };
+    res.render("contact", data);
   }
 };

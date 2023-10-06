@@ -76,6 +76,7 @@ module.exports = {
         .catch((error) => {
           console.log(error);
         });
+      
 
       await Otp.create({
         token: otp,
@@ -86,6 +87,7 @@ module.exports = {
         message: "Silahkan cek whatsapp anda untuk mendapatkan kode OTP",
       });
     } catch (error) {
+
       return res.status(500).json({
         error: true,
         message: error.message,
@@ -142,4 +144,55 @@ module.exports = {
       message: "Selamat datang, " + user.nama + "!",
     });
   },
+  getUserSimrs: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+
+    let Bearertoken = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+    try {
+      let config = {
+        method: "get",
+        url: process.env.HOSTKHNZA + "/api/users/cari?search=" + decoded.id + "&limit=1",
+        headers: {
+          Authorization: "Bearer " + Bearertoken,
+          "Content-Type": "application/json",
+        },
+      };
+      let hasil = await axios(config);
+      if (hasil.data.data.length === 0) {
+        return res.status(401).json({
+          error: true,
+          message: "Anda belum terdaftar di sistem SIMRS",
+        });
+      }
+      let configpass = {
+        method: "get",
+        url: process.env.HOSTKHNZA + "/api/users/password/" + hasil.data.data[0].nik,
+        headers: {
+          Authorization: "Bearer " + Bearertoken,
+          "Content-Type": "application/json",
+        },
+      };
+      try {
+        let pass = await axios(configpass);
+        return res.status(200).json({
+          error: false,
+          message: "Anda sudah terdaftar di sistem SIMRS",
+          data: pass.data.data
+        });
+
+      } catch (err) {
+        return res.status(401).json({
+          error: true,
+          message: "Akun anda belum memiliki password di SIMRS",
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        error: false,
+        message: error.message,
+      });
+    }
+
+  }
 };

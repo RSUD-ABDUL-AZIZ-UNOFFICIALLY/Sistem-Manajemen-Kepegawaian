@@ -228,6 +228,42 @@
                           <!-- /.card -->
                         </div><!-- /.container-fluid -->
                       </section>
+                      <section class="content">
+                        <div class="container-fluid">
+                          <!-- Horizontal Form -->
+                          <div class="card card-info">
+                            <div class="card-header">
+                              <h3 class="card-title">SIMRS ACCOUN</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <form id="simrs" enctype="multipart/form-data">
+                              <div class="card-body">
+                                <div class="form-group row">
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">User</label>
+                                  <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="simrs_User" name="simrs_User" disabled />
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
+                                  <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="simrs_Password" name="simrs_Password" disabled />
+                                  </div>
+                                </div>
+                                <p id="simrs_accoun">
+                                </p>
+                              </div>
+                          </div>
+                          <!-- /.card-body -->
+                          <div class="card-footer">
+                          </div>
+                          <!-- /.card-footer -->
+                          </form>
+                        </div>
+                        <!-- /.card -->
+                        </div><!-- /.container-fluid -->
+                      </section>
                       <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
@@ -240,6 +276,7 @@
   <%- include('template/footer'); %>
     <script src="/asset/js/profil.js"></script>
     <script src="/asset/js/biodata.js"></script>
+    <script src="/asset/js/simrs.js"></script>
 </body>
 
 </html>

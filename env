@@ -7,3 +7,24 @@ DB_PORT=3306
 DB_DIALECT=mariadb
 JWT_SECRET_KEY=
 HOSTWA=""
+
+SECRET_WA="DEV-TOKEN"
+HOSTCONTACT=""
+HOSTWA2=""
+GROUP_IT=""
+
+HOSTCDN=""
+SECRET_CDN=""
+
+SENTRY_DSN=""
+
+HOSTMAIL=""
+SECRET_MAIL=""
+
+HOSTKHNZA=
+SECRET_KHNZA=""
+
+MORGAN_FORMAT="dev"
+# MORGAN_FORMAT="combined" || "common" || "dev" || "short" || "tiny"
+NODE_ENV="development"
+

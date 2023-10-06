@@ -62,14 +62,13 @@ module.exports = {
       let body = req.body;
       let token = req.cookies.token;
       let decoded = jwt.verify(token, secretKey);
-      console.log(body);
-      console.log(decoded);
+
       let updateBio = await Biodatas.update(body, {
         where: {
           nik: decoded.id
         },
       });
-      console.log(updateBio);
+
       // validasi jika data tidak valid
       if (updateBio[0] == 0) {
         updateBio = await Biodatas.create({
@@ -1157,8 +1156,70 @@ module.exports = {
         message: "error",
         data: error.message,
       });
+    },
+  getProfiles: async (req, res) => {
+    let search = req.query.search;
+
+    try {
+      let profiles = await User.findAll({
+        where: {
+          [Op.or]: [
+            { nik: { [Op.substring]: search } },
+            { nama: { [Op.substring]: search } },
+            { nip: { [Op.substring]: search } }
+          ]
+        },
+        attributes: ["nama", "nik", "nip", "jab", "status", "wa", "email"],
+        include: [
+          {
+            model: Profile,
+            as: "profile",
+            attributes: ["url"],
+          },
+          {
+            model: Departemen,
+            as: "departemen",
+            attributes: ["bidang"],
+          }
+        ],
+        order: [
+          ["nama", "ASC"],
+        ],
+        limit: 20
+      });
+      let data = [];
+      for (let profil of profiles) {
+        // if departemen == null
+        if (profil.departemen == null) {
+          profil.departemen = {
+            bidang: ""
+          }
+        }
+        let x = {
+          nama: profil.nama,
+          nik: profil.nik.toString().substring(0, 13) + "xxxx",
+          nip: profil.nip.substring(0, 12) + "xxxx",
+          jab: profil.jab,
+          status: profil.status,
+          wa: profil.wa,
+          email: profil.email,
+          departemen: profil.departemen.bidang,
+          url: profil.profile.url
+        }
+        data.push(x);
+      }
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
     }
-
-  },
-
+  }
 };
