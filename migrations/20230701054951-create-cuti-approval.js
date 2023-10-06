@@ -2,12 +2,21 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Cuti-approvals', {
+    await queryInterface.createTable('Cuti_approvals', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      id_cuti: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Cutis'
+          },
+          key: 'id',
+        }
       },
       nik: {
         type: Sequelize.BIGINT(16),
@@ -18,23 +27,21 @@ module.exports = {
           key: 'nik',
         }
       },
-      type_cuti: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: 'Jns_cutis'
-          },
-          key: 'id',
-        }
+      departement: {
+        type: Sequelize.STRING,
       },
-      mulai: {
-        type: Sequelize.DATEONLY
+      jabatan: {
+        type: Sequelize.STRING,
       },
-      samapi: {
-        type: Sequelize.DATEONLY
+      pangkat: {
+        type: Sequelize.STRING,
       },
-      jumlah: {
-        type: Sequelize.INTEGER
+      approve_date: {
+        type: Sequelize.DATE
+      },
+      status: {
+        type: Sequelize.ENUM,
+        values: ['Disetujui', 'Diolak', 'Menunggu']
       },
       keterangan: {
         type: Sequelize.STRING
@@ -50,6 +57,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Cuti-approvals');
+    await queryInterface.dropTable('Cuti_approvals');
   }
 };

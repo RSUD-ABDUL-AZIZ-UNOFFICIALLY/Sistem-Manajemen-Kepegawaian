@@ -22,6 +22,9 @@ router.get('/helpdesk', middleware.login, controller.helpDesk);
 
 router.get('/profile', middleware.login, middleware.checkProfile, controller.profile);
 
+router.get('/cuti', middleware.login, controller.cuti);
+router.get('/aprovecuti', middleware.login, controller.approvalcuti);
+
 router.get('/logout', middleware.logout);
 
 router.get('/helpDeskAdmin', middleware.login, controller.helpDeskAdmin);
@@ -51,7 +54,16 @@ router.get('/api/template', middleware.login, ajax.getTemplate);
 router.post('/api/template', middleware.login, ajax.createTemplate);
 router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
+
+router.get('/api/cuti/jns', middleware.login, ajax.getJns_cuti);
+router.post('/api/cuti', middleware.login, ajax.postCuti);
+router.get('/api/cuti/riwayat', middleware.login, ajax.getRiwayatCuti);
+router.get('/api/cuti/approvementcuti', middleware.login, ajax.getAnggotaCuti);
+router.post('/api/cuti/approvementcuti', middleware.login, ajax.updateCuti);
+
+
 router.get('/api/contact/user', middleware.login, ajax.getProfiles);
+
 
 router.get('/api/report', middleware.login, report.person);
 router.get('/api/report/preview', middleware.login, report.results);

@@ -11,15 +11,27 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Cuti_approval.hasOne(models.User, {
+        foreignKey: 'nik',
+        sourceKey: 'nik',
+        as: 'user'
+      })
+      Cuti_approval.hasOne(models.Cuti, {
+        foreignKey: 'id',
+        sourceKey: 'id_cuti',
+        as: 'data_cuti'
+      })
 
     }
   }
   Cuti_approval.init({
+    id_cuti: DataTypes.INTEGER,
     nik: DataTypes.BIGINT,
-    type_cuti: DataTypes.INTEGER,
-    mulai: DataTypes.DATEONLY,
-    sampai: DataTypes.DATEONLY,
-    jumlah: DataTypes.INTEGER,
+    departement: DataTypes.STRING,
+    jabatan: DataTypes.STRING,
+    pangkat: DataTypes.STRING,
+    approve_date: DataTypes.DATE,
+    status: DataTypes.ENUM('Disetujui', 'Diolak', 'Menunggu'),
     keterangan: DataTypes.STRING
   }, {
     sequelize,

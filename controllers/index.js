@@ -187,6 +187,31 @@ module.exports = {
     };
     res.render("review", data);
   },
+
+  cuti: (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let datenow = new Date().toISOString().slice(0, 10);
+    let data = {
+      title: "Permohonan | LPKP",
+      page: "Permohonan Cuti",
+      token: decoded,
+      datenow: datenow,
+    };
+    res.render("cuti", data);
+  },
+  approvalcuti: (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let datenow = new Date().toISOString().slice(0, 10);
+    let data = {
+      title: "Approval | LPKP",
+      page: "Approval Cuti",
+      token: decoded,
+      datenow: datenow,
+    };
+    res.render("approvalcuti", data);
+  },
   helpDesk: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
