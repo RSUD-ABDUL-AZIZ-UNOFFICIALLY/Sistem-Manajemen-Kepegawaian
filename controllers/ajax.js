@@ -1156,7 +1156,8 @@ module.exports = {
         message: "error",
         data: error.message,
       });
-    },
+    }
+  },
   getProfiles: async (req, res) => {
     let search = req.query.search;
 
