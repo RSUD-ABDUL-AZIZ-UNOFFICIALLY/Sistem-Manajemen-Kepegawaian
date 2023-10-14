@@ -36,7 +36,7 @@ module.exports = {
         });
         client.set(`seen:${decoded.id}`, data);
         client.set(`user:${decoded.id}`, data);
-        client.expire(`user:${decoded.id}`, 10);
+        client.expire(`user:${decoded.id}`, 20);
         client.quit();
         // await client.disconnect();
         return res.status(200).json({

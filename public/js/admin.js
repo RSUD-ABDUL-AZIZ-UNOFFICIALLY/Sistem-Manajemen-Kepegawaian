@@ -109,3 +109,12 @@ if (cookieToken) {
 }
 // const decodedData = window.atob(decodedCookie);
 // const data = JSON.parse(decodedData);
+function setOnline() {
+  return $.ajax({
+    url: "/api/seen",
+    method: "GET",
+  });
+}
+setOnline();
+setInterval(setOnline, 10000);
+
