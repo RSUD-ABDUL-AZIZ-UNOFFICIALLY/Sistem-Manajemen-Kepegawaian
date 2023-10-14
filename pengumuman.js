@@ -96,7 +96,7 @@ async function kirimEmailLaporan(nama, email, month, JnsKel) {
             "p2": `Diharapkan laporan kinerja bulan ${month} dapat segera dikrirm.
             Jika ${jnskel} ${nama} memerlukan bantuan tambahan atau ada kendala dalam menyusun laporan, jangan ragu untuk menghubungi bagian SDM.`,
             "p3": `Terima kasih atas kerja keras ${jnskel} ${nama}. Kami berharap laporan kinerja bulan ${month} dapat segera kami terima.`,
-            "from": "Fakhry Hizballah Al",
+            "from": "",
             "jabatan": "Pengelola Teknologi Informasi",
         }
     };
