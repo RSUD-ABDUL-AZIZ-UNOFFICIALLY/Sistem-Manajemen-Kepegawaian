@@ -28,3 +28,4 @@ MORGAN_FORMAT="dev"
 # MORGAN_FORMAT="combined" || "common" || "dev" || "short" || "tiny"
 NODE_ENV="development"
 
+REDIS_URL="redis://localhost:6379"
