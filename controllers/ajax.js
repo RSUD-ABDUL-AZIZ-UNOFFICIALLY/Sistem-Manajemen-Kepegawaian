@@ -1222,5 +1222,30 @@ module.exports = {
         data: error.message,
       });
     }
+  },
+
+  getProfilepic: async (req, res) => {
+    try {
+      let { nik } = req.query;
+      let newToken = jwt.verify(nik, secretKey);
+      let porfil = await Profile.findOne({
+        where: {
+          nik: newToken
+        }
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: {
+          url: porfil.url
+        }
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
   }
 };
