@@ -8,6 +8,7 @@ const report = require('../controllers/report');
 const tracker = require('../controllers/tracker');
 const complaint = require('../controllers/complaint');
 const { upload } = require('../middleware/upload');
+const seen = require('../controllers/seen');
 
 
 router.get('/',middleware.checkLogin, controller.login);
@@ -77,5 +78,9 @@ router.get('/api/complaint/detail', middleware.login, complaint.getStatus);
 router.post('/api/complaint/status', middleware.login, complaint.setStatus);
 router.get('/api/complaint/all', middleware.login, complaint.getAllTiket);
 router.get('/api/complaint/updateTiket', middleware.login, complaint.getUpdateTiket);
+
+router.get('/api/seen', seen.update);
+router.get('/api/seen/online', seen.online);
+router.get('/api/seen/last_seen', seen.last_seen);
 
 module.exports = router;
