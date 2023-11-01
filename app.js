@@ -29,6 +29,8 @@ app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));
 const routes = require('./routes');
 app.use('/', routes);
 
+const routeRest = require('./routes/rest');
+app.use('/rest', routeRest);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
