@@ -23,5 +23,23 @@ module.exports = {
                 data: err,
             });
         }
+    },
+    bio: async (req, res) => {
+        let token = req.cookies.token;
+        let decoded = jwt.verify(token, secretKey);
+        try {
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: decoded
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                error: true,
+                message: "error",
+                data: err,
+            });
+        }
     }
 }

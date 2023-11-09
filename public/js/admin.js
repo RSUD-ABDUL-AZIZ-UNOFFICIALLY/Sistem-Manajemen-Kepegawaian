@@ -79,6 +79,7 @@ async function tracker() {
     }
   });
 }
+
 function getIP() {
   return $.ajax({
     url: "https://ipapi.co/json",
@@ -107,14 +108,26 @@ if (cookieToken) {
   imgUser = document.getElementById("imgUser");
   imgUser.src = data.url;
 }
-// const decodedData = window.atob(decodedCookie);
-// const data = JSON.parse(decodedData);
+
+if (!localStorage.getItem("dataIDUser")) {
+  console.log('set');
+  $.ajax({
+    url: "/api/jwt",
+    method: "post",
+    success: function (data) {
+      localStorage.setItem("dataIDUser", data.data.id);
+      localStorage.setItem("dataIDname", data.data.nama);
+    }
+  });
+}
 function setOnline() {
+  let id = localStorage.getItem("dataIDUser");
+  let name = localStorage.getItem("dataIDname");
   return $.ajax({
-    url: "/api/seen",
+    url: "https://cdn.spairum.biz.id/api/ls/update/lpkp?id=" + id + "&name=" + name,
     method: "GET",
   });
 }
 setOnline();
-setInterval(setOnline, 10000);
+setInterval(setOnline, 5000);
 
