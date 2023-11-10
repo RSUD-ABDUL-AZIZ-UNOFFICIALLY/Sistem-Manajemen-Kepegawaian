@@ -1,13 +1,11 @@
-
 // Membaca semua cookie
 const allCookies = document.cookie;
 
 // Memeriksa keberadaan cookie tertentu
 function checkCookie(cookieName) {
   const cookies = document.cookie.split(";");
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].trim();
-    if (cookie.startsWith(cookieName + "=")) {
+  for (const cookie of cookies) {
+    if (cookie.trim().startsWith(cookieName + "=")) {
       return true; // Cookie ditemukan
     }
   }
