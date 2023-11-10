@@ -3,10 +3,14 @@ const { default: axios } = require('axios');
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET_WA;
 const { User, Access, Otp } = require('../models');
+const payload = {
+    gid: "Server Side",
+};
 module.exports = {
     getOtp: async (req, res) => {
         try {
             let body = req.body;
+            let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
             if (!body.phone) {
                 return res.status(400).json({
                     status: true,
@@ -62,7 +66,7 @@ module.exports = {
                 method: "post",
                 url: process.env.HOSTWA + "/api/wa/send",
                 headers: {
-                    Authorization: "Bearer " + (req.headers['authorization']).split(' ')[1],
+                    Authorization: "Bearer " + token,
                     "Content-Type": "application/json",
                 },
                 data: data,
