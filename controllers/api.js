@@ -112,11 +112,10 @@ module.exports = {
     let now = new Date();
     let createdAt = new Date(checkOtp.createdAt); // Ganti dengan nilai yang sesuai dari createdAt
     let diff = (now.getTime() - createdAt.getTime()) / 1000; // Menghitung selisih waktu dalam detik
-    if (diff < 300) {
-    } else {
+    if (diff > 300) {
       return res.status(401).json({
         error: true,
-        message: "OTP kedaluwarsa",
+        message: "OTP kedaluwarsa silahkan klik Minta OTP",
       });
     }
     let user = await User.findOne({

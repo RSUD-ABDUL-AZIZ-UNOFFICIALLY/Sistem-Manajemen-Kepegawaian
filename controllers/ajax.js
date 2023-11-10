@@ -12,7 +12,7 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     try {
-      let user = await User.update(
+      await User.update(
         {
           nama: body.nama,
           dep: body.dep,
