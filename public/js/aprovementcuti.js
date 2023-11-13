@@ -118,3 +118,17 @@ async function tolak(id) {
     let tahun = $('#tahun').val();
     getRiwayatCuti(tahun);
 }
+async function updateCuti(data) {
+    await $.ajax({
+        url: '/api/cuti/approvementcuti',
+        method: 'POST',
+        data: data,
+        success: function (response) {
+            console.log(response);
+            return response.data;
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}

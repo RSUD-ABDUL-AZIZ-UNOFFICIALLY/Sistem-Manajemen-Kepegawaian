@@ -71,6 +71,7 @@ router.get('/api/report', middleware.login, report.person);
 router.get('/api/report/preview', middleware.login, report.results);
 
 router.post('/api/tracker', middleware.login, tracker.index);
+router.post('/api/jwt', middleware.login, tracker.bio);
 
 router.post('/api/complaint', middleware.login, complaint.addTiket);
 router.get('/api/complaint', middleware.login, complaint.getTiket);
