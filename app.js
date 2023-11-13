@@ -3,8 +3,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const favicon = require('serve-favicon');
+const cors = require('cors');
 const app = express();
 const path = require('path');
+app.use(cors());
 
 
 const http = require('http');
