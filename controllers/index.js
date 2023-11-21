@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Departemen, Atasan, Lpkp } = require("../models");
+const { User, Departemen, Atasan, SIMPEG } = require("../models");
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -43,7 +43,7 @@ module.exports = {
       };
     }
     let data = {
-      title: "Profile | LPKP",
+      title: "Profile | SIMPEG",
       page: "Profile",
       token: decoded,
       user: getUser,
@@ -58,7 +58,7 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let datenow = new Date().toISOString().slice(0, 10);
     let data = {
-      title: "Dasboard | LPKP",
+      title: "Dasboard | SIMPEG",
       page: "Daily Progress",
       token: decoded,
       datenow: datenow,
@@ -71,7 +71,7 @@ module.exports = {
     let datey = new Date().toISOString().slice(0, 7);
 
     let data = {
-      title: "Dasboard | LPKP",
+      title: "Dasboard | SIMPEG",
       page: "Monthly Progress",
       token: decoded,
       date: datey
@@ -91,7 +91,7 @@ module.exports = {
     }
     let datey = new Date().toISOString().slice(0, 7);
     let data = {
-      title: "Dasboard | LPKP",
+      title: "Dasboard | SIMPEG",
       page: "Monthly Progress",
       token: decoded,
       user: getUser,
@@ -105,7 +105,7 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let datey = new Date().toISOString().slice(0, 7);
     let data = {
-      title: "approvement | LPKP",
+      title: "approvement | SIMPEG",
       page: "Approvement",
       token: decoded,
       date: datey
@@ -135,7 +135,7 @@ module.exports = {
         nik: query.nik,
       },
     });
-    let lpkp = await Lpkp.findAll({
+    let SIMPEG = await SIMPEG.findAll({
       where: {
         nik: query.nik,
         tgl: {
@@ -144,8 +144,8 @@ module.exports = {
       },
     });
     let sumWaktu = 0;
-    for (let i = 0; i < lpkp.length; i++) {
-      sumWaktu += lpkp[i].waktu;
+    for (let i = 0; i < SIMPEG.length; i++) {
+      sumWaktu += SIMPEG[i].waktu;
     }
     // IF(sumWaktu>7999;"BAIK";IF(sumWaktu>7379;"CUKUP";IF(sumWaktu>6719;"KURANG";IF(sumWaktu>0;"WKE MINIMAL TIDAK TERPENUHI";))))
     let kategori = "";
@@ -171,12 +171,12 @@ module.exports = {
     }
 
     let data = {
-      title: "Review | LPKP",
+      title: "Review | SIMPEG",
       page: "Review Activity",
       userpage: user.nama,
       periode: dateString,
       token: decoded,
-      lpkp: lpkp,
+      SIMPEG: SIMPEG,
       user: user,
       date: endDate,
       score: {
@@ -193,7 +193,7 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let datenow = new Date().toISOString().slice(0, 10);
     let data = {
-      title: "Permohonan | LPKP",
+      title: "Permohonan | SIMPEG",
       page: "Permohonan Cuti",
       token: decoded,
       datenow: datenow,
@@ -205,7 +205,7 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let datenow = new Date().toISOString().slice(0, 10);
     let data = {
-      title: "Approval | LPKP",
+      title: "Approval | SIMPEG",
       page: "Approval Cuti",
       token: decoded,
       datenow: datenow,
@@ -221,7 +221,7 @@ module.exports = {
     });
     let departemen = await Departemen.findAll({});
     let data = {
-      title: "HelpDesk | LPKP",
+      title: "HelpDesk | SIMPEG",
       page: "Dukungan IT",
       token: decoded,
       user: getUser,
@@ -233,7 +233,7 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let data = {
-      title: "HelpDesk | LPKP",
+      title: "HelpDesk | SIMPEG",
       page: "Dukungan IT",
       token: decoded,
     };
@@ -243,7 +243,7 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let data = {
-      title: "Contact | LPKP",
+      title: "Contact | SIMPEG",
       page: "Contact",
       token: decoded,
     };

@@ -1,7 +1,7 @@
 {
-    "name": "RSUD Performance Rating",
-    "short_name": "Abdul Aziz Performance Rating",
-    "description": "Abdul Aziz Staff Performance Rating and Optimization Platform for Exceptional Leadership",
+    "name": "Sistem Informasi Manajemen Kepegawaian RSUD dr. Abdul Aziz",
+    "short_name": "SIMPEG RSUD dr. Abdul Aziz",
+    "description": "Sistem Informasi Manajemen Kepegawaian Rumah Sakit Umum Daerah dr. Abdul Aziz",
     "icons": [
       {
         "src": "/asset/img/icon.png",
