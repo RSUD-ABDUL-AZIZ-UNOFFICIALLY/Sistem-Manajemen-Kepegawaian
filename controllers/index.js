@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Departemen, Atasan, SIMPEG } = require("../models");
+const { User, Departemen, Atasan, Lpkp } = require("../models");
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -135,7 +135,7 @@ module.exports = {
         nik: query.nik,
       },
     });
-    let SIMPEG = await SIMPEG.findAll({
+    let Lpkp = await Lpkp.findAll({
       where: {
         nik: query.nik,
         tgl: {
@@ -144,8 +144,8 @@ module.exports = {
       },
     });
     let sumWaktu = 0;
-    for (let i = 0; i < SIMPEG.length; i++) {
-      sumWaktu += SIMPEG[i].waktu;
+    for (let i = 0; i < Lpkp.length; i++) {
+      sumWaktu += Lpkp[i].waktu;
     }
     // IF(sumWaktu>7999;"BAIK";IF(sumWaktu>7379;"CUKUP";IF(sumWaktu>6719;"KURANG";IF(sumWaktu>0;"WKE MINIMAL TIDAK TERPENUHI";))))
     let kategori = "";
@@ -176,7 +176,7 @@ module.exports = {
       userpage: user.nama,
       periode: dateString,
       token: decoded,
-      SIMPEG: SIMPEG,
+      Lpkp: Lpkp,
       user: user,
       date: endDate,
       score: {
