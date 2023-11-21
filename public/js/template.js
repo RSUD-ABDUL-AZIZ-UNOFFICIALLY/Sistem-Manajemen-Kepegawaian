@@ -50,7 +50,6 @@ async function hapus(data) {
                 showConfirmButton: false,
                 timer: 1500
             })
-            return;
         },
         error: function (error) {
             console.log(error);
@@ -84,7 +83,7 @@ async function simpan() {
                 icon: 'success',
                 title: response.data.title,
             })
-            return;
+
         },
         error: function (error) {
             Swal.fire({
@@ -92,10 +91,10 @@ async function simpan() {
                 title: error.statusText,
             })
             console.log(error.responseJSON);
-            return;
+
         },
     });
-    return;
+
 }
 
 async function preview(data) {

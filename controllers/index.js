@@ -144,9 +144,10 @@ module.exports = {
       },
     });
     let sumWaktu = 0;
-    for (let i = 0; i < Lpkp.length; i++) {
-      sumWaktu += Lpkp[i].waktu;
+    for (let lpkp of Lpkp) {
+      sumWaktu += lpkp.waktu;
     }
+
     // IF(sumWaktu>7999;"BAIK";IF(sumWaktu>7379;"CUKUP";IF(sumWaktu>6719;"KURANG";IF(sumWaktu>0;"WKE MINIMAL TIDAK TERPENUHI";))))
     let kategori = "";
     if (sumWaktu > 7999) {
