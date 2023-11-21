@@ -16,4 +16,14 @@ if (currentLocation.includes("daily") || currentLocation.includes("approvement")
     $("#laporan").addClass("menu-open");
 }
 
-// tambah menu di sidebar id laporan menggunakan jquery
+
+
+// Contoh penggunaan dengan salt
+const teksAsli = "Halo, ini adalah teks untuk diencode ke base64";
+
+const base64EncodedWithSalt = encode(teksAsli);
+
+console.log("Teks Asli:", teksAsli);
+console.log("Salt:", salt);
+console.log("Base64 Encoded with Salt:", base64EncodedWithSalt);
+console.log("Base64 Decoded with Salt:", decode(base64EncodedWithSalt));
