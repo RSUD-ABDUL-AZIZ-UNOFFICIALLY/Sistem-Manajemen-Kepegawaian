@@ -27,13 +27,20 @@ module.exports = {
             }
             let akses = await Access.findAll({
                 where: {
-                    wa: body.phone
+                    wa: body.phone,
                 }
             });
             if (akses.length == 0) {
                 return res.status(400).json({
                     status: true,
                     message: 'Phone number is not registered',
+                    data: null
+                });
+            }
+            if (akses.includes(body.app_name)) {
+                return res.status(400).json({
+                    status: true,
+                    message: 'Phone number is not allowed to access this application',
                     data: null
                 });
             }
