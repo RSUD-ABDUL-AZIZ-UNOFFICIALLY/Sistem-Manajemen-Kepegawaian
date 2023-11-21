@@ -65,6 +65,7 @@ router.post('/api/cuti/approvementcuti', middleware.login, ajax.updateCuti);
 
 router.get('/api/contact/user', middleware.login, ajax.getProfiles);
 router.get('/api/contact/pic', ajax.getProfilepic);
+router.get('/api/contact/menu', middleware.login, ajax.getMenu);
 
 
 router.get('/api/report', middleware.login, report.person);
