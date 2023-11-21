@@ -37,16 +37,16 @@ module.exports = {
                     data: null
                 });
             }
-            if (akses.includes(body.app_name)) {
+            let permission = [];
+            for (let i of akses) {
+                permission.push(i.status);
+            }
+            if (!permission.includes(body.app_name)) {
                 return res.status(400).json({
                     status: true,
                     message: 'Phone number is not allowed to access this application',
                     data: null
                 });
-            }
-            let permission = [];
-            for (let i of akses) {
-                permission.push(i.status);
             }
             let otp = Math.floor(10000 + Math.random() * 90000);
             let user = await User.findOne({
