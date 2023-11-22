@@ -135,7 +135,7 @@ module.exports = {
         nik: query.nik,
       },
     });
-    let Lpkp = await Lpkp.findAll({
+    let lpkp = await Lpkp.findAll({
       where: {
         nik: query.nik,
         tgl: {
@@ -144,8 +144,8 @@ module.exports = {
       },
     });
     let sumWaktu = 0;
-    for (let lpkp of Lpkp) {
-      sumWaktu += lpkp.waktu;
+    for (let i of lpkp) {
+      sumWaktu += i.waktu;
     }
 
     // IF(sumWaktu>7999;"BAIK";IF(sumWaktu>7379;"CUKUP";IF(sumWaktu>6719;"KURANG";IF(sumWaktu>0;"WKE MINIMAL TIDAK TERPENUHI";))))
@@ -177,7 +177,7 @@ module.exports = {
       userpage: user.nama,
       periode: dateString,
       token: decoded,
-      Lpkp: Lpkp,
+      lpkp: lpkp,
       user: user,
       date: endDate,
       score: {
