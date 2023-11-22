@@ -39,6 +39,7 @@ router.get('/api/getAnggota', middleware.login, ajax.getAnggota);
 router.post('/api/updateBiodata', middleware.login, ajax.updateBiodata);
 router.get('/api/getBiodata', middleware.login, ajax.getBiodata);
 router.post('/api/postPic', middleware.login, upload.single('image'), ajax.postPic);
+router.get('/api/getPic', middleware.login, ajax.getPic);
 
 router.post('/api/progress', middleware.login, ajax.progress);
 router.get('/api/monthly', middleware.login, ajax.monthly);

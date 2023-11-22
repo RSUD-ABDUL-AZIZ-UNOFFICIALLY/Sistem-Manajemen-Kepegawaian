@@ -133,6 +133,39 @@ module.exports = {
       });
     }
   },
+  getPic: async (req, res) => {
+    try {
+      const token = req.cookies.token;
+      const secretKey = process.env.JWT_SECRET_KEY;
+      const decoded = jwt.verify(token, secretKey);
+      let getFoto = await Profile.findOne({
+        attributes: ["url"],
+        where: {
+          nik: decoded.id,
+        },
+      });
+      if (!getFoto) {
+        return res.status(204).json({
+          error: false,
+          message: "success",
+          data: null,
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: getFoto,
+      });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
   postPic: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
