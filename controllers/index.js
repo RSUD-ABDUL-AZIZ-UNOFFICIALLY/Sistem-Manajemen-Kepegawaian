@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 module.exports = {
   login: (req, res) => {
     let data = {
-      title: "login | LKP",
+      title: "login | SIMPEG",
     };
     res.render("login", data);
   },
