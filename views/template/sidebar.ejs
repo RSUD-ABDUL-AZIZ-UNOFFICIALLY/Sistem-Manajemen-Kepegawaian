@@ -23,18 +23,18 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="navbar" name="navbar">
                 <!-- Add icons to the links using the .nav-icon class
                   with font-awesome or any other icon font library -->
                 <li class="nav-item" id="laporan" name="laporan">
-                    <a href="/dashboard" class="nav-link">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             LAPORAN KINERJA KARYAWAN
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview"id="ul_laporan" name="ul_laporan" >
                         <li class="nav-item">
                             <a href="/daily" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
@@ -45,12 +45,6 @@
                             <a href="/monthly" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Laporan Bulanan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/approvement" class="nav-link">
-                                <i class="far fa-solid fa-file-contract nav-icon"></i>
-                                <p>Persetujuan Laporan</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -87,14 +81,6 @@
                             <a href="/cuti" class="nav-link">
                                 <i class="far fa-solid fa-bed nav-icon"></i>
                                 <p>Permintaan Cuti</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="/aprovecuti" class="nav-link">
-                                <i class="far fa-solid fa-bed nav-icon"></i>
-                                <p>Persetujuan Cuti</p>
                             </a>
                         </li>
                     </ul>
