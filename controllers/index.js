@@ -53,6 +53,16 @@ module.exports = {
     };
     res.render("profile", data);
   },
+  account: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "Akun Pegawai | SIMPEG",
+      page: "Akun Pegawai",
+      token: decoded,
+    };
+    res.render("account", data);
+  },
   daily: (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);

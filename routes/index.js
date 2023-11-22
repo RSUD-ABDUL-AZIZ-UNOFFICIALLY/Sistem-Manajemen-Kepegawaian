@@ -12,8 +12,8 @@ const seen = require('../controllers/seen');
 
 
 router.get('/',middleware.checkLogin, controller.login);
-router.get('/daily', middleware.login, middleware.checkProfile, controller.daily);
-router.get('/monthly', middleware.login, middleware.checkProfile, controller.monthly);
+router.get('/daily', middleware.login, controller.daily);
+router.get('/monthly', middleware.login, controller.monthly);
 router.get('/approvement', middleware.login, controller.approvement);
 router.get('/review', middleware.login, controller.review);
 router.get('/report', middleware.login, controller.report);
@@ -21,7 +21,8 @@ router.get('/contact', middleware.login, controller.getContact);
 
 router.get('/helpdesk', middleware.login, controller.helpDesk);
 
-router.get('/profile', middleware.login, middleware.checkProfile, controller.profile);
+router.get('/profile', middleware.login, controller.profile);
+router.get('/account', middleware.login, controller.account);
 
 router.get('/cuti', middleware.login, controller.cuti);
 router.get('/aprovecuti', middleware.login, controller.approvalcuti);
