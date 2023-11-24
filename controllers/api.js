@@ -195,7 +195,7 @@ module.exports = {
   },
   getUserMicrotik: async (req, res) => {
     try {
-      const response = await axios.get('http://192.168.254.102/rest/system/resource', {
+      const response = await axios.get('http://192.168.254.102:8728/rest/system/resource', {
         auth: {
             username: 'admin'
         }
