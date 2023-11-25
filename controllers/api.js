@@ -192,6 +192,25 @@ module.exports = {
         message: error.message,
       });
     }
-
-  }
+  },
+  getUserMicrotik: async (req, res) => {
+    try {
+      const response = await axios.get('http://192.168.254.102:8728/rest/system/resource', {
+        auth: {
+            username: 'admin'
+        }
+    });    
+    console.log(response);
+      return res.status(200).json({
+        error: false,
+        message: "Anda sudah terdaftar di sistem SIMRS",
+        data: response
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: false,
+        message: error.message,
+      });
+    }
+  },
 };
