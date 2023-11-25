@@ -110,8 +110,8 @@ async function kalibarsiKamar() {
 }
 kalibarsiKamar();
 
-cron.schedule('* * * * *', () => {
+cron.schedule('*/15 * * * *', () => {
   // Kode yang akan dijalankan setiap jam 6 pagi
-  console.log('Cron job berjalan tiap menit!');
+  console.log('Cron job berjalan tiap 15 menit!');
   kalibarsiKamar();
 });
