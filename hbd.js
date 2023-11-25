@@ -87,3 +87,31 @@ cron.schedule('0 9 * * *', () => {
     console.log(date);
     getHbd(date);
   });
+
+async function kalibarsiKamar() {
+  let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: 'https://api.rsudaa.singkawangkota.go.id/api/ranap/belumpulang',
+    headers: {
+      'Authorization': 'Bearer ' + token,
+    }
+  };
+
+  axios.request(config)
+    .then((response) => {
+      console.log('kalibarsiKamar');
+      // console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+kalibarsiKamar();
+
+cron.schedule('* * * * *', () => {
+  // Kode yang akan dijalankan setiap jam 6 pagi
+  console.log('Cron job berjalan tiap menit!');
+  kalibarsiKamar();
+});
