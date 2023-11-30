@@ -87,7 +87,7 @@ for (let i of pegawi) {
     }
 }
 }
-// cek(10)
+cek(17)
 
 
 let hak_dokter_false = {   
