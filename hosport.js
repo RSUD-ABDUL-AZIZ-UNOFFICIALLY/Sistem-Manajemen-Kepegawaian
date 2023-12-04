@@ -1,5 +1,6 @@
 const { User, Hotspot } = require("./models");
 const { Op } = require("sequelize");
+const e = require("express");
 
 function getHotspot() {
     return Hotspot.findAll({
@@ -14,6 +15,7 @@ async function setHotspot() {
         }
     })
     for (let i of pegawi) {
+        try {
         let random = Math.floor(Math.random() * 1000);
         let x = await Hotspot.create({
             nik: i.nik,
@@ -21,6 +23,9 @@ async function setHotspot() {
             password: random
         })
         console.log(x)
+        }catch (error) {
+            console.log(error)
+        }
     }
 }
 setHotspot()
