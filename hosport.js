@@ -2,10 +2,14 @@ const { User, Hotspot } = require("./models");
 const { Op } = require("sequelize");
 const e = require("express");
 
-function getHotspot() {
-    return Hotspot.findAll({
+async function getHotspot() {
+    let x = await Hotspot.findAll({
         attributes: ['user', 'password']
     })
+    // console.log(`add name=${x.user} password=${x.password} profile=PA6M server=hotspot1`)
+    for (let i of x) {
+        console.log(`add name=${i.user} password=${i.password} profile=PA6M server=hotspot1`)
+    }
 }
 async function setHotspot() {
     let pegawi = await User.findAll({
@@ -28,5 +32,7 @@ async function setHotspot() {
         }
     }
 }
-setHotspot()
+// setHotspot()
+getHotspot()
+
 
