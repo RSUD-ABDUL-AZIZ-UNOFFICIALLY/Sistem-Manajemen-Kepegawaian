@@ -16,6 +16,7 @@ const {
   sequelize,
   Cuti_approval,
   Access,
+  Hotspot
 } = require("../models");
 const { Op } = require("sequelize");
 const fs = require("fs");
@@ -1336,6 +1337,28 @@ module.exports = {
         error: true,
         message: "error",
         data: error.message,
+      });
+    }
+  },
+  getUserMicrotik: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      console.log(decoded);
+        let getUserPw = await Hotspot.findOne({
+          where: {
+            nik: decoded.id,
+          },
+          });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: getUserPw
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: false,
+        message: error.message,
       });
     }
   },
