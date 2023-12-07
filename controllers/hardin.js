@@ -39,7 +39,7 @@ module.exports = {
                 let pesan = "Pendaftaran Hardin Online \n" +
                             "Kode OTP anda *"+ random +"* \n" +
                             "Kode ini akan kadaluarsa dalam 5 menit. \n" +
-                            "Mohon jangan berikan kode ini kepada siapapun.\n";
+                            "Mohon jangan berikan kode ini kepada siapapun.";
                 let data = JSON.stringify({
                     message: pesan,
                     telp: phone
