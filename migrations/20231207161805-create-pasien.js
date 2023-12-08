@@ -10,12 +10,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nik: {
+        allowNull: false,
+        primaryKey: true,
+        unique: true,
         type: Sequelize.BIGINT
       },
       fullname: {
         type: Sequelize.STRING
       },
       wa: {
+        allowNull: false,
+        primaryKey: true,
+        unique: true,
         type: Sequelize.STRING
       },
       createdAt: {

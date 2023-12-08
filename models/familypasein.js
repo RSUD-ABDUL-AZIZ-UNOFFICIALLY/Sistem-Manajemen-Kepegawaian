@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   FamilyPasein.init({
+    familyId: DataTypes.INTEGER,
     nik: DataTypes.BIGINT,
     nama: DataTypes.STRING,
     noRm: DataTypes.INTEGER
