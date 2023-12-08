@@ -259,5 +259,15 @@ module.exports = {
       token: decoded,
     };
     res.render("contact", data);
+  },
+  addAnggotaPasien: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "Contact | SIMPEG",
+      page: "Contact",
+      token: decoded,
+    };
+    res.render("simrs/addAnggotaPasien", data);
   }
 };

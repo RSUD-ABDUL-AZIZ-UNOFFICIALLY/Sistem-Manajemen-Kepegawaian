@@ -19,6 +19,8 @@ router.get('/review', middleware.login, controller.review);
 router.get('/report', middleware.login, controller.report);
 router.get('/contact', middleware.login, controller.getContact); 
 
+router.get('/simrs/regis', middleware.login, controller.addAnggotaPasien);
+
 router.get('/helpdesk', middleware.login, controller.helpDesk);
 
 router.get('/profile', middleware.login, controller.profile);
