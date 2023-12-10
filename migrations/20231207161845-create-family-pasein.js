@@ -24,6 +24,9 @@ module.exports = {
       nama: {
         type: Sequelize.STRING
       },
+      hubungan: {
+        type: Sequelize.STRING
+      },
       noRm: {
         type: Sequelize.INTEGER
       },
@@ -35,7 +38,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    },
+      {
+        indexes: [
+          {
+            unique: true,
+            fields: ['id', 'noRm']
+          }
+        ]
+      });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('FamilyPaseins');

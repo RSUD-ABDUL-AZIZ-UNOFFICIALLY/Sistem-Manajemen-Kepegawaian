@@ -3,6 +3,7 @@ const axios = require("axios");
 const { Pasien, FamilyPasein } = require("../models");
 const { Op } = require("sequelize");
 const { sendWa } = require("../helper/message");
+const { apiGetSimrs } = require("../helper/simrs");
 const { createClient } = require('redis');
 const client = createClient({
     url: process.env.REDIS_URL
@@ -267,8 +268,8 @@ module.exports = {
     },
     addFamily: async (req, res) => {
         try {
-            let { name, nik, noRm, familyId } = req.body;
-            if (!name || !nik || !noRm || !familyId) {
+            let { name, nik, noRm, familyId, hubungan } = req.body;
+            if (!name || !nik || !noRm || !familyId || !hubungan) {
                 return res.status(400).json({
                     error: true,
                     message: "Data tidak boleh kosong",
@@ -294,6 +295,7 @@ module.exports = {
             let data = {
                 familyId: id,
                 nama: name,
+                hubungan: hubungan,
                 nik: nik,
                 noRm: noRm
             }
@@ -340,6 +342,41 @@ module.exports = {
                 error: false,
                 message: "success",
                 data: { user, family }
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                error: true,
+                message: "Internal Server Error",
+            });
+        }
+    },
+    getPasien: async (req, res) => {
+        try {
+            let { search } = req.query;
+            let data = await apiGetSimrs('/api/petugas/pasien?limit=6&search=' + search)
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: data.data
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                error: true,
+                message: "Internal Server Error",
+            });
+        }
+    },
+    getPasienDetail: async (req, res) => {
+        try {
+            let { no_rkm_medis } = req.params;
+            let data = await apiGetSimrs('/api/petugas/pasien/' + no_rkm_medis)
+            console.log(no_rkm_medis)
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: data.data
             });
         } catch (error) {
             console.log(error);

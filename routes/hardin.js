@@ -9,8 +9,9 @@ router.post('/login/sendOtp', controller.loginSendOtp);
 router.post('/login', controller.login);
 
 router.get('/family', middleware.check, controller.getFamily);
-router.post('/family', middleware.check, controller.addFamily);
+router.post('/family', controller.addFamily);
 router.get('/rm/user', controller.getUser);
-router.get('/rm/pasie', controller.getPasien);
+router.get('/rm/pasien', controller.getPasien);
+router.get('/rm/pasien/:no_rkm_medis', controller.getPasienDetail);
 
 module.exports = router;

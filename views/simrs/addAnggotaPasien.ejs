@@ -65,30 +65,50 @@
                                                     <label class="form-label">Cari Pasien</label>
                                                     <div class="input-group mb-3">
                                                         <select class="form-control select2" id="cari_pasien" name="cari_pasien"
-                                                            aria-label="Floating label select example">
-                                                            <option selected>Cari pasien</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
+                                                            aria-label="Floating label select" disabled>
                                                         </select>
-                                    
                                                     </div>
                                                     <label class="form-label">Nama</label>
                                                     <div class="input-group mb-1">
                                                         <input type="text" class="form-control" id="nama_pasien" name="nama_pasien"
                                                             placeholder="Nama akun pasien" aria-label="Nama akun pasien" disabled />
                                                     </div>
+                                                    <label class="form-label">Tanggal Lahir</label>
+                                                    <div class="input-group mb-1">
+                                                        <input type="date" class="form-control" id="tgl_lahir_pasien" name="tgl_lahir_pasien" placeholder="NIK pasien"
+                                                            aria-label="Nik akun pasien" disabled />
+                                                    </div>
                                                     <label class="form-label">NIK</label>
                                                     <div class="input-group mb-1">
                                                         <input type="number" class="form-control" id="nik_pasien" name="nik_pasien" placeholder="NIK pasien"
                                                             aria-label="Nik akun pasien" disabled />
                                                     </div>
-                                                    <label class="form-label">Tanggal Lahir</label>
+                                                    <label class="form-label">No Rekam Medis</label>
                                                     <div class="input-group mb-1">
-                                                        <input type="number" class="form-control" id="nik_pasien" name="nik_pasien" placeholder="NIK pasien"
+                                                        <input type="number" class="form-control" id="norm_pasien" name="norm_pasien" placeholder="NoRM pasien"
                                                             aria-label="Nik akun pasien" disabled />
-                                        </div>
+                                                        </div>
+                                                        <label class="form-label">No Peserta</label>
+                                                        <div class="input-group mb-1">
+                                                            <input type="number" class="form-control" id="no_bpjs" name="no_bpjs" placeholder="No Peserta"
+                                                                aria-label="Nik akun pasien" disabled />
+                                                        </div>
+                                                        <label class="form-label">Status Hubungan Pasien</label>
+                                                        <select class="form-select" aria-label="hubungan_pasien select " id="hubungan_pasien" name="hubungan_pasien">
+                                                            <option selected>Pilih Hubungan</option>
+                                                            <option value="Diri Sendiri2">Diri Sendiri</option>
+                                                            <option value="Ayah">Ayah</option>
+                                                            <option value="Ibu">Ibu</option>
+                                                            <option value="Anak">Anak</option>
+                                                            <option value="Kakek">Kakek</option>
+                                                            <option value="Nenek">Nenek</option>
+                                                            <option value="Saudara">Saudara</option>
+                                                            <option value="Lainnya">Lainnya</option>
+                                                        </select>
+
                                         <br>
+                                        <button type="button" class="btn btn-primary" id="tambah_anggota_pasien" name="tambah_anggota_pasien" disabled>Tambah
+                                            Anggota</button>
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
