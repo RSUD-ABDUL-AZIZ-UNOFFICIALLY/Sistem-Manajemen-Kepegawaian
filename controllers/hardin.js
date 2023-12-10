@@ -265,7 +265,7 @@ module.exports = {
             });
         }
     },
-    postFamily: async (req, res) => {
+    addFamily: async (req, res) => {
         try {
             let { name, nik, noRm, familyId } = req.body;
             if (!name || !nik || !noRm || !familyId) {
@@ -310,4 +310,43 @@ module.exports = {
             });
         }
     },
+    getUser: async (req, res) => {
+        try {
+            let { no_wa } = req.query;
+            if (!no_wa) {
+                return res.status(400).json({
+                    error: true,
+                    message: "no_wa tidak boleh kosong",
+                });
+            }
+            let user = await Pasien.findOne({
+                where: {
+                    wa: no_wa,
+                },
+            });
+            if (!user) {
+                return res.status(400).json({
+                    error: true,
+                    message: "no whatsapp tidak terdaftar",
+                });
+            }
+            let family = await FamilyPasein.findAll({
+                where: {
+                    familyId: user.id,
+                },
+            });
+            user.family = family;
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: { user, family }
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                error: true,
+                message: "Internal Server Error",
+            });
+        }
+    }
 };

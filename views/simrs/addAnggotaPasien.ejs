@@ -30,8 +30,78 @@
                                     </div>
                                     <!-- /.card-header -->
                                     <div class="card-body">
-                                        <input type="month" class="form-control" id="riwayatDate" name="start" min="2023-03" />
+                                        <label for="basic-url" class="form-label">Cari Akun Pasien</label>
+                                        <div class="input-group mb-3">
+                                            <input type="number" class="form-control" id="no_wa_akun" name="no_wa_akun" placeholder="nomor whatsapp pasien"
+                                                aria-label="nomor whatsapp pasien" aria-describedby="button-cari_akun" />
+                                            <button class="btn btn-outline-info" type="button" id="button-cari_akun"><i
+                                                    class="fa-solid fa-magnifying-glass mx-2"></i>Cari</button>
+                                        </div>
+                                        <label for="basic-url" class="form-label">Nama Akun</label>
+                                        <div class="input-group mb-1">
+                                            <input type="text" class="form-control" id="nama_akun" name="nama_akun" placeholder="Nama akun pasien"
+                                                aria-label="Nama akun pasien" disabled />
+                                        </div>
+                                        <label for="basic-url" class="form-label">NIK Akun</label>
+                                        <div class="input-group mb-1">
+                                            <input type="number" class="form-control" id="nik_akun" name="nik_akun" placeholder="NIK pasien"
+                                                aria-label="Nik akun pasien" disabled />
+                                        </div>
+                                        <input type="hidden" class="form-control" id="id_akun" name="id_akun" disabled />
                                         <br>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    </div>
+                                    </div>
+                                    </section>
+                                    <section class="content">
+                                        <div class="container-fluid">
+                                            <div class="card card-primary">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Tambah Anggota Keluarga Pasien</h3>
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <label class="form-label">Cari Pasien</label>
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-control select2" id="cari_pasien" name="cari_pasien"
+                                                            aria-label="Floating label select example">
+                                                            <option selected>Cari pasien</option>
+                                                            <option value="1">One</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                    
+                                                    </div>
+                                                    <label class="form-label">Nama</label>
+                                                    <div class="input-group mb-1">
+                                                        <input type="text" class="form-control" id="nama_pasien" name="nama_pasien"
+                                                            placeholder="Nama akun pasien" aria-label="Nama akun pasien" disabled />
+                                                    </div>
+                                                    <label class="form-label">NIK</label>
+                                                    <div class="input-group mb-1">
+                                                        <input type="number" class="form-control" id="nik_pasien" name="nik_pasien" placeholder="NIK pasien"
+                                                            aria-label="Nik akun pasien" disabled />
+                                                    </div>
+                                                    <label class="form-label">Tanggal Lahir</label>
+                                                    <div class="input-group mb-1">
+                                                        <input type="number" class="form-control" id="nik_pasien" name="nik_pasien" placeholder="NIK pasien"
+                                                            aria-label="Nik akun pasien" disabled />
+                                        </div>
+                                        <br>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                            </div>
+                        </section>
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Anggoat Keluarga Pasein</h3>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
                                         <div class="card-body table-responsive p-0">
                                             <table class="table table-bordered table-head-fixed text-nowrap">
                                                 <thead>
@@ -40,50 +110,18 @@
                                                         <th>No RM</th>
                                                         <th>Nama</th>
                                                         <th>NIK</th>
-                                                        <th>No BPJS</th>
+                                                        <th>No Peserta</th>
                                                         <th>bidang</th>
                                                         <th style="width: 40px">Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                            </div>
-                            </section>
-                            <section class="content">
-                                <div class="container-fluid">
-                                    <div class="card card-primary">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Anggoat Pasein
-                                            </h3>
-                                        </div>
-                                        <!-- /.card-header -->
-                                        <div class="card-body">
-                                            <input type="month" class="form-control" id="riwayatDate" name="start" min="2023-03" />
-                                            <br>
-                                            <div class="card-body table-responsive p-0">
-                                                <table class="table table-bordered table-head-fixed text-nowrap">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width: 10px">#</th>
-                                                            <th>No RM</th>
-                                                            <th>Nama</th>
-                                                            <th>NIK</th>
-                                                            <th>No BPJS</th>
-                                                            <th>bidang</th>
-                                                            <th style="width: 40px">Status</th>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody></tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <!-- /.card-body -->
-                                    </div>
-                                </div>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                        </table>
+                                                        </div>
+                                                        </div>
+                                                        <!-- /.card-body -->
+                                                        </div>
+                                                        </div>
                         </section>
                         <!-- /.content -->
                 </div>
@@ -99,7 +137,7 @@
     <!-- ./wrapper -->
 
     <%- include('../template/footer'); %>
-        <script src="../asset/js/rekap.js"></script>
+        <script src="../asset/js/simrs/rm/pasien.js"></script>
 </body>
 
 </html>

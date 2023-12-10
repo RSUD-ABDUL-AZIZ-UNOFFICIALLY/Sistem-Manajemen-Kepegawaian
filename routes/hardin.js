@@ -9,5 +9,8 @@ router.post('/login/sendOtp', controller.loginSendOtp);
 router.post('/login', controller.login);
 
 router.get('/family', middleware.check, controller.getFamily);
+router.post('/family', middleware.check, controller.addFamily);
+router.get('/rm/user', controller.getUser);
+router.get('/rm/pasie', controller.getPasien);
 
 module.exports = router;
