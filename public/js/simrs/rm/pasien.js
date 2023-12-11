@@ -33,6 +33,24 @@ $("#button-cari_akun").on("click", function () {
         }
     });
 });
+async function getFamily() {
+    let id_akun = $("#id_akun").val();
+    let data = await $.ajax({
+        url: "/rest/hardin/family?id_akun=" + id_akun,
+        method: "GET",
+        success: function (data) {
+            console.log(data);
+            return data;
+        },
+        error: function (error) {
+            return Swal.fire({
+                text: error.responseJSON.message,
+                icon: "warning",
+            });
+        }
+    });
+    return data;
+}
 $("#cari_pasien").select2({
     placeholder: "Cari data pasien",
     ajax: {
@@ -99,31 +117,31 @@ $("#tambah_anggota_pasien").on("click", function () {
         });
     }
     let data = {
-        name: nama, nik: nik, noRm: no_rkm_medis, familyId: id_akun, hubungan
+        name: nama, nik: nik, noRm: no_rkm_medis, familyId: id_akun, hubungan: hubungan
     }
     console.log(data);
-    // $.ajax({
-    //     url: "/rest/hardin/family",
-    //     method: "POST",
-    //     data: data,
-    //     success: function (data) {
-    //         console.log(data);
-    //         Swal.fire({
-    //             text: "Data keluarga berhasil ditambahkan",
-    //             icon: "success",
-    //         });
-    //         $("#hubungan").val("");
-    //         $("#nama").val("");
-    //         $("#nik").val("");
-    //         $("#tgl_lahir").val("");
-    //         $("#no_bpjs").val("");
-    //     },
-    //     error: function (error) {
-    //         return Swal.fire({
-    //             text: error.responseJSON.message,
-    //             icon: "warning",
-    //         });
-    //     }
-    // });
+    $.ajax({
+        url: "/rest/hardin/family",
+        method: "POST",
+        data: data,
+        success: function (data) {
+            console.log(data);
+            Swal.fire({
+                text: "Data keluarga berhasil ditambahkan",
+                icon: "success",
+            });
+            $("#hubungan").val("");
+            $("#nama").val("");
+            $("#nik").val("");
+            $("#tgl_lahir").val("");
+            $("#no_bpjs").val("");
+        },
+        error: function (error) {
+            return Swal.fire({
+                text: error.responseJSON.message,
+                icon: "warning",
+            });
+        }
+    });
 
 });

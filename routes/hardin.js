@@ -8,7 +8,8 @@ router.post('/daftar', controller.daftar);
 router.post('/login/sendOtp', controller.loginSendOtp);
 router.post('/login', controller.login);
 
-router.get('/family', middleware.check, controller.getFamily);
+router.get('/myfamily', middleware.check, controller.getFamily);
+router.get('/family', controller.getFamilys);
 router.post('/family', controller.addFamily);
 router.get('/rm/user', controller.getUser);
 router.get('/rm/pasien', controller.getPasien);

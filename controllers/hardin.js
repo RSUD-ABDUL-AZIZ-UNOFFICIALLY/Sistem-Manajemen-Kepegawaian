@@ -266,6 +266,27 @@ module.exports = {
             });
         }
     },
+    getFamilys: async (req, res) => {
+        try {
+            let { id_akun } = req.query;
+            let family = await FamilyPasein.findAll({
+                where: {
+                    familyId: id_akun,
+                },
+            });
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: family
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                error: true,
+                message: "Internal Server Error",
+            });
+        }
+    },
     addFamily: async (req, res) => {
         try {
             let { name, nik, noRm, familyId, hubungan } = req.body;
@@ -281,25 +302,22 @@ module.exports = {
                     message: "NIK tidak valid",
                 });
             }
-            let user = await Pasien.findOne({
-                where: {
-                    nik: nik,
-                },
-            });
-            if (!user) {
-                return res.status(400).json({
-                    error: true,
-                    message: "NIK tidak terdaftar",
-                });
-            }
             let data = {
-                familyId: id,
+                familyId: familyId,
                 nama: name,
                 hubungan: hubungan,
                 nik: nik,
                 noRm: noRm
             }
-            await FamilyPasein.create(data);
+            try {
+                await FamilyPasein.create(data);
+            } catch (error) {
+                return res.status(401).json({
+                    error: false,
+                    message: "Data sudah ada",
+                });
+
+            }
             return res.status(200).json({
                 error: false,
                 message: "success",

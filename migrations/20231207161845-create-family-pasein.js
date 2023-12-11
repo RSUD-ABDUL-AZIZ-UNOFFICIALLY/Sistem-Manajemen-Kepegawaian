@@ -38,15 +38,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    },
-      {
-        indexes: [
-          {
-            unique: true,
-            fields: ['id', 'noRm']
-          }
-        ]
-      });
+    });
+    await queryInterface.addConstraint('FamilyPaseins', {
+      type: 'unique',
+      fields: ['familyId', 'noRm'],
+      name: 'unique_noRm_familyId'
+    });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('FamilyPaseins');
