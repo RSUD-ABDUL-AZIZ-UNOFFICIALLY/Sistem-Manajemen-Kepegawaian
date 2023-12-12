@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     nik: DataTypes.BIGINT,
     nama: DataTypes.STRING,
     hubungan: DataTypes.STRING,
-    noRm: DataTypes.INTEGER
+    noRm: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'FamilyPasein',

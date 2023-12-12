@@ -1,6 +1,15 @@
 const jwt = require("jsonwebtoken");
-const { User, Atasan, Profile } = require("../models");
+const { User, Atasan, Access } = require("../models");
 const { Buffer } = require('buffer');
+const { createClient } = require('redis');
+const client = createClient({
+    url: process.env.REDIS_URL
+});
+client.on('error', (error) => {
+    console.error(error);
+});
+client.connect();
+
 
 module.exports = {
     login: async (req, res, next) => {
@@ -80,36 +89,45 @@ module.exports = {
         res.clearCookie("token");
         res.redirect("/");
     },
-    checkProfile: async (req, res, next) => {
-        try {
-            const token = req.cookies.token;
-            const secretKey = process.env.JWT_SECRET_KEY;
-            const decoded = jwt.verify(token, secretKey);
-            const host = req.get("host");
-            let getFoto = await Profile.findOne({
-                where: {
-                    nik: decoded.id,
-                },
-            });
-            let data = {
-                    "url" : host+"/asset/img/cowok.png",
+    checkHakAkses: (data) => {
+        return async (req, res, next) => {
+            try {
+                const token = req.cookies.token;
+                if (!token) {
+                    return res.redirect("/");
+                }
+                if (await client.exists(`Token:Accesses:${token}`)) {
+                    let check = await client.hExists(`Token:Accesses:${token}`, data);
+                    if (check) {
+                        next();
+                    } else {
+                        return res.redirect("/");
+                    }
+                }
+                const secretKey = process.env.JWT_SECRET_KEY;
+                const decoded = jwt.verify(token, secretKey);
+                let Accesses = await Access.findAll({
+                    where: {
+                        wa: decoded.wa,
+                    }
+                });
+                let hakAkses = [];
+                for (let i = 0; i < Accesses.length; i++) {
+                    hakAkses.push(Accesses[i].status);
+                    client.hSet(`Token:Accesses:${token}`, Accesses[i].status, 'true');
+                }
+                client.expire(`Token:Accesses:${token}`, 60 * 60);
+                let check = hakAkses.includes(data);
+                if (check) {
+                    next();
+                } else {
+                    return res.redirect("/");
+                }
+            } catch (err) {
+                console.log(err);
+                return res.redirect("/");
             }
-            if (getFoto) {
-                // get host name
-                data.url = getFoto.url;
-            }
-            data = JSON.stringify(data);
-            let encodedData = Buffer.from(data).toString('base64');
-            console.log(data);
-            console.log(encodedData);
-            res.cookie("profile", encodedData, {
-                maxAge: 1000 * 60 * 60 * 24 * 7,
-                httpOnly: false,
-            });
-            next();
-        } catch (error) {
-            console.log(error);
-            next();
         }
-    }
+    },
+
 };

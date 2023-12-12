@@ -24,6 +24,7 @@ $("#button-cari_akun").on("click", function () {
                 });
             }
             $("#cari_pasien").prop('disabled', false);
+            getFamily();
         },
         error: function (error) {
             return Swal.fire({
@@ -35,12 +36,23 @@ $("#button-cari_akun").on("click", function () {
 });
 async function getFamily() {
     let id_akun = $("#id_akun").val();
-    let data = await $.ajax({
+    await $.ajax({
         url: "/rest/hardin/family?id_akun=" + id_akun,
         method: "GET",
-        success: function (data) {
-            console.log(data);
-            return data;
+        success: function (response) {
+            console.log(response.data);
+            let rows = $("tbody > tr");
+            rows.remove();
+            for (let i = 0; i < response.data.length; i++) {
+                let nomor = i + 1
+                let row = $("<tr>");
+                row.append($("<td>" + nomor + "</td>"));
+                row.append($("<td>" + response.data[i].noRm + "</td>"));
+                row.append($("<td>" + response.data[i].nama + "</td>"));
+                row.append($("<td>" + response.data[i].nik + "</td>"));
+                row.append($("<td>" + response.data[i].hubungan + "</td>"));
+                $("tbody").append(row);
+            }
         },
         error: function (error) {
             return Swal.fire({
@@ -49,7 +61,6 @@ async function getFamily() {
             });
         }
     });
-    return data;
 }
 $("#cari_pasien").select2({
     placeholder: "Cari data pasien",
@@ -135,6 +146,7 @@ $("#tambah_anggota_pasien").on("click", function () {
             $("#nik").val("");
             $("#tgl_lahir").val("");
             $("#no_bpjs").val("");
+            getFamily();
         },
         error: function (error) {
             return Swal.fire({

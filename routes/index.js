@@ -19,7 +19,7 @@ router.get('/review', middleware.login, controller.review);
 router.get('/report', middleware.login, controller.report);
 router.get('/contact', middleware.login, controller.getContact); 
 
-router.get('/simrs/regis', middleware.login, controller.addAnggotaPasien);
+router.get('/simrs/regis', middleware.login, middleware.checkHakAkses('rm'), controller.addAnggotaPasien);
 
 router.get('/helpdesk', middleware.login, controller.helpDesk);
 

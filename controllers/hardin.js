@@ -246,7 +246,6 @@ module.exports = {
                     familyId: id,
                 },
             });
-            console.log(family);
             if (family.length < 1) {
                 return res.status(400).json({
                     error: true,
@@ -294,12 +293,6 @@ module.exports = {
                 return res.status(400).json({
                     error: true,
                     message: "Data tidak boleh kosong",
-                });
-            }
-            if (nik.length != 16) {
-                return res.status(400).json({
-                    error: true,
-                    message: "NIK tidak valid",
                 });
             }
             let data = {
