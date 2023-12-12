@@ -103,26 +103,28 @@ module.exports = {
                     } else {
                         return res.redirect("/");
                     }
-                }
-                const secretKey = process.env.JWT_SECRET_KEY;
-                const decoded = jwt.verify(token, secretKey);
-                let Accesses = await Access.findAll({
-                    where: {
-                        wa: decoded.wa,
-                    }
-                });
-                let hakAkses = [];
-                for (let i = 0; i < Accesses.length; i++) {
-                    hakAkses.push(Accesses[i].status);
-                    client.hSet(`Token:Accesses:${token}`, Accesses[i].status, 'true');
-                }
-                client.expire(`Token:Accesses:${token}`, 60 * 60);
-                let check = hakAkses.includes(data);
-                if (check) {
-                    next();
                 } else {
-                    return res.redirect("/");
+                    const secretKey = process.env.JWT_SECRET_KEY;
+                    const decoded = jwt.verify(token, secretKey);
+                    let Accesses = await Access.findAll({
+                        where: {
+                            wa: decoded.wa,
+                        }
+                    });
+                    let hakAkses = [];
+                    for (let i = 0; i < Accesses.length; i++) {
+                        hakAkses.push(Accesses[i].status);
+                        client.hSet(`Token:Accesses:${token}`, Accesses[i].status, 'true');
+                    }
+                    client.expire(`Token:Accesses:${token}`, 60 * 60);
+                    let check = hakAkses.includes(data);
+                    if (check) {
+                        next();
+                    } else {
+                        return res.redirect("/");
+                    }
                 }
+
             } catch (err) {
                 console.log(err);
                 return res.redirect("/");
