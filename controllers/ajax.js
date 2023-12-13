@@ -1003,32 +1003,65 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let body = req.body;
-    let sisaCuti = await Cuti.findAll({
-      where: {
-        nik: decoded.id,
-        type_cuti: body.type_cuti,
-      },
-      attributes: ["jumlah"],
-    });
-    let Boss = await Atasan.findOne({
-      where: {
-        user: decoded.id,
-      },
-      include: [
-        {
-          model: User,
-          as: "atasanLangsung",
-          include: [
-            {
-              model: Departemen,
-              as: "departemen",
-            },
-          ],
-        },
-      ],
-    });
     const t = await sequelize.transaction();
+    let year = body.mulai.split("-");
     try {
+      let sisaCuti = await Cuti.findAll({
+        where: {
+          nik: decoded.id,
+          type_cuti: body.type_cuti,
+        },
+        include: [
+          {
+            model: Cuti_approval,
+            as: "approval",
+            where: {
+              status: "Disetujui",
+              createdAt: {
+                [Op.startsWith]: year[0],
+              },
+            },
+          },
+        ],
+        attributes: ["jumlah"],
+      });
+      let getJenisCuti = await Jns_cuti.findOne({
+        attributes: ["total", "max"],
+        where: {
+          id: body.type_cuti,
+        },
+      });
+
+      let Boss = await Atasan.findOne({
+        where: {
+          user: decoded.id,
+        },
+        include: [
+          {
+            model: User,
+            as: "atasanLangsung",
+            include: [
+              {
+                model: Departemen,
+                as: "departemen",
+              },
+            ],
+          },
+        ],
+      });
+      let totalCuti = 0;
+      for (let i = 0; i < sisaCuti.length; i++) {
+        totalCuti += sisaCuti[i].jumlah;
+      }
+      let totalCutis = totalCuti + parseInt(body.jumlah);
+      if (totalCutis > getJenisCuti.total) {
+        return res.status(400).json({
+          error: true,
+          message: "Opps",
+          icon: "warning",
+          data: "Jumlah cuti melebihi batas",
+        });
+      }
       let saveCuti = await Cuti.create(
         {
           nik: decoded.id,
@@ -1054,9 +1087,9 @@ module.exports = {
       return res.status(200).json({
         error: false,
         message: "success",
-        boss: Boss,
-        data: aproveCuti,
-        saveCuti: saveCuti,
+        data: null,
+        // data: aproveCuti,
+        // saveCuti: saveCuti,
       });
     } catch (error) {
       await t.rollback();
@@ -1097,6 +1130,41 @@ module.exports = {
                 attributes: ["nama", "nip", "jab"],
               },
             ],
+          },
+        ],
+        order: [["createdAt", "ASC"]],
+      });
+      if (data.length == 0) {
+        return res.status(404).json({
+          error: true,
+          message: "data not found",
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getSisaCuti: async (req, res) => {
+    let user = req.account;
+    try {
+      let data = await Cuti.findAll({
+        where: {
+          nik: user.nik,
+        },
+        include: [
+          {
+            model: Jns_cuti,
+            as: "jenis_cuti",
+            attributes: ["type_cuti"],
           },
         ],
         order: [["createdAt", "ASC"]],

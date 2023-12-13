@@ -52,14 +52,20 @@ $('#jnsCuti').change(function () {
     // enable reservation
     $('#reservation').prop('disabled', false);
     let id = $(this).val();
-    console.log(id);
-    console.log(dataCuti);
     let jnsCuti = dataCuti.find(x => x.id == id);
     console.log(jnsCuti);
-
+    $('#Keterangan_cuti').text(jnsCuti.type_cuti + ' maksimal ' + jnsCuti.max + ' hari secara berturut-turut dan maksimal ' + jnsCuti.total + ' hari dalam setahun.');
+    $('#reservation').val('');
+    $('#totalReservation').val('');
+    let mindate
+    if (jnsCuti.type_cuti == "Cuti Sakit") {
+        mindate = moment().clone().startOf('week')
+    } else {
+        mindate = moment().startOf('day')
+    }
     $('#reservation').daterangepicker({
         // opens: 'left',
-        minDate: moment().startOf('day'),
+        minDate: mindate,
         locale: {
             format: 'DD/MM/YYYY'
         }
@@ -84,7 +90,6 @@ $('#jnsCuti').change(function () {
             return false;
         }
         if (hariKerja == "5 Hari kerja") {
-            console.log('5 hari kerja');
             $('#totalReservation').prop('disabled', false);
         }
         $('#totalReservation').val(selisihHari);
@@ -116,14 +121,23 @@ $('#Cuti').submit(function (event) {
                 showConfirmButton: false,
                 timer: 2000
             })
-            $('#jnsCuti').val('');
+            // $('#jnsCuti').val('');
             $('#reservation').val('');
             $('#totalReservation').val('');
+            $('#reservation').prop('disabled', false);
+            $('#totalReservation').prop('disabled', false);
             $('#keterangan').val('');
             return;
         },
         error: function (error) {
             console.log(error);
+            Swal.fire({
+                icon: error.responseJSON.icon,
+                title: error.responseJSON.message,
+                text: error.responseJSON.data,
+                showConfirmButton: false,
+                timer: 2000
+            });
         }
     });
 });
