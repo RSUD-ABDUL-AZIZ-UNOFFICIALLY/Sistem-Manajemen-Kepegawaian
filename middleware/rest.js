@@ -4,7 +4,7 @@ module.exports = {
         try {
             const token = (req.headers['authorization']).split(' ')[1];
             let raw = jwt.verify(token, process.env.JWT_SECRET_KEY);
-            console.log(raw)
+            console.log(token)
             req.user = raw;
             next();
         } catch (err) {

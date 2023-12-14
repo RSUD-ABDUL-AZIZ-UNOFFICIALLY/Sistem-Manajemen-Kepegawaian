@@ -10,6 +10,7 @@ router.post('/login/sendOtp', controller.loginSendOtp);
 router.post('/login', controller.login);
 
 router.get('/myfamily', middleware.check, controller.getFamily);
+router.get('/profile', middleware.check, controller.getProfile);
 router.get('/family', checkHakAkses('rm'), controller.getFamilys);
 router.post('/family', checkHakAkses('rm'), controller.addFamily);
 router.get('/rm/user', checkHakAkses('rm'), controller.getUser);

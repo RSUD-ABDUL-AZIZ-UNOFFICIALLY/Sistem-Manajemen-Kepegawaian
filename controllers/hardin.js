@@ -241,6 +241,7 @@ module.exports = {
     getFamily: async (req, res) => {
         try {
             let { id } = req.user;
+            console.log(id)
             let family = await FamilyPasein.findAll({
                 where: {
                     familyId: id,
@@ -256,6 +257,27 @@ module.exports = {
                 error: false,
                 message: "success",
                 data: family
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                error: true,
+                message: "Internal Server Error",
+            });
+        }
+    },
+    getProfile: async (req, res) => {
+        try {
+            let { id } = req.user;
+            let user = await Pasien.findOne({
+                where: {
+                    id: id,
+                },
+            });
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: user
             });
         } catch (error) {
             console.log(error);
