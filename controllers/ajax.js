@@ -22,7 +22,7 @@ const { Op } = require("sequelize");
 const fs = require("fs");
 const { convertdate, convertdatetime } = require("../helper");
 const { uploadImage } = require("../helper/upload");
-const { sendWa } = require("../helper/message");
+const { sendWa, sendGrub } = require("../helper/message");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
@@ -1003,6 +1003,13 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let body = req.body;
+    let account = req.account;
+    let dep = await Departemen.findOne({
+      where: {
+        id: account.dep,
+      },
+    });
+
     const t = await sequelize.transaction();
     let year = body.mulai.split("-");
     try {
@@ -1062,27 +1069,27 @@ module.exports = {
           data: "Jumlah cuti melebihi batas",
         });
       }
-      let saveCuti = await Cuti.create(
-        {
-          nik: decoded.id,
-          type_cuti: body.type_cuti,
-          mulai: body.mulai,
-          samapi: body.samapi,
-          jumlah: body.jumlah,
-          keterangan: body.keterangan,
-        },
-        { transaction: t }
-      );
-      let aproveCuti = await Cuti_approval.create(
-        {
-          id_cuti: saveCuti.id,
-          nik: Boss.atasanLangsung.nik,
-          departement: Boss.atasanLangsung.departemen.bidang,
-          jabatan: Boss.atasanLangsung.jab,
-          status: "Menunggu",
-        },
-        { transaction: t }
-      );
+      // let saveCuti = await Cuti.create(
+      //   {
+      //     nik: decoded.id,
+      //     type_cuti: body.type_cuti,
+      //     mulai: body.mulai,
+      //     samapi: body.samapi,
+      //     jumlah: body.jumlah,
+      //     keterangan: body.keterangan,
+      //   },
+      //   { transaction: t }
+      // );
+      // let aproveCuti = await Cuti_approval.create(
+      //   {
+      //     id_cuti: saveCuti.id,
+      //     nik: Boss.atasanLangsung.nik,
+      //     departement: Boss.atasanLangsung.departemen.bidang,
+      //     jabatan: Boss.atasanLangsung.jab,
+      //     status: "Menunggu",
+      //   },
+      //   { transaction: t }
+      // );
 
       console.log(Boss.atasanLangsung.wa);
       let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
@@ -1091,11 +1098,18 @@ module.exports = {
         "mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. \n" +
         "Silahkan login ke aplikasi SIMPEG untuk menyetujui atau menolak pengajuan cuti tersebut. \n" +
         "Terima kasih.";
+      let pesanGrub = "Pegawai dengan nama " + decoded.nama + " (" + decoded.id + ") " +
+        "di bidang " + dep.bidang + " mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. ";
       let data = JSON.stringify({
         message: pesan,
         telp: Boss.atasanLangsung.wa
       });
+      let dataGrub = JSON.stringify({
+        message: pesanGrub,
+        telp: 'LogCuti'
+      });
       await sendWa(data);
+      await sendGrub(dataGrub);
       await t.commit();
       return res.status(200).json({
         error: false,

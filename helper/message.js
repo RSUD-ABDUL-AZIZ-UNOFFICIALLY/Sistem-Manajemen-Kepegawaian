@@ -33,7 +33,7 @@ async function sendGrub(data){
     let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
     let config = {
         method: "post",
-        url: process.env.HOSTWA2 + "/api/wa/sendgrub",
+        url: process.env.HOSTWA + "/api/wa/sendgrub",
         headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
