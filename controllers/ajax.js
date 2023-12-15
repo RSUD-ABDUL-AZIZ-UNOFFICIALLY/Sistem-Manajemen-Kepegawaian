@@ -22,7 +22,7 @@ const { Op } = require("sequelize");
 const fs = require("fs");
 const { convertdate, convertdatetime } = require("../helper");
 const { uploadImage } = require("../helper/upload");
-const e = require("express");
+const { sendWa } = require("../helper/message");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
@@ -1026,7 +1026,7 @@ module.exports = {
         attributes: ["jumlah"],
       });
       let getJenisCuti = await Jns_cuti.findOne({
-        attributes: ["total", "max"],
+        attributes: ["total", "max", "type_cuti"],
         where: {
           id: body.type_cuti,
         },
@@ -1083,6 +1083,19 @@ module.exports = {
         },
         { transaction: t }
       );
+
+      console.log(Boss.atasanLangsung.wa);
+      let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
+      let pesan = "Halo " + jnsKelBoss + Boss.atasanLangsung.nama + ", \n" +
+        "Pegawai dengan nama " + decoded.nama + " (" + decoded.id + ") " +
+        "mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. \n" +
+        "Silahkan login ke aplikasi SIMPEG untuk menyetujui atau menolak pengajuan cuti tersebut. \n" +
+        "Terima kasih.";
+      let data = JSON.stringify({
+        message: pesan,
+        telp: Boss.atasanLangsung.wa
+      });
+      await sendWa(data);
       await t.commit();
       return res.status(200).json({
         error: false,

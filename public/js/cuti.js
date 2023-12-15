@@ -78,7 +78,7 @@ $('#jnsCuti').change(function () {
         const tanggalAkhir = moment(end, 'YYYY-MM-DD');
 
         // Menghitung perbedaan hari
-        const selisihHari = tanggalAkhir.diff(tanggalAwal, 'days');
+        const selisihHari = tanggalAkhir.diff(tanggalAwal, 'days') + 1;
         if (selisihHari > jnsCuti.max) {
             Swal.fire({
                 icon: 'error',
