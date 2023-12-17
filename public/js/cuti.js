@@ -38,7 +38,6 @@ $.ajax({
     url: '/api/cuti/jns',
     method: 'GET',
     success: function (response) {
-        console.log(response);
         dataCuti = response.data;
         // change select option jnscuti type_cuti
         response.data.forEach(element => {
@@ -53,7 +52,6 @@ $('#jnsCuti').change(function () {
     $('#reservation').prop('disabled', false);
     let id = $(this).val();
     let jnsCuti = dataCuti.find(x => x.id == id);
-    console.log(jnsCuti);
     $('#Keterangan_cuti').text(jnsCuti.type_cuti + ' maksimal ' + jnsCuti.max + ' hari secara berturut-turut dan maksimal ' + jnsCuti.total + ' hari dalam setahun.');
     $('#reservation').val('');
     $('#totalReservation').val('');
@@ -107,13 +105,11 @@ $('#Cuti').submit(function (event) {
         keterangan: $('#alasanCuti').val(),
         maxCuti: maxCuti,
     };
-    console.log(datafrom);
     $.ajax({
         url: '/api/cuti',
         method: 'POST',
         data: datafrom,
         success: function (response) {
-            console.log(response);
             Swal.fire({
                 icon: 'success',
                 title: 'Succeed',
@@ -127,7 +123,8 @@ $('#Cuti').submit(function (event) {
             $('#reservation').prop('disabled', false);
             $('#totalReservation').prop('disabled', false);
             $('#keterangan').val('');
-            return;
+            let tahun = $('#tahun').val();
+            getRiwayatCuti(tahun);
         },
         error: function (error) {
             console.log(error);
@@ -158,7 +155,6 @@ async function getRiwayatCuti(tahun) {
         url: '/api/cuti/riwayat?tahun=' + tahun,
         method: 'GET',
         success: function (response) {
-            console.log(response);
             parsingDataCuti(response.data);
             return response.data;
         },

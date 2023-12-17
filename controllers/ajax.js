@@ -1069,27 +1069,27 @@ module.exports = {
           data: "Jumlah cuti melebihi batas",
         });
       }
-      // let saveCuti = await Cuti.create(
-      //   {
-      //     nik: decoded.id,
-      //     type_cuti: body.type_cuti,
-      //     mulai: body.mulai,
-      //     samapi: body.samapi,
-      //     jumlah: body.jumlah,
-      //     keterangan: body.keterangan,
-      //   },
-      //   { transaction: t }
-      // );
-      // let aproveCuti = await Cuti_approval.create(
-      //   {
-      //     id_cuti: saveCuti.id,
-      //     nik: Boss.atasanLangsung.nik,
-      //     departement: Boss.atasanLangsung.departemen.bidang,
-      //     jabatan: Boss.atasanLangsung.jab,
-      //     status: "Menunggu",
-      //   },
-      //   { transaction: t }
-      // );
+      let saveCuti = await Cuti.create(
+        {
+          nik: decoded.id,
+          type_cuti: body.type_cuti,
+          mulai: body.mulai,
+          samapi: body.samapi,
+          jumlah: body.jumlah,
+          keterangan: body.keterangan,
+        },
+        { transaction: t }
+      );
+      let aproveCuti = await Cuti_approval.create(
+        {
+          id_cuti: saveCuti.id,
+          nik: Boss.atasanLangsung.nik,
+          departement: Boss.atasanLangsung.departemen.bidang,
+          jabatan: Boss.atasanLangsung.jab,
+          status: "Menunggu",
+        },
+        { transaction: t }
+      );
 
       console.log(Boss.atasanLangsung.wa);
       let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
