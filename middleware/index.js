@@ -76,7 +76,6 @@ module.exports = {
             const token = req.cookies.token;
             const secretKey = process.env.JWT_SECRET_KEY;
             const decoded = jwt.verify(token, secretKey);
-            // echo(decoded);
             if (decoded) {
                 return res.redirect("/daily");
             }
@@ -113,9 +112,9 @@ module.exports = {
                         }
                     });
                     let hakAkses = [];
-                    for (let i = 0; i < Accesses.length; i++) {
-                        hakAkses.push(Accesses[i].status);
-                        client.hSet(`Token:Accesses:${token}`, Accesses[i].status, 'true');
+                    for (const element of Accesses) {
+                        hakAkses.push(element.status);
+                        client.hSet(`Token:Accesses:${token}`, element.status, 'true');
                     }
                     client.expire(`Token:Accesses:${token}`, 60 * 60);
                     let check = hakAkses.includes(data);
@@ -131,6 +130,5 @@ module.exports = {
                 return res.redirect("/");
             }
         }
-    },
-
+    }
 };

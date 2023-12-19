@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
-const { Pasien, FamilyPasein } = require("../models");
+const { Pasien, FamilyPasein,Log } = require("../models");
 const { Op } = require("sequelize");
 const { sendWa } = require("../helper/message");
 const { apiGetSimrs } = require("../helper/simrs");
@@ -222,6 +222,7 @@ module.exports = {
                 process.env.JWT_SECRET_KEY,
                 { expiresIn: "7d" }
             );
+            req.cookies.token = token;
             return res.status(200).json({
                 error: false,
                 message: "success",
@@ -287,6 +288,39 @@ module.exports = {
             });
         }
     },
+    getRegPoli: async (req, res) => {
+        try {
+            let data = await apiGetSimrs('/api/ralan/poli');
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: data.data
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                error: true,
+                message: "Internal Server Error",
+            });
+        }
+    },
+    getRegJadwal: async (req, res) => {
+        try {
+            let { kd_poli, tanggal_periksa } = req.query;
+            let data = await apiGetSimrs(`/api/registrasi/jadwal?kd_poli=${kd_poli}&tanggal_periksa=${tanggal_periksa}`);
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: data.data
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                error: true,
+                message: "Internal Server Error",
+            });
+        }
+    },
     getFamilys: async (req, res) => {
         try {
             let { id_akun } = req.query;
@@ -325,6 +359,16 @@ module.exports = {
                 noRm: noRm
             }
             try {
+                let cookie = req.cookies.token;
+                let decoded = jwt.verify(cookie, process.env.JWT_SECRET_KEY);
+                Log.create({
+                    nowa : decoded.wa,
+                    url : req.originalUrl,
+                    method : req.method,
+                    ip: req.ip,
+                    user_agent : req.headers['user-agent'] , 
+                    body : JSON.stringify(req.body)
+                })
                 await FamilyPasein.create(data);
             } catch (error) {
                 return res.status(401).json({
