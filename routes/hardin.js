@@ -14,6 +14,8 @@ router.get('/profile', middleware.check, controller.getProfile);
 router.get('/reg/poli', middleware.check, controller.getRegPoli);
 router.get('/reg/jadwal', middleware.check, controller.getRegJadwal);
 router.get('/reg/asuransi', middleware.check, controller.getAsuransi);
+router.get('/reg/bookingperiksa', middleware.check, controller.getBookingPeriksa);
+router.post('/reg/bookingperiksa', middleware.check, controller.postBookingPeriksa);
 router.get('/family', checkHakAkses('rm'), controller.getFamilys);
 router.post('/family', checkHakAkses('rm'), controller.addFamily);
 router.get('/rm/user', checkHakAkses('rm'), controller.getUser);

@@ -3,7 +3,7 @@ const axios = require("axios");
 const { Pasien, FamilyPasein,Log } = require("../models");
 const { Op } = require("sequelize");
 const { sendWa } = require("../helper/message");
-const { apiGetSimrs } = require("../helper/simrs");
+const { apiGetSimrs, apiPostSimrs } = require("../helper/simrs");
 const { createClient } = require('redis');
 const client = createClient({
     url: process.env.REDIS_URL
@@ -297,11 +297,11 @@ module.exports = {
                 data: data.data
             });
         } catch (error) {
-            console.log(error);
-            return res.status(500).json({
+            console.log(error.response);
+            return res.status(error.response.status).json({
                 error: true,
-                message: "Internal Server Error",
-            });
+                message: error.response.data.data,
+           });
         }
     },
     getRegJadwal: async (req, res) => {
@@ -314,11 +314,11 @@ module.exports = {
                 data: data.data
             });
         } catch (error) {
-            console.log(error);
-            return res.status(500).json({
+            console.log(error.response);
+            return res.status(error.response.status).json({
                 error: true,
-                message: "Internal Server Error",
-            });
+                message: error.response.data.data,
+           });
         }
     },
     getAsuransi: async (req, res) => {
@@ -330,11 +330,44 @@ module.exports = {
                 data: data.data
             });
         } catch (error) {
-            console.log(error);
-            return res.status(500).json({
+            console.log(error.response);
+            return res.status(error.response.status).json({
                 error: true,
-                message: "Internal Server Error",
+                message: error.response.data.data,
+           });
+        }
+    },
+    getBookingPeriksa: async (req, res) => {
+        try {
+            let { no_rkm_medis } = req.query;
+            let data = await apiGetSimrs(`/api/registrasi/bookingperiksa?no_rkm_medis=${no_rkm_medis}`);
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: data.data
             });
+        } catch (error) {
+            console.log(error.response);
+                return res.status(error.response.status).json({
+                    error: true,
+                    message: error.response.data.data,
+               });
+        }
+    },
+    postBookingPeriksa: async (req, res) => {
+        try {
+            let data = await apiPostSimrs('/api/registrasi/bookingperiksa', req.body, req);
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data:  data.data
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(error.response.status).json({
+                error: true,
+                message: error.response.data.data,
+              });
         }
     },
     getFamilys: async (req, res) => {
@@ -454,11 +487,11 @@ module.exports = {
                 data: data.data
             });
         } catch (error) {
-            console.log(error);
-            return res.status(500).json({
+            console.log(error.response);
+            return res.status(error.response.status).json({
                 error: true,
-                message: "Internal Server Error",
-            });
+                message: error.response.data.data,
+           });
         }
     },
     getPasienDetail: async (req, res) => {
