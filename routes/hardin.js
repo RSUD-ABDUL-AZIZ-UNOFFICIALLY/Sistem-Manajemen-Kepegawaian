@@ -13,6 +13,7 @@ router.get('/myfamily', middleware.check, controller.getFamily);
 router.get('/profile', middleware.check, controller.getProfile);
 router.get('/reg/poli', middleware.check, controller.getRegPoli);
 router.get('/reg/jadwal', middleware.check, controller.getRegJadwal);
+router.get('/reg/asuransi', middleware.check, controller.getAsuransi);
 router.get('/family', checkHakAkses('rm'), controller.getFamilys);
 router.post('/family', checkHakAkses('rm'), controller.addFamily);
 router.get('/rm/user', checkHakAkses('rm'), controller.getUser);

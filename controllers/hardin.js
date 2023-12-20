@@ -321,6 +321,22 @@ module.exports = {
             });
         }
     },
+    getAsuransi: async (req, res) => {
+        try {
+            let data = await apiGetSimrs('/api/registrasi/asuransi');
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: data.data
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                error: true,
+                message: "Internal Server Error",
+            });
+        }
+    },
     getFamilys: async (req, res) => {
         try {
             let { id_akun } = req.query;
