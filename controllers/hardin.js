@@ -356,7 +356,7 @@ module.exports = {
     },
     postBookingPeriksa: async (req, res) => {
         try {
-            let data = await apiPostSimrs('/api/registrasi/bookingperiksa', req.body, req);
+            let data = await apiPostSimrs('/api/registrasi/bookingperiksa', req.body);
             return res.status(200).json({
                 error: false,
                 message: "success",
