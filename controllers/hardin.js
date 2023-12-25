@@ -356,7 +356,7 @@ module.exports = {
     },
     postBookingPeriksa: async (req, res) => {
         try {
-            let data = await apiPostSimrs('/api/registrasi/bookingperiksa', req.body, req);
+            let data = await apiPostSimrs('/api/registrasi/bookingperiksa', req.body);
             return res.status(200).json({
                 error: false,
                 message: "success",
@@ -368,6 +368,38 @@ module.exports = {
                 error: true,
                 message: error.response.data.data,
               });
+        }
+    },
+    postBookingPeriksaBatal: async (req, res) => {
+        try {
+            let data = await apiPostSimrs('/api/registrasi/bookingperiksa/batal', req.body);
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data:  data.data
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(error.response.status).json({
+                error: true,
+                message: error.response.data.data,
+                });
+        }
+    },
+    postBookingPeriksaCekin: async (req, res) => {
+        try {
+            let data = await apiPostSimrs('/api/registrasi/bookingperiksa/cekin', req.body);
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data:  data.data
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(error.response.status).json({
+                error: true,
+                message: error.response.data.data,
+                });
         }
     },
     getFamilys: async (req, res) => {

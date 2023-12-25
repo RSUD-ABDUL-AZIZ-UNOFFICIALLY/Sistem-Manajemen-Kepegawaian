@@ -19,16 +19,7 @@ async function apiGetSimrs(path) {
     let response = await axios(config);
     return response.data;
 }
-async function apiPostSimrs(path, data, req) {
-    let logs = {
-        nowa: req.user.phone,
-        url: process.env.HOSTKHNZA + path,
-        method: "POST",
-        ip:req.ip,
-        user_agent: req.headers['user-agent'],
-        body: JSON.stringify(data)
-    }
-    
+async function apiPostSimrs(path, data) {
     let config = {
         method: "POST",
         maxBodyLength: Infinity,
@@ -39,10 +30,8 @@ async function apiPostSimrs(path, data, req) {
         data: data
     };
     let response = await axios(config);
-    await Log.create(logs);
     return response.data;
 }
-
 
 
 module.exports = {
