@@ -1303,42 +1303,11 @@ module.exports = {
   getAllCuti: async (req, res) => {
     let { tahun } = req.query;
     try {
-      let data = await .findAll({
-        where: {
-          createdAt: {
-            [Op.startsWith]: tahun,
-          },
-        },
-        include: [
-          {
-            model: Cuti,
-            as: "data_cuti",
-            include: [
-              {
-                model: Jns_cuti,
-                as: "jenis_cuti",
-                attributes: ["type_cuti"],
-              },
-              {
-                model: User,
-                as: "user",
-                attributes: ["nama", "nip", "jab"],
-              },
-            ],
-          },
-        ],
-        order: [["createdAt", "ASC"]],
-      });
-      if (data.length == 0) {
-        return res.status(404).json({
-          error: true,
-          message: "data not found",
-        });
-      }
+
       return res.status(200).json({
         error: false,
         message: "success",
-        data: data,
+        data: tahun,
       });
     }
     catch (error) {
