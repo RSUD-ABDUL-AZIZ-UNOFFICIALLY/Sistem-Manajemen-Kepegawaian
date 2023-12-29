@@ -9,6 +9,9 @@ for (let i = 0; i < data.length; i++) {
         console.log(data[i])
     }
 }
+let nipUser = [
+
+]
 
 async function ubahhakakses(user) {
     let data = Object.keys(hak_akses);
