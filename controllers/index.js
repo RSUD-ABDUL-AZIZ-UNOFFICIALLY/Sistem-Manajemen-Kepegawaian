@@ -223,6 +223,18 @@ module.exports = {
     };
     res.render("approvalcuti", data);
   },
+  admincuti: (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let datenow = new Date().toISOString().slice(0, 10);
+    let data = {
+      title: "Admin Cuti | SIMPEG",
+      page: "Admin Cuti",
+      token: decoded,
+      datenow: datenow,
+    };
+    res.render("admincuti", data);
+  },
   helpDesk: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);

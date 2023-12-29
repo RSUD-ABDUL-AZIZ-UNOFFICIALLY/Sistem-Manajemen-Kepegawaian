@@ -1300,6 +1300,24 @@ module.exports = {
       });
     }
   },
+  getAllCuti: async (req, res) => {
+    let { tahun } = req.query;
+    try {
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: tahun,
+      });
+    }
+    catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
   getProfiles: async (req, res) => {
     let search = req.query.search;
 
