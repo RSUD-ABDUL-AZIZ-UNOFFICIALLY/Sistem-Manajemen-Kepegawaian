@@ -746,7 +746,7 @@
         "grafik_porsidiet_perbangsal": "false",
         "penilaian_awal_medis_ralan": "false",
         "master_masalah_keperawatan_mata": "false",
-        "penilaian_awal_keperawatan_mata": "false",
+        "penilaian_awal_keperawatan_mata": "true",
         "penilaian_awal_medis_ranap": "false",
         "penilaian_awal_medis_ranap_kebidanan": "false",
         "penilaian_awal_medis_ralan_kebidanan": "false",
