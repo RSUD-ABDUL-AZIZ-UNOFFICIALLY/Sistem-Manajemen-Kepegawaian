@@ -1,4 +1,10 @@
 let fs = require('fs');
+const axios = require('axios');
+const jwt = require("jsonwebtoken");
+const secretKey = process.env.SECRET_KHNZA;
+const payload = {
+    gid: "Server Side",
+};
 let hak_akses = fs.readFileSync('prIGD.json', 'utf8');
 hak_akses = JSON.parse(hak_akses);
 console.log(hak_akses.length)
