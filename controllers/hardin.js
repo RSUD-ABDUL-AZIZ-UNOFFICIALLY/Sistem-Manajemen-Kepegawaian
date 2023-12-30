@@ -149,7 +149,7 @@ module.exports = {
             });
             if (user) {
                 let random = Math.floor(10000 + Math.random() * 9000);
-                let pesan = "Pendaftaran Hardin Online \n" +
+                let pesan = "login aplikasi Hardin Online \n" +
                     "Kode OTP anda *" + random + "* \n" +
                     "Kode ini akan kadaluarsa dalam 5 menit. \n" +
                     "Mohon jangan berikan kode ini kepada siapapun.";
