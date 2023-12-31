@@ -5,7 +5,7 @@ const secretKey = process.env.SECRET_KHNZA;
 const payload = {
     gid: "Server Side",
 };
-let hak_akses = fs.readFileSync('prIGD.json', 'utf8');
+let hak_akses = fs.readFileSync('PerawatInap.json', 'utf8');
 hak_akses = JSON.parse(hak_akses);
 console.log(hak_akses.length)
 let data = Object.keys(hak_akses);
