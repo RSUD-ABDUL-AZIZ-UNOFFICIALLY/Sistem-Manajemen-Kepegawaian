@@ -7,17 +7,23 @@ const payload = {
 };
 let hak_akses = fs.readFileSync('prIGD.json', 'utf8');
 hak_akses = JSON.parse(hak_akses);
-console.log(hak_akses.length)
 let data = Object.keys(hak_akses);
 let vaule = Object.values(hak_akses);
-for (let i = 0; i < data.length; i++) {
-    if (vaule[i] == "true") {
-        console.log(data[i])
-    }
-}
+// for (let i = 0; i < data.length; i++) {
+//     if (vaule[i] == "true") {
+//         console.log(data[i])
+//     }
+// }
 let nipUser = [
-
+    "PRPIGD21",
 ]
+async function update() {
+    for (let i of nipUser) {
+        console.log(i)  
+        await ubahhakakses(i)
+    }  
+}
+update()
 
 async function ubahhakakses(user) {
     let data = Object.keys(hak_akses);
