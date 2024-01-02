@@ -14,7 +14,7 @@ if (process.argv[4] == "cek") {
 
 }
 
-// submit(process.argv[2], process.argv[3]);
+submit(process.argv[2], process.argv[3]);
 
 function bulan(month) {
     // Mengubah tanggal menjadi objek Date
@@ -112,4 +112,4 @@ async function kirimEmailLaporan(nama, email, month, JnsKel) {
     return await axios.request(config)
 }
 // console.log(bulan('2021-08'))
-kirimEmailLaporan('Lady Cleophila Mardhatillah', 'falehry88@gmail.com', bulan('2023-08'), 'Perempuan')
+// kirimEmailLaporan('Lady Cleophila Mardhatillah', 'falehry88@gmail.com', bulan('2023-08'), 'Perempuan')
