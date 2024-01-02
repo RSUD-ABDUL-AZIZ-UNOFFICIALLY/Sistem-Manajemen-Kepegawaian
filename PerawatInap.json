@@ -931,7 +931,7 @@
     "penilaian_pasien_penyakit_menular": "true",
     "mpp_skrining": "false",
     "edukasi_pasien_keluarga_rj": "true",
-    "pemantauan_pews_dewasa": "false",
+    "pemantauan_pews_dewasa": "true",
     "penilaian_tambahan_bunuh_diri": "true",
     "bpjs_antrean_pertanggal": "false",
     "penilaian_tambahan_perilaku_kekerasan": "true",
