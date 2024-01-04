@@ -122,7 +122,7 @@ $('#Cuti').submit(function (event) {
             $('#totalReservation').val('');
             $('#reservation').prop('disabled', false);
             $('#totalReservation').prop('disabled', false);
-            $('#keterangan').val('');
+            $('#alasanCuti').val('');
             let tahun = $('#tahun').val();
             getRiwayatCuti(tahun);
         },
