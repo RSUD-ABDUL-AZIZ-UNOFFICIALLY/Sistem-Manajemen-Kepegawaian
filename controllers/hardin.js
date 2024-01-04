@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
-const { Pasien, FamilyPasein,Log } = require("../models");
+const { Pasien, Family_paseins, Log } = require("../models");
 const { Op } = require("sequelize");
 const { sendWa } = require("../helper/message");
 const { apiGetSimrs, apiPostSimrs } = require("../helper/simrs");
@@ -243,7 +243,7 @@ module.exports = {
         try {
             let { id } = req.user;
             console.log(id)
-            let family = await FamilyPasein.findAll({
+            let family = await Family_paseins.findAll({
                 where: {
                     familyId: id,
                 },
@@ -405,7 +405,7 @@ module.exports = {
     getFamilys: async (req, res) => {
         try {
             let { id_akun } = req.query;
-            let family = await FamilyPasein.findAll({
+            let family = await Family_paseins.findAll({
                 where: {
                     familyId: id_akun,
                 },
@@ -450,7 +450,7 @@ module.exports = {
                     user_agent : req.headers['user-agent'] , 
                     body : JSON.stringify(req.body)
                 })
-                await FamilyPasein.create(data);
+                await Family_paseins.create(data);
             } catch (error) {
                 return res.status(401).json({
                     error: false,
@@ -490,7 +490,7 @@ module.exports = {
                     message: "no whatsapp tidak terdaftar",
                 });
             }
-            let family = await FamilyPasein.findAll({
+            let family = await Family_paseins.findAll({
                 where: {
                     familyId: user.id,
                 },

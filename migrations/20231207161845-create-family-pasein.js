@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('FamilyPaseins', {
+    await queryInterface.createTable('Family_paseins', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -39,13 +39,13 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.addConstraint('FamilyPaseins', {
+    await queryInterface.addConstraint('Family_paseins', {
       type: 'unique',
       fields: ['familyId', 'noRm'],
       name: 'unique_noRm_familyId'
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('FamilyPaseins');
+    await queryInterface.dropTable('Family_paseins');
   }
 };
