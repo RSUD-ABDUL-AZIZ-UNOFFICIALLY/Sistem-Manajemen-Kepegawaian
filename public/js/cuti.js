@@ -105,6 +105,7 @@ $('#Cuti').submit(function (event) {
         keterangan: $('#alasanCuti').val(),
         maxCuti: maxCuti,
     };
+    $('#btnSubmit').prop('disabled', true);
     $.ajax({
         url: '/api/cuti',
         method: 'POST',
@@ -125,6 +126,7 @@ $('#Cuti').submit(function (event) {
             $('#alasanCuti').val('');
             let tahun = $('#tahun').val();
             getRiwayatCuti(tahun);
+            $('#btnSubmit').prop('disabled', false);
         },
         error: function (error) {
             console.log(error);
@@ -135,6 +137,7 @@ $('#Cuti').submit(function (event) {
                 showConfirmButton: false,
                 timer: 2000
             });
+            $('#btnSubmit').prop('disabled', false);
         }
     });
 });
