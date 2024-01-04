@@ -64,6 +64,7 @@ router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
 router.get('/api/cuti/jns', middleware.login, ajax.getJns_cuti);
 router.post('/api/cuti', middleware.login, ajax.postCuti);
+router.delete('/api/cuti', middleware.login, ajax.deleteCuti);
 router.get('/api/cuti/riwayat', middleware.login, ajax.getRiwayatCuti);
 router.get('/api/cuti/sisa', middleware.login, ajax.getSisaCuti);
 router.get('/api/cuti/approvementcuti', middleware.login, ajax.getAnggotaCuti);

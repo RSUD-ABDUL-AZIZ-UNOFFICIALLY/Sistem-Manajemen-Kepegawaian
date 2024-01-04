@@ -187,6 +187,54 @@ function parsingDataCuti(data) {
         row.append($("<td>" + i.approval.approve_date + "</td>"));
         row.append($("<td>" + i.approval.user.nama + "</td>"));
         row.append($("<td>" + i.approval.keterangan + "</td>"));
+        // tabah tombol edit dan delete
+        let btnDelete = $("<button>");
+        btnDelete.addClass("btn btn-danger btn-sm");
+        btnDelete.attr("onclick", "deleteCuti(" + i.id + ")");
+        btnDelete.html("<i class='fas fa-trash'></i>");
+        if (i.approval.status == "Menunggu") {
+            row.append($("<td>").append(btnDelete));
+        }
         $("tbody").append(row);
     }
+}
+deleteCuti = (id) => {
+    Swal.fire({
+        title: 'Apakah anda yakin?',
+        text: "Data cuti akan dihapus",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, hapus data!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/api/cuti?id=' + id,
+                method: 'DELETE',
+                success: function (response) {
+                    console.log(response);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Succeed',
+                        text: 'Data berhasil dihapus',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+                    let tahun = $('#tahun').val();
+                    getRiwayatCuti(tahun);
+                },
+                error: function (error) {
+                    Swal.fire({
+                        icon: error.responseJSON.icon,
+                        title: error.responseJSON.message,
+                        text: error.responseJSON.data,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
+            });
+        }
+    })
+
 }

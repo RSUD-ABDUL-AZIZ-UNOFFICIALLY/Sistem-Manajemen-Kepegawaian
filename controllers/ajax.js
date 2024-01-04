@@ -1010,7 +1010,7 @@ module.exports = {
       },
     });
 
-    const t = await sequelize.transaction();
+    let t = await sequelize.transaction();
     let year = body.mulai.split("-");
     try {
       let sisaCuti = await Cuti.findAll({
@@ -1080,7 +1080,7 @@ module.exports = {
         },
         { transaction: t }
       );
-      let aproveCuti = await Cuti_approval.create(
+      await Cuti_approval.create(
         {
           id_cuti: saveCuti.id,
           nik: Boss.atasanLangsung.nik,
@@ -1091,7 +1091,6 @@ module.exports = {
         { transaction: t }
       );
 
-      console.log(Boss.atasanLangsung.wa);
       let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
       let pesan = "Halo " + jnsKelBoss + Boss.atasanLangsung.nama + ", \n" +
         "Pegawai dengan nama " + decoded.nama + " (" + decoded.id + ") " +
@@ -1121,6 +1120,70 @@ module.exports = {
     } catch (error) {
       await t.rollback();
       console.log(error);
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  deleteCuti: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let body = req.query;
+    try {
+      let t = await sequelize.transaction();
+      let findCiuti = await Cuti.findOne({
+        where: {
+          nik: decoded.id,
+          id: body.id,
+        },
+      },
+        { transaction: t });
+      if (findCiuti == null) {
+        await t.rollback();
+        return res.status(204).json({
+          error: true,
+          message: "data not found",
+          data: findCiuti,
+        });
+      }
+      let approval = await Cuti_approval.findOne({
+        where: {
+          id_cuti: body.id,
+        },
+      },
+        { transaction: t });
+      if (approval.status == "Menunggu") {
+        await Cuti_approval.destroy({
+          where: {
+            id_cuti: body.id,
+          },
+        },
+          { transaction: t });
+        await Cuti.destroy({
+          where: {
+            nik: decoded.id,
+            id: body.id,
+          },
+        },
+          { transaction: t });
+        await t.commit();
+        return res.status(200).json({
+          error: false,
+          message: "success",
+          data: null,
+        });
+      } else {
+        await t.rollback();
+        return res.status(400).json({
+          error: true,
+          message: "error",
+          data: "Cuti sudah di approve",
+        });
+      }
+    } catch (error) {
+      await t.rollback();
       return res.status(400).json({
         error: true,
         message: "error",
@@ -1434,7 +1497,7 @@ module.exports = {
       });
       let menu = [];
       for (let i of akses) {
-        console.log(i.status);
+
         menu.push(i.status);
       }
       hakakses.push({
@@ -1457,7 +1520,7 @@ module.exports = {
     try {
       let token = req.cookies.token;
       let decoded = jwt.verify(token, secretKey);
-      console.log(decoded);
+
         let getUserPw = await Hotspot.findOne({
           where: {
             nik: decoded.id,
