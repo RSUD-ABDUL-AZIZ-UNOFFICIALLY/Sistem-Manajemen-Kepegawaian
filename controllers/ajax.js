@@ -13,12 +13,13 @@ const {
   Profile,
   Jns_cuti,
   Cuti,
+  Ledger_cuti,
   sequelize,
   Cuti_approval,
   Access,
   Hotspot
 } = require("../models");
-const { Op } = require("sequelize");
+const { Op, or } = require("sequelize");
 const fs = require("fs");
 const { convertdate, convertdatetime } = require("../helper");
 const { uploadImage } = require("../helper/upload");
@@ -1333,11 +1334,98 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let { id, keterangan, status } = req.body;
+    let t = await sequelize.transaction();
     try {
       let timeNowWib = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Jakarta",
       });
-      let data = await Cuti_approval.update(
+      let year = timeNowWib.split("/");
+      let yearNow = year[2].split(" ");
+      let getCuti = await Cuti.findOne({
+        where: {
+          id: id,
+        },
+        include: [
+          {
+            model: Jns_cuti,
+            as: "jenis_cuti",
+          },
+          {
+            model: User,
+            as: "user",
+            include: [
+              {
+                model: Biodatas,
+                as: "biodata",
+              },
+              {
+                model: Departemen,
+                as: "departemen",
+              }
+            ],
+          },
+        ],
+      });
+      if (status == 'Disetujui') {
+        let atasan = await User.findOne({
+          where: {
+            nik: decoded.id,
+          },
+          include: [
+            {
+              model: Departemen,
+              as: "departemen",
+            }
+          ],
+        });
+        let ledger = await Ledger_cuti.findOne({
+          where: {
+            nik_user: getCuti.nik,
+            type_cuti: getCuti.type_cuti,
+          },
+          order: [
+            ["createdAt", "DESC"],
+          ],
+        }, { transaction: t });
+        if (ledger == null) {
+          let sisaCuti = getCuti.jenis_cuti.total - getCuti.jumlah;
+          console.log('ledger null');
+          await Ledger_cuti.create({
+            nik_user: getCuti.nik,
+            name_user: getCuti.user.nama,
+            jabatan: getCuti.user.jab,
+            pangkat: getCuti.user.biodata.pangkat,
+            departemen: getCuti.user.departemen.bidang,
+            nik_atasan: atasan.nik,
+            name_atasan: atasan.nama,
+            tembusan: atasan.departemen.bidang,
+            periode: parseInt(yearNow[0]),
+            type_cuti: getCuti.type_cuti,
+            id_cuti: getCuti.id,
+            sisa_cuti: sisaCuti,
+            cuti_diambil: getCuti.jumlah,
+          }, { transaction: t });
+        } else {
+          let sisaCuti = ledger.sisa_cuti - getCuti.jumlah;
+          await Ledger_cuti.create({
+            nik_user: getCuti.nik,
+            name_user: getCuti.user.nama,
+            jabatan: getCuti.user.jab,
+            pangkat: getCuti.user.biodata.pangkat,
+            departemen: getCuti.user.departemen.bidang,
+            nik_atasan: atasan.nik,
+            name_atasan: atasan.nama,
+            tembusan: atasan.departemen.bidang,
+            periode: parseInt(yearNow[0]),
+            type_cuti: getCuti.type_cuti,
+            id_cuti: getCuti.id,
+            sisa_cuti: sisaCuti,
+            cuti_diambil: getCuti.jumlah,
+          },
+            { transaction: t });
+        }
+      }
+      await Cuti_approval.update(
         {
           status: status,
           keterangan: keterangan,
@@ -1348,14 +1436,19 @@ module.exports = {
             id: id,
             nik: decoded.id,
           },
-        }
-      );
+        },
+        { transaction: t });
+      await t.commit();
       return res.status(200).json({
         error: false,
         message: "success",
-        data: data,
+        data: getCuti,
+        body: decoded,
+        yearNow: yearNow,
       });
     } catch (error) {
+      await t.rollback();
+      console.log(error);
       return res.status(400).json({
         error: true,
         message: "error",
