@@ -87,7 +87,7 @@ module.exports = {
         message: "Silahkan cek whatsapp anda untuk mendapatkan kode OTP",
       });
     } catch (error) {
-
+      console.log(error);
       return res.status(500).json({
         error: true,
         message: error.message,
