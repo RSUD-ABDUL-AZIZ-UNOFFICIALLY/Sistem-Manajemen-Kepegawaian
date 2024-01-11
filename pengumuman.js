@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { User, Lpkp, Rekap } = require("./models");
+const { User, Lpkp, Rekap, Notif } = require("./models");
 const { Op } = require("sequelize");
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
@@ -40,14 +40,21 @@ async function submit(status, tanggal) {
             }
         }
     });
-
+    let notifs = await Notif.findAll({
+        where: {
+            email: '0'
+        }
+    })
+    
+    let notif = notifs.map(x => x.user)
     let user = users.map(x => x.nik)
     let rekaps = rekap.map(x => x.nik)
     console.log(user.length)
     console.log(rekaps.length)
     let data = user.filter(x => !rekaps.includes(x))
+    let data2 = data.filter(x => !notif.includes(x))
 
-    for (let vaule of data) {
+    for (let vaule of data2) {
         let index = users.findIndex(item => item.nik === vaule);
         if (index !== -1) {
             console.log(users[index].nama + ' ' + users[index].nik + ' ' + users[index].email)
@@ -62,7 +69,7 @@ async function submit(status, tanggal) {
             }
         }
     }
-    console.log(`Yang belum kirim ${data.length} orang`)
+    console.log(`Yang belum kirim ${data2.length} orang`)
 
 
 }
@@ -89,8 +96,8 @@ async function kirimEmailLaporan(nama, email, month, JnsKel) {
             "p2": `Diharapkan laporan kinerja bulan ${month} dapat segera dikrirm.
             Jika ${jnskel} ${nama} memerlukan bantuan tambahan atau ada kendala dalam menyusun laporan, jangan ragu untuk menghubungi bagian SDM.`,
             "p3": `Terima kasih atas kerja keras ${jnskel} ${nama}. Kami berharap laporan kinerja bulan ${month} dapat segera kami terima.`,
-            "from": "Fakhry Hizballah Al",
-            "jabatan": "Pengelola Teknologi Informasi",
+            "from": "",
+            "jabatan": "RSUD dr. Abdul Aziz",
         }
     };
     let config = {

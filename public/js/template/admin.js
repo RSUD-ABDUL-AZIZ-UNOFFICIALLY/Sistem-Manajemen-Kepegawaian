@@ -1,20 +1,11 @@
-const currentLocation = location.href;
-const menuItem = document.querySelectorAll(".nav-link");
-const menuLength = menuItem.length;
-for (let i = 0; i < menuLength; i++) {
-  if (menuItem[i].href === currentLocation) {
-    menuItem[i].className = "nav-link active";
-  }
-}
 // Membaca semua cookie
 const allCookies = document.cookie;
 
 // Memeriksa keberadaan cookie tertentu
 function checkCookie(cookieName) {
   const cookies = document.cookie.split(";");
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].trim();
-    if (cookie.startsWith(cookieName + "=")) {
+  for (const cookie of cookies) {
+    if (cookie.trim().startsWith(cookieName + "=")) {
       return true; // Cookie ditemukan
     }
   }
@@ -79,6 +70,7 @@ async function tracker() {
     }
   });
 }
+
 function getIP() {
   return $.ajax({
     url: "https://ipapi.co/json",
@@ -107,5 +99,26 @@ if (cookieToken) {
   imgUser = document.getElementById("imgUser");
   imgUser.src = data.url;
 }
-// const decodedData = window.atob(decodedCookie);
-// const data = JSON.parse(decodedData);
+
+if (!localStorage.getItem("dataIDUser")) {
+  console.log('set');
+  $.ajax({
+    url: "/api/jwt",
+    method: "post",
+    success: function (data) {
+      localStorage.setItem("dataIDUser", data.data.id);
+      localStorage.setItem("dataIDname", data.data.nama);
+    }
+  });
+}
+function setOnline() {
+  let id = localStorage.getItem("dataIDUser");
+  let name = localStorage.getItem("dataIDname");
+  return $.ajax({
+    url: "https://cdn.spairum.biz.id/api/ls/update/lpkp?id=" + id + "&name=" + name,
+    method: "GET",
+  });
+}
+setOnline();
+setInterval(setOnline, 5000);
+

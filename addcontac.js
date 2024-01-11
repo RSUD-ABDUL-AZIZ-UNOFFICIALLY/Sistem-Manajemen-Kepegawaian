@@ -4,8 +4,8 @@ const axios = require("axios");
 
 async function getUser() {
   let user = await User.findAll({
-    limit: 10,
-    offset: 680,
+    limit: 100,
+    offset: 690,
     order: [["id", "ASC"]],
   });
   console.log(user.length);
@@ -49,7 +49,7 @@ async function saveContak(user) {
   let config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "http://localhost:8000/api/contact/",
+    url: process.env.HOSTCONTACT+"api/contact/",
     data: data,
   };
 

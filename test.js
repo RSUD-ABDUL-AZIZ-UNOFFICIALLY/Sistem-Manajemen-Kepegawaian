@@ -95,8 +95,4 @@ dr. Achmad Hardin, Sp. PD`
     return pesan;
 }
 
-
 // console.log(pesan1('fakhry', '0895321701798', 'Laki-laki'))
-
-
-// findUser('PPPK', { [Op.not]: null })

@@ -8,19 +8,27 @@ const report = require('../controllers/report');
 const tracker = require('../controllers/tracker');
 const complaint = require('../controllers/complaint');
 const { upload } = require('../middleware/upload');
+const seen = require('../controllers/seen');
 
 
 router.get('/',middleware.checkLogin, controller.login);
-router.get('/daily', middleware.login, middleware.checkProfile, controller.daily);
-router.get('/monthly', middleware.login, middleware.checkProfile, controller.monthly);
+router.get('/daily', middleware.login, controller.daily);
+router.get('/monthly', middleware.login, controller.monthly);
 router.get('/approvement', middleware.login, controller.approvement);
 router.get('/review', middleware.login, controller.review);
 router.get('/report', middleware.login, controller.report);
 router.get('/contact', middleware.login, controller.getContact); 
 
+router.get('/simrs/regis', middleware.login, middleware.checkHakAkses('rm'), controller.addAnggotaPasien);
+
 router.get('/helpdesk', middleware.login, controller.helpDesk);
 
-router.get('/profile', middleware.login, middleware.checkProfile, controller.profile);
+router.get('/profile', middleware.login, controller.profile);
+router.get('/account', middleware.login, controller.account);
+
+router.get('/cuti', middleware.login, controller.cuti);
+router.get('/aprovecuti', middleware.login, controller.approvalcuti);
+router.get('/aprovecuti/admin', middleware.login, controller.admincuti);
 
 router.get('/logout', middleware.logout);
 
@@ -29,12 +37,14 @@ router.get('/helpDeskAdmin', middleware.login, controller.helpDeskAdmin);
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
 router.get('/api/simrs/userpas', middleware.login, api.getUserSimrs);
+router.get('/api/microtik/userpas', middleware.login, ajax.getUserMicrotik);
 
 router.post('/api/updateProfile', middleware.login, ajax.updateProfile);
 router.get('/api/getAnggota', middleware.login, ajax.getAnggota);
 router.post('/api/updateBiodata', middleware.login, ajax.updateBiodata);
 router.get('/api/getBiodata', middleware.login, ajax.getBiodata);
 router.post('/api/postPic', middleware.login, upload.single('image'), ajax.postPic);
+router.get('/api/getPic', middleware.login, ajax.getPic);
 
 router.post('/api/progress', middleware.login, ajax.progress);
 router.get('/api/monthly', middleware.login, ajax.monthly);
@@ -51,12 +61,27 @@ router.get('/api/template', middleware.login, ajax.getTemplate);
 router.post('/api/template', middleware.login, ajax.createTemplate);
 router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
+
+router.get('/api/cuti/jns', middleware.login, ajax.getJns_cuti);
+router.post('/api/cuti', middleware.login, ajax.postCuti);
+router.delete('/api/cuti', middleware.login, ajax.deleteCuti);
+router.get('/api/cuti/riwayat', middleware.login, ajax.getRiwayatCuti);
+router.get('/api/cuti/sisa', middleware.login, ajax.getSisaCuti);
+router.get('/api/cuti/approvementcuti', middleware.login, ajax.getAnggotaCuti);
+router.post('/api/cuti/approvementcuti', middleware.login, ajax.updateCuti);
+router.get('/api/cuti/approve/all', middleware.login, ajax.getAllCuti);
+
+
 router.get('/api/contact/user', middleware.login, ajax.getProfiles);
+router.get('/api/contact/pic', ajax.getProfilepic);
+router.get('/api/contact/menu', middleware.login, ajax.getMenu);
+
 
 router.get('/api/report', middleware.login, report.person);
 router.get('/api/report/preview', middleware.login, report.results);
 
 router.post('/api/tracker', middleware.login, tracker.index);
+router.post('/api/jwt', middleware.login, tracker.bio);
 
 router.post('/api/complaint', middleware.login, complaint.addTiket);
 router.get('/api/complaint', middleware.login, complaint.getTiket);
@@ -64,5 +89,9 @@ router.get('/api/complaint/detail', middleware.login, complaint.getStatus);
 router.post('/api/complaint/status', middleware.login, complaint.setStatus);
 router.get('/api/complaint/all', middleware.login, complaint.getAllTiket);
 router.get('/api/complaint/updateTiket', middleware.login, complaint.getUpdateTiket);
+
+router.get('/api/seen', seen.update);
+router.get('/api/seen/online', seen.online);
+router.get('/api/seen/last_seen', seen.last_seen);
 
 module.exports = router;

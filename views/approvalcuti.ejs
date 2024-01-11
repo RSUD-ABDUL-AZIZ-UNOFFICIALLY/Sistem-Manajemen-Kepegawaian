@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <%- include('template/head'); %>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <!-- Navbar -->
+    <%- include('template/navbar'); %>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <%- include('template/sidebar'); %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+          <%- include('template/content-header'); %>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section>
+              <div class="container-fluid">
+                <div class="card">
+                  <h5 class="card-header">Persetujuan Tahun : <input type="number" id="tahun" min="2023" max="2099"
+                      step="1" value="2024" />
+                  </h5>
+                  <div class="card-body">
+                    <div class="card-body table-responsive p-0">
+                      <figure>
+                        <figcaption>Daftar anggota yang mengajukan cuti</figcaption>
+                        <table class="table table-bordered table-head-fixed text-nowrap">
+                          <thead>
+                            <tr>
+                              <th style="width: 10px">#</th>
+                              <th>Nama</th>
+                              <th>Tanggal Cuti</th>
+                              <th>Tipe Cuti</th>
+                              <th>jumlah</th>
+                              <th>Alasan Cuti</th>
+                              <th>Status</th>
+                              <th>Tanggal persetujuan</th>
+                              <th>Pratinjau</th>
+                              <th>Keterangan</th>
+                            </tr>
+                          </thead>
+                          <tbody></tbody>
+                        </table>
+                      </figure>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer"></footer>
+  </div>
+  <!-- ./wrapper -->
+  <%- include('modal/modalTemplate'); %>
+  <%- include('template/footer'); %>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="/asset/js/aprovementcuti.js"></script>
+</body>
+
+</html>

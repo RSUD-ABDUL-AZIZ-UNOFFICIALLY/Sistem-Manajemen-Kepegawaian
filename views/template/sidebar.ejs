@@ -23,48 +23,42 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="navbar" name="navbar">
                 <!-- Add icons to the links using the .nav-icon class
                   with font-awesome or any other icon font library -->
-                <li class="nav-item menu-open">
-                    <a href="/dashboard" class="nav-link">
+                <li class="nav-item" id="laporan" name="laporan">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            EMPLOYEE PERFORMANCE REPORT
+                            LAPORAN KINERJA KARYAWAN
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview"id="ul_laporan" name="ul_laporan" >
                         <li class="nav-item">
                             <a href="/daily" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Daily Progress</p>
+                                <p>Laporan Harian</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/monthly" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Monthly Progress</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/approvement" class="nav-link">
-                                <i class="far fa-solid fa-file-contract nav-icon"></i>
-                                <p>Approvement</p>
+                                <p>Laporan Bulanan</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/Report" class="nav-link">
                                 <i class="far fa-solid fa-arrow-trend-up nav-icon"></i>
-                                <p>Report Recapitulation</p>
+                                <p>Rekapitulasi Laporan</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item menu-open">
+                <li class="nav-item" id="documen" name="documen">
                     <a href="#" class="nav-link">
                         <i class=" nav-icon fa-regular fas fa-folder"></i>
-                        <p>EMPLOYMENT DOCUMENT</p>
+                        <p>DOKUMEN PEGAWAI</p>
                         <i class="right fas fa-angle-left"></i>
                     </a>
                     <ul class="nav nav-treeview">
@@ -74,19 +68,28 @@
                                 <p>Biodata</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/account" class="nav-link">
+                                <i class="far fa-solid fa-key nav-icon"></i>
+                                <p>Akun</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="/helpdesk" class="nav-link">
-                        <i class="fa-solid fa-bug text-danger nav-icon"></i>
-                        <p class="text">Helpdesk</p>
+                <li class="nav-item" id="cuti" name="cuti">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fa-regular fas fa-calendar-alt"></i>
+                        <p>CUTI</p>
+                        <i class="right fas fa-angle-left"></i>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/logout" class="nav-link">
-                        <i class="fa-solid fa-right-from-bracket text-danger"></i>
-                        <p class="text">Logout</p>
-                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/cuti" class="nav-link">
+                                <i class="far fa-solid fa-bed nav-icon"></i>
+                                <p>Permohonan Cuti</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </nav>

@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       Atasan.hasOne(models.User, {
         foreignKey: 'id',
         as: 'bio'
+      });
+      Atasan.hasOne(models.User, {
+        foreignKey: 'nik',
+        sourceKey: 'bos',
+        as: 'atasanLangsung'
       })
 
     }
