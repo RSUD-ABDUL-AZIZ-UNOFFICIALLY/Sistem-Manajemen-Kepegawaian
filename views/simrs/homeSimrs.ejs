@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <%- include('../template/head'); %>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <%- include('../template/navbar'); %>
+            <!-- /.navbar -->
+
+            <!-- Main Sidebar Container -->
+            <%- include('../template/sidebar'); %>
+
+                <!-- Content Wrapper. Contains page content -->
+                <div class="content-wrapper">
+                    <!-- Content Header (Page header) -->
+                    <%- include('../template/content-header'); %>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-6 col-12">
+                                        <a href="/simrs/igd/px" class="info-box">
+                                            <span class="info-box-icon bg-info">
+                                                <i class="fa-solid fa-truck-medical"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Pasine IGD</span>
+                                            </div>
+                                            <!-- /.info-box-content -->
+                                        </a>
+                                        <!-- /.info-box -->
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-12">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-info"><i
+                                                    class="fas fa-user-injured"></i></span>
+
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Pasien Rawat Jalan</span>
+                                            </div>
+                                            <!-- /.info-box-content -->
+                                        </div>
+                                        <!-- /.info-box -->
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-12">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-info"><i
+                                                    class="fa-solid fa-bed-pulse"></i></span>
+
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Pasien Rawat Inap</span>
+                                            </div>
+                                            <!-- /.info-box-content -->
+                                        </div>
+                                        <!-- /.info-box -->
+                                    </div>
+                                </div>
+                        </section>
+
+                        <!-- /.content -->
+                </div>
+    </div>
+
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+
+    </footer>
+
+
+    </div>
+    <!-- ./wrapper -->
+
+    <%- include('../template/footer'); %>
+        <!-- <script src="../asset/js/simrs/rm/pasien.js"></script> -->
+</body>
+
+</html>

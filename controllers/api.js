@@ -193,5 +193,38 @@ module.exports = {
       });
     }
   },
+  getRegPasienIGD: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let query = req.query;
+
+    let Bearertoken = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+    try {
+      let config = {
+        method: "get",
+        url: process.env.HOSTKHNZA + "/api/ralan/igd?from=" + query.tgl + "&until=" + query.tgl,
+        headers: {
+          Authorization: "Bearer " + Bearertoken,
+          "Content-Type": "application/json",
+        },
+      };
+      let hasil = await axios(config);
+      // set nama pasien + (jk)
+      hasil.data.data.forEach(element => {
+        element.pasien.nm_pasien = element.pasien.nm_pasien + " (" + element.pasien.jk + ")";
+      });
+      return res.status(200).json({
+        error: false,
+        message: "Data berhasil diambil",
+        record: hasil.data.record,
+        data: hasil.data.data
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: false,
+        message: error.message,
+      });
+    }
+  }
  
 };

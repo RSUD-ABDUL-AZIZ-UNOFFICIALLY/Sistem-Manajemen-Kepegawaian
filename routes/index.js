@@ -20,6 +20,9 @@ router.get('/report', middleware.login, controller.report);
 router.get('/contact', middleware.login, controller.getContact); 
 
 router.get('/simrs/regis', middleware.login, middleware.checkHakAkses('rm'), controller.addAnggotaPasien);
+router.get('/simrs/home', middleware.login, middleware.checkHakAkses('petugas'), controller.homeSIMRS);
+router.get('/simrs/igd/px', middleware.login, middleware.checkHakAkses('petugas'), controller.pxSIMRSIGD);
+router.get('/simrs/igd/tindakan', middleware.login, middleware.checkHakAkses('petugas'), controller.tindakanIgdMenu);
 
 router.get('/helpdesk', middleware.login, controller.helpDesk);
 
@@ -37,6 +40,9 @@ router.get('/helpDeskAdmin', middleware.login, controller.helpDeskAdmin);
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
 router.get('/api/simrs/userpas', middleware.login, api.getUserSimrs);
+router.get('/api/simrs/reg/igd', middleware.checkHakAkses('petugas'), api.getRegPasienIGD);
+
+
 router.get('/api/microtik/userpas', middleware.login, ajax.getUserMicrotik);
 
 router.post('/api/updateProfile', middleware.login, ajax.updateProfile);
