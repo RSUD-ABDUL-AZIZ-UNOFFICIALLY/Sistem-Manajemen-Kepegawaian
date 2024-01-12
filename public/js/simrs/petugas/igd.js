@@ -29,8 +29,7 @@ function getRegPasien(tgl) {
         console.log(data.pasien.nm_pasien);
         // console.log(data);
         let encoded = btoa(JSON.stringify(data));
-        location.href = '/simrs/igd/tindakan?data=' + encoded;
-        swalNotif(data);
+        location.href = '/simrs/igd/tindakan?data=' + encoded+'&stt=igd';
     });
 };
 
@@ -38,14 +37,5 @@ $('#tgl_reg').change(function () {
     getRegPasien($('#tgl_reg').val());
 });
 
-function swalNotif(data) {
-    console.log(data);
-    Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Data berhasil disimpan',
-        showConfirmButton: false,
-        timer: 1500
-    });
-}
+
 
