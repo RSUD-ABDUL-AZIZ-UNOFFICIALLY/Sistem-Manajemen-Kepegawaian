@@ -79,16 +79,18 @@ for (let i of pegawi) {
         // console.log(hasil.nik + " = " + hasil.nama)
         let password = await findPassword(hasil.nik)
         console.log(password)
-        await ubahhakakses(password.user)
+        // await ubahhakakses(password.user)
         if (password == null) {
             console.log("Tidak ada password")
             // await createPassword(i.nik)
+        }else{
+            await ubahhakakses(password.user)
         }
     }
 }
 console.log(pegawi.length)
 }
-cek(25);
+cek(18);
 let fs = require('fs');
 let hak_akses = fs.readFileSync('PerawatInap.json', 'utf8');
  hak_akses = JSON.parse(hak_akses);
