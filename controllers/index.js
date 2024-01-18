@@ -311,5 +311,15 @@ module.exports = {
       token: decoded,
     };
     res.render("simrs/tindakanIgdMenu", data);
-  }
+  },
+  menutndakanIgd: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "SIMRS | SIMPEG",
+      page: "SIMRS",
+      token: decoded,
+    };
+    res.render("simrs/menuTindakanIgd", data);
+  },
 };

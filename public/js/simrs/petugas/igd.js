@@ -24,12 +24,9 @@ function getRegPasien(tgl) {
     });
     dataTbPasien.on('click', 'tr', function () {
         let data = dataTbPasien.fnGetData(this);
-        // let x = dataTbPasien.row(this).data();
-        // console.log(x['pasien']['nm_pasien']);
-        console.log(data.pasien.nm_pasien);
-        // console.log(data);
-        let encoded = btoa(JSON.stringify(data));
-        location.href = '/simrs/igd/tindakan?data=' + encoded+'&stt=igd';
+        let datastring =JSON.stringify(data);
+        sessionStorage.setItem("px-igd", datastring);
+        location.href = '/simrs/igd/menu';
     });
 };
 
