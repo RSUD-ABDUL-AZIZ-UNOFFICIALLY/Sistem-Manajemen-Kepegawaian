@@ -14,8 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Complaint.hasMany(models.Tiket, {
         sourceKey: 'noTiket' ,
         foreignKey: 'noTiket',
-   
-        }),
+      })
       Complaint.hasOne(models.User, {
         sourceKey: 'nik',
         foreignKey: 'nik',

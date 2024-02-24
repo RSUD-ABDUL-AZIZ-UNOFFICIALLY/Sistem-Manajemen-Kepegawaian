@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Departemen, Atasan, Lpkp } = require("../models");
+const { User, Departemen, Atasan, Lpkp, Tiketgroup } = require("../models");
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -242,15 +242,25 @@ module.exports = {
       where: { nik: decoded.id },
       include: { model: Departemen, as: "departemen" },
     });
+    try {
     let departemen = await Departemen.findAll({});
+      let addgrubtiket = await Tiketgroup.findAll({});
+      console.log(addgrubtiket);
     let data = {
       title: "HelpDesk | SIMPEG",
       page: "Dukungan IT",
       token: decoded,
       user: getUser,
       departemen: departemen,
+      addgrubtiket
+
     };
     res.render("helpdesk", data);
+    }
+    catch (err) {
+      console.log(err);
+      res.render("error", { title: "Error", page: "Error", error: err });
+    }
   },
   helpDeskAdmin: async (req, res) => {
     let token = req.cookies.token;

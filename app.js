@@ -37,6 +37,11 @@ app.use('/rest', routeRest);
 const hardin = require('./routes/hardin');
 app.use('/rest/hardin', hardin);
 
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).send('Something broke!')
+})
+
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`listening on *:${PORT}`);

@@ -1,7 +1,9 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
 const groupIT = process.env.GROUP_IT;
-const { Complaint, Tiket, User, Departemen, sequelize } = require("../models");
+const baseUrl = process.env.BASE_URL;
+const { Complaint, Tiket, User, Tiketgroup, Grouperticket, Departemen, sequelize } = require("../models");
+const { sendWa, sendGrub } = require("../helper/message");
 const { Op } = require("sequelize");
 const {generateUID} = require("../helper");
 
@@ -11,21 +13,67 @@ module.exports = {
         let token = req.cookies.token;
         let decoded = jwt.verify(token, secretKey);
         let body = req.body;
+        console.log(body);
+        let find_Tiketgroup = await Tiketgroup.findOne({
+            where: {
+                id: body.idgrub
+            }
+        });
+        if (!find_Tiketgroup) {
+            return res.status(500).json({
+                error: true,
+                message: "error",
+                data: "Grup tidak ditemukan",
+            });
+        }
+        let find_departemen = await Departemen.findOne({
+            where: {
+                id: body.dep
+            }
+        });
+        console.log(find_Tiketgroup);
+        console.log(req.account)
         const t = await sequelize.transaction();
         try {
+            console.log(body);
             body.nik = decoded.id;
             body.noTiket = generateUID(7);
             body.nama= decoded.nama;
             body.status= "Buka";
             body.noHp= decoded.wa;  
-            body.keteranagn= "Di sampaikan ke bagian terkait";    
+            body.keteranagn = `Dengan kendala " ${body.kendala} " .`;
             let data = await Complaint.create(body);
-            let dataTiket = await Tiket.create(body);
-                await t.commit();
+            await Tiket.create(body);
+            await Grouperticket.create({
+                noTiket: body.noTiket,
+                id_grup: body.idgrub,
+                nama_dep: find_departemen.bidang,
+                pj: find_Tiketgroup.nama_pj,
+            });
+            let pesanGrub = "Pegawai dengan nama " + decoded.nama + " di bidang " + find_departemen.bidang + ".  " + body.keteranagn + " nomor tiket *" + body.noTiket + "*. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + "\n Di tujukan ke " + find_Tiketgroup.nama_pj + " (" + find_Tiketgroup.nama_grup + ")";
+            let dataGrub = JSON.stringify({
+                message: pesanGrub,
+                telp: groupIT
+            });
+            let pesanPJ = find_Tiketgroup.nama_pj + " ada tiket dari " + decoded.nama + "." + body.keteranagn + " Nomor tiket *" + body.noTiket + "* . Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + " \n Save nomor ini agar bisa klik link di atas 👆🏻 \n Terimakasih";
+            let dataPJ = JSON.stringify({
+                message: pesanPJ,
+                telp: find_Tiketgroup.wa_pj
+            });
+
+            let pesanUser = "Terimakasih " + decoded.nama + " telah mengajukan tiket dengan nomor *" + body.noTiket + "*. Kami akan segera menindaklanjuti. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + " \n Save nomor ini agar bisa klik link di atas 👆🏻 \n Terimakasih";
+            let dataUser = JSON.stringify({
+                message: pesanUser,
+                telp: decoded.wa
+            });
+            await sendWa(dataUser);
+            await sendGrub(dataGrub);
+            await sendWa(dataPJ);
+            await t.commit();
             return res.status(200).json({
                 error: false,
                 message: "success",
-                data: data
+                // data: data
             });
         } catch (err) {
             console.log(err);
@@ -41,7 +89,6 @@ module.exports = {
         let token = req.cookies.token;
         let decoded = jwt.verify(token, secretKey);
         let query = req.query;
-        console.log(query.date);
         try {
             query.nik = decoded.id;
             let data = await Complaint.findAll({
