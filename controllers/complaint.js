@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
 const groupIT = process.env.GROUP_IT;
 const baseUrl = process.env.BASE_URL;
-const { Complaint, Tiket, User, Tiketgroup, Grouperticket, Departemen, sequelize } = require("../models");
+const { Complaint, Tiket, User, Tiketgroup, Grouperticket, Departemen, Profile, sequelize } = require("../models");
 const { sendWa, sendGrub } = require("../helper/message");
-const { Op } = require("sequelize");
+const { Op, or } = require("sequelize");
 const {generateUID} = require("../helper");
 
 
@@ -125,7 +125,12 @@ module.exports = {
                 include: [
                     { model: Departemen, as: "departemen" , attributes: ["bidang"]},
                     { model: Tiket},
+                    { model: Profile, as: "pic", attributes: ["url"] }
+
                 ],
+                order: [
+                    ["createdAt", "DESC"]
+                ]
 
             });
             return res.status(200).json({
@@ -138,7 +143,7 @@ module.exports = {
             return res.status(500).json({
                 error: true,
                 message: "error",
-                data: err,
+                data: err.message,
             });
         }
     },

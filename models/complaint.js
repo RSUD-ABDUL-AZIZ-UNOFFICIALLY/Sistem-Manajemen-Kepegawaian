@@ -20,6 +20,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'nik',
         as: 'user'
       })
+      Complaint.hasOne(models.Profile, {
+        sourceKey: 'nik',
+        foreignKey: 'nik',
+        as: 'pic'
+      })
       Complaint.belongsTo(models.Departemen, {
         foreignKey: 'dep',
         as: 'departemen'
