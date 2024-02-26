@@ -8,25 +8,25 @@ const payload = {
 
 async function sendWa(data) {
     let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-    let config = {
-        method: "post",
-        url: process.env.HOSTWA + "/api/wa/send",
-        headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-        },
-        data: data,
-    };
-    await axios
-        .request(config)
-        .then((response) => {
-            console.log(JSON.stringify(response.data));
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-            return error;
+    try {
+        let response = await axios.post(process.env.HOSTWA + "/api/wa/send", data, {
+            headers: {
+                Authorization: "Bearer " + token,
+                "Content-Type": "application/json",
+                timeout: 2000 // only wait for 2s
+            }
         });
+        console.log(JSON.stringify(response.data));
+        return response.data;
+    }
+    catch (error) {
+        if (error.code === 'ECONNABORTED') {
+            console.log('Request timed out');
+        } else {
+            console.log(error.message);
+        }
+        throw new Error(error);
+    }
 }
 
 async function sendGrub(data){

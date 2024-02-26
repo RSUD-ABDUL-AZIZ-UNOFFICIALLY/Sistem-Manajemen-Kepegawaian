@@ -97,6 +97,7 @@ router.get('/api/complaint/detail', middleware.login, complaint.getStatus);
 router.post('/api/complaint/status', middleware.login, complaint.setStatus);
 router.get('/api/complaint/all', middleware.login, complaint.getAllTiket);
 router.get('/api/complaint/updateTiket', middleware.login, complaint.getUpdateTiket);
+// router.post('/api/complaint/grubtiket', middleware.login, complaint.updateTiket);
 
 router.get('/api/seen', seen.update);
 router.get('/api/seen/online', seen.online);

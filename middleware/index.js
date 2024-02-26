@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { User, Atasan, Access } = require("../models");
 const { Buffer } = require('buffer');
 const { createClient } = require('redis');
+const { error } = require("console");
 const client = createClient({
     url: process.env.REDIS_URL
 });
@@ -130,5 +131,34 @@ module.exports = {
                 return res.redirect("/");
             }
         }
-    }
+    },
+    // response: (req, res, data) => {
+    //     console.log(data);
+    //     if (req.status == 500) {
+    //         return res.status(500).json({
+    //             error: true,
+    //             message: req.pesan,
+    //             data: req.data,
+    //         });
+    //     }
+    //     if (req.status == 404) {
+    //         return res.status(404).json({
+    //             error: true,
+    //             message: req.pesan,
+    //             data: req.data,
+    //         });
+    //     }
+    //     if (req.status == 200) {
+    //         return res.status(200).json({
+    //             error: false,
+    //             message: req.pesan,
+    //             data: req.data,
+    //         });
+    //     }
+    //     return res.status(504).json({
+    //         error: false,
+    //         message: req.pesan,
+    //         data: req.data,
+    //     });
+    // },
 };

@@ -17,6 +17,7 @@ $('#lapor').submit(function(event) {
         kendala: $('#kendala').val(),
         dep: $('#departemen').val(),
         topic: $('#topic').val(),
+      idgrub: $('#grubtiket').val()
     };
     $.ajax({
         url: '/api/complaint',
@@ -55,6 +56,14 @@ $('#lapor').submit(function(event) {
         },
         error: function(error) {
             // console.log(error);
+          Swal.fire({
+            icon: 'error',
+            title: error.responseJSON.message,
+            text: error.responseJSON.data,
+            showConfirmButton: false,
+            timer: 2000
+          })
+
         }
     });
 });
