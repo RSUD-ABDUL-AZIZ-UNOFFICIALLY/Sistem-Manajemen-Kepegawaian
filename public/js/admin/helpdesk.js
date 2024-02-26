@@ -45,8 +45,8 @@ function getTabel(newDateValue) {
                         <li class="p-2 border-bottom">
                           <a href="/api/complaint/updateTiket?id=${element.noTiket}" class="d-flex justify-content-between">
                             <div class="d-flex flex-row">
-                              <img src="${element.pic.url}" alt="avatar"
-                                class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                              <img src="${element.pic.url}" alt="avatar ${element.nama}" 
+                                class="rounded-circle d-flex img-profile align-self-center me-3 shadow-1-strong">
                               <div class="pt-1">
                                 <p class="fw-bold mb-0">${element.nama}</p>
                                 <p class="small text-muted">${element.kendala}</p>

@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     Grouperticket.init({
         noTiket: DataTypes.STRING,
         id_grup: DataTypes.INTEGER,
-        nama_dep: DataTypes.STRING
+        nama_dep: DataTypes.STRING,
+        pj: DataTypes.STRING
     }, {
         sequelize,
         modelName: 'Grouperticket',
