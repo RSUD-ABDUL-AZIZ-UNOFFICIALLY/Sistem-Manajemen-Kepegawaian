@@ -50,7 +50,7 @@ module.exports = {
                 nama_dep: find_departemen.bidang,
                 pj: find_Tiketgroup.nama_pj,
             });
-            let pesanGrub = "Pegawai dengan nama " + decoded.nama + " di bidang " + find_departemen.bidang + ".  " + body.keteranagn + " nomor tiket *" + body.noTiket + "*. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + "\n Di tujukan ke " + find_Tiketgroup.nama_pj + " (" + find_Tiketgroup.nama_grup + ")";
+            let pesanGrub = "Pegawai dengan nama " + decoded.nama + " di bidang " + find_departemen.bidang + ". \n " + body.keteranagn + " nomor tiket *" + body.noTiket + "*. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + "\n Di tujukan ke " + find_Tiketgroup.nama_pj + " (" + find_Tiketgroup.nama_grup + ") \n info lebih lanjut klik link di atas 👆🏻 atau hubungi : " + decoded.wa + " \n Terimakasih";
             let dataGrub = JSON.stringify({
                 message: pesanGrub,
                 telp: groupIT
@@ -73,7 +73,7 @@ module.exports = {
             return res.status(200).json({
                 error: false,
                 message: "success",
-                // data: data
+                data: data
             });
         } catch (err) {
             console.log(err);
