@@ -19,6 +19,8 @@ $('#lapor').submit(function(event) {
         topic: $('#topic').val(),
       idgrub: $('#grubtiket').val()
     };
+  // disabel button submit  agar tidak bisa di klik
+  $('#submit').prop('disabled', true);
     $.ajax({
         url: '/api/complaint',
         method: 'POST',
@@ -52,10 +54,11 @@ $('#lapor').submit(function(event) {
               );
             $("tbody").append(row);
             $("#kendala").val("");
-            return;
+          $('#submit').prop('disabled', false);
         },
         error: function(error) {
             // console.log(error);
+          $('#submit').prop('disabled', false);
           Swal.fire({
             icon: 'error',
             title: error.responseJSON.message,
