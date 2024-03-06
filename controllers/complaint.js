@@ -50,7 +50,19 @@ module.exports = {
                 nama_dep: find_departemen.bidang,
                 pj: find_Tiketgroup.nama_pj,
             });
-            let pesanGrub = "Pegawai dengan nama " + decoded.nama + " di bidang " + find_departemen.bidang + ". \n " + body.keteranagn + " nomor tiket *" + body.noTiket + "*. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + "\n Di tujukan ke " + find_Tiketgroup.nama_pj + " (" + find_Tiketgroup.nama_grup + ") \n info lebih lanjut klik link di atas 👆🏻 atau hubungi : " + decoded.wa + " \n Terimakasih";
+            // let pesanGrub = "Pegawai dengan nama " + decoded.nama + " di bidang " + find_departemen.bidang + ". \n " + body.keteranagn + " nomor tiket *" + body.noTiket + "*. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + "\n Di tujukan ke " + find_Tiketgroup.nama_pj + " (" + find_Tiketgroup.nama_grup + ") \n info lebih lanjut klik link di atas 👆🏻 atau hubungi : " + decoded.wa + " \n Terimakasih";
+            let pesanGrub = `
+*Kendala Untuk Segera Ditanggapi*
+
+Nomor Tiket : ${body.noTiket}
+Nama : ${decoded.nama}
+Bidang : ${find_departemen.bidang} 
+Kendala : ${body.kendala}
+Ditujukan Kepada : ${find_Tiketgroup.nama_pj} (${find_Tiketgroup.nama_grup}) 
+Detail : 
+🔗 ${baseUrl}/api/complaint/updateTiket?id=${body.noTiket}
+☎ ${decoded.wa}
+`
             let dataGrub = JSON.stringify({
                 message: pesanGrub,
                 telp: groupIT
@@ -61,7 +73,15 @@ module.exports = {
                 telp: find_Tiketgroup.wa_pj
             });
 
-            let pesanUser = "Terimakasih " + decoded.nama + " telah mengajukan tiket dengan nomor *" + body.noTiket + "*. Kami akan segera menindaklanjuti. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + " \n Save nomor ini agar bisa klik link di atas 👆🏻 \n Terimakasih";
+            // let pesanUser = "Terimakasih " + decoded.nama + " telah mengajukan tiket dengan nomor *" + body.noTiket + "*. Kami akan segera menindaklanjuti. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + " \n Save nomor ini agar bisa klik link di atas 👆🏻 \n Terimakasih";
+            let pesanUser = `
+Terima kasih, ${decoded.nama}! 🌟
+Kami telah menerima pengajuan tiket dengan nomor *${body.noTiket}*. Tim kami akan segera menindaklanjuti.
+Lihat detail dan pembaruan status tiket di: ${baseUrl}/api/complaint/updateTiket?id=${body.noTiket}
+
+Simpan nomor tiket ini untuk kemudahan mengakses link di atas 👆🏻
+
+Terima kasih atas kerjasamanya 🙏`
             let dataUser = JSON.stringify({
                 message: pesanUser,
                 telp: decoded.wa
