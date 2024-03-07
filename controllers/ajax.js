@@ -1098,12 +1098,20 @@ module.exports = {
         "mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. \n" +
         "Silahkan login ke aplikasi SIMPEG untuk menyetujui atau menolak pengajuan cuti tersebut. \n" +
         "Terima kasih.";
-      let pesanGrub = "Pegawai dengan nama " + decoded.nama + " (" + decoded.id + ") " +
-        "di bidang " + dep.bidang + " mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. ";
+      // let pesanGrub = "Pegawai dengan nama " + decoded.nama + " (" + decoded.id + ") " +
+      // "di bidang " + dep.bidang + " mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. ";
       let data = JSON.stringify({
         message: pesan,
         telp: Boss.atasanLangsung.wa
       });
+      let pesanGrub = `
+*Pengajuan Cuti Pegawai*
+Nama : ${decoded.nama}
+NIK : ${decoded.id}
+Bidang : ${dep.bidang} 
+Jenis Cuti : ${getJenisCuti.type_cuti}
+Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)
+     `
       let dataGrub = JSON.stringify({
         message: pesanGrub,
         telp: 'LogCuti'
