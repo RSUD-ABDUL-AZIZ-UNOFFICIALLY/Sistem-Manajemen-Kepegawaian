@@ -6,7 +6,11 @@ const { sendWa } = require("../helper/message");
 const { apiGetSimrs, apiPostSimrs } = require("../helper/simrs");
 const { createClient } = require('redis');
 const client = createClient({
-    url: process.env.REDIS_URL
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_URL,
+        port: process.env.REDIS_URL_PORT
+    }
 });
 client.on('error', (error) => {
     console.error(error);

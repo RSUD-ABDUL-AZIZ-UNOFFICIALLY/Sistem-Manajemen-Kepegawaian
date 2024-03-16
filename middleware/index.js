@@ -4,7 +4,11 @@ const { Buffer } = require('buffer');
 const { createClient } = require('redis');
 const { error } = require("console");
 const client = createClient({
-    url: process.env.REDIS_URL
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_URL,
+        port: process.env.REDIS_URL_PORT
+    }
 });
 client.on('error', (error) => {
     console.error(error);
