@@ -446,14 +446,14 @@ module.exports = {
             try {
                 let cookie = req.cookies.token;
                 let decoded = jwt.verify(cookie, process.env.JWT_SECRET_KEY);
-                Log.create({
-                    nowa : decoded.wa,
-                    url : req.originalUrl,
-                    method : req.method,
-                    ip: req.ip,
-                    user_agent : req.headers['user-agent'] , 
-                    body : JSON.stringify(req.body)
-                })
+              //  Log.create({
+                    // nowa : decoded.wa,
+                //     url : req.originalUrl,
+                //     method : req.method,
+                //     ip: req.ip,
+                //     user_agent : req.headers['user-agent'] , 
+                //     body : JSON.stringify(req.body)
+                // })
                 await Family_paseins.create(data);
             } catch (error) {
                 return res.status(401).json({
