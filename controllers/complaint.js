@@ -6,6 +6,9 @@ const { Complaint, Tiket, User, Tiketgroup, Grouperticket, Departemen, Profile, 
 const { sendWa, sendGrub } = require("../helper/message");
 const { Op, or } = require("sequelize");
 const {generateUID} = require("../helper");
+function delay(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 
 module.exports = {
@@ -50,7 +53,6 @@ module.exports = {
                 nama_dep: find_departemen.bidang,
                 pj: find_Tiketgroup.nama_pj,
             });
-            // let pesanGrub = "Pegawai dengan nama " + decoded.nama + " di bidang " + find_departemen.bidang + ". \n " + body.keteranagn + " nomor tiket *" + body.noTiket + "*. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + "\n Di tujukan ke " + find_Tiketgroup.nama_pj + " (" + find_Tiketgroup.nama_grup + ") \n info lebih lanjut klik link di atas 👆🏻 atau hubungi : " + decoded.wa + " \n Terimakasih";
             let pesanGrub = `*Kendala Untuk Segera Ditanggapi*
 
 Nomor Tiket : ${body.noTiket}
@@ -66,7 +68,6 @@ Detail :
                 message: pesanGrub,
                 telp: groupIT
             });
-            // let pesanPJ = find_Tiketgroup.nama_pj + " ada tiket dari " + decoded.nama + "." + body.keteranagn + " Nomor tiket *" + body.noTiket + "* . Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + " \n Save nomor ini agar bisa klik link di atas 👆🏻 \n Terimakasih";
             let pesanPJ = `*Pemberitahuan Tiket Baru*
 Halo, ${find_Tiketgroup.nama_pj} !
 Ada kendala untuk segera ditanggapi dari : 
@@ -84,7 +85,6 @@ Terimakasih!`
                 telp: find_Tiketgroup.wa_pj
             });
 
-            // let pesanUser = "Terimakasih " + decoded.nama + " telah mengajukan tiket dengan nomor *" + body.noTiket + "*. Kami akan segera menindaklanjuti. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + " \n Save nomor ini agar bisa klik link di atas 👆🏻 \n Terimakasih";
             let pesanUser = `Terima kasih, ${decoded.nama}! 🌟
 Kami telah menerima pengajuan tiket dengan nomor *${body.noTiket}*. Tim kami akan segera menindaklanjuti.
 Lihat detail dan pembaruan status tiket di: ${baseUrl}/api/complaint/updateTiket?id=${body.noTiket}
@@ -96,10 +96,11 @@ Terima kasih atas kerjasamanya 🙏`
                 message: pesanUser,
                 telp: decoded.wa
             });
-            await sendWa(dataUser);
+            sendWa(dataUser);
             await sendGrub(dataGrub);
             await sendWa(dataPJ);
             await t.commit();
+            await delay(20000);
             return res.status(200).json({
                 error: false,
                 message: "success",

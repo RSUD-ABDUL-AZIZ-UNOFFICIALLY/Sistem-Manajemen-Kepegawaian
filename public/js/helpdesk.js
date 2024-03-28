@@ -21,6 +21,12 @@ $('#lapor').submit(function(event) {
     };
   // disabel button submit  agar tidak bisa di klik
   $('#submit').prop('disabled', true);
+  Swal.fire({
+    title: "Sedang Memproses",
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  })
     $.ajax({
         url: '/api/complaint',
         method: 'POST',
