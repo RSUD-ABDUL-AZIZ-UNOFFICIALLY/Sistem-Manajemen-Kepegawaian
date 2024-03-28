@@ -5,10 +5,7 @@ const baseUrl = process.env.BASE_URL;
 const { Complaint, Tiket, User, Tiketgroup, Grouperticket, Departemen, Profile, sequelize } = require("../models");
 const { sendWa, sendGrub } = require("../helper/message");
 const { Op, or } = require("sequelize");
-const {generateUID} = require("../helper");
-function delay(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
+const { generateUID } = require("../helper");
 
 
 module.exports = {
@@ -97,10 +94,10 @@ Terima kasih atas kerjasamanya 🙏`
                 telp: decoded.wa
             });
             sendWa(dataUser);
-            await sendGrub(dataGrub);
-            await sendWa(dataPJ);
+            sendGrub(dataGrub);
+            sendWa(dataPJ);
             await t.commit();
-            await delay(20000);
+
             return res.status(200).json({
                 error: false,
                 message: "success",
