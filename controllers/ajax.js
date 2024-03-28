@@ -1093,17 +1093,32 @@ module.exports = {
       );
 
       let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
-      let pesan = "Halo " + jnsKelBoss + Boss.atasanLangsung.nama + ", \n" +
-        "Pegawai dengan nama " + decoded.nama + " (" + decoded.id + ") " +
-        "mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. \n" +
-        "Silahkan login ke aplikasi SIMPEG untuk menyetujui atau menolak pengajuan cuti tersebut. \n" +
-        "Terima kasih.";
-      let pesanGrub = "Pegawai dengan nama " + decoded.nama + " (" + decoded.id + ") " +
-        "di bidang " + dep.bidang + " mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. ";
+      // let pesan = "Halo " + jnsKelBoss + Boss.atasanLangsung.nama + ", \n" +
+      //   "Pegawai dengan nama " + decoded.nama + " (" + decoded.id + ") " +
+      //   "mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. \n" +
+      //   "Silahkan login ke aplikasi SIMPEG untuk menyetujui atau menolak pengajuan cuti tersebut. \n" +
+      //   "Terima kasih.";
+      let pesan = `Pemberitahuan Pengajuan Cuti Pegawai
+Halo ${jnsKelBoss} ${Boss.atasanLangsung.nama},
+      
+Saat ini pegawai dengan : 
+Nama : ${decoded.nama}
+NIK : ${decoded.id} 
+Jenis Cuti : ${getJenisCuti.type_cuti}
+Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari). 
+      
+Untuk memberikan persetujuan atau penolakan terhadap pengajuan cuti diatas, silakan akses aplikasi SIMPEG. 
+Terima kasih atas perhatiannya.`;
       let data = JSON.stringify({
         message: pesan,
         telp: Boss.atasanLangsung.wa
       });
+      let pesanGrub = `*Pemberitahuan Cuti Pegawai*
+Nama : ${decoded.nama}
+NIK : ${decoded.id}
+Bidang : ${dep.bidang} 
+Jenis Cuti : ${getJenisCuti.type_cuti}
+Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
       let dataGrub = JSON.stringify({
         message: pesanGrub,
         telp: 'LogCuti'

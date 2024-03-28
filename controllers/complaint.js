@@ -5,7 +5,7 @@ const baseUrl = process.env.BASE_URL;
 const { Complaint, Tiket, User, Tiketgroup, Grouperticket, Departemen, Profile, sequelize } = require("../models");
 const { sendWa, sendGrub } = require("../helper/message");
 const { Op, or } = require("sequelize");
-const {generateUID} = require("../helper");
+const { generateUID } = require("../helper");
 
 
 module.exports = {
@@ -50,26 +50,54 @@ module.exports = {
                 nama_dep: find_departemen.bidang,
                 pj: find_Tiketgroup.nama_pj,
             });
-            let pesanGrub = "Pegawai dengan nama " + decoded.nama + " di bidang " + find_departemen.bidang + ". \n " + body.keteranagn + " nomor tiket *" + body.noTiket + "*. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + "\n Di tujukan ke " + find_Tiketgroup.nama_pj + " (" + find_Tiketgroup.nama_grup + ") \n info lebih lanjut klik link di atas 👆🏻 atau hubungi : " + decoded.wa + " \n Terimakasih";
+            let pesanGrub = `*Kendala Untuk Segera Ditanggapi*
+
+Nomor Tiket : ${body.noTiket}
+Nama : ${decoded.nama}
+Bidang : ${find_departemen.bidang} 
+Kendala : ${body.kendala}
+Ditujukan Kepada : ${find_Tiketgroup.nama_pj} (${find_Tiketgroup.nama_grup}) 
+Detail : 
+🔗 ${baseUrl}/api/complaint/updateTiket?id=${body.noTiket}
+
+☎ ${decoded.wa}`
             let dataGrub = JSON.stringify({
                 message: pesanGrub,
                 telp: groupIT
             });
-            let pesanPJ = find_Tiketgroup.nama_pj + " ada tiket dari " + decoded.nama + "." + body.keteranagn + " Nomor tiket *" + body.noTiket + "* . Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + " \n Save nomor ini agar bisa klik link di atas 👆🏻 \n Terimakasih";
+            let pesanPJ = `*Pemberitahuan Tiket Baru*
+Halo, ${find_Tiketgroup.nama_pj} !
+Ada kendala untuk segera ditanggapi dari : 
+Nama : ${decoded.nama} 
+Bidang : ${find_departemen.bidang}
+Kendala : ${body.kendala}
+Nomor Tiket : ${body.noTiket}
+Detail : 🔗 ${baseUrl}/api/complaint/updateTiket?id=${body.noTiket}
+
+☎ ${decoded.wa}
+
+Terimakasih!`
             let dataPJ = JSON.stringify({
                 message: pesanPJ,
                 telp: find_Tiketgroup.wa_pj
             });
 
-            let pesanUser = "Terimakasih " + decoded.nama + " telah mengajukan tiket dengan nomor *" + body.noTiket + "*. Kami akan segera menindaklanjuti. Lihat detail " + baseUrl + "/api/complaint/updateTiket?id=" + body.noTiket + " \n Save nomor ini agar bisa klik link di atas 👆🏻 \n Terimakasih";
+            let pesanUser = `Terima kasih, ${decoded.nama}! 🌟
+Kami telah menerima pengajuan tiket dengan nomor *${body.noTiket}*. Tim kami akan segera menindaklanjuti.
+Lihat detail dan pembaruan status tiket di: ${baseUrl}/api/complaint/updateTiket?id=${body.noTiket}
+
+Simpan nomor tiket ini untuk kemudahan mengakses link di atas 👆🏻
+
+Terima kasih atas kerjasamanya 🙏`
             let dataUser = JSON.stringify({
                 message: pesanUser,
                 telp: decoded.wa
             });
-            await sendWa(dataUser);
-            await sendGrub(dataGrub);
-            await sendWa(dataPJ);
+            sendWa(dataUser);
+            sendGrub(dataGrub);
+            sendWa(dataPJ);
             await t.commit();
+
             return res.status(200).json({
                 error: false,
                 message: "success",

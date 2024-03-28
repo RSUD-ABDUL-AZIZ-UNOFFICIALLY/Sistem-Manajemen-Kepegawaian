@@ -5,10 +5,13 @@ const secretKey = process.env.SECRET_WA;
 const payload = {
     gid: "Server Side",
 };
+const { generateDelay } = require("../helper");
 
 async function sendWa(data) {
     let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
     try {
+        let randomDelay = Math.floor(Math.random() * 1000) + 1000;
+        await generateDelay(randomDelay);
         let response = await axios.post(process.env.HOSTWA + "/api/wa/send", data, {
             headers: {
                 Authorization: "Bearer " + token,
@@ -40,6 +43,8 @@ async function sendGrub(data){
         },
         data: data,
     };
+    let randomDelay = Math.floor(Math.random() * 1000) + 1000;
+    await generateDelay(randomDelay);
     await axios
         .request(config)
         .then((response) => {

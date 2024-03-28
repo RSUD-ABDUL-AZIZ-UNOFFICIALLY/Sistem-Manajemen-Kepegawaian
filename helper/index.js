@@ -41,9 +41,13 @@ function generateUID(length) {
   
   return uid;
 }
+function generateDelay(milliseconds) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 module.exports = {
     convertdate,
     convertdatetime,
-    generateUID
+  generateUID,
+  generateDelay
 }
