@@ -1238,7 +1238,7 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
             ],
           },
         ],
-        order: [["createdAt", "ASC"]],
+        order: [["createdAt", "DESC"]],
       });
       if (data.length == 0) {
         return res.status(404).json({
@@ -1324,7 +1324,7 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
             ],
           },
         ],
-        order: [["createdAt", "ASC"]],
+        order: [["createdAt", "DESC"]]
       });
       if (data.length == 0) {
         return res.status(404).json({
