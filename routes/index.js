@@ -20,7 +20,7 @@ router.get('/report', middleware.login, controller.report);
 router.get('/contact', middleware.login, controller.getContact); 
 
 router.get('/simrs/regis', middleware.login, middleware.checkHakAkses('rm'), controller.addAnggotaPasien);
-router.get('/simrs/home', middleware.login, middleware.checkHakAkses('petugas'), controller.homeSIMRS);
+router.get('/simrs/home', middleware.login, middleware.checkHakAkses('petugas'), middleware.apiSIMRS, controller.homeSIMRS);
 router.get('/simrs/igd/px', middleware.login, middleware.checkHakAkses('petugas'), controller.pxSIMRSIGD);
 router.get('/simrs/igd/tindakan', middleware.login, middleware.checkHakAkses('petugas'), controller.tindakanIgdMenu);
 router.get('/simrs/igd/menu', middleware.login, middleware.checkHakAkses('petugas'), controller.menutndakanIgd);

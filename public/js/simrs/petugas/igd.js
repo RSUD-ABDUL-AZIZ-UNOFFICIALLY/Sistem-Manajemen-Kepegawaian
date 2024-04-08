@@ -3,11 +3,24 @@ let day = ("0" + now.getDate()).slice(-2);
 let month = ("0" + (now.getMonth() + 1)).slice(-2);
 let today = now.getFullYear() + "-" + (month) + "-" + (day);
 $('#tgl_reg').val(today);
-getRegPasien(today);
 
-function getRegPasien(tgl) {
+let token = getCookie('token');
+let urlSIMRS = decodeURIComponent(getCookie('urlSIMRS'));
+getRegPasien(today, urlSIMRS, token);
+
+
+
+
+function getRegPasien(tgl, urlSIMRS, token) {
     let dataTbPasien = $('#tb_pasien').dataTable({
-        ajax: '/api/simrs/reg/igd?tgl=' + tgl,
+        ajax: {
+            url: `${urlSIMRS}/api/ralan/igd?from=${tgl}&until=${tgl}`,
+            type: `GET`,
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        },
+        // ajax: '/api/simrs/reg/igd?tgl=' + tgl,
         columns: [
             { data: 'no_rawat' },
             { data: 'tgl_registrasi' },
@@ -31,7 +44,7 @@ function getRegPasien(tgl) {
 };
 
 $('#tgl_reg').change(function () {
-    getRegPasien($('#tgl_reg').val());
+    getRegPasien($('#tgl_reg').val(), urlSIMRS, token);
 });
 
 
