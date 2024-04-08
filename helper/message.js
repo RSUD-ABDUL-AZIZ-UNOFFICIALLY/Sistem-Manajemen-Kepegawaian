@@ -28,7 +28,7 @@ async function sendWa(data) {
         } else {
             console.log(error.message);
         }
-        throw new Error(error);
+        // throw new Error(error);
     }
 }
 

@@ -1013,32 +1013,53 @@ module.exports = {
 
     let t = await sequelize.transaction();
     let year = body.mulai.split("-");
+
     try {
-      let sisaCuti = await Cuti.findAll({
-        where: {
-          nik: decoded.id,
-          type_cuti: body.type_cuti,
-        },
-        include: [
-          {
-            model: Cuti_approval,
-            as: "approval",
-            where: {
-              status: "Disetujui",
-              createdAt: {
-                [Op.startsWith]: year[0],
-              },
-            },
-          },
-        ],
-        attributes: ["jumlah"],
-      });
       let getJenisCuti = await Jns_cuti.findOne({
         attributes: ["total", "max", "type_cuti"],
         where: {
           id: body.type_cuti,
         },
       });
+      let getLeagerCuti = await Ledger_cuti.findOne({
+        attributes: ["sisa_cuti"],
+        where: {
+          nik_user: decoded.id,
+          type_cuti: body.type_cuti,
+          periode: year[0],
+        },
+        order: [
+          ["createdAt", "DESC"],
+        ],
+      });
+      if (getLeagerCuti == null) {
+        if (body.jumlah > getJenisCuti.max) {
+          return res.status(400).json({
+            error: true,
+            message: "Opps",
+            icon: "warning",
+            data: "Kouta cuti " + getJenisCuti.type_cuti + " maksimal " + getJenisCuti.max + " hari",
+          });
+        }
+      } else if ((getLeagerCuti.sisa_cuti - body.jumlah) < 0) {
+        return res.status(400).json({
+          error: true,
+          message: "Opps",
+          icon: "warning",
+          data: "Maaf, sisa cuti anda tidak mencukupi, Sisa cuti anda " + getLeagerCuti.sisa_cuti + " hari",
+        });
+      }
+      let saveCuti = await Cuti.create(
+        {
+          nik: decoded.id,
+          type_cuti: body.type_cuti,
+          mulai: body.mulai,
+          samapi: body.samapi,
+          jumlah: body.jumlah,
+          keterangan: body.keterangan,
+        },
+        { transaction: t }
+      );
 
       let Boss = await Atasan.findOne({
         where: {
@@ -1057,30 +1078,6 @@ module.exports = {
           },
         ],
       });
-      let totalCuti = 0;
-      for (let i = 0; i < sisaCuti.length; i++) {
-        totalCuti += sisaCuti[i].jumlah;
-      }
-      let totalCutis = totalCuti + parseInt(body.jumlah);
-      if (totalCutis > getJenisCuti.total) {
-        return res.status(400).json({
-          error: true,
-          message: "Opps",
-          icon: "warning",
-          data: "Jumlah cuti melebihi batas",
-        });
-      }
-      let saveCuti = await Cuti.create(
-        {
-          nik: decoded.id,
-          type_cuti: body.type_cuti,
-          mulai: body.mulai,
-          samapi: body.samapi,
-          jumlah: body.jumlah,
-          keterangan: body.keterangan,
-        },
-        { transaction: t }
-      );
       await Cuti_approval.create(
         {
           id_cuti: saveCuti.id,
@@ -1093,11 +1090,7 @@ module.exports = {
       );
 
       let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
-      // let pesan = "Halo " + jnsKelBoss + Boss.atasanLangsung.nama + ", \n" +
-      //   "Pegawai dengan nama " + decoded.nama + " (" + decoded.id + ") " +
-      //   "mengajukan " + getJenisCuti.type_cuti + " mulai tanggal " + body.mulai + " sampai tanggal " + body.samapi + " sebanyak " + body.jumlah + " hari. \n" +
-      //   "Silahkan login ke aplikasi SIMPEG untuk menyetujui atau menolak pengajuan cuti tersebut. \n" +
-      //   "Terima kasih.";
+
       let pesan = `Pemberitahuan Pengajuan Cuti Pegawai
 Halo ${jnsKelBoss} ${Boss.atasanLangsung.nama},
       
@@ -1123,8 +1116,8 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
         message: pesanGrub,
         telp: 'LogCuti'
       });
-      await sendWa(data);
-      await sendGrub(dataGrub);
+      sendWa(data);
+      sendGrub(dataGrub);
       await t.commit();
       return res.status(200).json({
         error: false,
@@ -1135,11 +1128,12 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
       });
     } catch (error) {
       await t.rollback();
-      console.log(error);
+      console.log(error.message);
       return res.status(400).json({
         error: true,
         message: "error",
-        data: error.message,
+        icon: "error",
+        data: "Maaf, terjadi kesalahan pengisian data, silahkan coba lagi",
       });
     }
   },
@@ -1397,6 +1391,7 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
           where: {
             nik_user: getCuti.nik,
             type_cuti: getCuti.type_cuti,
+            periode: parseInt(yearNow[0]),
           },
           order: [
             ["createdAt", "DESC"],
