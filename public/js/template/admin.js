@@ -1,20 +1,21 @@
-// Membaca semua cookie
-const allCookies = document.cookie;
+// // Membaca semua cookie
+// const allCookies = document.cookie;
 
-// Memeriksa keberadaan cookie tertentu
-function checkCookie(cookieName) {
-  const cookies = document.cookie.split(";");
-  for (const cookie of cookies) {
-    if (cookie.trim().startsWith(cookieName + "=")) {
-      return true; // Cookie ditemukan
-    }
-  }
-  return false; // Cookie tidak ditemukan
-}
+// // Memeriksa keberadaan cookie tertentu
+// function checkCookie(cookieName) {
+//   const cookies = document.cookie.split(";");
+//   for (const cookie of cookies) {
+//     if (cookie.trim().startsWith(cookieName + "=")) {
+//       return true; // Cookie ditemukan
+//     }
+//   }
+//   return false; // Cookie tidak ditemukan
+// }
 
 // Contoh penggunaan
 const cookieName = "status";
-const cookieExists = checkCookie(cookieName);
+const cookieExists = getCookie(cookieName);
+console.log(cookieExists);
 if (cookieExists) {
   // get the cookie value
   const cookieValue = document.cookie
@@ -81,13 +82,13 @@ function getIP() {
   });
 }
 
-const cookieTracker = checkCookie('tracker');
+const cookieTracker = getCookie('tracker');
 if (!cookieTracker) {
   document.cookie = "tracker=true; max-age=120; path=/";
   tracker();
 }
 
-const cookieToken = checkCookie('profile');
+const cookieToken = getCookie('profile');
 if (cookieToken) {
   let cookieTokenValue = document.cookie
     .split("; ")
@@ -111,14 +112,14 @@ if (!localStorage.getItem("dataIDUser")) {
     }
   });
 }
-function setOnline() {
-  let id = localStorage.getItem("dataIDUser");
-  let name = localStorage.getItem("dataIDname");
-  return $.ajax({
-    url: "https://cdn.spairum.biz.id/api/ls/update/lpkp?id=" + id + "&name=" + name,
-    method: "GET",
-  });
-}
-setOnline();
-setInterval(setOnline, 5000);
+// function setOnline() {
+//   let id = localStorage.getItem("dataIDUser");
+//   let name = localStorage.getItem("dataIDname");
+//   return $.ajax({
+//     url: "https://cdn.spairum.biz.id/api/ls/update/lpkp?id=" + id + "&name=" + name,
+//     method: "GET",
+//   });
+// }
+// setOnline();
+// setInterval(setOnline, 5000);
 
