@@ -1404,7 +1404,6 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
         }, { transaction: t });
         if (ledger == null) {
           let sisaCuti = getCuti.jenis_cuti.total - getCuti.jumlah;
-          console.log('ledger null');
           await Ledger_cuti.create({
             nik_user: getCuti.nik,
             name_user: getCuti.user.nama,
@@ -1422,6 +1421,14 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
           }, { transaction: t });
         } else {
           let sisaCuti = ledger.sisa_cuti - getCuti.jumlah;
+          if (sisaCuti < 0) {
+            await t.rollback();
+            return res.status(400).json({
+              error: true,
+              message: "error",
+              data: "Sisa cuti tidak mencukupi",
+            });
+          }
           await Ledger_cuti.create({
             nik_user: getCuti.nik,
             name_user: getCuti.user.nama,

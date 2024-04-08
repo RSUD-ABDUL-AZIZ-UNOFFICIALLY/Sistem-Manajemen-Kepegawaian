@@ -128,7 +128,8 @@ async function updateCuti(data) {
             return response.data;
         },
         error: function (error) {
-            console.log(error);
+            console.log(error.responseJSON);
+            Swal.fire(error.responseJSON.message, error.responseJSON.data, 'error')
         }
     });
 }
