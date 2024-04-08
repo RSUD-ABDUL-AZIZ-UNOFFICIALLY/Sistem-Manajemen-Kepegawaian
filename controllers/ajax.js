@@ -1,18 +1,36 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Biodatas, Atasan, Lpkp, Rekap, Aprovement, Template, Departemen, Profile, Jns_cuti, Cuti, sequelize, Cuti_approval } = require("../models");
-const { Op } = require("sequelize");
-const fs = require('fs');
+const {
+  User,
+  Biodatas,
+  Atasan,
+  Lpkp,
+  Rekap,
+  Aprovement,
+  Template,
+  Departemen,
+  Profile,
+  Jns_cuti,
+  Cuti,
+  Ledger_cuti,
+  sequelize,
+  Cuti_approval,
+  Access,
+  Hotspot
+} = require("../models");
+const { Op, or } = require("sequelize");
+const fs = require("fs");
 const { convertdate, convertdatetime } = require("../helper");
 const { uploadImage } = require("../helper/upload");
+const { sendWa, sendGrub } = require("../helper/message");
 module.exports = {
   updateProfile: async (req, res) => {
     let body = req.body;
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     try {
-      let user = await User.update(
+      await User.update(
         {
           nama: body.nama,
           dep: body.dep,
@@ -51,7 +69,7 @@ module.exports = {
           bos: body.atasan,
         });
       }
-    } catch (error) { }
+    } catch (error) {}
     return res.status(200).json({
       error: false,
       message: body,
@@ -65,7 +83,7 @@ module.exports = {
 
       let updateBio = await Biodatas.update(body, {
         where: {
-          nik: decoded.id
+          nik: decoded.id,
         },
       });
 
@@ -73,7 +91,7 @@ module.exports = {
       if (updateBio[0] == 0) {
         updateBio = await Biodatas.create({
           nik: decoded.id,
-          ...body
+          ...body,
         });
       }
       return res.status(200).json({
@@ -81,12 +99,12 @@ module.exports = {
         message: updateBio,
       });
     } catch (error) {
-      console.error(error)
+      console.error(error);
       return res.status(400).json({
         error: false,
         message: "error",
-        data: error.message
-      })
+        data: error.message,
+      });
     }
   },
   getBiodata: async (req, res) => {
@@ -117,6 +135,39 @@ module.exports = {
       });
     }
   },
+  getPic: async (req, res) => {
+    try {
+      const token = req.cookies.token;
+      const secretKey = process.env.JWT_SECRET_KEY;
+      const decoded = jwt.verify(token, secretKey);
+      let getFoto = await Profile.findOne({
+        attributes: ["url"],
+        where: {
+          nik: decoded.id,
+        },
+      });
+      if (!getFoto) {
+        return res.status(204).json({
+          error: false,
+          message: "success",
+          data: null,
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: getFoto,
+      });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
   postPic: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
@@ -142,9 +193,8 @@ module.exports = {
         error: false,
         message: "success",
         data: dataUpload,
-        profil: profil
+        profil: profil,
       });
-
     } catch (error) {
       console.error(error);
       return res.status(400).json({
@@ -175,7 +225,7 @@ module.exports = {
         message: "success",
         data: data,
       });
-    } catch (error) { }
+    } catch (error) {}
   },
   progress: async (req, res) => {
     let token = req.cookies.token;
@@ -349,15 +399,14 @@ module.exports = {
       return res.status(204).json({
         error: true,
         message: "data not found",
-        data: delLpkp
+        data: delLpkp,
       });
-
     }
-    console.log(delLpkp)
+    console.log(delLpkp);
     return res.status(200).json({
       error: false,
       message: "success",
-      data: delLpkp
+      data: delLpkp,
     });
   },
   createReport: async (req, res) => {
@@ -416,7 +465,7 @@ module.exports = {
           ket: ket,
         },
       });
-    console.log(id);
+      console.log(id);
       if (id == null) {
         let user = await User.findOne({
           where: {
@@ -451,7 +500,8 @@ module.exports = {
               ket: ket,
               nik: decoded.id,
             },
-          });
+          }
+        );
         pesan = "Progress updated successfully";
       }
     } catch (error) {
@@ -461,28 +511,28 @@ module.exports = {
     return res.status(200).json({
       error: false,
       message: "success",
-      data: pesan
+      data: pesan,
     });
   },
   getReport: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let queryparams = req.query;
-    let PNS = (queryparams.satusPNS == "true") ? 'PNS' : '';
-    let PPPK = (queryparams.satusPPPK == "true") ? 'PPPK' : '';
-    let NonASN = (queryparams.satusNonASN == "true") ? 'Non ASN' : '';
+    let PNS = queryparams.satusPNS == "true" ? "PNS" : "";
+    let PPPK = queryparams.satusPPPK == "true" ? "PPPK" : "";
+    let NonASN = queryparams.satusNonASN == "true" ? "Non ASN" : "";
     try {
       let getUser = await User.findAll({
         where: {
           [Op.and]: [
             { dep: queryparams.dep },
-            { [Op.or]: [{ status: NonASN }, { status: PPPK }, { status: PNS }] },
-          ]
+            {
+              [Op.or]: [{ status: NonASN }, { status: PPPK }, { status: PNS }],
+            },
+          ],
         },
         attributes: ["nik", "nama", "nip", "jab", "status"],
-        order: [
-          ["nama", "ASC"],
-        ],
+        order: [["nama", "ASC"]],
       });
       let data = [];
       for (let i = 0; i < getUser.length; i++) {
@@ -495,7 +545,7 @@ module.exports = {
           },
         });
         getUser[i].state = 0;
-        let pushData
+        let pushData;
         if (getfind == null) {
           pushData = {
             nik: getUser[i].nik,
@@ -520,10 +570,10 @@ module.exports = {
             },
             order: [
               // Will escape title and validate DESC against a list of valid direction parameters
-              ['createdAt', 'DESC'],
+              ["createdAt", "DESC"],
             ],
           });
-          let findBos
+          let findBos;
           if (approve != null) {
             findBos = await User.findOne({
               where: {
@@ -532,7 +582,7 @@ module.exports = {
               attributes: ["nama", "nip", "jab"],
             });
           }
-           pushData = {
+          pushData = {
             nik: getUser[i].nik,
             nama: getUser[i].nama,
             nip: getUser[i].nip,
@@ -542,8 +592,8 @@ module.exports = {
             kategori: getfind.kategori,
             tpp: getfind.tpp,
             periode: getfind.periode,
-            state: (approve == null) ? 1 : 2,
-            bos: findBos
+            state: approve == null ? 1 : 2,
+            bos: findBos,
           };
         }
         data.push(pushData);
@@ -553,7 +603,6 @@ module.exports = {
         message: "success",
         data: data,
       });
-
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -657,7 +706,7 @@ module.exports = {
     let getAnggota = await Atasan.findAll({
       where: {
         bos: decoded.id,
-      }
+      },
     });
     let data = [];
     for (let i = 0; i < getAnggota.length; i++) {
@@ -715,9 +764,8 @@ module.exports = {
     return res.status(200).json({
       error: false,
       message: "success",
-      data: data
+      data: data,
     });
-
   },
   getSignaute: async (req, res) => {
     let token = req.cookies.token;
@@ -781,13 +829,13 @@ module.exports = {
         aprovAtasan: {
           atasan: atasan,
           date: aprovAtasan,
-        }
+        },
       };
 
       return res.status(200).json({
         error: false,
         message: "success",
-        data: data
+        data: data,
       });
     } catch (error) {
       return res.status(500).json({
@@ -811,7 +859,7 @@ module.exports = {
       return res.status(200).json({
         error: false,
         message: "success",
-        data: Approve
+        data: Approve,
       });
     } catch (error) {
       return res.status(500).json({
@@ -825,7 +873,7 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let body = req.body;
-    if (body.kegiatan == '') {
+    if (body.kegiatan == "") {
       return res.status(400).json({
         error: true,
         message: "Kegiatan tidak boleh kosong",
@@ -841,7 +889,7 @@ module.exports = {
         data: {
           template: addTemplate,
           title: "Templat berhasil disimpan",
-        }
+        },
       });
     } catch (error) {
       // console.log(error);
@@ -868,8 +916,8 @@ module.exports = {
           message: "success",
           data: {
             nama: decoded.nama,
-            template: getTemplate
-          }
+            template: getTemplate,
+          },
         });
       } catch (error) {
         return res.status(500).json({
@@ -889,10 +937,9 @@ module.exports = {
         return res.status(200).json({
           error: false,
           message: "success",
-          data: getTemplate
+          data: getTemplate,
         });
-      }
-      catch (error) {
+      } catch (error) {
         return res.status(500).json({
           error: true,
           message: "error",
@@ -915,7 +962,7 @@ module.exports = {
       return res.status(200).json({
         error: false,
         message: "success",
-        data: deleteTemplate
+        data: deleteTemplate,
       });
     } catch (error) {
       return res.status(500).json({
@@ -943,7 +990,7 @@ module.exports = {
       return res.status(200).json({
         error: false,
         message: "success",
-        data: getJenisCuti
+        data: getJenisCuti,
       });
     } catch (error) {
       return res.status(500).json({
@@ -957,59 +1004,196 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let body = req.body;
-    let sisaCuti = await Cuti.findAll({
+    let account = req.account;
+    let dep = await Departemen.findOne({
       where: {
-        nik: decoded.id,
-        type_cuti: body.type_cuti,
+        id: account.dep,
       },
-      attributes: ["jumlah"],
     });
-    let Boss = await Atasan.findOne({
-      where: {
-        user: decoded.id,
-      },
-      include: [
-        {
-          model: User,
-          as: "atasanLangsung",
-          include: [
-            {
-              model: Departemen,
-              as: "departemen",
-            },
-          ],
-        }
-      ],
-    });
-    const t = await sequelize.transaction();
-    try {
 
-      let saveCuti = await Cuti.create({
-        nik: decoded.id,
-        type_cuti: body.type_cuti,
-        mulai: body.mulai,
-        samapi: body.samapi,
-        jumlah: body.jumlah,
-        keterangan: body.keterangan,
-      }, { transaction: t });
-      let aproveCuti = await Cuti_approval.create({
-        id_cuti: saveCuti.id,
-        nik: Boss.atasanLangsung.nik,
-        departement: Boss.atasanLangsung.departemen.bidang,
-        jabatan: Boss.atasanLangsung.jab,
-        status: 'Menunggu'
-      }, { transaction: t });
+    let t = await sequelize.transaction();
+    let year = body.mulai.split("-");
+
+    try {
+      let getJenisCuti = await Jns_cuti.findOne({
+        attributes: ["total", "max", "type_cuti"],
+        where: {
+          id: body.type_cuti,
+        },
+      });
+      let getLeagerCuti = await Ledger_cuti.findOne({
+        attributes: ["sisa_cuti"],
+        where: {
+          nik_user: decoded.id,
+          type_cuti: body.type_cuti,
+          periode: year[0],
+        },
+        order: [
+          ["createdAt", "DESC"],
+        ],
+      });
+      if (getLeagerCuti == null) {
+        if (body.jumlah > getJenisCuti.max) {
+          return res.status(400).json({
+            error: true,
+            message: "Opps",
+            icon: "warning",
+            data: "Kouta cuti " + getJenisCuti.type_cuti + " maksimal " + getJenisCuti.max + " hari",
+          });
+        }
+      } else if ((getLeagerCuti.sisa_cuti - body.jumlah) < 0) {
+        return res.status(400).json({
+          error: true,
+          message: "Opps",
+          icon: "warning",
+          data: "Maaf, sisa cuti anda tidak mencukupi, Sisa cuti anda " + getLeagerCuti.sisa_cuti + " hari",
+        });
+      }
+      let saveCuti = await Cuti.create(
+        {
+          nik: decoded.id,
+          type_cuti: body.type_cuti,
+          mulai: body.mulai,
+          samapi: body.samapi,
+          jumlah: body.jumlah,
+          keterangan: body.keterangan,
+        },
+        { transaction: t }
+      );
+
+      let Boss = await Atasan.findOne({
+        where: {
+          user: decoded.id,
+        },
+        include: [
+          {
+            model: User,
+            as: "atasanLangsung",
+            include: [
+              {
+                model: Departemen,
+                as: "departemen",
+              },
+            ],
+          },
+        ],
+      });
+      await Cuti_approval.create(
+        {
+          id_cuti: saveCuti.id,
+          nik: Boss.atasanLangsung.nik,
+          departement: Boss.atasanLangsung.departemen.bidang,
+          jabatan: Boss.atasanLangsung.jab,
+          status: "Menunggu",
+        },
+        { transaction: t }
+      );
+
+      let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
+
+      let pesan = `Pemberitahuan Pengajuan Cuti Pegawai
+Halo ${jnsKelBoss} ${Boss.atasanLangsung.nama},
+      
+Saat ini pegawai dengan : 
+Nama : ${decoded.nama}
+NIK : ${decoded.id} 
+Jenis Cuti : ${getJenisCuti.type_cuti}
+Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari). 
+      
+Untuk memberikan persetujuan atau penolakan terhadap pengajuan cuti diatas, silakan akses aplikasi SIMPEG. 
+Terima kasih atas perhatiannya.`;
+      let data = JSON.stringify({
+        message: pesan,
+        telp: Boss.atasanLangsung.wa
+      });
+      let pesanGrub = `*Pemberitahuan Cuti Pegawai*
+Nama : ${decoded.nama}
+NIK : ${decoded.id}
+Bidang : ${dep.bidang} 
+Jenis Cuti : ${getJenisCuti.type_cuti}
+Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
+      let dataGrub = JSON.stringify({
+        message: pesanGrub,
+        telp: 'LogCuti'
+      });
+      sendWa(data);
+      sendGrub(dataGrub);
       await t.commit();
       return res.status(200).json({
         error: false,
         message: "success",
-        boss: Boss,
-        data: aproveCuti,
-        saveCuti: saveCuti
+        data: null,
+        // data: aproveCuti,
+        // saveCuti: saveCuti,
       });
     } catch (error) {
       await t.rollback();
-      console.log(error);
+      console.log(error.message);
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        icon: "error",
+        data: "Maaf, terjadi kesalahan pengisian data, silahkan coba lagi",
+      });
+    }
+  },
+  deleteCuti: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let body = req.query;
+    try {
+      let t = await sequelize.transaction();
+      let findCiuti = await Cuti.findOne({
+        where: {
+          nik: decoded.id,
+          id: body.id,
+        },
+      },
+        { transaction: t });
+      if (findCiuti == null) {
+        await t.rollback();
+        return res.status(204).json({
+          error: true,
+          message: "data not found",
+          data: findCiuti,
+        });
+      }
+      let approval = await Cuti_approval.findOne({
+        where: {
+          id_cuti: body.id,
+        },
+      },
+        { transaction: t });
+      if (approval.status == "Menunggu") {
+        await Cuti_approval.destroy({
+          where: {
+            id_cuti: body.id,
+          },
+        },
+          { transaction: t });
+        await Cuti.destroy({
+          where: {
+            nik: decoded.id,
+            id: body.id,
+          },
+        },
+          { transaction: t });
+        await t.commit();
+        return res.status(200).json({
+          error: false,
+          message: "success",
+          data: null,
+        });
+      } else {
+        await t.rollback();
+        return res.status(400).json({
+          error: true,
+          message: "error",
+          data: "Cuti sudah di approve",
+        });
+      }
+    } catch (error) {
+      await t.rollback();
       return res.status(400).json({
         error: true,
         message: "error",
@@ -1046,11 +1230,9 @@ module.exports = {
                 attributes: ["nama", "nip", "jab"],
               },
             ],
-          }
+          },
         ],
-        order: [
-          ['createdAt', 'ASC'],
-        ],
+        order: [["createdAt", "DESC"]],
       });
       if (data.length == 0) {
         return res.status(404).json({
@@ -1061,7 +1243,42 @@ module.exports = {
       return res.status(200).json({
         error: false,
         message: "success",
-        data: data
+        data: data,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getSisaCuti: async (req, res) => {
+    let user = req.account;
+    try {
+      let data = await Cuti.findAll({
+        where: {
+          nik: user.nik,
+        },
+        include: [
+          {
+            model: Jns_cuti,
+            as: "jenis_cuti",
+            attributes: ["type_cuti"],
+          },
+        ],
+        order: [["createdAt", "ASC"]],
+      });
+      if (data.length == 0) {
+        return res.status(404).json({
+          error: true,
+          message: "data not found",
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: data,
       });
     } catch (error) {
       return res.status(400).json({
@@ -1101,9 +1318,7 @@ module.exports = {
             ],
           },
         ],
-        order: [
-          ['createdAt', 'ASC'],
-        ],
+        order: [["createdAt", "DESC"]]
       });
       if (data.length == 0) {
         return res.status(404).json({
@@ -1114,7 +1329,7 @@ module.exports = {
       return res.status(200).json({
         error: false,
         message: "success",
-        data: data
+        data: data,
       });
     } catch (error) {
       return res.status(400).json({
@@ -1128,29 +1343,147 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let { id, keterangan, status } = req.body;
+    let t = await sequelize.transaction();
     try {
       let timeNowWib = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Jakarta",
       });
-      let data = await Cuti_approval.update(
+      let year = timeNowWib.split("/");
+      let yearNow = year[2].split(" ");
+      let getCuti = await Cuti.findOne({
+        where: {
+          id: id,
+        },
+        include: [
+          {
+            model: Jns_cuti,
+            as: "jenis_cuti",
+          },
+          {
+            model: User,
+            as: "user",
+            include: [
+              {
+                model: Biodatas,
+                as: "biodata",
+              },
+              {
+                model: Departemen,
+                as: "departemen",
+              }
+            ],
+          },
+        ],
+      });
+      if (status == 'Disetujui') {
+        let atasan = await User.findOne({
+          where: {
+            nik: decoded.id,
+          },
+          include: [
+            {
+              model: Departemen,
+              as: "departemen",
+            }
+          ],
+        });
+        let ledger = await Ledger_cuti.findOne({
+          where: {
+            nik_user: getCuti.nik,
+            type_cuti: getCuti.type_cuti,
+            periode: parseInt(yearNow[0]),
+          },
+          order: [
+            ["createdAt", "DESC"],
+          ],
+        }, { transaction: t });
+        if (ledger == null) {
+          let sisaCuti = getCuti.jenis_cuti.total - getCuti.jumlah;
+          await Ledger_cuti.create({
+            nik_user: getCuti.nik,
+            name_user: getCuti.user.nama,
+            jabatan: getCuti.user.jab,
+            pangkat: getCuti.user.biodata.pangkat,
+            departemen: getCuti.user.departemen.bidang,
+            nik_atasan: atasan.nik,
+            name_atasan: atasan.nama,
+            tembusan: atasan.departemen.bidang,
+            periode: parseInt(yearNow[0]),
+            type_cuti: getCuti.type_cuti,
+            id_cuti: getCuti.id,
+            sisa_cuti: sisaCuti,
+            cuti_diambil: getCuti.jumlah,
+          }, { transaction: t });
+        } else {
+          let sisaCuti = ledger.sisa_cuti - getCuti.jumlah;
+          if (sisaCuti < 0) {
+            await t.rollback();
+            return res.status(400).json({
+              error: true,
+              message: "error",
+              data: "Sisa cuti tidak mencukupi",
+            });
+          }
+          await Ledger_cuti.create({
+            nik_user: getCuti.nik,
+            name_user: getCuti.user.nama,
+            jabatan: getCuti.user.jab,
+            pangkat: getCuti.user.biodata.pangkat,
+            departemen: getCuti.user.departemen.bidang,
+            nik_atasan: atasan.nik,
+            name_atasan: atasan.nama,
+            tembusan: atasan.departemen.bidang,
+            periode: parseInt(yearNow[0]),
+            type_cuti: getCuti.type_cuti,
+            id_cuti: getCuti.id,
+            sisa_cuti: sisaCuti,
+            cuti_diambil: getCuti.jumlah,
+          },
+            { transaction: t });
+        }
+      }
+      await Cuti_approval.update(
         {
           status: status,
           keterangan: keterangan,
-          approve_date: timeNowWib
+          approve_date: timeNowWib,
         },
         {
           where: {
             id: id,
             nik: decoded.id,
           },
-        }
-      );
+        },
+        { transaction: t });
+      await t.commit();
       return res.status(200).json({
         error: false,
         message: "success",
-        data: data
+        data: getCuti,
+        body: decoded,
+        yearNow: yearNow,
       });
     } catch (error) {
+      await t.rollback();
+      console.log(error);
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getAllCuti: async (req, res) => {
+    let { tahun } = req.query;
+    try {
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: tahun,
+      });
+    }
+    catch (error) {
       return res.status(400).json({
         error: true,
         message: "error",
@@ -1167,8 +1500,8 @@ module.exports = {
           [Op.or]: [
             { nik: { [Op.substring]: search } },
             { nama: { [Op.substring]: search } },
-            { nip: { [Op.substring]: search } }
-          ]
+            { nip: { [Op.substring]: search } },
+          ],
         },
         attributes: ["nama", "nik", "nip", "jab", "status", "wa", "email"],
         include: [
@@ -1181,20 +1514,18 @@ module.exports = {
             model: Departemen,
             as: "departemen",
             attributes: ["bidang"],
-          }
+          },
         ],
-        order: [
-          ["nama", "ASC"],
-        ],
-        limit: 20
+        order: [["nama", "ASC"]],
+        limit: 20,
       });
       let data = [];
       for (let profil of profiles) {
         // if departemen == null
         if (profil.departemen == null) {
           profil.departemen = {
-            bidang: ""
-          }
+            bidang: "",
+          };
         }
         let x = {
           nama: profil.nama,
@@ -1205,15 +1536,15 @@ module.exports = {
           wa: profil.wa,
           email: profil.email,
           departemen: profil.departemen.bidang,
-          url: profil.profile.url
-        }
+          url: profil.profile.url,
+        };
         data.push(x);
       }
 
       return res.status(200).json({
         error: false,
         message: "success",
-        data: data
+        data: data,
       });
     } catch (error) {
       return res.status(400).json({
@@ -1222,5 +1553,99 @@ module.exports = {
         data: error.message,
       });
     }
-  }
+  },
+
+  getProfilepic: async (req, res) => {
+    try {
+      let { nik } = req.query;
+      let newToken = jwt.verify(nik, secretKey);
+      let porfil = await Profile.findOne({
+        where: {
+          nik: newToken,
+        },
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: {
+          url: porfil.url,
+        },
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getMenu: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      let hakakses = [];
+      let getAnggota = await Atasan.findOne({
+        attributes: ["bos"],
+        where: {
+          bos: decoded.id,
+        },
+      });
+      if (getAnggota) {
+        hakakses.push({
+          bos: true,
+        });
+      } else {
+        hakakses.push({
+          bos: false,
+        });
+      }
+      let akses = await Access.findAll({
+        attributes: ["status"],
+        where: {
+          wa: decoded.wa,
+        },
+      });
+      let menu = [];
+      for (let i of akses) {
+
+        menu.push(i.status);
+      }
+      hakakses.push({
+        menu: menu,
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: hakakses,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getUserMicrotik: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+
+        let getUserPw = await Hotspot.findOne({
+          where: {
+            nik: decoded.id,
+          },
+          });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: getUserPw
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: false,
+        message: error.message,
+      });
+    }
+  },
 };

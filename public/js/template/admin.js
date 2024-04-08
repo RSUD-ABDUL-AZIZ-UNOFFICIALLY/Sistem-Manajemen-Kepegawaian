@@ -1,29 +1,21 @@
-const currentLocation = location.href;
-const menuItem = document.querySelectorAll(".nav-link");
-const menuLength = menuItem.length;
-for (let i = 0; i < menuLength; i++) {
-  if (menuItem[i].href === currentLocation) {
-    menuItem[i].className = "nav-link active";
-  }
-}
-// Membaca semua cookie
-const allCookies = document.cookie;
+// // Membaca semua cookie
+// const allCookies = document.cookie;
 
-// Memeriksa keberadaan cookie tertentu
-function checkCookie(cookieName) {
-  const cookies = document.cookie.split(";");
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].trim();
-    if (cookie.startsWith(cookieName + "=")) {
-      return true; // Cookie ditemukan
-    }
-  }
-  return false; // Cookie tidak ditemukan
-}
+// // Memeriksa keberadaan cookie tertentu
+// function checkCookie(cookieName) {
+//   const cookies = document.cookie.split(";");
+//   for (const cookie of cookies) {
+//     if (cookie.trim().startsWith(cookieName + "=")) {
+//       return true; // Cookie ditemukan
+//     }
+//   }
+//   return false; // Cookie tidak ditemukan
+// }
 
 // Contoh penggunaan
 const cookieName = "status";
-const cookieExists = checkCookie(cookieName);
+const cookieExists = getCookie(cookieName);
+console.log(cookieExists);
 if (cookieExists) {
   // get the cookie value
   const cookieValue = document.cookie
@@ -79,6 +71,7 @@ async function tracker() {
     }
   });
 }
+
 function getIP() {
   return $.ajax({
     url: "https://ipapi.co/json",
@@ -89,13 +82,13 @@ function getIP() {
   });
 }
 
-const cookieTracker = checkCookie('tracker');
+const cookieTracker = getCookie('tracker');
 if (!cookieTracker) {
   document.cookie = "tracker=true; max-age=120; path=/";
   tracker();
 }
 
-const cookieToken = checkCookie('profile');
+const cookieToken = getCookie('profile');
 if (cookieToken) {
   let cookieTokenValue = document.cookie
     .split("; ")
@@ -107,14 +100,26 @@ if (cookieToken) {
   imgUser = document.getElementById("imgUser");
   imgUser.src = data.url;
 }
-// const decodedData = window.atob(decodedCookie);
-// const data = JSON.parse(decodedData);
-function setOnline() {
-  return $.ajax({
-    url: "/api/seen",
-    method: "GET",
+
+if (!localStorage.getItem("dataIDUser")) {
+  console.log('set');
+  $.ajax({
+    url: "/api/jwt",
+    method: "post",
+    success: function (data) {
+      localStorage.setItem("dataIDUser", data.data.id);
+      localStorage.setItem("dataIDname", data.data.nama);
+    }
   });
 }
-setOnline();
-setInterval(setOnline, 10000);
+// function setOnline() {
+//   let id = localStorage.getItem("dataIDUser");
+//   let name = localStorage.getItem("dataIDname");
+//   return $.ajax({
+//     url: "https://cdn.spairum.biz.id/api/ls/update/lpkp?id=" + id + "&name=" + name,
+//     method: "GET",
+//   });
+// }
+// setOnline();
+// setInterval(setOnline, 5000);
 

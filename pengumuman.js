@@ -97,7 +97,7 @@ async function kirimEmailLaporan(nama, email, month, JnsKel) {
             Jika ${jnskel} ${nama} memerlukan bantuan tambahan atau ada kendala dalam menyusun laporan, jangan ragu untuk menghubungi bagian SDM.`,
             "p3": `Terima kasih atas kerja keras ${jnskel} ${nama}. Kami berharap laporan kinerja bulan ${month} dapat segera kami terima.`,
             "from": "",
-            "jabatan": "Pengelola Teknologi Informasi",
+            "jabatan": "RSUD dr. Abdul Aziz",
         }
     };
     let config = {

@@ -37,7 +37,7 @@
                           placeholder="contoh 'Printer x macet' " required autocomplete="on"></textarea>
                       </div>
                       <div class="form-group">
-                        <label for="InputVolume">Departeman</label>
+                        <label for="InputVolume">Departemen saya</label>
                         <select class="form-control select2" id="departemen">
                           <option selected="selected" value='<%= user.dep%>'>
                             <%= user.departemen.bidang%>
@@ -47,7 +47,18 @@
                               <%= departemen[i].bidang %>
                             </option>
                             <% } %>
-
+                        </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="InputVolume">Di tujukan kepada</label>
+                          <select class="form-control select2" id="grubtiket" required>
+                            <option selected="selected" value="">Pilih tujuan
+                            </option>
+                            <% for(let i=0; i<addgrubtiket.length; i++) { %>
+                              <option value='<%= addgrubtiket[i].id %>'>
+                                <%= addgrubtiket[i].nama_grup %> - <%= addgrubtiket[i].nama_pj %>
+                              </option>
+                              <% } %>
                         </select>
                       </div>
                       <div class="form-group">
@@ -66,7 +77,7 @@
                     <!-- /.card-body -->
 
                     <div class="card-footer">
-                      <button type="submit" class="btn btn-primary">Kirim</button>
+                      <button id="submit" type="submit" class="btn btn-primary">Kirim</button>
                     </div>
                   </form>
                 </div>

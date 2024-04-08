@@ -3,8 +3,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const favicon = require('serve-favicon');
+const cors = require('cors');
 const app = express();
 const path = require('path');
+app.use(cors());
 
 
 const http = require('http');
@@ -29,6 +31,16 @@ app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));
 const routes = require('./routes');
 app.use('/', routes);
 
+const routeRest = require('./routes/rest');
+app.use('/rest', routeRest);
+
+const hardin = require('./routes/hardin');
+app.use('/rest/hardin', hardin);
+
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).send('Something broke!')
+})
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

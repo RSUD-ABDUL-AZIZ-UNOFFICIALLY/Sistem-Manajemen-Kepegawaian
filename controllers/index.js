@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Departemen, Atasan, Lpkp } = require("../models");
+const { User, Departemen, Atasan, Lpkp, Tiketgroup } = require("../models");
 const { Op } = require("sequelize");
 
 module.exports = {
   login: (req, res) => {
     let data = {
-      title: "login | LKP",
+      title: "login | SIMPEG",
     };
     res.render("login", data);
   },
@@ -43,7 +43,7 @@ module.exports = {
       };
     }
     let data = {
-      title: "Profile | LPKP",
+      title: "Profile | SIMPEG",
       page: "Profile",
       token: decoded,
       user: getUser,
@@ -53,12 +53,22 @@ module.exports = {
     };
     res.render("profile", data);
   },
+  account: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "Akun Pegawai | SIMPEG",
+      page: "Akun Pegawai",
+      token: decoded,
+    };
+    res.render("account", data);
+  },
   daily: (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let datenow = new Date().toISOString().slice(0, 10);
     let data = {
-      title: "Dasboard | LPKP",
+      title: "Dasboard | SIMPEG",
       page: "Daily Progress",
       token: decoded,
       datenow: datenow,
@@ -71,7 +81,7 @@ module.exports = {
     let datey = new Date().toISOString().slice(0, 7);
 
     let data = {
-      title: "Dasboard | LPKP",
+      title: "Dasboard | SIMPEG",
       page: "Monthly Progress",
       token: decoded,
       date: datey
@@ -91,7 +101,7 @@ module.exports = {
     }
     let datey = new Date().toISOString().slice(0, 7);
     let data = {
-      title: "Dasboard | LPKP",
+      title: "Dasboard | SIMPEG",
       page: "Monthly Progress",
       token: decoded,
       user: getUser,
@@ -105,7 +115,7 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let datey = new Date().toISOString().slice(0, 7);
     let data = {
-      title: "approvement | LPKP",
+      title: "approvement | SIMPEG",
       page: "Approvement",
       token: decoded,
       date: datey
@@ -144,9 +154,10 @@ module.exports = {
       },
     });
     let sumWaktu = 0;
-    for (let i = 0; i < lpkp.length; i++) {
-      sumWaktu += lpkp[i].waktu;
+    for (let i of lpkp) {
+      sumWaktu += i.waktu;
     }
+
     // IF(sumWaktu>7999;"BAIK";IF(sumWaktu>7379;"CUKUP";IF(sumWaktu>6719;"KURANG";IF(sumWaktu>0;"WKE MINIMAL TIDAK TERPENUHI";))))
     let kategori = "";
     if (sumWaktu > 7999) {
@@ -171,7 +182,7 @@ module.exports = {
     }
 
     let data = {
-      title: "Review | LPKP",
+      title: "Review | SIMPEG",
       page: "Review Activity",
       userpage: user.nama,
       periode: dateString,
@@ -193,7 +204,7 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let datenow = new Date().toISOString().slice(0, 10);
     let data = {
-      title: "Permohonan | LPKP",
+      title: "Permohonan | SIMPEG",
       page: "Permohonan Cuti",
       token: decoded,
       datenow: datenow,
@@ -205,12 +216,24 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let datenow = new Date().toISOString().slice(0, 10);
     let data = {
-      title: "Approval | LPKP",
+      title: "Approval | SIMPEG",
       page: "Approval Cuti",
       token: decoded,
       datenow: datenow,
     };
     res.render("approvalcuti", data);
+  },
+  admincuti: (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let datenow = new Date().toISOString().slice(0, 10);
+    let data = {
+      title: "Admin Cuti | SIMPEG",
+      page: "Admin Cuti",
+      token: decoded,
+      datenow: datenow,
+    };
+    res.render("admincuti", data);
   },
   helpDesk: async (req, res) => {
     let token = req.cookies.token;
@@ -219,21 +242,31 @@ module.exports = {
       where: { nik: decoded.id },
       include: { model: Departemen, as: "departemen" },
     });
+    try {
     let departemen = await Departemen.findAll({});
+      let addgrubtiket = await Tiketgroup.findAll({});
+      console.log(addgrubtiket);
     let data = {
-      title: "HelpDesk | LPKP",
+      title: "HelpDesk | SIMPEG",
       page: "Dukungan IT",
       token: decoded,
       user: getUser,
       departemen: departemen,
+      addgrubtiket
+
     };
     res.render("helpdesk", data);
+    }
+    catch (err) {
+      console.log(err);
+      res.render("error", { title: "Error", page: "Error", error: err });
+    }
   },
   helpDeskAdmin: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let data = {
-      title: "HelpDesk | LPKP",
+      title: "HelpDesk | SIMPEG",
       page: "Dukungan IT",
       token: decoded,
     };
@@ -243,10 +276,20 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let data = {
-      title: "Contact | LPKP",
+      title: "Contact | SIMPEG",
       page: "Contact",
       token: decoded,
     };
     res.render("contact", data);
+  },
+  addAnggotaPasien: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "Contact | SIMPEG",
+      page: "Contact",
+      token: decoded,
+    };
+    res.render("simrs/addAnggotaPasien", data);
   }
 };

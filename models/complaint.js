@@ -14,12 +14,16 @@ module.exports = (sequelize, DataTypes) => {
       Complaint.hasMany(models.Tiket, {
         sourceKey: 'noTiket' ,
         foreignKey: 'noTiket',
-   
-        }),
+      })
       Complaint.hasOne(models.User, {
         sourceKey: 'nik',
         foreignKey: 'nik',
         as: 'user'
+      })
+      Complaint.hasOne(models.Profile, {
+        sourceKey: 'nik',
+        foreignKey: 'nik',
+        as: 'pic'
       })
       Complaint.belongsTo(models.Departemen, {
         foreignKey: 'dep',

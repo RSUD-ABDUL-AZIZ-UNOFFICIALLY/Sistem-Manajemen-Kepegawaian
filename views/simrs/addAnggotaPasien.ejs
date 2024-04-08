@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <%- include('../template/head'); %>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <%- include('../template/navbar'); %>
+            <!-- /.navbar -->
+
+            <!-- Main Sidebar Container -->
+            <%- include('../template/sidebar'); %>
+
+                <!-- Content Wrapper. Contains page content -->
+                <div class="content-wrapper">
+                    <!-- Content Header (Page header) -->
+                    <%- include('../template/content-header'); %>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Cari Akun Pasien
+                                        </h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <label for="basic-url" class="form-label">Cari Akun Pasien</label>
+                                        <div class="input-group mb-3">
+                                            <input type="number" class="form-control" id="no_wa_akun" name="no_wa_akun" placeholder="nomor whatsapp pasien"
+                                                aria-label="nomor whatsapp pasien" aria-describedby="button-cari_akun" />
+                                            <button class="btn btn-outline-info" type="button" id="button-cari_akun"><i
+                                                    class="fa-solid fa-magnifying-glass mx-2"></i>Cari</button>
+                                        </div>
+                                        <label for="basic-url" class="form-label">Nama Akun</label>
+                                        <div class="input-group mb-1">
+                                            <input type="text" class="form-control" id="nama_akun" name="nama_akun" placeholder="Nama akun pasien"
+                                                aria-label="Nama akun pasien" disabled />
+                                        </div>
+                                        <label for="basic-url" class="form-label">NIK Akun</label>
+                                        <div class="input-group mb-1">
+                                            <input type="number" class="form-control" id="nik_akun" name="nik_akun" placeholder="NIK pasien"
+                                                aria-label="Nik akun pasien" disabled />
+                                        </div>
+                                        <input type="hidden" class="form-control" id="id_akun" name="id_akun" disabled />
+                                        <br>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    </div>
+                                    </div>
+                                    </section>
+                                    <section class="content">
+                                        <div class="container-fluid">
+                                            <div class="card card-primary">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Tambah Anggota Keluarga Pasien</h3>
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <label class="form-label">Cari Pasien</label>
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-control select2" id="cari_pasien" name="cari_pasien"
+                                                            aria-label="Floating label select" disabled>
+                                                        </select>
+                                                    </div>
+                                                    <label class="form-label">Nama</label>
+                                                    <div class="input-group mb-1">
+                                                        <input type="text" class="form-control" id="nama_pasien" name="nama_pasien"
+                                                            placeholder="Nama akun pasien" aria-label="Nama akun pasien" disabled />
+                                                    </div>
+                                                    <label class="form-label">Tanggal Lahir</label>
+                                                    <div class="input-group mb-1">
+                                                        <input type="date" class="form-control" id="tgl_lahir_pasien" name="tgl_lahir_pasien" placeholder="NIK pasien"
+                                                            aria-label="Nik akun pasien" disabled />
+                                                    </div>
+                                                    <label class="form-label">NIK</label>
+                                                    <div class="input-group mb-1">
+                                                        <input type="number" class="form-control" id="nik_pasien" name="nik_pasien" placeholder="NIK pasien"
+                                                            aria-label="Nik akun pasien" disabled />
+                                                    </div>
+                                                    <label class="form-label">No Rekam Medis</label>
+                                                    <div class="input-group mb-1">
+                                                        <input type="number" class="form-control" id="norm_pasien" name="norm_pasien" placeholder="NoRM pasien"
+                                                            aria-label="Nik akun pasien" disabled />
+                                                        </div>
+                                                        <label class="form-label">No Peserta</label>
+                                                        <div class="input-group mb-1">
+                                                            <input type="number" class="form-control" id="no_bpjs" name="no_bpjs" placeholder="No Peserta"
+                                                                aria-label="Nik akun pasien" disabled />
+                                                        </div>
+                                                        <label class="form-label">Status Hubungan Pasien</label>
+                                                        <select class="form-select" aria-label="hubungan_pasien select " id="hubungan_pasien" name="hubungan_pasien">
+                                                            <option selected>Pilih Hubungan</option>
+                                                            <option value="Diri Sendiri">Diri Sendiri</option>
+                                                            <option value="Ayah">Ayah</option>
+                                                            <option value="Ibu">Ibu</option>
+                                                            <option value="Anak">Anak</option>
+                                                            <option value="Kakek">Kakek</option>
+                                                            <option value="Nenek">Nenek</option>
+                                                            <option value="Saudara">Saudara</option>
+                                                            <option value="Lainnya">Lainnya</option>
+                                                        </select>
+
+                                        <br>
+                                        <button type="button" class="btn btn-primary" id="tambah_anggota_pasien" name="tambah_anggota_pasien" disabled>Tambah
+                                            Anggota</button>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                            </div>
+                        </section>
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Anggoat Keluarga Pasein</h3>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                        <div class="card-body table-responsive p-0">
+                                            <table class="table table-bordered table-head-fixed text-nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 10px">#</th>
+                                                        <th style="width: 40px">No RM</th>
+                                                        <th>Nama</th>
+                                                        <th>NIK</th>
+                                                        <th style="width: 50px">Status</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                        </table>
+                                                        </div>
+                                                        </div>
+                                                        <!-- /.card-body -->
+                                                        </div>
+                                                        </div>
+                        </section>
+                        <!-- /.content -->
+                </div>
+    </div>
+
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+
+    </footer>
+
+
+    </div>
+    <!-- ./wrapper -->
+
+    <%- include('../template/footer'); %>
+        <script src="../asset/js/simrs/rm/pasien.js"></script>
+</body>
+
+</html>

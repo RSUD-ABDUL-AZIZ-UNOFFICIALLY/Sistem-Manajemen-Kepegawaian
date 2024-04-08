@@ -1,6 +1,20 @@
 const jwt = require("jsonwebtoken");
-const { User, Atasan, Profile } = require("../models");
+const { User, Atasan, Access } = require("../models");
 const { Buffer } = require('buffer');
+const { createClient } = require('redis');
+const { error } = require("console");
+const client = createClient({
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_URL,
+        port: process.env.REDIS_URL_PORT
+    }
+});
+client.on('error', (error) => {
+    console.error(error);
+});
+client.connect();
+
 
 module.exports = {
     login: async (req, res, next) => {
@@ -55,6 +69,7 @@ module.exports = {
                 maxAge: 1000 * 60 * 60 * 24 * 7,
                 httpOnly: false,
             });
+            req.account = getUser;
             next();
         } catch (err) {
             res.clearCookie("token");
@@ -66,7 +81,6 @@ module.exports = {
             const token = req.cookies.token;
             const secretKey = process.env.JWT_SECRET_KEY;
             const decoded = jwt.verify(token, secretKey);
-            // echo(decoded);
             if (decoded) {
                 return res.redirect("/daily");
             }
@@ -80,36 +94,75 @@ module.exports = {
         res.clearCookie("token");
         res.redirect("/");
     },
-    checkProfile: async (req, res, next) => {
-        try {
-            const token = req.cookies.token;
-            const secretKey = process.env.JWT_SECRET_KEY;
-            const decoded = jwt.verify(token, secretKey);
-            const host = req.get("host");
-            let getFoto = await Profile.findOne({
-                where: {
-                    nik: decoded.id,
-                },
-            });
-            let data = {
-                    "url" : host+"/asset/img/cowok.png",
+    checkHakAkses: (data) => {
+        return async (req, res, next) => {
+            try {
+                const token = req.cookies.token;
+                if (!token) {
+                    return res.redirect("/");
+                }
+                if (await client.exists(`Token:Accesses:${token}`)) {
+                    let check = await client.hExists(`Token:Accesses:${token}`, data);
+                    if (check) {
+                        next();
+                    } else {
+                        return res.redirect("/");
+                    }
+                } else {
+                    const secretKey = process.env.JWT_SECRET_KEY;
+                    const decoded = jwt.verify(token, secretKey);
+                    let Accesses = await Access.findAll({
+                        where: {
+                            wa: decoded.wa,
+                        }
+                    });
+                    let hakAkses = [];
+                    for (const element of Accesses) {
+                        hakAkses.push(element.status);
+                        client.hSet(`Token:Accesses:${token}`, element.status, 'true');
+                    }
+                    client.expire(`Token:Accesses:${token}`, 60 * 60);
+                    let check = hakAkses.includes(data);
+                    if (check) {
+                        next();
+                    } else {
+                        return res.redirect("/");
+                    }
+                }
+
+            } catch (err) {
+                console.log(err);
+                return res.redirect("/");
             }
-            if (getFoto) {
-                // get host name
-                data.url = getFoto.url;
-            }
-            data = JSON.stringify(data);
-            let encodedData = Buffer.from(data).toString('base64');
-            console.log(data);
-            console.log(encodedData);
-            res.cookie("profile", encodedData, {
-                maxAge: 1000 * 60 * 60 * 24 * 7,
-                httpOnly: false,
-            });
-            next();
-        } catch (error) {
-            console.log(error);
-            next();
         }
-    }
+    },
+    // response: (req, res, data) => {
+    //     console.log(data);
+    //     if (req.status == 500) {
+    //         return res.status(500).json({
+    //             error: true,
+    //             message: req.pesan,
+    //             data: req.data,
+    //         });
+    //     }
+    //     if (req.status == 404) {
+    //         return res.status(404).json({
+    //             error: true,
+    //             message: req.pesan,
+    //             data: req.data,
+    //         });
+    //     }
+    //     if (req.status == 200) {
+    //         return res.status(200).json({
+    //             error: false,
+    //             message: req.pesan,
+    //             data: req.data,
+    //         });
+    //     }
+    //     return res.status(504).json({
+    //         error: false,
+    //         message: req.pesan,
+    //         data: req.data,
+    //     });
+    // },
 };

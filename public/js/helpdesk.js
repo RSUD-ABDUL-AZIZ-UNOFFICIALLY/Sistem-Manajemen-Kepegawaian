@@ -17,7 +17,16 @@ $('#lapor').submit(function(event) {
         kendala: $('#kendala').val(),
         dep: $('#departemen').val(),
         topic: $('#topic').val(),
+      idgrub: $('#grubtiket').val()
     };
+  // disabel button submit  agar tidak bisa di klik
+  $('#submit').prop('disabled', true);
+  Swal.fire({
+    title: "Sedang Memproses",
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  })
     $.ajax({
         url: '/api/complaint',
         method: 'POST',
@@ -51,10 +60,19 @@ $('#lapor').submit(function(event) {
               );
             $("tbody").append(row);
             $("#kendala").val("");
-            return;
+          $('#submit').prop('disabled', false);
         },
         error: function(error) {
             // console.log(error);
+          $('#submit').prop('disabled', false);
+          Swal.fire({
+            icon: 'error',
+            title: error.responseJSON.message,
+            text: error.responseJSON.data,
+            showConfirmButton: false,
+            timer: 2000
+          })
+
         }
     });
 });
