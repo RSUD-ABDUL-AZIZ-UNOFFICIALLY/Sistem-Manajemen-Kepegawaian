@@ -106,7 +106,7 @@ module.exports = {
                     if (check) {
                         next();
                     } else {
-                        return res.redirect("/");
+                        return res.redirect("/daily");
                     }
                 } else {
                     const secretKey = process.env.JWT_SECRET_KEY;
@@ -126,16 +126,25 @@ module.exports = {
                     if (check) {
                         next();
                     } else {
-                        return res.redirect("/");
+                        return res.redirect("/daily");
                     }
                 }
 
             } catch (err) {
                 console.log(err);
-                return res.redirect("/");
+                return res.redirect("/daily");
             }
         }
     },
+    apiSIMRS: (req, res, next) => {
+        let urlSIMRS = process.env.HOSTKHNZA;
+        console.log(urlSIMRS);
+        res.cookie("urlSIMRS", urlSIMRS, {
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            httpOnly: false,
+        });
+        next();
+    }
     // response: (req, res, data) => {
     //     console.log(data);
     //     if (req.status == 500) {
