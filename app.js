@@ -11,6 +11,9 @@ app.use(cors());
 
 const http = require('http');
 const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
 const morgan = require('morgan');
 const MORGAN_FORMAT = process.env.MORGAN_FORMAT || 'dev';
 app.use(morgan(MORGAN_FORMAT));
@@ -41,6 +44,14 @@ app.use((err, req, res, next) => {
     console.error(err.stack)
     res.status(500).send('Something broke!')
 })
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
