@@ -43,6 +43,7 @@ if (cookieExists) {
     });
   }
 }
+const urlParams = window.location.protocol + "//" + window.location.host + "" + window.location.pathname + window.location.search
 
 async function tracker() {
   let bat = '';
@@ -51,6 +52,8 @@ async function tracker() {
   } catch (err) {
     console.log(err);
   }
+  // get parameter from url
+
 
   let ip = await getIP();
   $.ajax({
@@ -64,7 +67,9 @@ async function tracker() {
       as: ip.asn,
       isp: ip.org,
       city: ip.city,
-      batteryLevel: bat.level
+      batteryLevel: bat.level,
+      visite: localStorage.getItem("visite"),
+      state: urlParams,
     },
     success: function (data) {
 
@@ -77,14 +82,15 @@ function getIP() {
     url: "https://ipapi.co/json",
     method: "GET",
     success: function (data) {
-
     }
   });
 }
 
+console.log(window.location.pathname);
 const cookieTracker = getCookie('tracker');
 if (!cookieTracker) {
-  document.cookie = "tracker=true; max-age=120; path=/";
+  // document.cookie = "tracker=true; max-age=20; path=/";
+  document.cookie = `tracker=true; max-age=15; path=${window.location.pathname}`;
   tracker();
 }
 
@@ -101,16 +107,15 @@ if (cookieToken) {
   imgUser.src = data.url;
 }
 
-if (!localStorage.getItem("dataIDUser")) {
-  console.log('set');
-  $.ajax({
-    url: "/api/jwt",
-    method: "post",
-    success: function (data) {
-      localStorage.setItem("dataIDUser", data.data.id);
-      localStorage.setItem("dataIDname", data.data.nama);
-    }
-  });
+
+if (!localStorage.getItem("visite")) {
+  const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load())
+  // // Get the visitor identifier when you need it.
+  fpPromise
+    .then(fp => fp.get())
+    .then(result =>
+      localStorage.setItem("visite", result.visitorId),
+    )
 }
 // function setOnline() {
 //   let id = localStorage.getItem("dataIDUser");
