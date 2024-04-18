@@ -35,7 +35,7 @@ Lampiran  : -
 Perihal      : Surat Pemberian Izin Cuti
       </pre>
       <p class="text-sm-start">Dengan Hormat,</p>
-      <p class="text-sm-start ">Berdasarkan Surat Permohonan Izin Cuti yang diajukan pada tanggal
+      <p class="text-sm-start paragraf ">Berdasarkan Surat Permohonan Izin Cuti yang diajukan pada tanggal
         <%= tglPengajuan %> atas nama:
       </p>
       <pre>
@@ -45,29 +45,35 @@ NIP                           : <%= nipPegawai.nip %>
 Pangkat/Golongan   : <%= pangkat%>
 Jabatan                    : <%= jabatan %>
         </pre>
-      <p>Mengajukan <%= leager.jenis_cuti.type_cuti%> selama <%= leager.cuti_diambil%> hari dari
+      <p class="paragraf">Mengajukan <%= leager.jenis_cuti.type_cuti%> selama <%= leager.cuti_diambil%> hari dari
             tanggal
             <%= tglMulai%>
               sampai
               <%= tglSampai%>
       </p>
-      <p> Adapun Alasan Cuti : <%= leager.data_cuti.keterangan%>
+      <p class="paragraf"> Adapun Alasan Cuti : <%= leager.data_cuti.keterangan%>
       </p>
-      <p> Dengan ini Kepala <%= leager.name_atasan%> memberikan izin kepada yang bersangkutan,
+      <p class="paragraf"> Dengan ini Kepala <%= leager.name_atasan%> memberikan izin kepada yang bersangkutan,
           sesuai dengan peraturan
           yang berlaku dan menjadi tanggung jawab yang bersangkutan.</p>
-      <p> Demikian Surat Pemberian Izin Cuti ini diberikan, untuk dapat dipergunakan sebagaimana mestinya.</p>
+      <p class="paragraf"> Demikian Surat Pemberian Izin Cuti ini diberikan, untuk dapat dipergunakan sebagaimana mestinya.
+      </p>
     </div>
     <div class="footer">
-      <p>Kepala <%= leager.tembusan%>
-          <br>
-          <div id="qrcodeAtasan"></div>
-      </p>
-      <p>
-        <strong>
-          <%= leager.name_atasan%>
-        </strong> <br> NIP. <%= leager.Atasan_cuti.nip%>
-      </p>
+      <div class="row">
+        <div class="col-6"></div>
+        <div class="col-6">
+          <p>Kepala <%= leager.tembusan%>
+              <br>
+              <div id="qrcodeAtasan"></div>
+          </p>
+          <p>
+            <strong>
+              <%= leager.name_atasan%>
+            </strong> <br> NIP. <%= leager.Atasan_cuti.nip%>
+          </p>
+</div>
+
     </div>
   </div>
   <!-- Jquery -->

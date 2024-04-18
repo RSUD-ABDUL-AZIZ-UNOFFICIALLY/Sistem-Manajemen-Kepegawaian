@@ -84,9 +84,10 @@ body {
     justify-content: space-between;
     /* padding: 20px 0; */
 }
-p {
+.paragraf {
   text-align: justify;
   text-justify: inter-word;
+  text-indent: 25px;
 }
 pre {
   display: block;
