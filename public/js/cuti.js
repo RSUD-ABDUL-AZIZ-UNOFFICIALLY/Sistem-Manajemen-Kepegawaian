@@ -204,17 +204,17 @@ function parsingDataCuti(data) {
     }
 }
 cetakSuratCuti = (id) => {
-    console.log(id);
     let data = $.ajax({
         url: '/api/cuti/suratCuti',
         method: 'POST',
         data: { id: id },
         success: function (response) {
-            console.log(response);
-            return response;
+            window.open('/api/cuti/suratCuti?token=' + response.data, '_blank');
+            // return response;
         },
     });
-    // window.open('/api/cuti/suratCuti?id=' + id, '_blank');
+
+
 }
 
 deleteCuti = (id) => {
