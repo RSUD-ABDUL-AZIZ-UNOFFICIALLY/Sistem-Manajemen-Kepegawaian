@@ -1,0 +1,94 @@
+@page {
+  size: A4;
+    /* margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 5px; */
+
+}
+  
+@media print {
+  .page {
+    margin: 0;
+    box-shadow: none;
+  }
+}
+.page {
+    width: 210mm; /* A4 width */
+    height: 297mm; /* A4 height */
+    margin: 20mm auto; /* Page margins */
+    background-color: #fff; /* Page background color */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Drop shadow for whole page */
+  }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    /* width: 80%; */
+    margin: auto;
+    overflow: hidden;
+}
+.header {
+    text-align: center;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-evenly;
+    border-bottom: 5px solid #000000;
+}
+.header h1 {
+    font-size: 24px;
+}
+.logo {
+  height: 100px;
+  margin-top: 10px;
+  margin-left: 10px;
+  justify-content: start;
+}
+.info {
+  margin-top: 20px;
+  margin-right: 10px;
+  text-align: center;
+}
+.info h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+.info h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+.info h4 {
+  font-size: 12px;
+  font-weight: normal;
+  margin: 0;
+}
+.line{
+  border: none;
+  /* height: 6px; */
+  border: 1px solid rgb(0, 0, 0);
+  /* border: 10px solid green; */
+  border-radius: 4px;
+}
+.content {
+    padding: 20px;
+}
+.content p {
+    margin: 0 0 10px;
+}
+.footer {
+    text-align: center;
+    justify-content: space-between;
+    /* padding: 20px 0; */
+}
+pre {
+  display: block;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  white-space: pre;
+  margin: 1em 0;
+}

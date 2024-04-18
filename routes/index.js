@@ -70,6 +70,8 @@ router.get('/api/cuti/sisa', middleware.login, ajax.getSisaCuti);
 router.get('/api/cuti/approvementcuti', middleware.login, ajax.getAnggotaCuti);
 router.post('/api/cuti/approvementcuti', middleware.login, ajax.updateCuti);
 router.get('/api/cuti/approve/all', middleware.login, ajax.getAllCuti);
+router.post('/api/cuti/suratCuti', middleware.login, ajax.GetCuti);
+router.get('/api/cuti/suratCuti', middleware.login, report.reportCuti);
 
 
 router.get('/api/contact/user', middleware.login, ajax.getProfiles);

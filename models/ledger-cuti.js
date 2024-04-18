@@ -13,22 +13,26 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
             Ledger_cuti.hasOne(models.User, {
                 foreignKey: 'nik',
-                targetKey: 'nik_user',
+                sourceKey: 'nik_user',
                 as: 'User_cuti'
+            }, {
+                foreignKey: 'nik',
+                sourceKey: 'nik_atasan',
+                as: 'Atasan_cuti'
             })
             Ledger_cuti.hasOne(models.User, {
                 foreignKey: 'nik',
-                targetKey: 'nik_atasan',
+                sourceKey: 'nik_atasan',
                 as: 'Atasan_cuti'
             })
             Ledger_cuti.hasOne(models.Jns_cuti, {
-                foreignKey: 'type_cuti',
-                targetKey: 'id',
+                foreignKey: 'id',
+                sourceKey: 'type_cuti',
                 as: 'jenis_cuti'
             })
             Ledger_cuti.hasOne(models.Cuti, {
                 foreignKey: 'id',
-                targetKey: 'id_cuti',
+                sourceKey: 'id_cuti',
                 as: 'data_cuti'
             })
         }

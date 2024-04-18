@@ -4,7 +4,6 @@ $.ajax({
     url: '/api/getBiodata',
     method: 'GET',
     success: function (response) {
-        console.log(response);
         hariKerja = response.data.jns_kerja;
     },
     error: function (error) {
@@ -192,12 +191,32 @@ function parsingDataCuti(data) {
         btnDelete.addClass("btn btn-danger btn-sm");
         btnDelete.attr("onclick", "deleteCuti(" + i.id + ")");
         btnDelete.html("<i class='fas fa-trash'></i>");
+        let btnCetak = $("<button>");
+        btnCetak.addClass("btn btn-primary btn-sm");
+        btnCetak.attr("onclick", "cetakSuratCuti(" + i.id + ")");
+        btnCetak.html("<i class='fa-solid fa-envelope-open-text'></i> Cetak Surat Cuti");
         if (i.approval.status == "Menunggu") {
             row.append($("<td>").append(btnDelete));
+        } else if (i.approval.status == "Disetujui") {
+            row.append($("<td>").append(btnCetak));
         }
         $("tbody").append(row);
     }
 }
+cetakSuratCuti = (id) => {
+    console.log(id);
+    let data = $.ajax({
+        url: '/api/cuti/suratCuti',
+        method: 'POST',
+        data: { id: id },
+        success: function (response) {
+            console.log(response);
+            return response;
+        },
+    });
+    // window.open('/api/cuti/suratCuti?id=' + id, '_blank');
+}
+
 deleteCuti = (id) => {
     Swal.fire({
         title: 'Apakah anda yakin?',
