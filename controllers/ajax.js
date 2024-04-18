@@ -1643,9 +1643,38 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
       });
     } catch (error) {
       return res.status(500).json({
-        error: false,
+        error: true,
         message: error.message,
       });
     }
+  },
+  GetCuti: async (req, res) => {
+    let diCuti = req.body.id;
+    try {
+      let leager = await Ledger_cuti.findOne({
+        where: {
+          id_cuti: diCuti,
+        },
+        attributes: ["id"],
+      });
+      // set jwt token
+      let token = jwt.sign(
+        { leager },
+        secretKey
+      );
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: token,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+
+
   },
 };

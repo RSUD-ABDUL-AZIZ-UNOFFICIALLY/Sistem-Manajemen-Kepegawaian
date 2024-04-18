@@ -1,9 +1,8 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Departemen, Lpkp, Atasan } = require("../models");
+const { User, Departemen, Lpkp, Atasan, Ledger_cuti, Cuti, Jns_cuti } = require("../models");
 const { Op } = require("sequelize");
-const { convertdate } = require("../helper");
-const { redirect } = require("express/lib/response");
+const { convertdate, toRoman } = require("../helper");
 
 module.exports = {
   person: async (req, res) => {
@@ -166,8 +165,8 @@ module.exports = {
         },
         order: [["tgl", "ASC"]],
       });
-      for (var i = 0; i < progress.length; i++) {
-        var tanggalFormat = convertdate(progress[i].tgl);
+      for (let i = 0; i < progress.length; i++) {
+        let tanggalFormat = convertdate(progress[i].tgl);
         progress[i].tanggal = tanggalFormat;
         progress[i].no = i + 1;
       }
@@ -234,4 +233,81 @@ module.exports = {
    
     
   },
+  reportCuti: async (req, res) => {
+    try {
+      let regData = jwt.verify(req.query.token, secretKey);
+      console.log(req.query.token);
+      console.log(regData.leager.id);
+      let leager = await Ledger_cuti.findOne({
+        where: {
+          id: regData.leager.id,
+        },
+        include: [
+          {
+            model: Cuti,
+            as: "data_cuti",
+            attributes: ["mulai", "samapi", "keterangan", "createdAt"],
+          },
+          {
+            model: Jns_cuti,
+            as: "jenis_cuti",
+            attributes: ["type_cuti"],
+          }, {
+            model: User,
+            as: "User_cuti",
+            attributes: ["nama", "nip", 'nik'],
+          },
+          {
+            model: User,
+            as: "Atasan_cuti",
+            attributes: ["nama", "nip", 'nik']
+          }
+
+        ],
+      });
+      console.log(leager);
+      console.log(leager.data_cuti.createdAt);
+      // convert date to month name 
+      let month = new Date(leager.createdAt).toLocaleString("id-ID", {
+        month: "numeric",
+      });
+      month = toRoman(parseInt(month));
+
+
+      let data = {
+        tglSurat: new Date(leager.createdAt).toLocaleString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+        tglPengajuan: new Date(leager.data_cuti.createdAt).toLocaleString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+        tglMulai: new Date(leager.data_cuti.mulai).toLocaleString("id-ID", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+        tglSampai: new Date(leager.data_cuti.samapi).toLocaleString("id-ID", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+        nomorSurat: `${leager.id}/E-UK/${month}/${new Date(leager.createdAt).getFullYear()}`,
+        leager: leager,
+        nipPegawai: leager.User_cuti,
+        pangkat: leager.pangkat,
+        jabatan: leager.jabatan,
+
+      }
+      return res.render("report/suratCuti", data);
+    } catch (error) {
+      console.log(error);
+      // return res.redirect("/");
+    }
+  }
 };
