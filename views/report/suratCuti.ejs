@@ -34,9 +34,8 @@ Nomor      : <%= nomorSurat %>
 Lampiran  : -
 Perihal      : Surat Pemberian Izin Cuti
       </pre>
-      <p class="text-sm-start">Perihal: Surat Pemberian Izin Cuti</p>
       <p class="text-sm-start">Dengan Hormat,</p>
-      <p class="text-sm-start">Berdasarkan Surat Permohonan Izin Cuti yang diajukan pada tanggal
+      <p class="text-sm-start ">Berdasarkan Surat Permohonan Izin Cuti yang diajukan pada tanggal
         <%= tglPengajuan %> atas nama:
       </p>
       <pre>
@@ -46,14 +45,16 @@ NIP                           : <%= nipPegawai.nip %>
 Pangkat/Golongan   : <%= pangkat%>
 Jabatan                    : <%= jabatan %>
         </pre>
-      <p>Mengajukan <%= leager.jenis_cuti.type_cuti%> selama <%= leager.cuti_diambil%> hari dari tanggal
+      <p>Mengajukan <%= leager.jenis_cuti.type_cuti%> selama <%= leager.cuti_diambil%> hari dari
+            tanggal
             <%= tglMulai%>
               sampai
               <%= tglSampai%>
       </p>
       <p> Adapun Alasan Cuti : <%= leager.data_cuti.keterangan%>
       </p>
-      <p> Dengan ini Kepala <%= leager.name_atasan%> memberikan izin kepada yang bersangkutan, sesuai dengan peraturan
+      <p> Dengan ini Kepala <%= leager.name_atasan%> memberikan izin kepada yang bersangkutan,
+          sesuai dengan peraturan
           yang berlaku dan menjadi tanggung jawab yang bersangkutan.</p>
       <p> Demikian Surat Pemberian Izin Cuti ini diberikan, untuk dapat dipergunakan sebagaimana mestinya.</p>
     </div>
