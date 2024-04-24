@@ -13,6 +13,7 @@ const {
   Profile,
   Jns_cuti,
   Cuti,
+  Cutialamat,
   Ledger_cuti,
   sequelize,
   Cuti_approval,
@@ -1031,7 +1032,7 @@ module.exports = {
         order: [
           ["createdAt", "DESC"],
         ],
-      });
+      }, { transaction: t });
       if (getLeagerCuti == null) {
         if (body.jumlah > getJenisCuti.max) {
           return res.status(400).json({
@@ -1042,6 +1043,7 @@ module.exports = {
           });
         }
       } else if ((getLeagerCuti.sisa_cuti - body.jumlah) < 0) {
+        await t.rollback();
         return res.status(400).json({
           error: true,
           message: "Opps",
@@ -1060,6 +1062,16 @@ module.exports = {
         },
         { transaction: t }
       );
+      await Cutialamat.create(
+        {
+          id_cuti: saveCuti.id,
+          nik: decoded.id,
+          alamat: body.alamat,
+
+        },
+        { transaction: t }
+      );
+
 
       let Boss = await Atasan.findOne({
         where: {
@@ -1077,7 +1089,7 @@ module.exports = {
             ],
           },
         ],
-      });
+      }, { transaction: t });
       await Cuti_approval.create(
         {
           id_cuti: saveCuti.id,
@@ -1176,8 +1188,7 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
             nik: decoded.id,
             id: body.id,
           },
-        },
-          { transaction: t });
+        }, { transaction: t });
         await t.commit();
         return res.status(200).json({
           error: false,
@@ -1320,6 +1331,27 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
         ],
         order: [["createdAt", "DESC"]]
       });
+      let id_cutis = data.map((item) => item.id_cuti);
+      let dataAlamat = await Cutialamat.findAll({
+        where: {
+          id_cuti: id_cutis,
+        },
+      });
+      let dataCuti = data.map((item) => {
+        let alamat = dataAlamat.find((alamat) => alamat.id_cuti == item.id_cuti);
+        return {
+          id: item.id,
+          id_cuti: item.id_cuti,
+          nik: item.nik,
+          departement: item.departement,
+          jabatan: item.jabatan,
+          status: item.status,
+          approve_date: item.approve_date,
+          keterangan: item.keterangan,
+          data_cuti: item.data_cuti,
+          alamat: alamat ? alamat.alamat : '-',
+        }
+      });
       if (data.length == 0) {
         return res.status(404).json({
           error: true,
@@ -1329,7 +1361,7 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
       return res.status(200).json({
         error: false,
         message: "success",
-        data: data,
+        data: dataCuti,
       });
     } catch (error) {
       return res.status(400).json({
