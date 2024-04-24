@@ -14,7 +14,7 @@ async function uploadImage(path) {
     let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: process.env.HOSTCDN + "api/cdn/upload/img",
+        url: process.env.HOSTCDN + "upload/img",
         headers: {
             Authorization: "Bearer " + token
         },
