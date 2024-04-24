@@ -103,6 +103,7 @@ $('#Cuti').submit(function (event) {
         jumlah: $('#totalReservation').val(),
         keterangan: $('#alasanCuti').val(),
         maxCuti: maxCuti,
+        alamat: $('#alamat').val()
     };
     $('#btnSubmit').prop('disabled', true);
     $.ajax({
@@ -123,6 +124,7 @@ $('#Cuti').submit(function (event) {
             $('#reservation').prop('disabled', false);
             $('#totalReservation').prop('disabled', false);
             $('#alasanCuti').val('');
+            $('#alamat').val('');
             let tahun = $('#tahun').val();
             getRiwayatCuti(tahun);
             $('#btnSubmit').prop('disabled', false);

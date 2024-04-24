@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'id_cuti',
         as: 'data_cuti'
       })
-
     }
   }
   Cuti_approval.init({

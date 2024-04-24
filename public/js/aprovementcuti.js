@@ -15,7 +15,6 @@ async function getRiwayatCuti(tahun) {
         url: '/api/cuti/approvementcuti?tahun=' + tahun,
         method: 'GET',
         success: function (response) {
-            console.log(response);
             parsingDataCuti(response.data);
             return response.data;
         },
@@ -25,6 +24,15 @@ async function getRiwayatCuti(tahun) {
     });
     return data;
 }
+// new DataTable('#tabelCuti', {
+//     layout: {
+//         bottomEnd: {
+//             paging: {
+//                 boundaryNumbers: false
+//             }
+//         }
+//     }
+// });
 function parsingDataCuti(data) {
     let rows = $("tbody > tr");
     rows.remove();
@@ -38,7 +46,6 @@ function parsingDataCuti(data) {
         if (i.approve_date == null) {
             approve_status = "Belum di Approve"
         } else {
-            console.log(i.approve_date)
             let tanggalWaktuUTC = new Date(i.approve_date).toLocaleString("en-US", {
                 timeZone: "Asia/Jakarta",
             });
@@ -61,6 +68,7 @@ function parsingDataCuti(data) {
         row.append($("<td>" + i.data_cuti.jenis_cuti.type_cuti + "</td>"));
         row.append($("<td>" + i.data_cuti.jumlah + "</td>"));
         row.append($("<td>" + i.data_cuti.keterangan + "</td>"));
+        row.append($("<td style='vertical-align: inherit'>" + i.alamat + "</td>"));
         row.append($("<td>" + i.status + "</td>"));
         row.append($("<td>" + approve_status + "</td>"));
         if (i.status == "Menunggu") {
@@ -124,7 +132,6 @@ async function updateCuti(data) {
         method: 'POST',
         data: data,
         success: function (response) {
-            console.log(response);
             return response.data;
         },
         error: function (error) {
