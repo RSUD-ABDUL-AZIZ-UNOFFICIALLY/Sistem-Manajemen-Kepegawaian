@@ -1,4 +1,4 @@
-const { User, Profile } = require("../models");
+const { User, Profile } = require("./models");
 const { Op } = require("sequelize");
 const axios = require("axios");
 
