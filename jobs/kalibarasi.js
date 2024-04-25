@@ -75,7 +75,7 @@ function findSimilarity(param, data) {
     return result;
 }
 
-const { User } = require("./models");
+const { User } = require("../models");
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
 const fs = require("fs");

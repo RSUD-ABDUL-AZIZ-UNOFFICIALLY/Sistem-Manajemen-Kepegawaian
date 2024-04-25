@@ -1,4 +1,4 @@
-const { User } = require("./models");
+const { User } = require("../models");
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET_KHNZA;

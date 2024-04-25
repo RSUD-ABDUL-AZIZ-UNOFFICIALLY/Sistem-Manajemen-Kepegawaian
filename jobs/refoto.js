@@ -1,4 +1,4 @@
-const { User, Profile } = require("./models");
+const { User, Profile } = require("../models");
 
 async function getProfile() {
     let user = await Profile.findAll();

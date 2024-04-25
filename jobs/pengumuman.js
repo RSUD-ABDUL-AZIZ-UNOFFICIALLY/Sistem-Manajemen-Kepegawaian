@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { User, Lpkp, Rekap, Notif } = require("./models");
+const { User, Lpkp, Rekap, Notif } = require("../models");
 const { Op } = require("sequelize");
 const axios = require('axios');
 const jwt = require("jsonwebtoken");

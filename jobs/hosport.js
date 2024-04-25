@@ -1,4 +1,4 @@
-const { User, Hotspot } = require("./models");
+const { User, Hotspot } = require("../models");
 const { Op } = require("sequelize");
 const e = require("express");
 
