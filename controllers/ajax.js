@@ -1527,6 +1527,14 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
     let search = req.query.search;
 
     try {
+      let cache = await req.cache.json.get(`SIMPEG:getProfiles:${search}`, '$');
+      if (cache != null) {
+        return res.status(200).json({
+          error: false,
+          message: "success",
+          data: cache,
+        });
+      }
       let profiles = await User.findAll({
         where: {
           [Op.or]: [
@@ -1572,6 +1580,8 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
         };
         data.push(x);
       }
+      req.cache.json.set(`SIMPEG:getProfiles:${search}`, '$', data);
+      req.cache.expire(`SIMPEG:getProfiles:${search}`, 60);
 
       return res.status(200).json({
         error: false,
