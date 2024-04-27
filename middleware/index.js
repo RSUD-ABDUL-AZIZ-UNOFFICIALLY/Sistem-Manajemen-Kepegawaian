@@ -1,20 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { User, Atasan, Access } = require("../models");
 const { Buffer } = require('buffer');
-const { createClient } = require('redis');
-const { error } = require("console");
-const client = createClient({
-    password: process.env.REDIS_PASSWORD,
-    socket: {
-        host: process.env.REDIS_URL,
-        port: process.env.REDIS_URL_PORT
-    }
-});
-client.on('error', (error) => {
-    console.error(error);
-});
-client.connect();
-
 
 module.exports = {
     login: async (req, res, next) => {
@@ -101,8 +87,8 @@ module.exports = {
                 if (!token) {
                     return res.redirect("/");
                 }
-                if (await client.exists(`Token:Accesses:${token}`)) {
-                    let check = await client.hExists(`Token:Accesses:${token}`, data);
+                if (await req.cache.exists(`Token:Accesses:${token}`)) {
+                    let check = await req.cache.hExists(`Token:Accesses:${token}`, data);
                     if (check) {
                         next();
                     } else {
@@ -119,9 +105,9 @@ module.exports = {
                     let hakAkses = [];
                     for (const element of Accesses) {
                         hakAkses.push(element.status);
-                        client.hSet(`Token:Accesses:${token}`, element.status, 'true');
+                        req.cache.hSet(`Token:Accesses:${token}`, element.status, 'true');
                     }
-                    client.expire(`Token:Accesses:${token}`, 60 * 60);
+                    req.cache.expire(`Token:Accesses:${token}`, 60 * 60);
                     let check = hakAkses.includes(data);
                     if (check) {
                         next();

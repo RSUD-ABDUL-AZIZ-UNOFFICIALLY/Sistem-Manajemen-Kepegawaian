@@ -30,3 +30,5 @@ MORGAN_FORMAT="dev"
 NODE_ENV="development"
 
 REDIS_URL="redis://localhost:6379"
+REDIS_URL_PORT="
+REDIS_PASSWORD=""

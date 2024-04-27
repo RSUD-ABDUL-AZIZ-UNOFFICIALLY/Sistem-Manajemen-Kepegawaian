@@ -1,12 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { format } = require("mysql");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { createClient } = require('redis');
-// const client = await createClient({
-//     url: process.env.REDIS_URL
-// })
-// .on('error', err => console.log('Redis Client Error', err))
-// .connect();
 module.exports = {
     update: async (req, res) => {
         let token = req.cookies.token;
@@ -20,11 +13,6 @@ module.exports = {
             }
             return decoded;
         });
-        const client = await createClient({
-            url: process.env.REDIS_URL
-        })
-            .on('error', err => console.log('Redis Client Error', err))
-            .connect();
 
         let datetime = new Date();
         // wib
@@ -34,10 +22,10 @@ module.exports = {
             nik: decoded.id,
             last_seen: datetime
         });
-        client.set(`seen:${decoded.id}`, data);
-        client.set(`user:${decoded.id}`, data);
-        client.expire(`user:${decoded.id}`, 20);
-        client.quit();
+        req.cache.set(`seen:${decoded.id}`, data);
+        req.cache.set(`user:${decoded.id}`, data);
+        req.cache.expire(`user:${decoded.id}`, 20);
+        req.cache.quit();
         // await client.disconnect();
         return res.status(200).json({
             message: 'success',
@@ -45,19 +33,13 @@ module.exports = {
         });
     },
     online: async (req, res) => {
-        const client = await createClient({
-            url: process.env.REDIS_URL
-        })
-            .on('error', err => console.log('Redis Client Error', err))
-            .connect();
 
-        let keys = await client.keys('user:*');
+        let keys = await req.cache.keys('user:*');
         let users = [];
         for (let key of keys) {
-            let user = await client.get(key);
+            let user = await req.cache.get(key);
             users.push(JSON.parse(user));
         }
-        client.quit();
         return res.status(200).json({
             message: 'success',
             length: keys.length,
@@ -68,20 +50,14 @@ module.exports = {
         });
     },
     last_seen: async (req, res) => {
-        const client = await createClient({
-            url: process.env.REDIS_URL
-        })
-            .on('error', err => console.log('Redis Client Error', err))
-            .connect();
 
-        let seen = await client.keys('seen:*');
-        let online = await client.keys('user:*');
+        let seen = await req.cache.keys('seen:*');
+        let online = await req.cache.keys('user:*');
         let users = [];
         for (let key of seen) {
-            let user = await client.get(key);
+            let user = await req.cache.get(key);
             users.push(JSON.parse(user));
         }
-        client.quit();
         return res.status(200).json({
             message: 'success',
             data: {

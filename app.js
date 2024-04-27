@@ -6,6 +6,7 @@ const favicon = require('serve-favicon');
 const cors = require('cors');
 const app = express();
 const path = require('path');
+const { createClient } = require('redis');
 app.use(cors());
 
 
@@ -27,6 +28,26 @@ app.use(favicon(path.join(__dirname + '/public/', 'favicon.ico')));
 app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/')));
 app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/')));
 app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));
+
+const client = createClient({
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_URL,
+        port: process.env.REDIS_URL_PORT
+    }
+});
+client.connect();
+client.on('connect', () => {
+    console.log('Redis client connected');
+});
+client.on('error', (err) => {
+    console.log('Something went wrong ' + err);
+});
+
+app.use((req, res, next) => {
+    req.cache = client;
+    next();
+});
 
 const routes = require('./routes');
 app.use('/', routes);

@@ -4,18 +4,6 @@ const { Pasien, Family_paseins, Log } = require("../models");
 const { Op } = require("sequelize");
 const { sendWa } = require("../helper/message");
 const { apiGetSimrs, apiPostSimrs } = require("../helper/simrs");
-const { createClient } = require('redis');
-const client = createClient({
-    password: process.env.REDIS_PASSWORD,
-    socket: {
-        host: process.env.REDIS_URL,
-        port: process.env.REDIS_URL_PORT
-    }
-});
-client.on('error', (error) => {
-    console.error(error);
-});
-client.connect();
 
 
 module.exports = {
@@ -49,9 +37,9 @@ module.exports = {
                     message: pesan,
                     telp: phone
                 });
-                client.hSet(`hardinOnline:OTP`, phone ,random);
-                client.set(`hardinOnline:OTP:${phone}`, random);
-                client.expire(`hardinOnline:OTP:${phone}`, 5*60);
+                req.cache.hSet(`hardinOnline:OTP`, phone, random);
+                req.cache.set(`hardinOnline:OTP:${phone}`, random);
+                req.cache.expire(`hardinOnline:OTP:${phone}`, 5 * 60);
                 console.log(data)
                 await sendWa(data);
                 return res.status(200).json({
@@ -106,7 +94,7 @@ module.exports = {
                     message: "Nomor telepon telah terdaftar",
                 });
             }
-            let otpRedis = await client.get(`hardinOnline:OTP:${phone}`);
+            let otpRedis = await req.cache.get(`hardinOnline:OTP:${phone}`);
             if (otpRedis != otp) {
                 return res.status(400).json({
                     error: true,
@@ -161,9 +149,9 @@ module.exports = {
                     message: pesan,
                     telp: phone
                 });
-                client.hSet(`hardinOnline:OTP`, phone, random);
-                client.set(`hardinOnline:OTP:${phone}`, random);
-                client.expire(`hardinOnline:OTP:${phone}`, 5 * 60);
+                req.cache.hSet(`hardinOnline:OTP`, phone, random);
+                req.cache.set(`hardinOnline:OTP:${phone}`, random);
+                req.cache.expire(`hardinOnline:OTP:${phone}`, 5 * 60);
                 console.log(data)
                 await sendWa(data);
                 return res.status(200).json({
@@ -209,7 +197,7 @@ module.exports = {
                     message: "Nomor telepon belum terdaftar",
                 });
             }
-            let otpRedis = await client.get(`hardinOnline:OTP:${phone}`);
+            let otpRedis = await req.cache.get(`hardinOnline:OTP:${phone}`);
             if (otpRedis != otp) {
                 return res.status(400).json({
                     error: true,
