@@ -25,25 +25,28 @@
             <section>
               <div class="container-fluid">
                 <div class="card">
-                  <h5 class="card-header">Periode Cuti Tahun : <input type="number" id="tahun" min="2023" max="2099"
-                      step="1" value="2023" />
+                  <h5 class="card-header">Periode Cuti Tahun : <input id="periodeTahun" type="number" min="2023" max="2099" step="1"
+                      value="2023" />
                   </h5>
                   <div class="card-body">
                     <div class="card-body table-responsive p-0">
                       <figure>
-                        <figcaption>Daftar karyawan mengajukan cuti</figcaption>
-                        <table id="table-cuti" class="table table-bordered table-head-fixed text-nowrap">
+                        <figcaption>Daftar pegawai mengajukan cuti</figcaption>
+                        <table id="tableCuti" class="table display table-striped table-bordered">
                           <thead>
                             <tr>
                               <th style="width: 10px">#</th>
-                              <th>Nama karyawan</th>
-                              <th>Tanggal cuti</th>
+                              <th>Tgl Pengajuan</th>
+                              <th>Nama pegawai</th>
+                              <th>Depertemen Pegawai</th>
                               <th>Tipe cuti</th>
-                              <th>jumlah</th>
+                              <th>Tanggal cuti</th>
+                              <th>Jumlah cuti</th>
+                              <th>Sisa Cuti</th>
                               <th>Alasan cuti</th>
-                              <th>Status</th>
-                              <th>Tanggal persetujuan</th>
+                              <th>Tanggal Disetujui</th>
                               <th>Disetujui oleh</th>
+                              <th>Depertemen Atasan</th>
                               <th>Catatan Atasan</th>
                             </tr>
                           </thead>
@@ -68,7 +71,7 @@
       <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
       <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-      <script src="/asset/js/admincuti.js"></script>
+      <script src="/asset/js/admin/admincuti.js"></script>
 </body>
 
 </html>

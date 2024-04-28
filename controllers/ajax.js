@@ -1508,11 +1508,60 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
   getAllCuti: async (req, res) => {
     let { tahun } = req.query;
     try {
+      let data = await Ledger_cuti.findAll({
+        where: {
+          periode: tahun
+        },
+        include: [
+          {
+            model: Jns_cuti,
+            as: "jenis_cuti",
+            attributes: ["type_cuti"],
+          },
+          {
+            model: Cuti,
+            as: "data_cuti",
+            attributes: ["mulai", "samapi", "keterangan", "createdAt", "updatedAt"],
+          },
+          {
+            model: Cuti_approval,
+            as: "approval_cuti",
+            attributes: ["approve_date", "keterangan"],
+          }
+        ],
 
+        order: [["createdAt", "DESC"]],
+        attributes: { exclude: ['jabatan', 'pangkat', 'periode'] }
+      // limit: 20,
+      // offset: 10,
+
+      });
+
+      data = data.map((item) => {
+        return {
+          id: item.id,
+          nik_user: item.nik_user,
+          name_user: item.name_user,
+          departemen: item.departemen,
+          nik_atasan: item.nik_atasan,
+          name_atasan: item.name_atasan,
+          tembusan: item.tembusan,
+          type_cuti: item.jenis_cuti.type_cuti,
+          tgl_cuti: item.data_cuti.mulai + " s/d " + item.data_cuti.samapi,
+          cuti_diambil: item.cuti_diambil + " hari",
+          id_cuti: item.id_cuti,
+          sisa_cuti: item.sisa_cuti,
+          data_cuti: item.data_cuti,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+          approve_date: item.approval_cuti.approve_date,
+          keterangan: item.approval_cuti.keterangan,
+        }
+      });
       return res.status(200).json({
         error: false,
         message: "success",
-        data: tahun,
+        data: data,
       });
     }
     catch (error) {

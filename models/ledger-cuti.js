@@ -35,6 +35,11 @@ module.exports = (sequelize, DataTypes) => {
                 sourceKey: 'id_cuti',
                 as: 'data_cuti'
             })
+            Ledger_cuti.hasOne(models.Cuti_approval, {
+                foreignKey: 'id_cuti',
+                sourceKey: 'id_cuti',
+                as: 'approval_cuti'
+            })
         }
     }
     Ledger_cuti.init({
