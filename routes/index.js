@@ -27,8 +27,9 @@ router.get('/profile', middleware.login, controller.profile);
 router.get('/account', middleware.login, controller.account);
 
 router.get('/cuti', middleware.login, controller.cuti);
+router.get('/cuti/admin', middleware.login, controller.adminCuti);
 router.get('/aprovecuti', middleware.login, controller.approvalcuti);
-router.get('/aprovecuti/admin', middleware.login, controller.admincuti);
+router.get('/aprovecuti/admin', middleware.login, controller.leagercuti);
 
 router.get('/logout', middleware.logout);
 
@@ -64,6 +65,7 @@ router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
 router.get('/api/cuti/jns', middleware.login, ajax.getJns_cuti);
 router.post('/api/cuti', middleware.login, ajax.postCuti);
+router.post('/api/cuti/late', middleware.login, ajax.postCutiLate);
 router.delete('/api/cuti', middleware.login, ajax.deleteCuti);
 router.get('/api/cuti/riwayat', middleware.login, ajax.getRiwayatCuti);
 router.get('/api/cuti/sisa', middleware.login, ajax.getSisaCuti);

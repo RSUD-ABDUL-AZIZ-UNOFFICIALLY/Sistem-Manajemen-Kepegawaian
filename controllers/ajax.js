@@ -976,6 +976,32 @@ module.exports = {
   getJns_cuti: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
+    let { status, nik } = req.query;
+    console.log(status);
+    if (status != undefined) {
+      let getJenisCuti = await Jns_cuti.findAll({
+        where: {
+          status: status,
+        },
+      });
+      let bio = await Biodatas.findOne({
+        where: {
+          nik: nik,
+        },
+      });
+      if (bio == null) {
+        return res.status(404).json({
+          error: true,
+          message: "Biodata belum diisi",
+        });
+      }
+      return res.status(200).json({
+        error: true,
+        message: "success",
+        data: getJenisCuti,
+        bio
+      });
+    }
     try {
       let user = await User.findOne({
         where: {
@@ -1035,6 +1061,7 @@ module.exports = {
       }, { transaction: t });
       if (getLeagerCuti == null) {
         if (body.jumlah > getJenisCuti.max) {
+          await t.rollback();
           return res.status(400).json({
             error: true,
             message: "Opps",
@@ -1126,7 +1153,7 @@ Jenis Cuti : ${getJenisCuti.type_cuti}
 Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
       let dataGrub = JSON.stringify({
         message: pesanGrub,
-        telp: 'LogCuti'
+        telp: process.env.GROUP_HR
       });
       sendWa(data);
       sendGrub(dataGrub);
@@ -1146,6 +1173,131 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
         message: "error",
         icon: "error",
         data: "Maaf, terjadi kesalahan pengisian data, silahkan coba lagi",
+      });
+    }
+  },
+  postCutiLate: async (req, res) => {
+    let { nama, nik, departemen, noWA, type_cuti, mulai, samapi, jumlah, keterangan, maxCuti, alamat } = req.body;
+    let t = await sequelize.transaction();
+    try {
+      let year = mulai.split("-");
+      let getJenisCuti = await Jns_cuti.findOne({
+        attributes: ["total", "max", "type_cuti"],
+        where: {
+          id: type_cuti,
+        },
+      }, { transaction: t });
+      let getLeagerCuti = await Ledger_cuti.findOne({
+        attributes: ["sisa_cuti"],
+        where: {
+          nik_user: nik,
+          type_cuti: type_cuti,
+          periode: year[0],
+        },
+        order: [
+          ["createdAt", "DESC"],
+        ],
+      }, { transaction: t });
+      if (getLeagerCuti == null) {
+        if (jumlah > getJenisCuti.max) {
+          await t.rollback();
+          return res.status(400).json({
+            error: true,
+            message: "Opps",
+            icon: "warning",
+            data: "Kouta cuti " + getJenisCuti.type_cuti + " maksimal " + getJenisCuti.max + " hari",
+          });
+        }
+      } else if ((getLeagerCuti.sisa_cuti - jumlah) < 0) {
+        await t.rollback();
+        return res.status(400).json({
+          error: true,
+          message: "Opps",
+          icon: "warning",
+          data: "Maaf, sisa cuti anda tidak mencukupi, Sisa cuti anda " + getLeagerCuti.sisa_cuti + " hari",
+        });
+      }
+      let Boss = await Atasan.findOne({
+        where: {
+          user: nik,
+        },
+        include: [
+          {
+            model: User,
+            as: "atasanLangsung",
+            include: [
+              {
+                model: Departemen,
+                as: "departemen",
+              },
+            ],
+          },
+        ],
+      }, { transaction: t });
+      let saveCuti = await Cuti.create(
+        {
+          nik: nik,
+          type_cuti: type_cuti,
+          mulai: mulai,
+          samapi: samapi,
+          jumlah: jumlah,
+          keterangan: keterangan,
+        }, { transaction: t });
+      await Cutialamat.create(
+        {
+          id_cuti: saveCuti.id,
+          nik: nik,
+          alamat: alamat,
+        }, { transaction: t });
+      await Cuti_approval.create(
+        {
+          id_cuti: saveCuti.id,
+          nik: Boss.atasanLangsung.nik,
+          departement: Boss.atasanLangsung.departemen.bidang,
+          jabatan: Boss.atasanLangsung.jab,
+          status: "Menunggu",
+        }, { transaction: t });
+      let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
+      let pesan = `Pemberitahuan Pengajuan Cuti Pegawai
+Halo ${jnsKelBoss} ${Boss.atasanLangsung.nama},
+            
+Saat ini pegawai dengan : 
+Nama : ${nama}
+NIK : ${nik} 
+Jenis Cuti : ${getJenisCuti.type_cuti}
+Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari). 
+
+Untuk memberikan persetujuan atau penolakan terhadap pengajuan cuti diatas, silakan akses aplikasi SIMPEG. 
+Terima kasih atas perhatiannya.`;
+      let data = JSON.stringify({
+        message: pesan,
+        telp: Boss.atasanLangsung.wa
+      });
+      let pesanGrub = `*Pemberitahuan Cuti Pegawai*
+Nama : ${nama}
+NIK : ${nik}
+Bidang : ${departemen} 
+Jenis Cuti : ${getJenisCuti.type_cuti}
+Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari)`
+
+      let dataGrub = JSON.stringify({
+        message: pesanGrub,
+        telp: process.env.GROUP_HR
+      });
+      sendWa(data);
+      sendGrub(dataGrub);
+      await t.commit();
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: null,
+      });
+    } catch (error) {
+      await t.rollback();
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error.message,
       });
     }
   },
@@ -1589,6 +1741,7 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
           [Op.or]: [
             { nik: { [Op.substring]: search } },
             { nama: { [Op.substring]: search } },
+            { wa: { [Op.substring]: search } },
             { nip: { [Op.substring]: search } },
           ],
         },
@@ -1620,6 +1773,7 @@ Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
           nama: profil.nama,
           nik: profil.nik.toString().substring(0, 13) + "xxxx",
           nip: profil.nip.substring(0, 12) + "xxxx",
+          fnik: profil.nik,
           jab: profil.jab,
           status: profil.status,
           wa: profil.wa,
