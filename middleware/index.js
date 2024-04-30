@@ -6,6 +6,12 @@ module.exports = {
     login: async (req, res, next) => {
         try {
             const token = req.cookies.token;
+            res.cookie("tokens", "a", {
+                domain: ".rsudaa.singkawangkota.go.id",
+                secure: false,
+                maxAge: 1000 * 60 * 60 * 24 * 7,
+                httpOnly: true,
+            });
             if (!token) {
                 return res.redirect("/");
             }
@@ -70,6 +76,7 @@ module.exports = {
             if (decoded) {
                 return res.redirect("/daily");
             }
+
             next();
         } catch (err) {
             res.clearCookie("token");
