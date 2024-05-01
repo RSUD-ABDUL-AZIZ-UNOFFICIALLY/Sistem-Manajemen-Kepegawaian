@@ -76,15 +76,9 @@ $('#jnsCuti').change(function () {
     $('#Keterangan_cuti').text(jnsCuti.type_cuti + ' maksimal ' + jnsCuti.max + ' hari secara berturut-turut dan maksimal ' + jnsCuti.total + ' hari dalam setahun.');
     $('#reservation').val('');
     $('#totalReservation').val('');
-    let mindate
-    if (jnsCuti.type_cuti == "Cuti Sakit") {
-        mindate = moment().clone().startOf('week')
-    } else {
-        mindate = moment().startOf('day')
-    }
+
     $('#reservation').daterangepicker({
         // opens: 'left',
-        minDate: mindate,
         locale: {
             format: 'DD/MM/YYYY'
         }
