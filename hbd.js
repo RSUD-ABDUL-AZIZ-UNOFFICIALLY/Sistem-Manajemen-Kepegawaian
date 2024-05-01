@@ -48,7 +48,7 @@ Semoga hari ini semanis dirimu
 Ttd,
 Direktur RSUD dr. ABDUL AZIZ KOTA SINGKAWANG
 
-dr. Achmad Hardin, Sp. PD`,
+dr. Alexande, Sp. PD`,
             telp: `${wa}`,
         });
           console.log(send);
