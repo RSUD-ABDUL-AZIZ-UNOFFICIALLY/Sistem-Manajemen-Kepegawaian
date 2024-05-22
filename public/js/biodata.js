@@ -102,7 +102,8 @@ $("#profilePicForm").submit(function (event) {
                 text: "Foto berhasil diubah",
             });
             // clear file input
-            $("#profilePic")[0].files[0] = null;
+            $("#profilePic").val(null);
+            sessionStorage.removeItem("img");
         },
         error: function (error) {
             console.error(error)
