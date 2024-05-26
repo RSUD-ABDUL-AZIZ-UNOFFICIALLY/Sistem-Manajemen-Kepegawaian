@@ -9,3 +9,4 @@ tidakAda.json
 hakases.json
 uitest.js
 .env dev
+.DS_Store
