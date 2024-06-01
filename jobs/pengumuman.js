@@ -147,7 +147,7 @@ const main = async () => {
         console.log('Kirim Email Salah');
         process.exit(1);
     }
-    if (kirim === 'y') {
+    if (kirim == 'y') {
         submit(status, periode, 'kirim');
     } else {
         submit(status, periode, 'cek');
