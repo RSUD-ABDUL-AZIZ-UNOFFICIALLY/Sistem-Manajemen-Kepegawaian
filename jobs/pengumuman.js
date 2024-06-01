@@ -27,7 +27,7 @@ function bulan(month) {
     return monthName
 }
 
-async function submit(status, tanggal) {
+async function submit(status, tanggal, kirim) {
     let users = await User.findAll({
         where: {
             status: status
@@ -60,7 +60,7 @@ async function submit(status, tanggal) {
         let index = users.findIndex(item => item.nik === vaule);
         if (index !== -1) {
             console.log(users[index].nama + ' ' + users[index].nik + ' ' + users[index].email)
-            if (process.argv[4] == "kirim") {
+            if (kirim == "kirim") {
                 try {
                     await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel)
                     console.log('kirim email')
