@@ -1,8 +1,10 @@
 require('dotenv').config();
 const { User, Lpkp, Rekap, Notif } = require("../models");
 const { Op } = require("sequelize");
+const readline = require('node:readline');
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
+
 const secretKey = process.env.SECRET_MAIL;
 const payload = {
     gid: "Server Side",
@@ -14,7 +16,7 @@ if (process.argv[4] == "cek") {
 
 }
 
-submit(process.argv[2], process.argv[3]);
+// submit(process.argv[2], process.argv[3]);
 
 function bulan(month) {
     // Mengubah tanggal menjadi objek Date
@@ -113,3 +115,52 @@ async function kirimEmailLaporan(nama, email, month, JnsKel) {
 }
 // console.log(bulan('2021-08'))
 // kirimEmailLaporan('Lady Cleophila Mardhatillah', 'falehry88@gmail.com', bulan('2023-08'), 'Perempuan')
+
+const rli = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+
+console.log(`Pengumuman Laporan Kinerja Bulanan Via Email`);
+function input(prompt) {
+    return new Promise((callbackFn, errorFn) => {
+        rli.question(prompt, (uinput) => {
+            callbackFn(uinput);
+        }, () => {
+            errorFn();
+        });
+    });
+}
+const main = async () => {
+    let status = await input("masukan Jenis Pegawai (PNS/PPPK/Non ASN) : ");
+    if (status !== 'PNS' && status !== 'PPPK' && status !== 'Non ASN') {
+        console.log('Jenis Pegawai Salah');
+        process.exit(1);
+    }
+    let periode = await input("masukan Periode Laporan (YYYY-MM) : ");
+    if (periode.length !== 7) {
+        console.log('Periode Laporan Salah');
+        process.exit(1);
+    }
+    let kirim = await input("Kirim Email (y/n) : ");
+    if (kirim !== 'y' && kirim !== 'n') {
+        console.log('Kirim Email Salah');
+        process.exit(1);
+    }
+    if (kirim === 'y') {
+        submit(status, periode, 'kirim');
+    } else {
+        submit(status, periode, 'cek');
+    }
+    rli.close();
+};
+
+main();
+
+// rl.question(`masukan Jenis Pegawai (PNS/PPPK/Non ASN) : `, status => {
+//     console.log(`Status : ${status}!`);
+//     let statuss = status;
+//     let date = '';
+
+
+// });
