@@ -28,6 +28,7 @@ app.use(favicon(path.join(__dirname + '/public/', 'favicon.ico')));
 app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/')));
 app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/')));
 app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));
+app.use("/asset/", express.static(path.join(__dirname + '/public/')));
 
 const client = createClient({
     password: process.env.REDIS_PASSWORD,
