@@ -32,7 +32,13 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+    await queryInterface.addConstraint('Otps', {
+      fields: ['token', 'wa'],
+      type: 'unique',
+      name: 'unique_token_wa',
+    });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Otps');
   }
