@@ -50,7 +50,7 @@
                                 <div class="input-group-prepend">
                                   <span class="input-group-text"> <i class="far fa-calendar-alt"></i></span>
                                 </div>
-                                <input type="text" class="form-control float-right" id="reservation" required disabled>
+                                <input type="text" class="form-control float-right" id="reservation" name="reservation" required disabled>
 
                               </div>
                             </div>
@@ -75,10 +75,12 @@
                           required autocomplete="on"></textarea>
                       </div>
                       <div class="form-group">
-                        <label for="InputActivities">Alamat Selama cuti</label>
+                        <label for="InputActivities">Alamat Selama Cuti</label>
                         <textarea class="form-control" rows="3" id="alamat"
                           placeholder="contoh: 'Jl. Dr. Sutomo No.28, Pasiran, Kec. Singkawang Bar., Kota Singkawang' " required
                           autocomplete="on"></textarea>
+                      </div>
+                      <div class="form-group" id="lampiran">
                       </div>
                     </div>
                     <!-- /.card-body -->
@@ -97,7 +99,7 @@
             <section>
               <div class="container-fluid">
                 <div class="card">
-                  <h5 class="card-header">Riwayat Cuti Tahun : <input type="number" id="tahun" min="2023" max="2099" step="1"
+                  <h5 class="card-header">Riwayat Cuti Tahun : <input type="number" id="tahun" min="2023" max="2024" step="1"
                       value="2024" />
                   </h5>
                   <div class="card-body">

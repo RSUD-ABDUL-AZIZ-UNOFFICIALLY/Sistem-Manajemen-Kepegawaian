@@ -30,8 +30,8 @@ $.ajax({
 let totalCuti = 0;
 let maxCuti = 0;
 let dataCuti = [];
-let mulaicuti = '';
-let akhircuti = '';
+let mulaicuti = moment().format('YYYY-MM-DD');
+let akhircuti = moment().format('YYYY-MM-DD');
 
 $.ajax({
     url: '/api/cuti/jns',
@@ -53,18 +53,39 @@ $('#jnsCuti').change(function () {
     let jnsCuti = dataCuti.find(x => x.id == id);
     $('#Keterangan_cuti').text(jnsCuti.type_cuti + ' maksimal ' + jnsCuti.max + ' hari secara berturut-turut dan maksimal ' + jnsCuti.total + ' hari dalam setahun.');
     $('#reservation').val('');
-    $('#totalReservation').val('');
+    $('#totalReservation').val('1');
+    // $('#totalReservation').val('');
     let mindate
-    if (jnsCuti.type_cuti == "Cuti Sakit") {
-        mindate = moment().clone().startOf('week')
+    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan") {
+        // mindate = moment().clone().startOf('week')
+        mindate = moment().subtract(1, 'weeks').startOf('day')
+        $('#lampiran').empty();
+        $('#lampiran').append(`<label for="InputActivities">Lampiran Surat ${jnsCuti.type_cuti}</label>
+                        <input type="hidden" class="form-control" id="suratLampiran" name="suratLampiran">
+                        <div class="input-group mb-3">
+                          <input type="file" class="form-control" id="inputSuratCuti" name="inputSuratCuti">
+                          <label class="input-group-text" for="inputSuratCuti" id="UploadSuratCuti">Upload</label>
+                        </div>`);
+
     } else {
-        mindate = moment().startOf('day')
+        mindate = moment().subtract(1, 'days').startOf('day')
+        $('#lampiran').empty();
     }
     $('#reservation').daterangepicker({
         // opens: 'left',
         minDate: mindate,
+        maxDate: moment('2024-12-31', 'YYYY-MM-DD'),
+        singleDatePicker: false,
+        autoApply: false,
+        autoUpdateInput: true,
         locale: {
-            format: 'DD/MM/YYYY'
+            format: 'DD/MM/YYYY',
+            daysOfWeek: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+            monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+            firstDay: 1,
+            applyLabel: 'Pilih',
+            cancelLabel: 'Batal',
+            customRangeLabel: 'Pilih Tanggal'
         }
     }, function (start, end) {
         // Tanggal awal
@@ -91,11 +112,13 @@ $('#jnsCuti').change(function () {
         }
         $('#totalReservation').val(selisihHari);
     });
-});
 
+});
+let token = getCookie("token");
 // on button submit 
 $('#Cuti').submit(function (event) {
     event.preventDefault();
+    // $('#btnSubmit').prop('disabled', true);
     let datafrom = {
         type_cuti: $('#jnsCuti').val(),
         mulai: mulaicuti,
@@ -105,7 +128,97 @@ $('#Cuti').submit(function (event) {
         maxCuti: maxCuti,
         alamat: $('#alamat').val()
     };
-    $('#btnSubmit').prop('disabled', true);
+    let id = $('#jnsCuti').val();
+    let jnsCuti = dataCuti.find(x => x.id == id);
+
+    // let jnsCuti = dataCuti.find(x => x.id == id);
+    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan") {
+        if ($('#inputSuratCuti').prop('files')[0] == undefined) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Lampiran surat harus diisi',
+            })
+            return false;
+        }
+        let file = $('#inputSuratCuti').prop('files')[0];
+        if (file.type !== 'application/pdf' && file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/jpg') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'File Tidak Valid.',
+                text: 'File harus berupa PDF, JPG, PNG',
+            })
+            return false;
+        }
+        if (file.size > 3000000) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'File Terlalu Besar.',
+                text: 'File harus kurang dari 3 MB',
+            })
+            return false;
+        }
+        if (file.type == 'application/pdf') {
+            var form = new FormData();
+            form.append("file", file, 'surat-cuti.pdf');
+            var settings = {
+                url: "https://api.rsudaa.singkawangkota.go.id/api/cdn/upload/file",
+                method: "POST",
+                timeout: 0,
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+                processData: false,
+                mimeType: "multipart/form-data",
+                contentType: false,
+                data: form
+            };
+
+            $.ajax(settings).done(function (response) {
+                response = JSON.parse(response);
+                console.log(response.data.url);
+                datafrom.lampiran = response.data.url;
+                postCuti(datafrom)
+                inputSuratCuti.value = null;
+                return;
+            });
+        }
+        if (file.type == 'image/jpeg' || file.type == 'image/png' || file.type == 'image/jpg') {
+            let fileType = file.type.split('/')[1];
+            let form = new FormData();
+            form.append("image", file, 'surat-cuti.' + fileType);
+
+            let settings = {
+                url: "https://api.rsudaa.singkawangkota.go.id/api/cdn/upload/img",
+                method: "POST",
+                timeout: 0,
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+                processData: false,
+                mimeType: "multipart/form-data",
+                contentType: false,
+                data: form
+            };
+
+            $.ajax(settings).done(function (response) {
+                response = JSON.parse(response);
+                console.log(response.data.url);
+                datafrom.lampiran = response.data.url;
+                postCuti(datafrom)
+                inputSuratCuti.value = null;
+                return;
+            });
+        }
+    } else {
+        // console.log(datafrom);
+        postCuti(datafrom)
+    }
+
+
+});
+
+function postCuti(datafrom) {
     $.ajax({
         url: '/api/cuti',
         method: 'POST',
@@ -118,7 +231,7 @@ $('#Cuti').submit(function (event) {
                 showConfirmButton: false,
                 timer: 2000
             })
-            // $('#jnsCuti').val('');
+            $('#jnsCuti').val('');
             $('#reservation').val('');
             $('#totalReservation').val('');
             $('#reservation').prop('disabled', false);
@@ -141,8 +254,7 @@ $('#Cuti').submit(function (event) {
             $('#btnSubmit').prop('disabled', false);
         }
     });
-});
-
+}
 
 $(document).ready(function () {
     let tahun = $('#tahun').val();
@@ -177,6 +289,18 @@ function parsingDataCuti(data) {
         let tanggalmulai = tmulai[2] + "/" + tmulai[1] + "/" + tmulai[0];
         let tsampai = i.samapi.split("-");
         let tanggalsampai = tsampai[2] + "/" + tsampai[1] + "/" + tsampai[0];
+        let tglApproval = new Date(i.approval.approve_date).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+        let waktuApproval = new Date(i.approval.approve_date).toLocaleTimeString('id-ID');
+
+        if (i.approval.approve_date === null) {
+            i.approval.approve_date = '-'
+        } else {
+            i.approval.approve_date = tglApproval + " " + waktuApproval;
+        }
 
         let row = $("<tr>");
         row.append($("<td>" + nomor + "</td>"));

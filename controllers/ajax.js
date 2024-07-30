@@ -17,6 +17,7 @@ const {
   Ledger_cuti,
   sequelize,
   Cuti_approval,
+  Cuti_lampiran,
   Access,
   Hotspot
 } = require("../models");
@@ -1098,8 +1099,6 @@ module.exports = {
         },
         { transaction: t }
       );
-
-
       let Boss = await Atasan.findOne({
         where: {
           user: decoded.id,
@@ -1127,30 +1126,45 @@ module.exports = {
         },
         { transaction: t }
       );
+      let lampiran = body.lampiran || "-";
+      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan") {
+        lampiran = body.lampiran
+        await Cuti_lampiran.create(
+          {
+            id_cuti: saveCuti.id,
+            nik: decoded.id,
+            file: body.lampiran,
+            periode: `${new Date().getFullYear()}`,
+          },
+          { transaction: t }
+        )
+      }
+
 
       let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
-
       let pesan = `Pemberitahuan Pengajuan Cuti Pegawai
 Halo ${jnsKelBoss} ${Boss.atasanLangsung.nama},
       
 Saat ini pegawai dengan : 
-Nama : ${decoded.nama}
-NIK : ${decoded.id} 
+Nama       : ${decoded.nama}
+NIK        : ${decoded.id} 
 Jenis Cuti : ${getJenisCuti.type_cuti}
-Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari). 
-      
+Tanggal    : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari). 
+Lampiran   : ${lampiran}      
 Untuk memberikan persetujuan atau penolakan terhadap pengajuan cuti diatas, silakan akses aplikasi SIMPEG. 
 Terima kasih atas perhatiannya.`;
       let data = JSON.stringify({
         message: pesan,
         telp: Boss.atasanLangsung.wa
       });
+
       let pesanGrub = `*Pemberitahuan Cuti Pegawai*
-Nama : ${decoded.nama}
-NIK : ${decoded.id}
-Bidang : ${dep.bidang} 
+Nama       : ${decoded.nama}
+NIK        : ${decoded.id}
+Bidang     : ${dep.bidang} 
 Jenis Cuti : ${getJenisCuti.type_cuti}
-Tanggal : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)`
+Tanggal    : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)
+Lampiran   : ${lampiran}`
       let dataGrub = JSON.stringify({
         message: pesanGrub,
         telp: process.env.GROUP_HR
