@@ -63,7 +63,7 @@ $('#jnsCuti').change(function () {
         $('#lampiran').append(`<label for="InputActivities">Lampiran Surat ${jnsCuti.type_cuti}</label>
                         <input type="hidden" class="form-control" id="suratLampiran" name="suratLampiran">
                         <div class="input-group mb-3">
-                          <input type="file" class="form-control" id="inputSuratCuti" name="inputSuratCuti">
+                          <input type="file" class="form-control" id="inputSuratCuti" name="inputSuratCuti" accept="image/png, image/jpeg, application/pdf">
                           <label class="input-group-text" for="inputSuratCuti" id="UploadSuratCuti">Upload</label>
                         </div>`);
 
