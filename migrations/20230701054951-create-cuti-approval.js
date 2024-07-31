@@ -41,7 +41,7 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM,
-        values: ['Disetujui', 'Diolak', 'Menunggu']
+        values: ['Disetujui', 'Ditolak', 'Menunggu']
       },
       keterangan: {
         type: Sequelize.STRING

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
-const { User, Departemen, Lpkp, Atasan, Ledger_cuti, Cuti, Jns_cuti } = require("../models");
+const { User, Departemen, Lpkp, Atasan, Cuti_approval, Cutialamat, Ledger_cuti, Cuti, Jns_cuti } = require("../models");
 const { Op } = require("sequelize");
 const { convertdate, toRoman } = require("../helper");
 
@@ -236,75 +236,181 @@ module.exports = {
   reportCuti: async (req, res) => {
     try {
       let regData = jwt.verify(req.query.token, secretKey);
-      console.log(req.query.token);
-      console.log(regData.leager.id);
-      let leager = await Ledger_cuti.findOne({
+      let dataCuti = await Cuti.findOne({
         where: {
-          id: regData.leager.id,
+          id: regData.cuti.id,
         },
         include: [
           {
-            model: Cuti,
-            as: "data_cuti",
-            attributes: ["mulai", "samapi", "keterangan", "createdAt"],
+            model: User,
+            as: "user",
+            attributes: ["nip", "nama", "jab", "wa"],
+            include: [
+              {
+                model: Departemen,
+                as: "departemen",
+                attributes: ["bidang"],
+              }
+            ],
           },
           {
             model: Jns_cuti,
             as: "jenis_cuti",
             attributes: ["type_cuti"],
-          }, {
-            model: User,
-            as: "User_cuti",
-            attributes: ["nama", "nip", 'nik'],
           },
           {
-            model: User,
-            as: "Atasan_cuti",
-            attributes: ["nama", "nip", 'nik']
+            model: Cuti_approval,
+            as: "approval",
+            // attributes: ["nik", "nama"],
+            include: [
+              {
+                model: User,
+                as: "atasan",
+                attributes: ["nip", "nama"],
+              },
+            ],
           }
+        ]
+      })
+      let alamatCuti = await Cutialamat.findOne({
+        where: {
+          id_cuti: dataCuti.id
+        },
+        attributes: ["alamat"],
+      })
 
+      let leagerTahunan = await Ledger_cuti.findAll({
+        where: {
+          nik_user: dataCuti.nik,
+          id_cuti: { [Op.lt]: [dataCuti.id] },
+          type_cuti: { [Op.in]: [1, 2, 3] },
+        },
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: Jns_cuti,
+            as: "jenis_cuti",
+            attributes: ["type_cuti"],
+          },
         ],
-      });
-      console.log(leager);
-      console.log(leager.data_cuti.createdAt);
-      // convert date to month name 
-      let month = new Date(leager.createdAt).toLocaleString("id-ID", {
-        month: "numeric",
-      });
-      month = toRoman(parseInt(month));
-
-
-      let data = {
-        tglSurat: new Date(leager.createdAt).toLocaleString("id-ID", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        }),
-        tglPengajuan: new Date(leager.data_cuti.createdAt).toLocaleString("id-ID", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        }),
-        tglMulai: new Date(leager.data_cuti.mulai).toLocaleString("id-ID", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        }),
-        tglSampai: new Date(leager.data_cuti.samapi).toLocaleString("id-ID", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        }),
-        nomorSurat: `${leager.id}/E-UK/${month}/${new Date(leager.createdAt).getFullYear()}`,
-        leager: leager,
-        nipPegawai: leager.User_cuti,
-        pangkat: leager.pangkat,
-        jabatan: leager.jabatan,
-
+        limit: 1
+      })
+      let Sisa_N = leagerTahunan.length > 0 ? leagerTahunan[0].sisa_cuti : 12;
+      let leagerCutiBesar = await Ledger_cuti.findAll({
+        where: {
+          nik_user: dataCuti.nik,
+          id_cuti: { [Op.lt]: [dataCuti.id] },
+          type_cuti: { [Op.in]: [13] },
+        }
+      })
+      let CutiBesar
+      if (leagerCutiBesar.length > 0) {
+        CutiBesar = leagerCutiBesar.reduce((acc, elm) => acc + elm.cuti_diambil, 0);
+      } else {
+        CutiBesar = 0
       }
-      return res.render("report/suratCuti", data);
+      let leagerCutiPenting = await Ledger_cuti.findAll({
+        where: {
+          nik_user: dataCuti.nik,
+          id_cuti: { [Op.lt]: [dataCuti.id] },
+          type_cuti: { [Op.in]: [4, 5, 6] },
+        }
+      })
+      let CutiPenting
+      if (leagerCutiPenting.length > 0) {
+        CutiPenting = leagerCutiPenting.reduce((acc, elm) => acc + elm.cuti_diambil, 0);
+      } else {
+        CutiPenting = 0
+      }
+      let leagerCutiSakit = await Ledger_cuti.findAll({
+        where: {
+          nik_user: dataCuti.nik,
+          id_cuti: { [Op.lt]: [dataCuti.id] },
+          type_cuti: { [Op.in]: [7, 8, 9] },
+        }
+      })
+      let CutiSakit
+      if (leagerCutiSakit.length > 0) {
+        CutiSakit = leagerCutiSakit.reduce((acc, elm) => acc + elm.cuti_diambil, 0);
+      } else {
+        CutiSakit = 0
+      }
+
+      let leagerCutiMelahirkan = await Ledger_cuti.findAll({
+        where: {
+          nik_user: dataCuti.nik,
+          id_cuti: { [Op.lt]: [dataCuti.id] },
+          type_cuti: { [Op.in]: [10, 11, 12] },
+        }
+      })
+      let CutiMelahirkan
+      if (leagerCutiMelahirkan.length > 0) {
+        CutiMelahirkan = leagerCutiMelahirkan.reduce((acc, elm) => acc + elm.cuti_diambil, 0);
+      } else {
+        CutiMelahirkan = 0
+      }
+      // console.log(dataCuti);
+
+      // let month = new Date(leager.createdAt).toLocaleString("id-ID", {
+      //   month: "numeric",
+      // });
+      // month = toRoman(parseInt(month));
+
+      dataCuti.dataValues.mulai = new Date(dataCuti.mulai).toLocaleString("id-ID", {
+        weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+      })
+
+      dataCuti.dataValues.samapi = new Date(dataCuti.samapi).toLocaleString("id-ID", {
+        weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+      })
+      dataCuti.dataValues.createdAt = new Date(dataCuti.createdAt).toLocaleString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+      })
+      let data = {
+        dataCuti,
+        status: dataCuti.approval.status.toUpperCase(),
+        alamatCuti: alamatCuti ? alamatCuti.alamat : '-',
+        Sisa_N: Sisa_N,
+        CutiPenting: CutiPenting,
+        CutiBesar: CutiBesar,
+        CutiSakit: CutiSakit,
+        CutiMelahirkan: CutiMelahirkan,
+      }
+      // console.log(data);
+      if (dataCuti.approval.status == "Disetujui" && dataCuti.approval.status != "Ditolak") {
+        let sigrnature = `Telah di ${dataCuti.approval.status} oleh ${dataCuti.approval.atasan.nama}
+NIP. ${dataCuti.approval.atasan.nip}
+pada ${new Date(dataCuti.approval.approve_date).toLocaleString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+
+})}`;
+        res.cookie('sigrnature', sigrnature, {
+          // httpOnly: true,
+          // secure: true,
+          sameSite: 'strict',
+          expires: new Date(Date.now() + 60 * 10000)
+        })
+      } else {
+        res.cookie('sigrnature', '', {
+          // httpOnly: true,
+          // secure: true,
+          sameSite: 'strict',
+          expires: new Date(Date.now() + 60 * 10000)
+        })
+      }
+      return res.render("report/suratCuti2", data);
     } catch (error) {
       console.log(error);
       // return res.redirect("/");

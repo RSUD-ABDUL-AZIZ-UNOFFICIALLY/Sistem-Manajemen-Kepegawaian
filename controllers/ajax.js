@@ -1403,7 +1403,7 @@ Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari)`
             include: [
               {
                 model: User,
-                as: "user",
+                as: "atasan",
                 attributes: ["nama", "nip", "jab"],
               },
             ],
@@ -1910,16 +1910,16 @@ Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari)`
   GetCuti: async (req, res) => {
     let diCuti = req.body.id;
     try {
-      let leager = await Ledger_cuti.findOne({
+      let cuti = await Cuti.findOne({
         where: {
-          id_cuti: diCuti,
+          id: diCuti
         },
         attributes: ["id"],
-      });
+      })
       // set jwt token
       let token = jwt.sign(
-        { leager },
-        secretKey
+        { cuti },
+        secretKey,
       );
       return res.status(200).json({
         error: false,

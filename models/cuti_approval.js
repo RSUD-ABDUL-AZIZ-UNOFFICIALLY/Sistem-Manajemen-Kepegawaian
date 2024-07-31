@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Cuti_approval.hasOne(models.User, {
         foreignKey: 'nik',
         sourceKey: 'nik',
-        as: 'user'
+        as: 'atasan'
       })
       Cuti_approval.hasOne(models.Cuti, {
         foreignKey: 'id',
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     jabatan: DataTypes.STRING,
     pangkat: DataTypes.STRING,
     approve_date: DataTypes.DATE,
-    status: DataTypes.ENUM('Disetujui', 'Diolak', 'Menunggu'),
+    status: DataTypes.ENUM('Disetujui', 'Ditolak', 'Menunggu'),
     keterangan: DataTypes.STRING
   }, {
     sequelize,

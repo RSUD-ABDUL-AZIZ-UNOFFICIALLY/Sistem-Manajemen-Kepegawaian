@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <title>
+    Surat Cuti
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/asset/css/report/cutiRepot2.css" />
+  <script type="text/javascript" src="/asset/js/lib/qrcode.min.js"></script>
+  <script type="text/javascript" src="/asset/js/lib/qr-code-styling.js"></script>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="content">
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+        <div class="col-4">
+          <pre class="title-surat">
+    Singkawang, <%= dataCuti.createdAt %>
+    Kepada
+Yth. Direktur RSUD dr. Abdul Aziz
+    di
+        Singkawang
+</pre>
+        </div>
+      </div>
+
+      <p class="text-center title">FORMULIR PERMINTAAN DAN PEMBERIAN CUTI</p>
+      <table class="table table-bordered border-black">
+        <tbody>
+          <tr>
+            <th scope="col" colspan="4">I. DATA PEGAWAI</th>
+          </tr>
+          <tr>
+            <th scope="col" style="width: 15%;">Nama</th>
+            <td>
+              <%= dataCuti.user.nama %>
+            </td>
+            <th scope="col" style="width: 15%;">NIP</th>
+            <td>
+              <%= dataCuti.user.nip %>
+            </td>
+          </tr>
+          <tr>
+            <th scope="col" style="width: 15%;">Jabatan</th>
+            <td>
+              <%= dataCuti.user.jab %>
+            </td>
+            <th scope="col" style="width: 15%;">Masa Kerja</th>
+            <td>-</td>
+          </tr>
+          <tr>
+            <th scope="col" style="width: 15%;">Unit Kerja</th>
+            <td colspan="4">
+              <%= dataCuti.user.departemen.bidang %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered border-black">
+        <tbody>
+          <tr>
+            <th scope="col" colspan="4">II. JENIS CUTI YANG DIAMBIL</th>
+          </tr>
+          <tr>
+            <th scope="col">Cuti Tahunan</th>
+            <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Tahunan" ) { %>
+              <td>√
+              </td>
+              <% } else { %>
+                <td>-</td>
+                <% } %>
+                  <th scope="col">Cuti Besar</th>
+                  <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Besar" ) { %>
+                    <td>√
+                    </td>
+                    <% } else { %>
+                      <td>-</td>
+                      <% } %>
+          </tr>
+          <tr>
+            <th scope="col">Cuti Sakit</th>
+            <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Sakit" ) { %>
+              <td>√
+              </td>
+              <% } else { %>
+                <td>-</td>
+                <% } %>
+                  <th scope="col">Cuti Melahirkan</th>
+                  <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Melahirkan" ) { %>
+                    <td>√
+                    </td>
+                    <% } else { %>
+                      <td>-</td>
+                      <% } %>
+          </tr>
+          <tr>
+            <th scope="col">Cuti Karena Alasan Penting</th>
+            <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Alasan Penting" ) { %>
+              <td>√
+              </td>
+              <% } else { %>
+                <td>-</td>
+                <% } %>
+                  <th scope="col">Cuti di Luar Tanggungan Negara</th>
+                  <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Besar" ) { %>
+                    <td>√
+                    </td>
+                    <% } else { %>
+                      <td>-</td>
+                      <% } %>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered border-black">
+        <tbody>
+          <tr>
+            <th scope="col" colspan="4">III. ALASAN CUTI
+          </tr>
+          <tr>
+            <td>
+              <%= dataCuti.keterangan %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered border-black">
+        <tbody>
+          <tr>
+            <th scope="col" colspan="6">IV. LAMANYA CUTI</th>
+          </tr>
+          <tr>
+            <th scope="col">Selama</th>
+            <td>
+              <%= dataCuti.jumlah %>
+            </td>
+            <th scope="col">Mulai Tanggal</th>
+            <td>
+              <%= dataCuti.mulai %>
+            </td>
+            <td>s/d</td>
+            <td>
+              <%= dataCuti.samapi %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered border-black">
+        <tbody>
+          <tr>
+            <th scope="col" colspan="5">V. CATATAN CUTI</th>
+          </tr>
+          <tr>
+            <th scope="col" colspan="3">1. CUTI TAHUNAN</th>
+            <th scope="col">2. CUTI BESAR</th>
+            <td>
+              <%=CutiBesar %>
+            </td>
+          </tr>
+          <tr>
+            <td>Tahun</td>
+            <td>Sisa</td>
+            <td>keterangan</td>
+            <th scope="col">3. CUTI SAKIT</th>
+            <td>
+              <%=CutiSakit %>
+            </td>
+          </tr>
+          <tr>
+            <td>N-2</td>
+            <td>0</td>
+            <td>-</td>
+            <th scope="col">4. CUTI MELAHIRKAN</th>
+            <td>
+              <%=CutiMelahirkan %>
+            </td>
+          </tr>
+          <tr>
+            <td>N-1</td>
+            <td>0</td>
+            <td>-</td>
+            <th scope="col">5. CUTI KARENA ALASAN PENTING</th>
+            <td>
+              <%=CutiPenting %>
+            </td>
+          </tr>
+          <tr>
+            <td>N</td>
+            <td>
+              <%=Sisa_N %>
+            </td>
+            <td>Sisa Sebelumnya</td>
+            <th scope="col">6. CUTI DILUAR TANGGUNGAN NEGARA</th>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered border-black">
+        <tbody>
+          <tr>
+            <th scope="col" colspan="3">VI. ALAMAT SELAMA MENJALANKAN CUTI</th>
+          </tr>
+          <tr>
+            <td>
+            </td>
+            <th scope="col" style="width: 10%;">Telp</th>
+            <td>
+              <%= dataCuti.user.wa %>
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="1" class="text-center mt-auto">
+              <%= alamatCuti %>
+            </td>
+            <td colspan="2" class="text-center">
+              <p>Hormat Saya<br>
+              <div id="qrcodeUser"></div> <br>(<%= dataCuti.user.nama %>) <br>NIP. <%= dataCuti.user.nip %>
+                  </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered border-black">
+        <tbody>
+          <tr>
+            <th scope="col" colspan="2">VII. PERTIMBANGAN ATASAN LANGSUNG</th>
+          </tr>
+          <tr>
+            <th scope="col" rowspan="2"></th>
+            <th scope="col" class="text-center">
+              <%= status %>
+            </th>
+
+          </tr>
+          <tr>
+            <td class="text-center">
+              <p>
+                <%= dataCuti.approval.jabatan %> <br>
+                  <div id="qrcodeAtasan"></div> <br>
+                  <p style="text-decoration: underline;" class="mb-0">
+                    <%= dataCuti.approval.atasan.nama %>
+                  </p>NIP.<%= dataCuti.approval.atasan.nip %>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <!-- Jquery -->
+    <script src="/asset/js/lib/jquery-3.6.0.min.js"></script>
+    <script src="/asset/js/module/helper.js"></script>
+    <script type="text/javascript" src="/asset/js/report/cutiRepot2.js"></script>
+
+</body>
+
+</html>

@@ -117,7 +117,7 @@ async function setuju(id) {
 async function tolak(id) {
     let data = {
         id: id,
-        status: "Diolak",
+        status: "Ditolak",
         keterangan: $('#catatan').val()
     }
     await updateCuti(data);

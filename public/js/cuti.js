@@ -310,20 +310,22 @@ function parsingDataCuti(data) {
         row.append($("<td>" + i.keterangan + "</td>"));
         row.append($("<td>" + i.approval.status + "</td>"));
         row.append($("<td>" + i.approval.approve_date + "</td>"));
-        row.append($("<td>" + i.approval.user.nama + "</td>"));
+        row.append($("<td>" + i.approval.atasan.nama + "</td>"));
         row.append($("<td>" + i.approval.keterangan + "</td>"));
         // tabah tombol edit dan delete
         let btnDelete = $("<button>");
         btnDelete.addClass("btn btn-danger btn-sm");
         btnDelete.attr("onclick", "deleteCuti(" + i.id + ")");
-        btnDelete.html("<i class='fas fa-trash'></i>");
+        btnDelete.html("<i class='fas fa-trash'></i> Batalkan");
         let btnCetak = $("<button>");
         btnCetak.addClass("btn btn-primary btn-sm");
         btnCetak.attr("onclick", "cetakSuratCuti(" + i.id + ")");
         btnCetak.html("<i class='fa-solid fa-envelope-open-text'></i> Cetak Surat Cuti");
         if (i.approval.status == "Menunggu") {
-            row.append($("<td>").append(btnDelete));
+            row.append($("<td>").append(btnCetak, btnDelete));
         } else if (i.approval.status == "Disetujui") {
+            row.append($("<td>").append(btnCetak));
+        } else if (i.approval.status == "Ditolak") {
             row.append($("<td>").append(btnCetak));
         }
         $("tbody").append(row);
