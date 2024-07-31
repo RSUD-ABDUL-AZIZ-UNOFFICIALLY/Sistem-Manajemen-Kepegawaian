@@ -118,7 +118,7 @@ let token = getCookie("token");
 // on button submit 
 $('#Cuti').submit(function (event) {
     event.preventDefault();
-    // $('#btnSubmit').prop('disabled', true);
+    $('#btnSubmit').prop('disabled', true);
     let datafrom = {
         type_cuti: $('#jnsCuti').val(),
         mulai: mulaicuti,
