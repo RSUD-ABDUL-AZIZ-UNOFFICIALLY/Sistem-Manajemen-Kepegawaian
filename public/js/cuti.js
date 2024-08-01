@@ -46,12 +46,24 @@ $.ajax({
     error: function (error) {
     }
 });
-$('#jnsCuti').change(function () {
+async function sisaCuti(id_cuti) {
+    return $.ajax({
+        url: '/api/cuti/sisa?type_cuti=' + id_cuti,
+        method: 'GET',
+        success: function (response) {
+            return response.data;
+        },
+        error: function (error) {
+        }
+    })
+}
+$('#jnsCuti').change(async function () {
     // enable reservation
     $('#reservation').prop('disabled', false);
     let id = $(this).val();
     let jnsCuti = dataCuti.find(x => x.id == id);
-    $('#Keterangan_cuti').text(jnsCuti.type_cuti + ' maksimal ' + jnsCuti.max + ' hari secara berturut-turut dan maksimal ' + jnsCuti.total + ' hari dalam setahun.');
+    let x = await sisaCuti(jnsCuti.id);
+    $('#Keterangan_cuti').text(jnsCuti.type_cuti + ' maksimal ' + jnsCuti.max + ' hari secara berturut-turut dan maksimal ' + jnsCuti.total + ' hari dalam setahun. Sisa cuti anda ' + x.data.sisa_cuti + ' hari');
     $('#reservation').val('');
     $('#totalReservation').val('1');
     // $('#totalReservation').val('');

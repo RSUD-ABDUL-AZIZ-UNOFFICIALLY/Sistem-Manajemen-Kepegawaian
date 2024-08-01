@@ -1432,11 +1432,15 @@ Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari)`
   },
   getSisaCuti: async (req, res) => {
     let user = req.account;
+
+    let { type_cuti } = req.query;
     try {
-      let data = await Cuti.findAll({
+      let data = await Ledger_cuti.findOne({
         where: {
-          nik: user.nik,
+          nik_user: user.nik,
+          type_cuti: type_cuti
         },
+        attributes: ["sisa_cuti", "periode"],
         include: [
           {
             model: Jns_cuti,
@@ -1444,12 +1448,27 @@ Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari)`
             attributes: ["type_cuti"],
           },
         ],
-        order: [["createdAt", "ASC"]],
+        order: [["createdAt", "DESC"]],
       });
-      if (data.length == 0) {
-        return res.status(404).json({
+      if (data == null) {
+        let jnsCuti = await Jns_cuti.findOne({
+          where: {
+            id: type_cuti
+          },
+          attributes: ["type_cuti", "total"]
+        })
+        let yearNow = new Date().getFullYear()
+        let sisaCuti = {
+          sisa_cuti: jnsCuti.total,
+          periode: yearNow,
+          jenis_cuti: {
+            type_cuti: jnsCuti.type_cuti
+          }
+        }
+        return res.status(200).json({
           error: true,
-          message: "data not found",
+          message: 'Belum pernah di ambil',
+          data: sisaCuti
         });
       }
       return res.status(200).json({
