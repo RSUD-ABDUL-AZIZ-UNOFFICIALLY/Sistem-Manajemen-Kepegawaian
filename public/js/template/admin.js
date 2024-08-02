@@ -1,18 +1,4 @@
-// // Membaca semua cookie
-// const allCookies = document.cookie;
 
-// // Memeriksa keberadaan cookie tertentu
-// function checkCookie(cookieName) {
-//   const cookies = document.cookie.split(";");
-//   for (const cookie of cookies) {
-//     if (cookie.trim().startsWith(cookieName + "=")) {
-//       return true; // Cookie ditemukan
-//     }
-//   }
-//   return false; // Cookie tidak ditemukan
-// }
-
-// Contoh penggunaan
 const cookieName = "status";
 const cookieExists = getCookie(cookieName);
 console.log(cookieExists);
@@ -108,15 +94,6 @@ if (cookieToken) {
 }
 
 
-if (!localStorage.getItem("visite")) {
-  const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load())
-  // // Get the visitor identifier when you need it.
-  fpPromise
-    .then(fp => fp.get())
-    .then(result =>
-      localStorage.setItem("visite", result.visitorId),
-    )
-}
 // function setOnline() {
 //   let id = localStorage.getItem("dataIDUser");
 //   let name = localStorage.getItem("dataIDname");

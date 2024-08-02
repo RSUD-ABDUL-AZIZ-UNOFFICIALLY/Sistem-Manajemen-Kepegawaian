@@ -4,11 +4,11 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <div class="text-center mb-4">  
-            <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Logo" height="50">
-            <h5 class="card-title mt-2">Sistem Informasi Manajemen Kepegawaian</h5>
-            <h5 class="card-title mt-2">RSUD dr. Abdul Aziz</h5>
-          </div>
+            <div class="text-center mb-4">
+              <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Logo" height="50">
+              <h5 class="card-title mt-2">Sistem Informasi Manajemen Kepegawaian</h5>
+              <h5 class="card-title mt-2">RSUD dr. Abdul Aziz</h5>
+            </div>
             <form>
               <div class="form-group">
                 <label for="phone" class="form-label">Nomor Whatsapp</label>
@@ -23,11 +23,12 @@
                 <label for="otp">One-Time Password (OTP)</label>
                 <input type="number" class="form-control" id="otp" name="otp" required />
                 <div class="mt-3 text-justify">
-                  <p class="card-text text-muted"><small>One-Time Password (OTP) telah dikirim ke nomor Whatsapp Anda yang
-                    terdaftar.</small></p>
+                  <p class="card-text text-muted"><small>One-Time Password (OTP) telah dikirim ke nomor Whatsapp Anda
+                      yang
+                      terdaftar.</small></p>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary float-end">Login</button>   
+              <button type="submit" class="btn btn-primary float-end">Login</button>
             </form>
           </div>
         </div>
@@ -56,37 +57,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
   <!-- SweetAlert2 JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.8/sweetalert2.min.js"></script>
-  <script src="/asset/js/login.js"></script>
-  <script>
-    let deferredPrompt;
-    const installModal = new bootstrap.Modal(document.getElementById('installModal'));
-
-    window.addEventListener('beforeinstallprompt', (event) => {
-      event.preventDefault();
-      deferredPrompt = event;
-
-      // Menampilkan modal secara otomatis
-      installModal.show();
-
-      const installButton = document.getElementById('installButton');
-      installButton.addEventListener('click', () => {
-        installApp();
-      });
-    });
-
-    function installApp() {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('Aplikasi diinstal');
-        } else {
-          console.log('Pengguna menolak untuk menginstal aplikasi');
-        }
-        deferredPrompt = null;
-        // Menyembunyikan modal setelah proses instalasi selesai
-        installModal.hide();
-      });
-    }
-
-  </script>
+  <script src="/asset/js/module/helper.js"></script>
+  <script src="/asset/js/template/login.js"></script>
+  <script src="/asset/js/template/install.js"></script>
   <%- include('layout/footer') -%>
