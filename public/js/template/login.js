@@ -100,5 +100,3 @@
   });
   // Remove all saved data from sessionStorage
 sessionStorage.clear();
-
-  

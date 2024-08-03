@@ -27,3 +27,4 @@ function installApp() {
         installModal.hide();
     });
 }
+console.log("Halo");
