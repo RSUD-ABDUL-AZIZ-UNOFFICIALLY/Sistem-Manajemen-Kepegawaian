@@ -1,0 +1,14 @@
+{
+    "js": {
+        "type": "terser",
+        "terser": {
+            "mangle": false,
+            "compress": {
+                "drop_console": true
+            }
+        }
+    },
+    "css": {
+        "compatibility": "*"
+    }
+}

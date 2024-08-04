@@ -6,6 +6,10 @@ const favicon = require('serve-favicon');
 const cors = require('cors');
 const app = express();
 const path = require('path');
+const fs = require('fs');
+
+const package = JSON.parse(fs.readFileSync('package.json'));
+console.log(package.name + ' ' + package.version);
 const { createClient } = require('redis');
 app.use(cors());
 
@@ -25,10 +29,28 @@ app.use(cookieParser())
 app.set('view engine', 'ejs');
 
 app.use(favicon(path.join(__dirname + '/public/', 'favicon.ico')));
-app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/')));
-app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/')));
-app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));
-app.use("/asset/", express.static(path.join(__dirname + '/public/')));
+app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/'), {
+    setHeaders: (res, path, stat) => {
+        res.set('Cache-Control', 'public, max-age=10800');
+        res.set('ETag', package.version); // add etag
+    }
+}));
+app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/'), {
+    setHeaders: (res, path, stat) => {
+        res.set('Cache-Control', 'public, max-age=86400');
+        res.set('ETag', package.version); // add etag
+    }
+}));
+app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/'),
+    {
+        setHeaders: (res, path, stat) => {
+            res.set('Cache-Control', 'public, max-age=10800');
+            res.set('ETag', package.version); // add etag
+        }
+    }));
+app.use("/asset/site.webmanifest", express.static(path.join(__dirname + '/public/site.webmanifest')))
+app.use("/asset/favicon.ico", express.static(path.join(__dirname + '/public/favicon.ico')))
+
 
 const client = createClient({
     password: process.env.REDIS_PASSWORD,
