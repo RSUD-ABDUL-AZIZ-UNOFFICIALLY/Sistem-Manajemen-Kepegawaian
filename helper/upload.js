@@ -9,6 +9,7 @@ const payload = {
 
 async function uploadImage(path) {
     let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+    console.log(path)
     let formfile = new FormData();
     formfile.append('image', fs.createReadStream(path));
     let config = {

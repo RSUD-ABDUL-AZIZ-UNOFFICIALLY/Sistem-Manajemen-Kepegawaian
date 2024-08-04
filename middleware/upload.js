@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
         cb(null, "public/cache/");
     },
     filename: (req, file, cb) => {
-        cb(null, file.fieldname + "-" + file.originalname.split(' ').join('') + path.extname(file.originalname));
+        cb(null, file.fieldname + "-" + file.originalname.split(' ').join(''));
     },
 });
 

@@ -26,12 +26,18 @@ module.exports = {
       pangkat: {
         type: Sequelize.STRING
       },
+      tmt_pangkat: {
+        type: Sequelize.DATEONLY
+      },
       marital: {
         type: Sequelize.STRING
       },
       golongan_darah: {
         type: Sequelize.ENUM,
         values: ['A', 'B', 'AB', 'O']
+      },
+      tmt_kerja: {
+        type: Sequelize.DATEONLY
       },
       jns_kerja: {
         type: Sequelize.STRING
