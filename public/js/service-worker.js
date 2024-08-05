@@ -8,10 +8,8 @@ self.addEventListener('install', (event) => {
             '/asset/img/android-chrome-192x192.png',
             '/asset/img/android-chrome-512x512.png',
             '/asset/img/Lambang_KotaSingkawang.webp',
-            '/asset/img/logo.png',
             '/asset/img/portrait.png',
             '/asset/img/landscape.png',
-            '/',
           ]);
         })
     );
