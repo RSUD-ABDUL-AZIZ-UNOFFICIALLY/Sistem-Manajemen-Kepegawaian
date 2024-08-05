@@ -83,6 +83,12 @@ module.exports = {
       let token = req.cookies.token;
       let decoded = jwt.verify(token, secretKey);
 
+      if (body.tmt_pangkat == "") {
+        body.tmt_pangkat = null;
+      }
+      if (body.tmt_kerja == "") {
+        body.tmt_kerja = null;
+      }
       let updateBio = await Biodatas.update(body, {
         where: {
           nik: decoded.id,

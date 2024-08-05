@@ -5,7 +5,7 @@ minify public/js/template/admin.js >public/js/template/admin.min.js
 
 minify public/js/module/helper.js >public/js/module/helper.min.js
 
-minify public/js/biodata.js >public/js/src/biodata.min.js
+minify public/js/biodata.js >public/js/src/biodata-1.min.js
 minify public/js/profile.js >public/js/src/profile.min.js
 
 minify public/js/daily.js >public/js/src/daily.min.js

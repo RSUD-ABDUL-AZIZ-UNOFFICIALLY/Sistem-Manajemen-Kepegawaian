@@ -7,9 +7,11 @@ $(document).ready(function () {
             console.log(response)
             $("#alamat").val(response.data.alamat);
             $("#pangkat").val(response.data.pangkat);
+            $("#tmt_pangkat").val(response.data.tmt_pangkat);
             $("#marital").val(response.data.marital);
             $("#golongan_darah").val(response.data.golongan_darah);
             $("#jns_kerja").val(response.data.jns_kerja);
+            $("#tmt_kerja").val(response.data.tmt_kerja);
         },
         error: function (error) {
             console.error(error)
@@ -28,9 +30,11 @@ $("#biodata").submit(function (event) {
     let formData = {
         alamat: $("#alamat").val(),
         pangkat: $("#pangkat").val(),
+        tmt_pangkat: $("#tmt_pangkat").val(),
         marital: $("#marital").val(),
         golongan_darah: $("#golongan_darah").val(),
         jns_kerja: $("#jns_kerja").val(),
+        tmt_kerja: $("#tmt_kerja").val(),
     }
     console.log(formData)
     $.ajax({

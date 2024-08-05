@@ -126,16 +126,52 @@
                   <form id="biodata" class="form-horizontal">
                     <div class="card-body">
                       <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Alamat</label>
+                        <label for="alamat" class="col-sm-2 col-form-label">Alamat</label>
                         <div class="col-sm-10">
                           <input type="text" class="form-control" id="alamat" name="alamat" required />
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Pangkat</label>
+                        <label for="pangkat" class="col-sm-2 col-form-label">Pangkat</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="pangkat" name="pangkat" placeholder="contoh Golongan IIIa "
-                            </div>
+                          <select class="form-control  select2-danger" data-dropdown-css-class="select2-danger" id="pangkat" name="pangkat">
+                            <option value="" disabled selected="selected">Pilih Golongan pangkat</option>
+                            <option value='IVe'>IVe</option>
+                            <option value='IVd'>IVd</option>
+                            <option value='IVc'>IVc</option>
+                            <option value='IVb'>IVb</option>
+                            <option value='IVa'>IVa</option>
+                            <option value='IIId'>IIId</option>
+                            <option value='IIIc'>IIIc</option>
+                            <option value='IIIb'>IIIb</option>
+                            <option value='IIIa'>IIIa</option>
+                            <option value='IId'>IId</option>
+                            <option value='IIc'>IIc</option>
+                            <option value='IId'>IId</option>
+                            <option value='IIb'>IIb</option>
+                            <option value='IIa'>IIa</option>
+                            <option value='XI'>XI</option>
+                            <option value='X'>X</option>
+                            <option value='IX'>IX</option>
+                            <option value='VIII'>VIII</option>
+                            <option value='VII'>VII</option>
+                            <option value='VI'>VI</option>
+                            <option value='V'>V</option>
+                            <option value='IV'>IV</option>
+                            <option value='-'>Non ASN</option>
+                          </select>
+                        </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="tmt_pangkat" class="col-sm-2 col-form-label">TMT Pangkat</label>
+                          <div class="col-sm-10">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                                <input type="date" class="form-control" data-inputmask-alias="date" data-inputmask-inputformat="dd/mm/yyyy" data-mask
+                                  id="tmt_pangkat" name="tmt_pangkat">
+                              </div>
                         </div>
                       </div>
                       <div class="form-group row">
@@ -173,6 +209,17 @@
                           </select>
                         </div>
                       </div>
+                        <div class="form-group row">
+                          <label for="tmt_kerja" class="col-sm-2 col-form-label">TMT Kejra</label>
+                          <div class="col-sm-10">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                              </div>
+                              <input type="date" class="form-control" data-inputmask-alias="date" data-inputmask-inputformat="dd/mm/yyyy"
+                                data-mask id="tmt_kerja" name="tmt_kerja">
+                            </div>
+                          </div>
                       </div>
                       <!-- /.card-body -->
                       <div class="card-footer">
@@ -240,7 +287,7 @@
 
   <%- include('template/footer'); %>
     <script src="/asset/js/src/profile.min.js"></script>
-    <script src="/asset/js/src/biodata.min.js"></script>
+    <script src="/asset/js/src/biodata-1.min.js"></script>
 </body>
 
 </html>
