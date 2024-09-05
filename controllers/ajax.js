@@ -1149,7 +1149,7 @@ module.exports = {
 
       let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
       let pesan = `Pemberitahuan Pengajuan Cuti Pegawai
-Halo ${jnsKelBoss} ${Boss.atasanLangsung.nama},
+Yth. ${jnsKelBoss} ${Boss.atasanLangsung.nama},
       
 Saat ini pegawai dengan : 
 Nama       : ${decoded.nama}
