@@ -15,7 +15,7 @@ module.exports = {
           model: {
             tableName: 'Users'
           },
-          key: 'nik',
+          key: 'nik'
         }
       },
       departemen: {
@@ -23,9 +23,9 @@ module.exports = {
         primaryKey: true,
         references: {
           model: {
-            tableName: 'Departemens',
+            tableName: 'Departemens'
           },
-          key: 'bidang',
+          key: 'bidang'
         }
       },
       createdAt: {
