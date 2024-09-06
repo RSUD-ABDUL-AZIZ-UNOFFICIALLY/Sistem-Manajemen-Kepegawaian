@@ -18,14 +18,14 @@ module.exports = {
           key: 'nik'
         }
       },
-      departemen: {
+      dep: {
         type: Sequelize.STRING,
         primaryKey: true,
         references: {
           model: {
             tableName: 'Departemens'
           },
-          key: 'bidang'
+          key: 'id'
         }
       },
       createdAt: {
