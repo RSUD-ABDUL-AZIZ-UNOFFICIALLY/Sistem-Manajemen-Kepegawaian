@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Instalasi.init({
     bos: DataTypes.INTEGER,
-    departemen: DataTypes.STRING
+    dep: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Instalasi',
