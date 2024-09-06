@@ -19,7 +19,7 @@ module.exports = {
         }
       },
       dep: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         primaryKey: true,
         references: {
           model: {
