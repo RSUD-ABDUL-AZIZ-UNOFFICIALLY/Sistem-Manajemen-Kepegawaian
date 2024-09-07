@@ -18,7 +18,7 @@ const http = require('http');
 const server = http.createServer(app);
 const morgan = require('morgan');
 const maxAge = process.env.NODE_ENV == 'production' ? 10800 : 1;
-console.log(maxAge);
+console.log("mode = " + process.env.NODE_ENV);
 const MORGAN_FORMAT = process.env.MORGAN_FORMAT || 'dev';
 app.use(morgan(MORGAN_FORMAT));
 app.use(express.json());
