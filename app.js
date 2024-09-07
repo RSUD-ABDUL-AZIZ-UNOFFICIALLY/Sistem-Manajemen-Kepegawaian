@@ -17,6 +17,8 @@ app.use(cors());
 const http = require('http');
 const server = http.createServer(app);
 const morgan = require('morgan');
+const maxAge = process.env.NODE_ENV == 'production' ? 10800 : 1;
+console.log(maxAge);
 const MORGAN_FORMAT = process.env.MORGAN_FORMAT || 'dev';
 app.use(morgan(MORGAN_FORMAT));
 app.use(express.json());
@@ -31,7 +33,7 @@ app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname + '/public/', 'favicon.ico')));
 app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/'), {
     setHeaders: (res, path, stat) => {
-        res.set('Cache-Control', 'public, max-age=10800');
+        res.set('Cache-Control', 'public, max-age=' + maxAge);
         res.set('ETag', package.version); // add etag
     }
 }));
@@ -44,7 +46,7 @@ app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/'), {
 app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/'),
     {
         setHeaders: (res, path, stat) => {
-            res.set('Cache-Control', 'public, max-age=10800');
+            res.set('Cache-Control', 'public, max-age=' + maxAge);
             res.set('ETag', package.version); // add etag
         }
     }));
