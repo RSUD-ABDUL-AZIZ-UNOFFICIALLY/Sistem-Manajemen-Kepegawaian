@@ -303,5 +303,15 @@ module.exports = {
       token: decoded,
     };
     res.render("simrs/addAnggotaPasien", data);
+  },
+  presensi: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "presensi | SIMPEG",
+      page: "Daily Progress",
+      token: decoded,
+    };
+    res.render("presensi/jadwal", data);
   }
 };

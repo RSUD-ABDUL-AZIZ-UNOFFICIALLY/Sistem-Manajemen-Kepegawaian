@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <%- include('../template/head'); %>
+        <!-- fullCalendar -->
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <%- include('../template/navbar'); %>
+            <!-- /.navbar -->
+
+            <!-- Main Sidebar Container -->
+            <%- include('../template/sidebar'); %>
+
+                <!-- Content Wrapper. Contains page content -->
+                <div class="content-wrapper">
+                    <!-- Content Header (Page header) -->
+                    <%- include('../template/content-header'); %>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Jadwal Presensi</h3>
+                                        <br>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label for="periode">Bidang</label>
+                                            <input type="month" class="form-control" id="periode" name="start"
+                                                min="2023-03" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="departemen">Bidang</label>
+                                            <select class="custom-select form-control" id="departemen">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div class="container">
+                                            <table class="table table-bordered border-primary table-responsive"
+                                                id="tabel-jadwal">
+                                                <thead>
+                                                    <tr>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /.container-fluid -->
+                        </section>
+
+                        <!-- /.content -->
+                </div>
+                <!-- /.content-wrapper -->
+                <footer class="main-footer"></footer>
+    </div>
+    <!-- ./wrapper -->
+    <%- include('../modal/modalEditJadwal'); %>
+        <%- include('../template/footer'); %>
+            <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+            <!-- fullCalendar -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+            <script src="/asset/js/fullcalendar/presensi.js"></script>
+            <script src="/asset/js/fullcalendar/edit.js"></script>
+
+</body>
+
+</html>

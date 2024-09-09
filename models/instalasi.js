@@ -16,12 +16,22 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'bos',
         as: 'atasan'
       })
+      Instalasi.hasOne(models.Departemen, {
+        foreignKey: 'id',
+        sourceKey: 'dep',
+        as: 'departemen'
+      })
+      Instalasi.hasMany(models.User, {
+        foreignKey: 'dep',
+        sourceKey: 'dep',
+        as: 'anggota'
+      })
 
     }
   }
   Instalasi.init({
     bos: DataTypes.INTEGER,
-    dep: DataTypes.STRING
+    dep: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Instalasi',

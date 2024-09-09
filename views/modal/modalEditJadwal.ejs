@@ -1,0 +1,44 @@
+<!-- Modal -->
+<div class="modal fade" id="editJadwal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="editJadwalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editJadwalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="card-body" id="body">
+                    <ol class="list-group list-group-numbered" id="list-group"></ol>
+                    <form>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control" id="tgl" name="tgl" disabled>
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="sectionjnsDns" class="form-label">Shift</label>
+                            <select class="form-select" aria-label="sectionjnsDns" id="select" name="select">
+                                <option value="L" selected>LIBUR</option>
+                                <option value="F5">FULL TIME</option>
+                                <option value="P">DINAS PAGI</option>
+                                <option value="S">DINAS SIANG</option>
+                                <option value="M">DINAS MALAM</option>
+                                <option value="C">CUTI</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                        <input type="hidden" id="nik" name="nik">
+                    </form>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSave" data-bs-dismiss="modal"
+                    onclick="saveJadwal()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
