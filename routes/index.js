@@ -103,7 +103,7 @@ router.get('/api/presensi/anggota', middleware.login, presensi.anggota);
 router.get('/api/presensi/departemen', middleware.login, presensi.departemen);
 router.post('/api/presensi/anggota', middleware.login, presensi.updateJadwal);
 
-router.get('/api/presensi/bos', middleware.login, presensi.jadwal);
+// router.get('/api/presensi/bos', middleware.login, presensi.jadwal);
 
 router.get('/api/seen', seen.update);
 router.get('/api/seen/online', seen.online);
