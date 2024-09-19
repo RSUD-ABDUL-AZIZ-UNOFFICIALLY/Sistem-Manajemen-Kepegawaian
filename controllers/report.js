@@ -385,7 +385,7 @@ module.exports = {
         CutiMelahirkan: CutiMelahirkan,
       }
       // console.log(data);
-      if (dataCuti.approval.status == "Disetujui" && dataCuti.approval.status != "Ditolak") {
+      if (dataCuti.approval.status == "Disetujui" || dataCuti.approval.status == "Ditolak" || dataCuti.approval.status == "Perubahan") {
         let sigrnature = `Telah di ${dataCuti.approval.status} oleh ${dataCuti.approval.atasan.nama}
 NIP. ${dataCuti.approval.atasan.nip}
 pada ${new Date(dataCuti.approval.approve_date).toLocaleString("id-ID", {
@@ -394,7 +394,6 @@ pada ${new Date(dataCuti.approval.approve_date).toLocaleString("id-ID", {
           year: "numeric",
   hour: "numeric",
   minute: "numeric",
-
 })}`;
         res.cookie('sigrnature', sigrnature, {
           // httpOnly: true,
