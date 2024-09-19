@@ -227,23 +227,111 @@ Yth. Direktur RSUD dr. Abdul Aziz
       <table class="table table-bordered border-black">
         <tbody>
           <tr>
-            <th scope="col" colspan="2">VII. PERTIMBANGAN ATASAN LANGSUNG</th>
-          </tr>
-          <tr>
-            <th scope="col" rowspan="2"></th>
-            <th scope="col" class="text-center">
-              <%= status %>
-            </th>
-
-          </tr>
-          <tr>
-            <td class="text-center">
-              <p>
-                <%= dataCuti.approval.jabatan %> <br>
-                  <div id="qrcodeAtasan"></div> <br>
-                  <p style="text-decoration: underline;" class="mb-0">
-                    <%= dataCuti.approval.atasan.nama %>
-                  </p>NIP.<%= dataCuti.approval.atasan.nip %>
+            <th scope="col" colspan="4">VII. PERTIMBANGAN ATASAN LANGSUNG</th>
+            </tr>
+            <tr>
+              <th scope="col">
+                DISETUJUI
+              </th>
+              <th scope="col">
+                PERUBAHAN
+              </th>
+              <th scope="col">
+                DITANGGUHKAN
+              </th>
+              <th scope="col" class="text-center">
+                TIDAK DISETUJUI
+                </th>
+            </tr>
+            <tr>
+              <td class="text-center">
+                <!-- DISETUJUI -->
+                <% if (status==='DISETUJUI' ) { %>
+                  <%= dataCuti.approval.jabatan %> <br>
+                    <div id="qrcodeAtasan"></div> <br>
+                    <p style="text-decoration: underline;" class="mb-0">
+                      <%= dataCuti.approval.atasan.nama %>
+                    </p>NIP.<%= dataCuti.approval.atasan.nip %>
+                      </p>
+                      <% } else { %>
+                        <!-- Code to be executed if the condition is false -->
+                        <% } %>
+                          </td>
+                          <td class="text-center">
+                            <!-- PERUBAHAN -->
+                            <% if (status==='PERUBAHAN' ) { %>
+                              <%= dataCuti.approval.jabatan %> <br>
+                                <div id="qrcodeAtasan"></div> <br>
+                                <p style="text-decoration: underline;" class="mb-0">
+                                  <%= dataCuti.approval.atasan.nama %>
+                                </p>NIP.<%= dataCuti.approval.atasan.nip %>
+                                  </p>
+                                  <% } else { %>
+                                    <!-- Code to be executed if the condition is false -->
+                                    <% } %>
+                          </td>
+                          <td class="text-center">
+                            <!-- DITANGGUHKAN -->
+                          </td>
+                          <td class="text-center">
+                            <!-- TIDAK DISETUJUI -->
+                            <% if (status==='DITOLAK' ) { %>
+                              <%= dataCuti.approval.jabatan %> <br>
+                                <div id="qrcodeAtasan"></div> <br>
+                                <p style="text-decoration: underline;" class="mb-0">
+                                  <%= dataCuti.approval.atasan.nama %>
+                                </p>NIP.<%= dataCuti.approval.atasan.nip %>
+                                  </p>
+                                  <% } else { %>
+                                    <% } %>
+                          </td>
+                          </tr>
+                          </tbody>
+                          </table>
+                          <table class="table table-bordered border-black">
+                            <tbody>
+                              <tr>
+                                <th scope="col" colspan="4">VIII. KEPUTUSAN PEJABAT YANG BERWNANG MEMBERIKAN CUTI</th>
+                              </tr>
+                              <tr>
+                                <th scope="col">
+                                  DISETUJUI
+                                </th>
+                                <th scope="col">
+                                  PERUBAHAN
+                                </th>
+                                <th scope="col">
+                                  DITANGGUHKAN
+                                </th>
+                                <th scope="col" class="text-center">
+                                  TIDAK DISETUJUI
+                                </th>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <% if (status==='DISETUJUI' ) { %>
+                                    Direktur <br>
+                                    <div id="QRDirector"></div> <br>
+                                    <p style="text-decoration: underline;" class="mb-0">
+                                      dr. ALEXANDER, Sp.PD.
+                                    </p>NIP.197112192005021003
+                                    </p>
+                                    <% } else { %>
+                                      <!-- Code to be executed if the condition is false -->
+                                      <% } %>
+                                </td>
+                                <td class="text-center">
+                                  <p>
+                      
+                                  </p>
+                                </td>
+                                <td class="text-center">
+                                  <p>
+                      
+                                  </p>
+                                </td>
+                                <td class="text-center">
+                                  <p>
               </p>
             </td>
           </tr>

@@ -41,7 +41,7 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM,
-        values: ['Disetujui', 'Ditolak', 'Menunggu']
+        values: ['Disetujui', 'Ditolak', 'Menunggu', 'Perubahan', 'Ditangguhkan', 'Tidak Disetujui']
       },
       keterangan: {
         type: Sequelize.STRING

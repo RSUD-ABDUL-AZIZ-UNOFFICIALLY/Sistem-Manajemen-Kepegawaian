@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     jabatan: DataTypes.STRING,
     pangkat: DataTypes.STRING,
     approve_date: DataTypes.DATE,
-    status: DataTypes.ENUM('Disetujui', 'Ditolak', 'Menunggu'),
+    status: DataTypes.ENUM('Disetujui', 'Ditolak', 'Menunggu', 'Perubahan', 'Ditangguhkan', 'Tidak Disetujui'),
     keterangan: DataTypes.STRING
   }, {
     sequelize,
