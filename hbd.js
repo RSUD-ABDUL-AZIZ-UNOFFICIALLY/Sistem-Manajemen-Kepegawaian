@@ -7,16 +7,22 @@ const secretKey = process.env.SECRET_WA;
 const payload = {
   gid: "Server Side",
 };
+const pesiun = process.env.DEPPENSUN || 47;
 
 async function getHbd(date) {
     let data = await User.findAll({
         where: {
             tgl_lahir: {
                 [Op.endsWith]: `${date}`
+        },
+        dep: {
+          [Op.ne]: pesiun, 
             }
         },
+
         attributes: ['nama', 'wa', 'tgl_lahir', 'dep', 'jab'],
     })
+
     // console.log(data[0].nama);
     let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
     for (let i = 0; i < data.length; i++) {
@@ -62,14 +68,14 @@ dr. Alexander, Sp. PD`,
             data: send,
           };
           console.log(config);
-        await  axios
-            .request(config)
-            .then((response) => {
-              console.log(JSON.stringify(response.data));
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+      // await  axios
+      //     .request(config)
+      //     .then((response) => {
+      //       console.log(JSON.stringify(response.data));
+      //     })
+      //     .catch((error) => {
+      //       console.log(error);
+      //     });
     }
    
 }
@@ -77,7 +83,7 @@ dr. Alexander, Sp. PD`,
 // let date = onlyDate.slice(5, 10);
 // console.log(date);
 // getHbd(date);
-// getHbd(date);
+getHbd("10-06");
 
 cron.schedule('0 9 * * *', () => {
     // Kode yang akan dijalankan setiap jam 6 pagi
