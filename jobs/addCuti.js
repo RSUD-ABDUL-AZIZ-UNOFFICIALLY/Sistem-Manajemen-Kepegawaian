@@ -1,5 +1,5 @@
 const { sequelize, User, Departemen, Biodatas, Atasan, Cuti_sisa, Cuti, Cuti_approval, Ledger_cuti } = require("../models");
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 
 async function addcuti(nik, jumlah, tahun, type) {
     let t = await sequelize.transaction();
@@ -37,61 +37,62 @@ async function addcuti(nik, jumlah, tahun, type) {
                 type_cuti: type,
             },
             order: [
-                ["sisa_cuti", "ASC"]
+                ["id", "DESC"]
             ]
         })
+        let userData = await User.findOne({
+            where: {
+                nik: nik
+            },
+            include: [
+                {
+                    model: Departemen,
+                    as: "departemen",
+                },
+                {
+                    model: Biodatas,
+                    as: "biodata",
+                },
+            ]
+        })
+        let Boss = await Atasan.findOne({
+            where: {
+                user: nik,
+            },
+            include: [
+                {
+                    model: User,
+                    as: "atasanLangsung",
+                    include: [
+                        {
+                            model: Departemen,
+                            as: "departemen",
+                        },
+                    ],
+                },
+            ],
+        });
         if (ledger) {
+            console.log(ledger);
+
             let addLeager = await Ledger_cuti.create({
                 nik_user: nik,
-                name_user: 'Fakhry Hizballah Al Muminurradian S.T',
-                pangkat: '',
-                jabatan: 'Pengelola Teknologi Informasi',
-                departemen: 'Bagian Umum dan Kepegawaian',
-                nik_atasan: 6172026104860002,
-                name_atasan: 'F. FILICITY YOSSY KARTINI, S.S., M.A.P',
-                tembusan: 'Bagian Umum dan Kepegawaian',
+                name_user: userData.dataValues.nama,
+                pangkat: userData.biodata.pangkat,
+                jabatan: userData.dataValues.jab,
+                departemen: userData.departemen.bidang,
+                nik_atasan: Boss.bos,
+                name_atasan: Boss.atasanLangsung.nama,
+                tembusan: Boss.atasanLangsung.jab,
                 periode: tahun + 1,
                 type_cuti: type,
                 id_cuti: addcuti.dataValues.id,
-                sisa_cuti: 3 + jumlah,
+                sisa_cuti: ledger.dataValues.sisa_cuti + jumlah,
                 cuti_diambil: jumlah
             }, { transaction: t })
             console.log(addLeager);
-
         } else {
-            let userData = await User.findOne({
-                where: {
-                    nik: nik
-                },
-                include: [
-                    {
-                        model: Departemen,
-                        as: "departemen",
-                    },
-                    {
-                        model: Biodatas,
-                        as: "biodata",
-                    },
-                ]
-            })
 
-            let Boss = await Atasan.findOne({
-                where: {
-                    user: nik,
-                },
-                include: [
-                    {
-                        model: User,
-                        as: "atasanLangsung",
-                        include: [
-                            {
-                                model: Departemen,
-                                as: "departemen",
-                            },
-                        ],
-                    },
-                ],
-            }, { transaction: t });
             await Ledger_cuti.create({
                 nik_user: nik,
                 name_user: userData.dataValues.nama,
@@ -122,4 +123,5 @@ async function addcuti(nik, jumlah, tahun, type) {
     return;
 
 }
-addcuti(6172040104000002, 6, 2023, 3)
+// addcuti(nik, jumlah, tahun, type)
+// addcuti(6172026001940004, 6, 2026, 1)
