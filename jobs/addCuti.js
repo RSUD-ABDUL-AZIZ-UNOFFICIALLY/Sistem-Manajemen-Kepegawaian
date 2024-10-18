@@ -22,7 +22,7 @@ async function addcuti(nik, jumlah, tahun, type) {
 
         await Cuti_approval.create({
             id_cuti: addcuti.dataValues.id,
-            nik: nik,
+            nik: null,
             departement: null,
             jabatan: null,
             pangkat: null,
@@ -73,8 +73,6 @@ async function addcuti(nik, jumlah, tahun, type) {
             ],
         });
         if (ledger) {
-            console.log(ledger);
-
             let addLeager = await Ledger_cuti.create({
                 nik_user: nik,
                 name_user: userData.dataValues.nama,
@@ -90,7 +88,6 @@ async function addcuti(nik, jumlah, tahun, type) {
                 sisa_cuti: ledger.dataValues.sisa_cuti + jumlah,
                 cuti_diambil: jumlah
             }, { transaction: t })
-            console.log(addLeager);
         } else {
 
             await Ledger_cuti.create({
@@ -124,4 +121,4 @@ async function addcuti(nik, jumlah, tahun, type) {
 
 }
 // addcuti(nik, jumlah, tahun, type)
-// addcuti(6172026001940004, 6, 2026, 1)
+addcuti(6172025808790003, 6, 2023, 1)
