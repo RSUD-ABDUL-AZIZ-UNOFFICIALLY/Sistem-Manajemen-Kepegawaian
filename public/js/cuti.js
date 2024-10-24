@@ -293,14 +293,39 @@ async function getRiwayatCuti(tahun) {
     return data;
 }
 function parsingDataCuti(data) {
+
     let rows = $("tbody > tr");
     rows.remove();
     for (let i of data) {
+        console.log(i.mulai);
         let nomor = data.indexOf(i) + 1;
-        let tmulai = i.mulai.split("-");
-        let tanggalmulai = tmulai[2] + "/" + tmulai[1] + "/" + tmulai[0];
-        let tsampai = i.samapi.split("-");
-        let tanggalsampai = tsampai[2] + "/" + tsampai[1] + "/" + tsampai[0];
+        // let tmulai = i.mulai.split("-");
+        // let tanggalmulai = tmulai[2] + "/" + tmulai[1] + "/" + tmulai[0];
+        let tanggalmulai;
+        let tanggalsampai;
+        if (i.mulai == null || i.mulai == '0000-00-00') {
+            tanggalmulai = "-";
+        } else {
+            tanggalmulai = new Date(i.mulai).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+
+        // let tsampai = i.samapi.split("-");
+        // let tanggalsampai = tsampai[2] + "/" + tsampai[1] + "/" + tsampai[0];
+        if (i.samapi == null || i.samapi == '0000-00-00') {
+            tanggalsampai = "-";
+
+        } else {
+            tanggalsampai = new Date(i.samapi).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+
         let tglApproval = new Date(i.approval.approve_date).toLocaleDateString('id-ID', {
             day: 'numeric',
             month: 'long',
@@ -335,12 +360,9 @@ function parsingDataCuti(data) {
         btnCetak.html("<i class='fa-solid fa-envelope-open-text'></i> Cetak Surat Cuti");
         if (i.approval.status == "Menunggu") {
             row.append($("<td>").append(btnCetak, btnDelete));
-        } else if (i.approval.status == "Disetujui") {
+        } else if (i.approval.status == "Disetujui" || i.approval.status == "Ditolak" || i.approval.status == "Perubahan") {
             row.append($("<td>").append(btnCetak));
-        } else if (i.approval.status == "Ditolak") {
-            row.append($("<td>").append(btnCetak));
-        }
-        $("tbody").append(row);
+        } $("tbody").append(row);
     }
 }
 cetakSuratCuti = (id) => {

@@ -38,10 +38,27 @@ function parsingDataCuti(data) {
     rows.remove();
     for (let i of data) {
         let nomor = data.indexOf(i) + 1;
-        let tmulai = i.data_cuti.mulai.split("-");
-        let tanggalmulai = tmulai[2] + "/" + tmulai[1] + "/" + tmulai[0];
-        let tsampai = i.data_cuti.samapi.split("-");
-        let tanggalsampai = tsampai[2] + "/" + tsampai[1] + "/" + tsampai[0];
+        let tanggalmulai;
+        let tanggalsampai;
+        if (i.mulai == null || i.mulai == '0000-00-00') {
+            tanggalmulai = "-";
+        } else {
+            tanggalmulai = new Date(i.mulai).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+        if (i.samapi == null || i.samapi == '0000-00-00') {
+            tanggalsampai = "-";
+
+        } else {
+            tanggalsampai = new Date(i.samapi).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
         let approve_status = "";
         if (i.approve_date == null) {
             approve_status = "Belum di Approve"
