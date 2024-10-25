@@ -40,20 +40,20 @@ function parsingDataCuti(data) {
         let nomor = data.indexOf(i) + 1;
         let tanggalmulai;
         let tanggalsampai;
-        if (i.mulai == null || i.mulai == '0000-00-00') {
+        if (i.data_cuti.mulai == null || i.data_cuti.mulai == '0000-00-00') {
             tanggalmulai = "-";
         } else {
-            tanggalmulai = new Date(i.mulai).toLocaleDateString('id-ID', {
+            tanggalmulai = new Date(i.data_cuti.mulai).toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
             });
         }
-        if (i.samapi == null || i.samapi == '0000-00-00') {
+        if (i.data_cuti.samapi == null || i.data_cuti.samapi == '0000-00-00') {
             tanggalsampai = "-";
 
         } else {
-            tanggalsampai = new Date(i.samapi).toLocaleDateString('id-ID', {
+            tanggalsampai = new Date(i.data_cuti..samapi).toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
