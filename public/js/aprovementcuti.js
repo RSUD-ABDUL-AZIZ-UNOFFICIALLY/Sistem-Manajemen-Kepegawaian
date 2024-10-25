@@ -53,7 +53,7 @@ function parsingDataCuti(data) {
             tanggalsampai = "-";
 
         } else {
-            tanggalsampai = new Date(i.data_cuti..samapi).toLocaleDateString('id-ID', {
+            tanggalsampai = new Date(i.data_cuti.samapi).toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
