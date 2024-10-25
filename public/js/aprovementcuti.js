@@ -45,7 +45,7 @@ function parsingDataCuti(data) {
         } else {
             tanggalmulai = new Date(i.data_cuti.mulai).toLocaleDateString('id-ID', {
                 day: 'numeric',
-                month: 'long',
+                month: 'numeric',
                 year: 'numeric'
             });
         }
@@ -55,7 +55,7 @@ function parsingDataCuti(data) {
         } else {
             tanggalsampai = new Date(i.data_cuti.samapi).toLocaleDateString('id-ID', {
                 day: 'numeric',
-                month: 'long',
+                month: 'numeric',
                 year: 'numeric'
             });
         }
