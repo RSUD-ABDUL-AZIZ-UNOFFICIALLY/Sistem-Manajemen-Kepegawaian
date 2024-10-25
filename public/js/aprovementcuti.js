@@ -81,7 +81,7 @@ function parsingDataCuti(data) {
         let row = $("<tr>");
         row.append($("<td>" + nomor + "</td>"));
         row.append($("<td>" + i.data_cuti.user.nama + "</td>"));
-        row.append($("<td>" + tanggalmulai + " - " + tanggalsampai + "</td>"));
+        row.append($("<td>" + tanggalmulai + " s/d " + tanggalsampai + "</td>"));
         row.append($("<td>" + i.data_cuti.jenis_cuti.type_cuti + "</td>"));
         row.append($("<td>" + i.data_cuti.jumlah + "</td>"));
         row.append($("<td>" + i.data_cuti.keterangan + "</td>"));
