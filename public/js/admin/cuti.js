@@ -120,7 +120,7 @@ $('#jnsCuti').change(function () {
         $('#totalReservation').val(selisihHari);
     });
 });
-
+let token = getCookie("token");
 // on button submit 
 $('#Cuti').submit(function (event) {
     event.preventDefault();
