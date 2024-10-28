@@ -19,6 +19,20 @@ function QRAtasan(message) {
     });
     qrCodeA.append(document.getElementById("qrcodeAtasan"));
 }
+function QRDirector(message) {
+    let qrCodeY = new QRCodeStyling({
+        width: 150,
+        height: 130,
+        type: "svg",
+        data: message,
+        image: "/asset/img/Lambang_KotaSingkawang.webp",
+        dotsOptions: {
+            color: "#000000",
+            type: "rounded",
+        },
+    });
+    qrCodeY.append(document.getElementById("qrcodeDirector"));
+}
 function QRUser(message) {
     let qrCodeU = new QRCodeStyling({
         width: 150,

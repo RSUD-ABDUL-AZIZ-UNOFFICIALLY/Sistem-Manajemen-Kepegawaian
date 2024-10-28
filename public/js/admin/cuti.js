@@ -76,7 +76,19 @@ $('#jnsCuti').change(function () {
     $('#Keterangan_cuti').text(jnsCuti.type_cuti + ' maksimal ' + jnsCuti.max + ' hari secara berturut-turut dan maksimal ' + jnsCuti.total + ' hari dalam setahun.');
     $('#reservation').val('');
     $('#totalReservation').val('');
+    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan") {
 
+        $('#lampiran').empty();
+        $('#lampiran').append(`<label for="InputActivities">Lampiran Surat ${jnsCuti.type_cuti}</label>
+                        <input type="hidden" class="form-control" id="suratLampiran" name="suratLampiran">
+                        <div class="input-group mb-3">
+                          <input type="file" class="form-control" id="inputSuratCuti" name="inputSuratCuti" accept="image/png, image/jpeg, application/pdf">
+                          <label class="input-group-text" for="inputSuratCuti" id="UploadSuratCuti">Upload</label>
+                        </div>`);
+
+    } else {
+        $('#lampiran').empty();
+    }
     $('#reservation').daterangepicker({
         // opens: 'left',
         locale: {
@@ -109,13 +121,11 @@ $('#jnsCuti').change(function () {
     });
 });
 
+// on button submit 
 $('#Cuti').submit(function (event) {
     event.preventDefault();
+    $('#btnSubmit').prop('disabled', true);
     let datafrom = {
-        nama: $('#nama').val(),
-        nik: $('#nik').val(),
-        noWA: $('#noWA').val(),
-        departemen: $('#departemen').val(),
         type_cuti: $('#jnsCuti').val(),
         mulai: mulaicuti,
         samapi: akhircuti,
@@ -124,9 +134,99 @@ $('#Cuti').submit(function (event) {
         maxCuti: maxCuti,
         alamat: $('#alamat').val()
     };
-    $('#btnSubmit').prop('disabled', true);
+    let id = $('#jnsCuti').val();
+    let jnsCuti = dataCuti.find(x => x.id == id);
+
+    // let jnsCuti = dataCuti.find(x => x.id == id);
+    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan") {
+        if ($('#inputSuratCuti').prop('files')[0] == undefined) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Lampiran surat harus diisi',
+            })
+            return false;
+        }
+        let file = $('#inputSuratCuti').prop('files')[0];
+        if (file.type !== 'application/pdf' && file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/jpg') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'File Tidak Valid.',
+                text: 'File harus berupa PDF, JPG, PNG',
+            })
+            return false;
+        }
+        if (file.size > 3000000) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'File Terlalu Besar.',
+                text: 'File harus kurang dari 3 MB',
+            })
+            return false;
+        }
+        if (file.type == 'application/pdf') {
+            var form = new FormData();
+            form.append("file", file, 'surat-cuti.pdf');
+            var settings = {
+                url: "https://api.rsudaa.singkawangkota.go.id/api/cdn/upload/file",
+                method: "POST",
+                timeout: 0,
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+                processData: false,
+                mimeType: "multipart/form-data",
+                contentType: false,
+                data: form
+            };
+
+            $.ajax(settings).done(function (response) {
+                response = JSON.parse(response);
+                console.log(response.data.url);
+                datafrom.lampiran = response.data.url;
+                postCuti(datafrom)
+                inputSuratCuti.value = null;
+                return;
+            });
+        }
+        if (file.type == 'image/jpeg' || file.type == 'image/png' || file.type == 'image/jpg') {
+            let fileType = file.type.split('/')[1];
+            let form = new FormData();
+            form.append("image", file, 'surat-cuti.' + fileType);
+
+            let settings = {
+                url: "https://api.rsudaa.singkawangkota.go.id/api/cdn/upload/img",
+                method: "POST",
+                timeout: 0,
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+                processData: false,
+                mimeType: "multipart/form-data",
+                contentType: false,
+                data: form
+            };
+
+            $.ajax(settings).done(function (response) {
+                response = JSON.parse(response);
+                console.log(response.data.url);
+                datafrom.lampiran = response.data.url;
+                postCuti(datafrom)
+                inputSuratCuti.value = null;
+                return;
+            });
+        }
+    } else {
+        // console.log(datafrom);
+        postCuti(datafrom)
+    }
+
+
+});
+
+function postCuti(datafrom) {
     $.ajax({
-        url: '/api/cuti/late',
+        url: '/api/cuti',
         method: 'POST',
         data: datafrom,
         success: function (response) {
@@ -137,7 +237,7 @@ $('#Cuti').submit(function (event) {
                 showConfirmButton: false,
                 timer: 2000
             })
-            // $('#jnsCuti').val('');
+            $('#jnsCuti').val('');
             $('#reservation').val('');
             $('#totalReservation').val('');
             $('#reservation').prop('disabled', false);
@@ -160,4 +260,4 @@ $('#Cuti').submit(function (event) {
             $('#btnSubmit').prop('disabled', false);
         }
     });
-});
+}
