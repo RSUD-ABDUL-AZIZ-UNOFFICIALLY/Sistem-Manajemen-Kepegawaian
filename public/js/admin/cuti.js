@@ -126,6 +126,10 @@ $('#Cuti').submit(function (event) {
     event.preventDefault();
     $('#btnSubmit').prop('disabled', true);
     let datafrom = {
+        nama: $('#nama').val(),
+        nik: $('#nik').val(),
+        noWA: $('#noWA').val(),
+        departemen: $('#departemen').val(),
         type_cuti: $('#jnsCuti').val(),
         mulai: mulaicuti,
         samapi: akhircuti,
@@ -226,7 +230,7 @@ $('#Cuti').submit(function (event) {
 
 function postCuti(datafrom) {
     $.ajax({
-        url: '/api/cuti',
+        url: '/api/cuti/late',
         method: 'POST',
         data: datafrom,
         success: function (response) {

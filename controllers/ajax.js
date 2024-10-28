@@ -19,7 +19,8 @@ const {
   Cuti_approval,
   Cuti_lampiran,
   Access,
-  Hotspot
+  Hotspot,
+  Instalasi
 } = require("../models");
 const { Op, or } = require("sequelize");
 const fs = require("fs");
@@ -1277,28 +1278,42 @@ Lampiran   : ${lampiran}`
           jabatan: Boss.atasanLangsung.jab,
           status: "Menunggu",
         }, { transaction: t });
+      let lampiran = body.lampiran || "-";
+      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan") {
+        lampiran = body.lampiran
+        await Cuti_lampiran.create(
+          {
+            id_cuti: saveCuti.id,
+            nik: decoded.id,
+            file: body.lampiran,
+            periode: `${new Date().getFullYear()}`,
+          },
+          { transaction: t }
+        )
+      }
       let jnsKelBoss = (Boss.atasanLangsung.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
-      let pesan = `Pemberitahuan Pengajuan Cuti Pegawai
-Halo ${jnsKelBoss} ${Boss.atasanLangsung.nama},
+      let pesan = `Pemberitahuan Pengajuan Cuti Pegawai *(BACKDATE)*
+Kepada yang terhormat ${jnsKelBoss} ${Boss.atasanLangsung.nama},
             
 Saat ini pegawai dengan : 
 Nama : ${nama}
 NIK : ${nik} 
 Jenis Cuti : ${getJenisCuti.type_cuti}
 Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari). 
-
+Lampiran   : ${lampiran}   
 Untuk memberikan persetujuan atau penolakan terhadap pengajuan cuti diatas, silakan akses aplikasi SIMPEG. 
 Terima kasih atas perhatiannya.`;
       let data = JSON.stringify({
         message: pesan,
         telp: Boss.atasanLangsung.wa
       });
-      let pesanGrub = `*Pemberitahuan Cuti Pegawai*
+      let pesanGrub = `*Pemberitahuan Cuti Pegawai (BACKDATE)*
 Nama : ${nama}
 NIK : ${nik}
 Bidang : ${departemen} 
 Jenis Cuti : ${getJenisCuti.type_cuti}
-Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari)`
+Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari)
+Lampiran   : ${lampiran}`
 
       let dataGrub = JSON.stringify({
         message: pesanGrub,
@@ -1868,8 +1883,7 @@ Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari)`
       let token = req.cookies.token;
       let decoded = jwt.verify(token, secretKey);
       let hakakses = [];
-      let getAnggota = await Atasan.findOne({
-        attributes: ["bos"],
+      let getAnggota = await Instalasi.findOne({
         where: {
           bos: decoded.id,
         },
