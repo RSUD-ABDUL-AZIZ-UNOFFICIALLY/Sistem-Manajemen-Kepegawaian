@@ -1284,7 +1284,7 @@ Lampiran   : ${urlLampiran}`
         await Cuti_lampiran.create(
           {
             id_cuti: saveCuti.id,
-            nik: decoded.id,
+            nik: nik,
             file: lampiran,
             periode: `${new Date().getFullYear()}`,
           },
