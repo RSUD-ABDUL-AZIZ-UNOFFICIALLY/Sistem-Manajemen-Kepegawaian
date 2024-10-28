@@ -1133,9 +1133,9 @@ module.exports = {
         },
         { transaction: t }
       );
-      let lampiran = body.lampiran || "-";
+      let urlLampiran = body.lampiran || "-";
       if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan") {
-        lampiran = body.lampiran
+        urlLampiran = body.lampiran
         await Cuti_lampiran.create(
           {
             id_cuti: saveCuti.id,
@@ -1157,7 +1157,7 @@ Nama       : ${decoded.nama}
 NIK        : ${decoded.id} 
 Jenis Cuti : ${getJenisCuti.type_cuti}
 Tanggal    : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari). 
-Lampiran   : ${lampiran}      
+Lampiran   : ${urlLampiran}      
 Untuk memberikan persetujuan atau penolakan terhadap pengajuan cuti diatas, silakan akses aplikasi SIMPEG. 
 Terima kasih atas perhatiannya.`;
       let data = JSON.stringify({
@@ -1171,7 +1171,7 @@ NIK        : ${decoded.id}
 Bidang     : ${dep.bidang} 
 Jenis Cuti : ${getJenisCuti.type_cuti}
 Tanggal    : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)
-Lampiran   : ${lampiran}`
+Lampiran   : ${urlLampiran}`
       let dataGrub = JSON.stringify({
         message: pesanGrub,
         telp: process.env.GROUP_HR
@@ -1198,7 +1198,7 @@ Lampiran   : ${lampiran}`
     }
   },
   postCutiLate: async (req, res) => {
-    let { nama, nik, departemen, noWA, type_cuti, mulai, samapi, jumlah, keterangan, maxCuti, alamat } = req.body;
+    let { nama, nik, departemen, noWA, type_cuti, mulai, samapi, jumlah, keterangan, maxCuti, alamat, lampiran } = req.body;
     let t = await sequelize.transaction();
     try {
       let year = mulai.split("-");
@@ -1278,14 +1278,14 @@ Lampiran   : ${lampiran}`
           jabatan: Boss.atasanLangsung.jab,
           status: "Menunggu",
         }, { transaction: t });
-      let lampiran = body.lampiran || "-";
+      let urlLampiran = lampiran || "-";
       if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan") {
-        lampiran = body.lampiran
+        urlLampiran = lampiran
         await Cuti_lampiran.create(
           {
             id_cuti: saveCuti.id,
             nik: decoded.id,
-            file: body.lampiran,
+            file: lampiran,
             periode: `${new Date().getFullYear()}`,
           },
           { transaction: t }
@@ -1300,7 +1300,7 @@ Nama : ${nama}
 NIK : ${nik} 
 Jenis Cuti : ${getJenisCuti.type_cuti}
 Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari). 
-Lampiran   : ${lampiran}   
+Lampiran   : ${urlLampiran}   
 Untuk memberikan persetujuan atau penolakan terhadap pengajuan cuti diatas, silakan akses aplikasi SIMPEG. 
 Terima kasih atas perhatiannya.`;
       let data = JSON.stringify({
@@ -1313,7 +1313,7 @@ NIK : ${nik}
 Bidang : ${departemen} 
 Jenis Cuti : ${getJenisCuti.type_cuti}
 Tanggal : ${mulai} s/d ${samapi} (${jumlah} hari)
-Lampiran   : ${lampiran}`
+Lampiran   : ${urlLampiran}`
 
       let dataGrub = JSON.stringify({
         message: pesanGrub,
