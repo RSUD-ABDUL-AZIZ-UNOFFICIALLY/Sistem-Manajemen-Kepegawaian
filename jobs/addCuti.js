@@ -15,9 +15,8 @@ async function addcuti(nik, jumlah, tahun, type) {
         let addcuti = await Cuti.create({
             nik: nik,
             type_cuti: type,
-
             jumlah: jumlah,
-            keterangan: `TAMBAHAN CUTI ${tahun} `,
+            keterangan: `TAMBAHAN CUTI ${tahun}`,
         }, { transaction: t })
 
         await Cuti_approval.create({
@@ -28,7 +27,7 @@ async function addcuti(nik, jumlah, tahun, type) {
             pangkat: null,
             approve_date: dateup,
             status: 'Disetujui',
-            keterangan: `TAMBAHAN CUTI ${tahun} `
+            keterangan: `TAMBAHAN CUTI ${tahun}`
         }, { transaction: t })
 
         let ledger = await Ledger_cuti.findOne({
@@ -121,4 +120,4 @@ async function addcuti(nik, jumlah, tahun, type) {
 
 }
 // addcuti(nik, jumlah, tahun, type)
-addcuti(6172025808790003, 6, 2023, 1)
+// addcuti(6172015001820005, 4, 2023, 1)
