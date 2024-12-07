@@ -28,3 +28,11 @@ MORGAN_FORMAT="dev"
 # MORGAN_FORMAT="combined" || "common" || "dev" || "short" || "tiny"
 NODE_ENV="development"
 
+<<<<<<< Updated upstream
+=======
+REDIS_URL="redis://localhost:6379"
+REDIS_URL_PORT="
+REDIS_PASSWORD=""
+
+DEPPENSUN=""
+>>>>>>> Stashed changes
