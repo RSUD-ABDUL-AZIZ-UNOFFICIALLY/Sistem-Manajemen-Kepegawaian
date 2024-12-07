@@ -1,8 +1,7 @@
-/.env
-/node_modules
-/package-lock.json
-/public/cache/*
-!/public/cache/.gitkeep
-.env prod
-under.json
-tidakAda.json
+/nbproject/
+/.idea/*
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
