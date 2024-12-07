@@ -33,6 +33,7 @@ router.get('/aprovecuti', middleware.login, controller.approvalcuti);
 router.get('/aprovecuti/admin', middleware.login, controller.leagercuti);
 
 router.get('/presensi', middleware.login, controller.presensi);
+router.get('/absen', middleware.login, controller.absensi);
 
 router.get('/logout', middleware.logout);
 
@@ -102,6 +103,9 @@ router.get('/api/complaint/updateTiket', middleware.login, complaint.getUpdateTi
 router.get('/api/presensi/anggota', middleware.login, presensi.anggota);
 router.get('/api/presensi/departemen', middleware.login, presensi.departemen);
 router.post('/api/presensi/anggota', middleware.login, presensi.updateJadwal);
+router.post('/api/presensi/getlocation', middleware.login, presensi.getlocation);
+router.get('/api/presensi/jdldns', middleware.login, presensi.getjdlDNS);
+router.post('/api/presensi/absen', middleware.login, presensi.absen);
 
 // router.get('/api/presensi/bos', middleware.login, presensi.jadwal);
 

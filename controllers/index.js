@@ -309,9 +309,19 @@ module.exports = {
     let decoded = jwt.verify(token, secretKey);
     let data = {
       title: "presensi | SIMPEG",
-      page: "Daily Progress",
+      page: "Jadwal Presensi",
       token: decoded,
     };
     res.render("presensi/jadwal", data);
+  },
+  absensi: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "presensi | SIMPEG",
+      page: "Absensi",
+      token: decoded,
+    };
+    res.render("presensi/absen", data);
   }
 };
