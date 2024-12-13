@@ -297,7 +297,7 @@ function parsingDataCuti(data) {
     let rows = $("tbody > tr");
     rows.remove();
     for (let i of data) {
-        console.log(i.mulai);
+        // console.log(i.mulai);
         let nomor = data.indexOf(i) + 1;
         // let tmulai = i.mulai.split("-");
         // let tanggalmulai = tmulai[2] + "/" + tmulai[1] + "/" + tmulai[0];
@@ -337,6 +337,9 @@ function parsingDataCuti(data) {
             i.approval.approve_date = '-'
         } else {
             i.approval.approve_date = tglApproval + " " + waktuApproval;
+        }
+        if (i.approval.atasan === null) {
+            i.approval.atasan.nama = '-'
         }
 
         let row = $("<tr>");
