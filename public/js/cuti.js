@@ -339,7 +339,7 @@ function parsingDataCuti(data) {
             i.approval.approve_date = tglApproval + " " + waktuApproval;
         }
         if (i.approval.atasan === null) {
-            i.approval.atasan.nama = '-'
+            i.approval.atasan = { nama: '-' };
         }
 
         let row = $("<tr>");
