@@ -310,8 +310,16 @@ module.exports = {
                 let end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(endTime[0]), parseInt(endTime[1])).getTime();
                 let time = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
 
-                if (time < start || time > end) {
-                    data.statusIn = "Late"
+                if (time < start) {
+                    data.statusIn = "Masuk Cepat"
+                    await Absen.create(data)
+                    return res.status(400).json({
+                        error: true,
+                        message: "Anda terlalu cepat Absen Masuk",
+                        data: "Jam absen : " + jadwal.start_min + " - " + jadwal.start_max,
+                    });
+                } else if (time > end) {
+                    data.statusIn = "Masuk Terlambat"
                     await Absen.create(data)
                     return res.status(400).json({
                         error: true,
@@ -319,8 +327,8 @@ module.exports = {
                         data: "Jam absen : " + jadwal.start_min + " - " + jadwal.start_max,
                     });
                 } else {
+                    data.statusIn = 'Masuk Tepat Waktu';
                     await Absen.create(data)
-                    data.statusIn = 'On Time';
                 }
                 console.log(body)
                 console.log(data)
@@ -378,8 +386,23 @@ module.exports = {
                 let endTime = jadwal.end_max.split(':');
                 let end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(endTime[0]), parseInt(endTime[1])).getTime();
                 let time = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
-                if (time < start || time > end) {
-                    data.statusOut = "Late";
+                if (time < start) {
+                    data.statusOut = "Pulang Cepat"
+                    await Absen.update(
+                        data, {
+                        where: {
+                            nik: user.nik,
+                            typeDns: body.type,
+                            date: body.date,
+                        }
+                    });
+                    return res.status(400).json({
+                        error: true,
+                        message: "Anda terlalu cepat Absen Pulang",
+                        data: "Jam absen : " + jadwal.end_min + " - " + jadwal.end_max,
+                    });
+                } else if (time > end) {
+                    data.statusOut = "Pulang Terlambat"
                     await Absen.update(
                         data, {
                         where: {
@@ -394,8 +417,7 @@ module.exports = {
                         data: "Jam absen : " + jadwal.end_min + " - " + jadwal.end_max,
                     });
                 } else {
-
-                    data.statusOut = 'On Time';
+                    data.statusOut = 'Pulang Tepat Waktu';
                     await Absen.update(
                         data, {
                         where: {

@@ -34,7 +34,7 @@ module.exports = {
         type: Sequelize.TIME
       },
       statusIn: {
-        type: Sequelize.ENUM('Late', 'On Time', 'Absent')
+        type: Sequelize.ENUM('Masuk Cepat', 'Masuk Terlambat', 'Masuk Tepat Waktu')
       },
       keteranganIn: {
         type: Sequelize.STRING
@@ -52,7 +52,7 @@ module.exports = {
         type: Sequelize.TIME
       },
       statusOut: {
-        type: Sequelize.ENUM('Late', 'On Time', 'Absent')
+        type: Sequelize.ENUM('Pulang Cepat', 'Pulang Terlambat', 'Pulang Tepat Waktu')
       },
       keteranganOut: {
         type: Sequelize.STRING
