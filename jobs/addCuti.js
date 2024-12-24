@@ -120,4 +120,4 @@ async function addcuti(nik, jumlah, tahun, type) {
 
 }
 // addcuti(nik, jumlah, tahun, type)
-// addcuti(6172015001820005, 4, 2023, 1)
+addcuti(6172055909890002, 5, 2023, 1)

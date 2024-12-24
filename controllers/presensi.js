@@ -27,13 +27,24 @@ module.exports = {
             let year = new Date(params.periode).getFullYear();
             let month = new Date(params.periode).getMonth();
             let jumlahHari = new Date(year, month + 1, 0).getDate();
-            console.log(jumlahHari);
-
-            for (let i = 0; i < users.length; i++) {
-                // console.log(users[i].dataValues.nik)
+            let listJadwal = await Jnsdns.findAll({
+                where: {
+                    dep: params.dep
+                },
+                attributes: ["day", "slug"]
+            })
+            // console.log(listJadwal);
+            if (listJadwal.length == 0) {
+                return res.status(406).json({
+                    error: true,
+                    message: "Belum di Aktifkan",
+                    // data: users,
+                });
+            }
+            for (let i of users) {
                 let presensi = await Jdldns.findAll({
                     where: {
-                        nik: users[i].dataValues.nik,
+                        nik: i.dataValues.nik,
                         date: { [Op.startsWith]: params.periode },
                     },
                     include: [{
@@ -43,21 +54,26 @@ module.exports = {
                     // attributes: ["typeDns"],
                 });
                 if (presensi.length == 0) {
-
                     for (let x = 0; x < jumlahHari; x++) {
                         let namaHari = ["MIN", "SEN", "SEL", "RAB", "KAM", "JUM", "SAB"];
                         let hari = (namaHari[new Date(year, month, x + 1).getDay()]);
-                        console.log(hari)
-                        console.log(namaHari[new Date(year, month, x + 1).getDay()] == 'MIN')
-                        let jadwal = {
-                            nik: users[i].dataValues.nik,
-                            typeDns: (namaHari[new Date(year, month, x + 1).getDay()] == 'MIN' || namaHari[new Date(year, month, x + 1).getDay()] == 'SAB') ? "L" : "F5",
-                            date: new Date(year, month, x + 1)
+                        for (let y of listJadwal) {
+                            // console.log(JSON.parse(y.dataValues.day))
+                            // y.dataValues.day = JSON.parse(y.dataValues.day)
+                            if (JSON.parse(y.dataValues.day).includes(hari)) {
+                                let jadwal = {
+                                    nik: i.dataValues.nik,
+                                    typeDns: y.dataValues.slug,
+                                    date: new Date(year, month, x + 1)
+                                }
+                                await Jdldns.create(jadwal);
+                                break;
+                            }
+
                         }
-                        await Jdldns.create(jadwal);
                     }
                 } else {
-                    users[i].dataValues.jadwal = presensi
+                    i.dataValues.jadwal = presensi
                 }
             }
 
@@ -67,6 +83,7 @@ module.exports = {
                 data: users,
             });
         } catch (error) {
+            console.log(error)
             return res.status(500).json({
                 error: true,
                 message: "error",
@@ -108,6 +125,39 @@ module.exports = {
                 data: error,
             });
         }
+    },
+    getTypeJadwal: async (req, res) => {
+        try {
+            let params = req.query;
+            let listJadwal = await Jnsdns.findAll({
+                where: {
+                    dep: params.dep
+                },
+                attributes: ["type", "slug", "start_min", "start_max", "end_min", "end_max"]
+            })
+            // console.log(listJadwal);
+            if (listJadwal.length == 0) {
+                return res.status(406).json({
+                    error: true,
+                    message: "Belum di Aktifkan",
+                    // data: users,
+                });
+            }
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: listJadwal
+            });
+        } catch (error) {
+            return res.status(500).json({
+                error: true,
+                message: "error",
+                data: error,
+            });
+
+        }
+
+
     },
     updateJadwal: async (req, res) => {
         let token = req.cookies.token;

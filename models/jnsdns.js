@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   Jnsdns.init({
     type: DataTypes.STRING,
     slug: DataTypes.STRING,
+    dep: DataTypes.INTEGER,
+    day: DataTypes.STRING,
     start_min: DataTypes.TIME,
     start_max: DataTypes.TIME,
     end_min: DataTypes.TIME,

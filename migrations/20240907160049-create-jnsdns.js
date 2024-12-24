@@ -18,6 +18,18 @@ module.exports = {
         primaryKey: true,
         allowNull: false
       },
+      dep: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Departemens'
+          },
+          key: 'id'
+        }
+      },
+      day: {
+        type: Sequelize.STRING
+      },
       start_min: {
         type: Sequelize.TIME
       },

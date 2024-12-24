@@ -102,6 +102,7 @@ router.get('/api/complaint/updateTiket', middleware.login, complaint.getUpdateTi
 
 router.get('/api/presensi/anggota', middleware.login, presensi.anggota);
 router.get('/api/presensi/departemen', middleware.login, presensi.departemen);
+router.get('/api/presensi/jnsdns', middleware.login, presensi.getTypeJadwal);
 router.post('/api/presensi/anggota', middleware.login, presensi.updateJadwal);
 router.post('/api/presensi/getlocation', middleware.login, presensi.getlocation);
 router.get('/api/presensi/jdldns', middleware.login, presensi.getjdlDNS);
