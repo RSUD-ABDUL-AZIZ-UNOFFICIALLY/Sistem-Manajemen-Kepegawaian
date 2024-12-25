@@ -22,6 +22,12 @@ if (visitLocal) {
     visitIdIn = "";
     visitIdOut = "";
 }
+// console.log(getCookie("token"))
+let token = getCookie("token");
+token = token.split('.')
+let idData = atob(token[1]);
+idData = JSON.parse(idData);
+console.log(idData)
 
 
 $.ajax({
@@ -58,6 +64,7 @@ $.ajax({
     },
 })
 
+let intervalId = null;
 function check(state) {
     if (posisi === false) {
         return window.location.href = '/absen';
@@ -73,33 +80,211 @@ function check(state) {
         visitIdIn: visitIdIn
     }
     console.log(data)
+    video.addEventListener('play', startDetection);
+    // Inisialisasi
+    loadModels().then(startVideo);
+
+
+    $('#faceReactionLabel').text('Arahkan Kamera Wajah')
+    $('#faceReaction').modal('show');
+    // $.ajax({
+    //     url: "/api/presensi/absen",
+    //     method: "POST",
+    //     data: data,
+    //     success: function (response) {
+    //         console.log(response);
+    //         Swal.fire({
+    //             icon: "success",
+    //             title: response.message,
+    //             text: response.data,
+    //             // }).then((result) => {
+    //             //     if (result.isConfirmed) {
+    //             //         window.location.href = "/absen";
+    //             //     }
+    //         });
+    //     },
+    //     error: function (error) {
+    //         console.log(error.responseJSON);
+    //         Swal.fire({
+    //             icon: "warning",
+    //             title: error.responseJSON.message,
+    //             text: error.responseJSON.data
+    //             // }).then((result) => {
+    //             //     if (result.isConfirmed) {
+    //             //         window.location.href = "/absen";
+    //             //     }
+    //         });
+    //     },
+    // });
+}
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const context = canvas.getContext('2d');
+const snapshot = document.getElementById('snapshot');
+
+// Variabel untuk mencegah pengambilan gambar berulang terlalu cepat
+let lastCaptureTime = 0;
+const captureInterval = 2000; // Waktu minimal antara capture (ms)
+
+// Muat model Face API
+async function loadModels() {
+    await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.0.1/model');
+}
+
+// Mulai kamera
+async function startVideo() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+    } catch (error) {
+        console.error('Error mengakses kamera:', error);
+    }
+}
+
+// Deteksi wajah
+async function detectFaces() {
+    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // faceapi.draw.drawDetections(canvas, detections);
+
+    // Jika wajah terdeteksi, lakukan auto-capture
+    if (detections.length > 0) {
+        const currentTime = Date.now();
+        if (currentTime - lastCaptureTime > captureInterval) {
+            autoCapture();
+            lastCaptureTime = currentTime;
+        }
+    }
+}
+
+// Fungsi untuk auto-capture
+function autoCapture() {
+    const imageData = canvas.toDataURL('image/png'); // Gambar dalam format Base64
+    snapshot.src = imageData; // Tampilkan hasil snapshot
+    // console.log('Gambar diambil otomatis:', imageData);
+
+    // Kirim gambar ke server
+    sendImageToServer(imageData);
+}
+
+// Fungsi untuk mengirim gambar ke server menggunakan AJAX
+function sendImageToServer(imageData) {
+    const base64Data = imageData.replace(/^data:image\/(png|jpeg);base64,/, '');
+    // Konversi Base64 menjadi Blob
+    const blob = base64ToBlob(base64Data, 'image/jpeg');
     $.ajax({
-        url: "/api/presensi/absen",
-        method: "POST",
-        data: data,
+        url: "https://fr.spairum.my.id/api/cdn/upload/fr/recognition?metadata=0_" + idData.id + ".json",
+        method: "GET",
         success: function (response) {
             console.log(response);
-            Swal.fire({
-                icon: "success",
-                title: response.message,
-                text: response.data,
-                // }).then((result) => {
-                //     if (result.isConfirmed) {
-                //         window.location.href = "/absen";
-                //     }
-            });
+            // let data = response.data;
+            matchFR(blob)
+
         },
         error: function (error) {
-            console.log(error.responseJSON);
-            Swal.fire({
-                icon: "warning",
-                title: error.responseJSON.message,
-                text: error.responseJSON.data
-                // }).then((result) => {
-                //     if (result.isConfirmed) {
-                //         window.location.href = "/absen";
-                //     }
-            });
+            console.log(error);
+            sendRecognition(blob)
+
         },
     });
+}
+
+
+// Jalankan kamera dan deteksi wajah
+// video.addEventListener('play', () => {
+//     setInterval(detectFaces, 100);
+// });
+
+$('#faceReaction').on('hidden.bs.modal', function () {
+    video.pause();
+    video.srcObject = null;
+    stopDetection()
+});
+
+function startDetection() {
+    if (!intervalId) {
+        intervalId = setInterval(detectFaces, 100);
+        console.log('Deteksi wajah dimulai');
+    }
+}
+
+// Fungsi untuk menghentikan deteksi
+function stopDetection() {
+    if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+        console.log('Deteksi wajah dihentikan');
+    }
+}
+
+async function sendRecognition(img) {
+    let form = new FormData();
+    form.append("image", img, idData.nama + '.jpg');
+    form.append("nik", idData.id);
+    form.append("name", idData.nama);
+
+    let settings = {
+        url: "https://fr.spairum.my.id/api/cdn/upload/fr/recognition",
+        method: "POST",
+        processData: false,
+        mimeType: "multipart/form-data",
+        contentType: false,
+        data: form
+    };
+
+    $.ajax(settings).done(function (response) {
+        response = JSON.parse(response);
+        console.log(response)
+    });
+}
+
+async function matchFR(img) {
+    let form = new FormData();
+    form.append("image", img, idData.nama + '.jpg');
+    form.append("nik", idData.id);
+    form.append("metadata", '0_' + idData.id + '.json');
+
+    let settings = {
+        url: "https://fr.spairum.my.id/api/cdn/upload/fr/recognition",
+        method: "PUT",
+        processData: false,
+        mimeType: "multipart/form-data",
+        contentType: false,
+        data: form
+    };
+
+    $.ajax(settings).done(function (response) {
+        response = JSON.parse(response);
+        console.log(response.output)
+        if (response.output != undefined) {
+            if (response.output.data) {
+                stopDetection();
+                $('#faceReaction').modal('hide');
+            }
+        }
+// stopDetection();
+// $('#faceReaction').modal('hide');
+    });
+}
+
+// Fungsi untuk mengonversi Base64 ke Blob
+function base64ToBlob(base64, contentType = '', sliceSize = 512) {
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, { type: contentType });
 }
