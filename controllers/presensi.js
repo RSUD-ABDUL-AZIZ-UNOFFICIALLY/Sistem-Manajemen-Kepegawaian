@@ -444,5 +444,35 @@ module.exports = {
                 data: error,
             });
         }
+    },
+    riwayat: async (req, res) => {
+        try {
+            let query = req.query
+            let account = req.account
+            let dataAbsen = await Absen.findAll({
+                where: {
+                    nik: account.nik,
+                    date: { [Op.startsWith]: query.periode, }
+                },
+                include: [{
+                    model: Jnsdns,
+                    attributes: ["type", "start_min", "start_max", "end_min", "end_max"]
+                }]
+            })
+
+            return res.status(200).json({
+                error: false,
+                message: "Sukses",
+                data: dataAbsen
+            })
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                error: true,
+                message: "internal server error",
+                data: error,
+            });
+        }
     }
 }

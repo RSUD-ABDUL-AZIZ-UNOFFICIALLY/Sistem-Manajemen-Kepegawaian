@@ -13,7 +13,8 @@ let typeDns,
     keteranganOut,
     nilaiOut,
     geoOut,
-    visitIdOut;
+    visitIdOut,
+    dataPostAbsen;
 const visitLocal = localStorage.getItem("visite");
 if (visitLocal) {
     visitIdIn = visitLocal;
@@ -41,6 +42,19 @@ $.ajax({
         $('#jns_shift').text(response.data.dnsType.type);
         typeDns = response.data.typeDns;
         date = response.data.date;
+        if (response.data.dnsType.state == 0) {
+            Swal.fire({
+                icon: "info",
+                title: "Anda hari ini " + response.data.dnsType.type,
+                text: "",
+                buttons: false,
+                confirmButtonText: "OK",
+                showCancelButton: false,
+                confirmButtonColor: "#3085d6",
+            })
+            $('#checkin').prop('disabled', true);
+            $('#checkout').prop('disabled', true);
+        }
 
     },
     error: function (error) {
@@ -69,8 +83,7 @@ function check(state) {
     if (posisi === false) {
         return window.location.href = '/absen';
     }
-    let data = {
-
+    dataPostAbsen = {
         state: state,
         type: typeDns,
         date: date,
@@ -79,7 +92,7 @@ function check(state) {
         posisi: posisi,
         visitIdIn: visitIdIn
     }
-    console.log(data)
+
     video.addEventListener('play', startDetection);
     // Inisialisasi
     loadModels().then(startVideo);
@@ -192,11 +205,6 @@ function sendImageToServer(imageData) {
 }
 
 
-// Jalankan kamera dan deteksi wajah
-// video.addEventListener('play', () => {
-//     setInterval(detectFaces, 100);
-// });
-
 $('#faceReaction').on('hidden.bs.modal', function () {
     video.pause();
     video.srcObject = null;
@@ -260,6 +268,37 @@ async function matchFR(img) {
         console.log(response.output)
         if (response.output != undefined) {
             if (response.output.data) {
+                console.log(response.output.data)
+                console.log(dataPostAbsen)
+                $.ajax({
+                    url: "/api/presensi/absen",
+                    method: "POST",
+                    data: dataPostAbsen,
+                    success: function (response) {
+                        console.log(response);
+                        Swal.fire({
+                            icon: "success",
+                            title: response.message,
+                            text: response.data,
+                            // }).then((result) => {
+                            //     if (result.isConfirmed) {
+                            //         window.location.href = "/absen";
+                            //     }
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error.responseJSON);
+                        Swal.fire({
+                            icon: "warning",
+                            title: error.responseJSON.message,
+                            text: error.responseJSON.data
+                            // }).then((result) => {
+                            //     if (result.isConfirmed) {
+                            //         window.location.href = "/absen";
+                            //     }
+                        });
+                    },
+                });
                 stopDetection();
                 $('#faceReaction').modal('hide');
             }
@@ -287,4 +326,7 @@ function base64ToBlob(base64, contentType = '', sliceSize = 512) {
     }
 
     return new Blob(byteArrays, { type: contentType });
+}
+async function sendAbsen(params) {
+
 }

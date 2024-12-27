@@ -11,6 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Absen.hasOne(models.Jnsdns, {
+        foreignKey: 'slug',
+        sourceKey: 'typeDns'
+      })
+      // Atasan.hasOne(models.User, {
+      //   foreignKey: 'nik',
+      //   sourceKey: 'bos',
+      //   as: 'atasanLangsung'
+      // })
+
     }
   }
   Absen.init({

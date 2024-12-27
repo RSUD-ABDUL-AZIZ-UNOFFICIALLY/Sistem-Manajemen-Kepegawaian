@@ -23,10 +23,10 @@ function geoFindMe() {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         let accuracyInMeter = position.coords.accuracy;
-        console.log(`${accuracyInMeter} meters`);
+        // console.log(`${accuracyInMeter} meters`);
 
         $("#posisi").text(`Latitude: ${latitude} °, Longitude: ${longitude} °`);
-        console.log(`${latitude},${longitude}`);
+        // console.log(`${latitude},${longitude}`);
         geoIn = `${latitude},${longitude}`
         geoOut = `${latitude},${longitude}`
 
@@ -39,7 +39,7 @@ function geoFindMe() {
             },
             success: function (response) {
                 $("#posisi").text(response.data.location);
-                console.log(response.data);
+                // console.log(response.data);
                 if (response.data.status) {
                     posisi = 1;
                 } else {
@@ -85,7 +85,7 @@ function geoFindMe() {
     if (!navigator.geolocation) {
         $("#posisi").text("Perangakat tidak mendukung geolocation");
     } else {
-        $("#posisi").text("Loading...");
+        // $("#posisi").text("Loading...");
         navigator.geolocation.getCurrentPosition(success, error);
     }
     setTimeout(() => {
@@ -99,7 +99,7 @@ async function getStatus() {
         const battery = await navigator.getBattery();
 
         // Cek level baterai (nilai antara 0.0 dan 1.0)
-        console.log("Battery level: " + Math.round(battery.level * 100) + "%");
+        // console.log("Battery level: " + Math.round(battery.level * 100) + "%");
         $('#baterai').text(Math.round(battery.level * 100) + "%");
         if (battery.level < 0.5) {
             $('#bateraiicon').attr('class', 'fa-solid fa-battery-quarter');
@@ -110,7 +110,7 @@ async function getStatus() {
         }
 
         // Cek apakah sedang charging
-        console.log("Is charging: " + battery.charging);
+        // console.log("Is charging: " + battery.charging);
         if (battery.charging) {
 
             $('#bateraichager').attr('class', "fa-solid fa-bolt");
@@ -131,7 +131,7 @@ async function pingLocalDevice(ip) {
         if (response.ok) {
             const endTime = Date.now();
             const pingTime = endTime - startTime;
-            console.log(`Ping to ${ip}: ${pingTime} ms`);
+            // console.log(`Ping to ${ip}: ${pingTime} ms`);
             $('#wifi').text('Dalam Jaringan');
             wifi = 1;
         } else {
@@ -142,7 +142,7 @@ async function pingLocalDevice(ip) {
 
         $('#wifi').text('Diluar Jaringan');
         wifi = 0;
-        console.log(`Ping to ${ip} failed: ${error.message}`);
+        // console.log(`Ping to ${ip} failed: ${error.message}`);
     }
     setTimeout(() => {
         pingLocalDevice('10.60.0.161:8080');
