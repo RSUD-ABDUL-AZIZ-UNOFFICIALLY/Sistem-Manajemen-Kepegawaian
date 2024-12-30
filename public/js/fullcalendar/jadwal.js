@@ -53,7 +53,7 @@ $.ajax({
                 confirmButtonColor: "#3085d6",
             })
             $('#checkin').prop('disabled', true);
-            $('#checkout').prop('disabled', true);
+            // $('#checkout').prop('disabled', true);
         }
 
     },

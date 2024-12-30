@@ -350,12 +350,25 @@ module.exports = {
                     }
                 })
                 if (!absensi) {
-                    return res.status(400).json({
-                        error: true,
-                        message: "Anda belum Absen Masuk",
-                        data: null,
-                    });
+                    absensi = await Absen.findOne({
+                        where: {
+                            nik: user.nik,
+                        },
+                        order: [
+                            ["date", "DESC"]
+                        ]
+                    })
+                    user.nik = absensi.nik;
+                    body.type = absensi.typeDns;
+                    body.date = absensi.date;
+                    // console.log(absensi)
+                    // return res.status(400).json({
+                    //     error: true,
+                    //     message: "Anda belum Absen Masuk",
+                    //     data: null,
+                    // });
                 }
+                console.log(absensi)
                 if (absensi.statusOut != null) {
                     return res.status(200).json({
                         error: false,
