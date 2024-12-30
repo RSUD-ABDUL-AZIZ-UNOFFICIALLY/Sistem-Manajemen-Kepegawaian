@@ -160,11 +160,11 @@ module.exports = {
 
     },
     updateJadwal: async (req, res) => {
-        let token = req.cookies.token;
-        let decoded = jwt.verify(token, secretKey);
         let params = req.body;
         let dateNow = new Date();
         let dateJadwal = new Date(params.date);
+        dateJadwal.setHours(0, 0, 0, 0);
+        dateNow.setHours(0, 0, 0, 0);
         console.log(dateJadwal, dateNow)
         if (dateJadwal < dateNow) {
             return res.status(400).json({
