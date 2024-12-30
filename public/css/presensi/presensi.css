@@ -1,0 +1,41 @@
+.table-container {
+    width: 100%;
+    /* max-height: 200px; */
+    overflow: auto;
+    border: 1px solid #ccc;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+thead tr {
+    position: sticky;
+    top: 0;
+    background-color: #f4f4f4;
+    z-index: 2;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+td:first-child, th:first-child {
+    position: sticky;
+    left: 0;
+    background-color: #f4f4f4;
+    z-index: 1;
+}
+
+tbody td:first-child {
+    background-color: #fff;
+}
