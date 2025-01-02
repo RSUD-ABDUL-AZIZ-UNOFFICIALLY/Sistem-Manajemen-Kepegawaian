@@ -100,35 +100,6 @@ function check(state) {
 
     $('#faceReactionLabel').text('Arahkan Kamera Wajah')
     $('#faceReaction').modal('show');
-    // $.ajax({
-    //     url: "/api/presensi/absen",
-    //     method: "POST",
-    //     data: data,
-    //     success: function (response) {
-    //         console.log(response);
-    //         Swal.fire({
-    //             icon: "success",
-    //             title: response.message,
-    //             text: response.data,
-    //             // }).then((result) => {
-    //             //     if (result.isConfirmed) {
-    //             //         window.location.href = "/absen";
-    //             //     }
-    //         });
-    //     },
-    //     error: function (error) {
-    //         console.log(error.responseJSON);
-    //         Swal.fire({
-    //             icon: "warning",
-    //             title: error.responseJSON.message,
-    //             text: error.responseJSON.data
-    //             // }).then((result) => {
-    //             //     if (result.isConfirmed) {
-    //             //         window.location.href = "/absen";
-    //             //     }
-    //         });
-    //     },
-    // });
 }
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
@@ -148,6 +119,8 @@ async function loadModels() {
 async function startVideo() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        console.log('Kamera diakses');
+        console.log(stream);
         video.srcObject = stream;
     } catch (error) {
         console.error('Error mengakses kamera:', error);
@@ -327,6 +300,42 @@ function base64ToBlob(base64, contentType = '', sliceSize = 512) {
 
     return new Blob(byteArrays, { type: contentType });
 }
-async function sendAbsen(params) {
+navigator.permissions.query({ name: 'camera' })
+    .then((permissionStatus) => {
+        console.log('Kamera izin status:', permissionStatus.state); // granted, denied, atau prompt
+        if (permissionStatus.state === 'denied') {
+            alert('Izinkan akses kamera di pengaturan browser Anda.');
+            permissionStatus.onchange = () => {
+                console.log('Kamera izin status berubah:', permissionStatus.state);
+                if (permissionStatus.state === 'denied') {
+                    alert('Izinkan akses kamera di pengaturan browser Anda.');
+                } else if (permissionStatus.state === 'granted') {
+                    console.log('Akses kamera telah diizinkan.');
+                }
+            };
 
+        }
+    });
+async function detectCameras() {
+    try {
+        // Dapatkan daftar perangkat media
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        console.log(devices);
+
+        // Filter perangkat untuk jenis "videoinput" (kamera)
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        console.log(videoDevices);
+        for (let e of videoDevices) {
+            console.log(e.label);
+            console.log(e.deviceId);
+            console.log(e.kind);
+            $('#cameraList').append(`<li>${e.label}</li>`);
+        }
+    } catch (error) {
+        console.error('Error saat mendeteksi kamera:', error);
+        document.getElementById('cameraCount').textContent = 'Tidak dapat mendeteksi kamera.';
+    }
 }
+
+// Jalankan fungsi deteksi kamera
+detectCameras();
