@@ -10,4 +10,16 @@
 
 # minify public/js/daily.js >public/js/src/daily.min.js
 # minify public/js/template.js >public/js/src/template.min.js
-# minify public/js/cuti.js >public/js/src/cuti0v1.min.js
+
+# minify public/js/keuangan.js >public/js/src/keuangan.min.js
+
+# minify public/js/fullcalendar/edit.js >public/js/fullcalendar/edit.min.js
+# minify public/js/fullcalendar/presensi.js >public/js/fullcalendar/presensi.min.js
+
+minify public/js/fullcalendar/edit.js >public/js/fullcalendar/edit.min.js
+minify public/js/fullcalendar/presensi.js >public/js/fullcalendar/presensi.min.js
+
+minify public/js/aprovementcuti.js >public/js/src/aprovementcuti_1.min.js
+minify public/js/fullcalendar/jadwal.js >public/js/src/presensi/jadwal_1.min.js
+minify public/js/fullcalendar/jadwal.js >public/js/src/presensi/jadwal_2.min.js
+minify public/js/fullcalendar/absen.js >public/js/src/presensi/absen_1.min.js
