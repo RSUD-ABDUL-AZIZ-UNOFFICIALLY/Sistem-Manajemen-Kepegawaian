@@ -127,7 +127,7 @@ async function pingLocalDevice(ip) {
     const startTime = Date.now();
     wifi = 0;
     try {
-        const response = await fetch(`http://${ip}`, { method: 'GET', cache: 'no-cache', signal: AbortSignal.timeout(2000) });
+        const response = await fetch(`https://${ip}`, { method: 'GET', cache: 'no-cache', signal: AbortSignal.timeout(2000) });
         if (response.ok) {
             const endTime = Date.now();
             const pingTime = endTime - startTime;
@@ -145,9 +145,40 @@ async function pingLocalDevice(ip) {
         // console.log(`Ping to ${ip} failed: ${error.message}`);
     }
     setTimeout(() => {
-        pingLocalDevice('10.60.0.161:8080');
+        pingLocalDevice('api.rsudaa.singkawangkota.go.id/ping');
     }, 10000);
 }
 
 // Contoh penggunaan dengan alamat IP lokal
-pingLocalDevice('10.60.0.161:8080');
+pingLocalDevice('api.rsudaa.singkawangkota.go.id/ping');
+
+function getLocalIP(callback) {
+    const pc = new RTCPeerConnection(); // Membuat koneksi WebRTC
+    console.log(pc);
+    const noop = () => { };
+    pc.createDataChannel(""); // Membuat channel dummy
+    pc.createOffer()
+        .then(offer => pc.setLocalDescription(offer)) // Set local description
+        .catch(noop);
+
+    pc.onicecandidate = (event) => {
+        if (!event || !event.candidate) return;
+        const candidate = event.candidate.candidate;
+
+        // Ekstrak IP dari ICE candidate
+        const ipRegex = /(?:[0-9]{1,3}\.){3}[0-9]{1,3}/;
+        const ip = candidate.match(ipRegex);
+        console.log(ip);
+        if (ip) {
+            callback(ip[0]); // Panggil callback dengan IP
+        }
+        pc.close(); // Tutup koneksi setelah mendapatkan IP
+    };
+}
+
+// Contoh penggunaan:
+console.log("IP lokal Anda:");
+getLocalIP((ip) => {
+
+    console.log("IP lokal Anda:", ip);
+});
