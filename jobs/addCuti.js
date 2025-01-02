@@ -120,6 +120,7 @@ async function addcuti(nik, jumlah, tahun, type) {
 
 }
 // addcuti(nik, jumlah, tahun, type)
+
 // addcuti(6172015001820005, 4, 2023, 1)
 
 
@@ -294,3 +295,4 @@ async function addRekapCuti(nik, jumlah, tahun, type) {
     return;
 
 }
+

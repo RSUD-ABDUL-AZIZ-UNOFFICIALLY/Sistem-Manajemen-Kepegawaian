@@ -11,6 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Absen.hasOne(models.Jnsdns, {
+        foreignKey: 'slug',
+        sourceKey: 'typeDns'
+      })
+      // Atasan.hasOne(models.User, {
+      //   foreignKey: 'nik',
+      //   sourceKey: 'bos',
+      //   as: 'atasanLangsung'
+      // })
+
     }
   }
   Absen.init({
@@ -18,13 +28,13 @@ module.exports = (sequelize, DataTypes) => {
     typeDns: DataTypes.STRING,
     date: DataTypes.DATEONLY,
     cekIn: DataTypes.TIME,
-    statusIn: DataTypes.ENUM('Late', 'On Time', 'Absent'),
+    statusIn: DataTypes.ENUM('Masuk Cepat', 'Masuk Terlambat', 'Masuk Tepat Waktu'),
     keteranganIn: DataTypes.STRING,
     nilaiIn: DataTypes.INTEGER,
     geoIn: DataTypes.STRING,
     visitIdIn: DataTypes.STRING,
     cekOut: DataTypes.TIME,
-    statusOut: DataTypes.ENUM('Late', 'On Time', 'Absent'),
+    statusOut: DataTypes.ENUM('Pulang Cepat', 'Pulang Terlambat', 'Pulang Tepat Waktu'),
     keteranganOut: DataTypes.STRING,
     nilaiOut: DataTypes.INTEGER,
     geoOut: DataTypes.STRING,

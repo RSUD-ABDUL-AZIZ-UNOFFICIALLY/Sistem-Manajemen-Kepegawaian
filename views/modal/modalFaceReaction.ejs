@@ -1,0 +1,25 @@
+<!-- Modal -->
+<div class="modal fade" id="faceReaction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="faceReactionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="faceReactionLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body" id="body">
+                       <video id="video" autoplay muted></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <img id="snapshot"  style="display: none;" alt="Hasil snapshot akan muncul di sini">
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSave" data-bs-dismiss="modal"
+                    onclick="saveJadwal()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

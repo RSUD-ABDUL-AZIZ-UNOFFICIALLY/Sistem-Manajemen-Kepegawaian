@@ -2,6 +2,7 @@
 let dateNow = new Date();
 let year = dateNow.getFullYear();
 let month = dateNow.getMonth();
+let typeJdlDns = [];
 $("#periode").val(year + "-" + ("0" + (month + 1)).slice(-2));
 async function getTabel(periode) {
     let id_departemen = $("#departemen").val();
@@ -29,67 +30,51 @@ async function getTabel(periode) {
         let namaHari = ["MIN", "SEN", "SEL", "RAB", "KAM", "JUM", "SAB"];
         headCol.append("<th>" + namaHari[new Date(year, month, i + 1).getDay()] + ", " + (i + 1) + "</th>");
     }
-    headCol.append("<th>LIBUR</th>");
-    headCol.append("<th>FULL TIME</th>");
-    headCol.append("<th>PAGI</th>");
-    headCol.append("<th>SIANG</th>");
-    headCol.append("<th>MALAM</th>");
+    for (let dns of typeJdlDns) {
+        headCol.append("<th>" + dns.type + "</th>");
+    }
 
 
-    for (let i = 0; i < anggota.data.length; i++) {
+    for (const element of anggota.data) {
         let row = $("<tr>");
-        row.append("<td>" + anggota.data[i].nama + "</td>");
-        for (let x of anggota.data[i].jadwal) {
-            let value = `<button type="button" class="btn btn-primary " onclick="editJadwal('${anggota.data[i].nama}','${anggota.data[i].nik}', '${x.date}', '${x.typeDns}')">Edit</button>`
+        row.append("<td>" + element.nama + "</td>");
+        for (let x of element.jadwal) {
+            let value = `<button type="button" class="btn btn-primary " onclick="editJadwal('${element.nama}','${element.nik}', '${x.date}', '${x.typeDns}')">Edit</button>`
             let value2 = `<p class="text-center">${x.dnsType.type}</p>`
             row.append($("<td>" + value + value2 + "</td>"));
         }
-        let MapJadwal = anggota.data[i].jadwal.reduce((acc, curr) => {
+        let MapJadwal = element.jadwal.reduce((acc, curr) => {
             if (!acc[curr.typeDns]) {
                 acc[curr.typeDns] = []
             }
             acc[curr.typeDns].push(curr)
             return acc
         }, {})
-        row.append($(`<td> ${MapJadwal.L == undefined ? 0 : MapJadwal.L.length} </td>`));
-        row.append($(`<td> ${MapJadwal.F5 == undefined ? 0 : MapJadwal.F5.length} </td>`));
-        row.append($(`<td> ${MapJadwal.P == undefined ? 0 : MapJadwal.P.length} </td>`));
-        row.append($(`<td> ${MapJadwal.S == undefined ? 0 : MapJadwal.S.length} </td>`));
-        row.append($(`<td> ${MapJadwal.M == undefined ? 0 : MapJadwal.M.length} </td>`));
-        $("tbody").append(row);
+        for (let dns of typeJdlDns) {
+            row.append($(`<td> ${MapJadwal[dns.slug] == undefined ? 0 : MapJadwal[dns.slug].length} </td >`));
+            $("tbody").append(row);
+        }
     }
     $("tfoot > tr").remove();
-    let rowL = $("<tr>");
-    rowL.append("<td>LIBUR</td>");
-    let rowF5 = $("<tr>");
-    rowF5.append("<td>FULL TIME</td>");
-    let rowP = $("<tr>");
-    rowP.append("<td>PAGI</td>");
-    let rowS = $("<tr>");
-    rowS.append("<td>SIANG</td>");
-    let rowM = $("<tr>");
-    rowM.append("<td>MALAM</td>");
-    for (let i = 0; i < jumlahHari; i++) {
-        let x = [];
-        for (let j = 0; j < anggota.data.length; j++) {
-            // console.log(anggota.data[j].jadwal[i].typeDns);
-            x.push(anggota.data[j].jadwal[i].typeDns);
+    for (let dns of typeJdlDns) {
+        let rowL = $("<tr>");
+        console.log(dns);
+        rowL.append("<td>" + dns.type + "</td>");
+        for (let i = 0; i < jumlahHari; i++) {
+            let x = [];
+            for (const element of anggota.data) {
+                x.push(element.jadwal[i].typeDns);
+            }
+            let countX = x.reduce((acc, curr) => {
+                acc[curr] = (acc[curr] || 0) + 1;
+                return acc;
+            }, {});
+
+            rowL.append($(`<td>${countX[dns.slug] == undefined ? 0 : countX[dns.slug]}</td>`));
+
         }
-        let countX = x.reduce((acc, curr) => {
-            acc[curr] = (acc[curr] || 0) + 1;
-            return acc;
-        }, {});
-        rowL.append($(`<td>${countX["L"] == undefined ? 0 : countX["L"]}</td>`));
-        rowF5.append($(`<td>${countX["F5"] == undefined ? 0 : countX["F5"]}</td>`));
-        rowP.append($(`<td>${countX["P"] == undefined ? 0 : countX["P"]}</td>`));
-        rowS.append($(`<td>${countX["S"] == undefined ? 0 : countX["S"]}</td>`));
-        rowM.append($(`<td>${countX["M"] == undefined ? 0 : countX["M"]}</td>`));
+        $("tfoot").append(rowL);
     }
-    $("tfoot").append(rowL);
-    $("tfoot").append(rowF5);
-    $("tfoot").append(rowP);
-    $("tfoot").append(rowS);
-    $("tfoot").append(rowM);
 }
 $("#periode").on("change", function () {
     let periode = $(this).val();
@@ -111,6 +96,25 @@ $("#departemen").on("change", function () {
 });
 
 async function getAnggota(dep) {
+    await $.ajax({
+        url: "/api/presensi/jnsdns?dep=" + dep,
+        method: "GET",
+        success: function (data) {
+            typeJdlDns = data.data
+            $("#sectionjnsDns").find('option').remove().end();
+            for (let i of typeJdlDns) {
+                $("#sectionjnsDns").append("<option value='" + i.slug + "'>" + i.type + "</option>");
+            }
+        },
+        error: function (error) {
+            console.log(error)
+            return Swal.fire({
+                icon: "error",
+                title: "Gagal",
+                text: error.responseJSON.message
+            })
+        }
+    })
     return await $.ajax({
         url: "/api/presensi/anggota?dep=" + dep + "&periode=" + $("#periode").val(),
         method: "GET",
@@ -118,10 +122,11 @@ async function getAnggota(dep) {
             return data.data;
         },
         error: function (error) {
+            console.log(error)
             return Swal.fire({
                 icon: "error",
                 title: "Gagal",
-                text: "Data gagal diambil",
+                text: error.responseJSON.message
             })
         }
     })

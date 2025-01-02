@@ -1,17 +1,15 @@
 async function editJadwal(name, nik, date, typeDns) {
-    console.log(name, nik, date, typeDns);
     $('#editJadwalLabel').text(name);
-    // let datenow = new Date(Date.parse(date) + 86400000).toISOString().slice(0, 10);
-    let datenow = new Date(date).toISOString().slice(0, 10);
+    $("#sectionjnsDns option[value='" + typeDns + "']").prop('selected', true);
     $('#tgl').val(date);
-    $("#select").val(typeDns);
+    $("#sectionjnsDns").val(typeDns);
     $('#nik').val(nik);
     $('#editJadwal').modal('show');
 }
 async function saveJadwal() {
     let nik = $('#nik').val();
     let date = $('#tgl').val();
-    let typeDns = $('#select').val();
+    let typeDns = $('#sectionjnsDns').val();
     let jadwal = {
         nik: nik,
         typeDns: typeDns,
