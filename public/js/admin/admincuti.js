@@ -3,12 +3,13 @@ getTabel(periode)
 $("#periodeTahun").val(periode);
 $("#periodeTahun").on("change", function (data) {
     // console.log("periode tahun berubah");
-    // console.log($(this).val());
+    console.log($(this).val());
     getTabel($(this).val());
 });
 
 async function getTabel(periode) {
     console.log("periode tahun", periode);
+    $('#tableCuti').DataTable().destroy();
     $('#tableCuti').DataTable({
         "ajax": {
             "url": "/api/cuti/approve/all?tahun=" + periode,
