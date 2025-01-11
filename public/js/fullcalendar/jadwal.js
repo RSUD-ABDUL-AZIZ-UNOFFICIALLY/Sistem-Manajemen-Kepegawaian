@@ -23,6 +23,8 @@ if (visitLocal) {
     visitIdIn = "";
     visitIdOut = "";
 }
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
 // console.log(getCookie("token"))
 let token = getCookie("token");
 token = token.split('.')
@@ -300,42 +302,84 @@ function base64ToBlob(base64, contentType = '', sliceSize = 512) {
 
     return new Blob(byteArrays, { type: contentType });
 }
-navigator.permissions.query({ name: 'camera' })
-    .then((permissionStatus) => {
-        console.log('Kamera izin status:', permissionStatus.state); // granted, denied, atau prompt
-        if (permissionStatus.state === 'denied') {
-            alert('Izinkan akses kamera di pengaturan browser Anda.');
-            permissionStatus.onchange = () => {
-                console.log('Kamera izin status berubah:', permissionStatus.state);
-                if (permissionStatus.state === 'denied') {
-                    alert('Izinkan akses kamera di pengaturan browser Anda.');
-                } else if (permissionStatus.state === 'granted') {
-                    console.log('Akses kamera telah diizinkan.');
-                }
-            };
 
-        }
-    });
 async function detectCameras() {
+    try {
+        // const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        console.log(stream);
+        // await navigator.mediaDevices.getUserMedia({ video: false });
+        if (stream) {
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            video.srcObject = null;
+            console.log('Kamera dihentikan');
+        }
+    } catch (error) {
+        console.error('Error accessing the camera:', error);
+        alert('Please allow camera access.');
+    }
+    // Stop the video stream
+
+
     try {
         // Dapatkan daftar perangkat media
         const devices = await navigator.mediaDevices.enumerateDevices();
         console.log(devices);
 
+
         // Filter perangkat untuk jenis "videoinput" (kamera)
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
         console.log(videoDevices);
-        for (let e of videoDevices) {
-            console.log(e.label);
-            console.log(e.deviceId);
-            console.log(e.kind);
-            $('#cameraList').append(`<li>${e.label}</li>`);
-        }
+        // for (let e of videoDevices) {
+        //     $('#cameraList').append(`<li>${e.label}</li>`);
+        // }
+
+
+        const raw = JSON.stringify({
+            "appName": "SIMPEG",
+            "level": "info",
+            "message": "Deteksi kamera berhasil",
+            "metadata": {
+                "nik": idData.id,
+                "name": idData.nama,
+                'deviceInfo': videoDevices,
+                'devices': devices
+            }
+        });
+
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+        };
+        console.log(requestOptions)
+        await fetch("https://logs.spairum.my.id/api/logs", requestOptions)
     } catch (error) {
         console.error('Error saat mendeteksi kamera:', error);
         document.getElementById('cameraCount').textContent = 'Tidak dapat mendeteksi kamera.';
+        const raw = JSON.stringify({
+            "appName": "SIMPEG",
+            "level": "error",
+            "message": "Deteksi kamera gagal",
+            "metadata": {
+                "nik": idData.id,
+                "name": idData.nama,
+                'error': error
+            }
+        });
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+        };
+
+        await fetch("https://logs.spairum.my.id/api/logs", requestOptions)
     }
 }
 
 // Jalankan fungsi deteksi kamera
 detectCameras();
+
