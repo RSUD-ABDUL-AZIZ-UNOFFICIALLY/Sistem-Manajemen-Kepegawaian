@@ -10,7 +10,7 @@ const {
     Jdldns,
 } = require("../models");
 const { cekLocation } = require("../helper/casting");
-const { Op, where } = require("sequelize");
+const { Op, where, or } = require("sequelize");
 module.exports = {
     anggota: async (req, res) => {
         let token = req.cookies.token;
@@ -470,7 +470,10 @@ module.exports = {
                 include: [{
                     model: Jnsdns,
                     attributes: ["type", "start_min", "start_max", "end_min", "end_max"]
-                }]
+                }],
+                order: [
+                    ["date", "DESC"]
+                ]
             })
 
             return res.status(200).json({

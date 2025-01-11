@@ -23,3 +23,4 @@ minify public/js/aprovementcuti.js >public/js/src/aprovementcuti_1.min.js
 minify public/js/fullcalendar/jadwal.js >public/js/src/presensi/jadwal_1.min.js
 
 minify public/js/fullcalendar/jadwal.js >public/js/src/presensi/jadwal_2.min.js
+minify public/js/fullcalendar/jadwal.js >public/js/src/presensi/jadwal_3.min.js
