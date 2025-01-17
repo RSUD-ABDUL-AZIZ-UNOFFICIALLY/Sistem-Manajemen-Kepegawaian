@@ -33,52 +33,68 @@ idData = JSON.parse(idData);
 console.log(idData)
 
 
-$.ajax({
-    url: "/api/presensi/jdldns",
+fetch("/api/presensi/jdldns", {
     method: "GET",
-    success: function (response) {
-        console.log(response.data);
-        console.log(response.data.dnsType.type);
-        $('#Timecheckin').text(response.data.dnsType.start_min + " - " + response.data.dnsType.start_max);
-        $('#Timecheckout').text(response.data.dnsType.end_min + " - " + response.data.dnsType.end_max);
-        $('#jns_shift').text(response.data.dnsType.type);
-        typeDns = response.data.typeDns;
-        date = response.data.date;
-        if (response.data.dnsType.state == 0) {
+})
+    .then((response) => {
+        if (!response.ok) {
+            throw response;
+        }
+        return response.json();
+    })
+    .then((data) => {
+        console.log(data.data);
+        console.log(data.data.dnsType.type);
+
+        // Perbarui teks elemen
+        document.getElementById("Timecheckin").textContent = `${data.data.dnsType.start_min} - ${data.data.dnsType.start_max}`;
+        document.getElementById("Timecheckout").textContent = `${data.data.dnsType.end_min} - ${data.data.dnsType.end_max}`;
+        document.getElementById("jns_shift").textContent = data.data.dnsType.type;
+
+        typeDns = data.data.typeDns;
+        date = data.data.date;
+
+        // Cek status
+        if (data.data.dnsType.state === 0) {
             Swal.fire({
                 icon: "info",
-                title: "Anda hari ini " + response.data.dnsType.type,
+                title: `Anda hari ini ${data.data.dnsType.type}`,
                 text: "",
                 buttons: false,
                 confirmButtonText: "OK",
                 showCancelButton: false,
                 confirmButtonColor: "#3085d6",
-            })
-            $('#checkin').prop('disabled', true);
-            // $('#checkout').prop('disabled', true);
-        }
+            });
 
-    },
-    error: function (error) {
-        console.log(error.responseJSON.message);
-        Swal.fire({
-            icon: "warning",
-            title: error.responseJSON.message,
-            text: error.responseJSON.data,
-            buttons: false,
-            confirmButtonText: "OK",
-            showCancelButton: false,
-            confirmButtonColor: "#3085d6",
-            allowOutsideClick: false, // Tidak memungkinkan untuk mengklik luar jendela SweetAlert
-            allowEscapeKey: false,   // Tidak memungkinkan untuk menutup dengan tombol "Esc"
-            allowEnterKey: false,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = '/';
-            }
-        });
-    },
-})
+            // Disable tombol checkin
+            document.getElementById("checkin").disabled = true;
+        }
+    })
+    .catch((error) => {
+        if (error.json) {
+            error.json().then((errorData) => {
+                console.log(errorData.message);
+                Swal.fire({
+                    icon: "warning",
+                    title: errorData.message,
+                    text: errorData.data,
+                    buttons: false,
+                    confirmButtonText: "OK",
+                    showCancelButton: false,
+                    confirmButtonColor: "#3085d6",
+                    allowOutsideClick: false, // Tidak memungkinkan untuk mengklik luar jendela SweetAlert
+                    allowEscapeKey: false,   // Tidak memungkinkan untuk menutup dengan tombol "Esc"
+                    allowEnterKey: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/';
+                    }
+                });
+            });
+        } else {
+            console.error("Unexpected error:", error);
+        }
+    });
 
 let intervalId = null;
 function check(state) {
@@ -100,8 +116,9 @@ function check(state) {
     loadModels().then(startVideo);
 
 
-    $('#faceReactionLabel').text('Arahkan Kamera Wajah')
-    $('#faceReaction').modal('show');
+    document.getElementById("faceReactionLabel").textContent = "Arahkan Kamera Wajah";
+    const faceReactionModal = new bootstrap.Modal(document.getElementById("faceReaction"));
+    faceReactionModal.show();
 }
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
@@ -159,31 +176,40 @@ function autoCapture() {
 
 // Fungsi untuk mengirim gambar ke server menggunakan AJAX
 function sendImageToServer(imageData) {
-    const base64Data = imageData.replace(/^data:image\/(png|jpeg);base64,/, '');
+    const base64Data = imageData.replace(/^data:image\/(png|jpeg);base64,/, "");
+
     // Konversi Base64 menjadi Blob
-    const blob = base64ToBlob(base64Data, 'image/jpeg');
-    $.ajax({
-        url: "https://fr.spairum.my.id/api/cdn/upload/fr/recognition?metadata=0_" + idData.id + ".json",
+    const blob = base64ToBlob(base64Data, "image/jpeg");
+
+    // Lakukan permintaan menggunakan fetch
+    fetch(`https://fr.spairum.my.id/api/cdn/upload/fr/recognition?metadata=0_${idData.id}.json`, {
         method: "GET",
-        success: function (response) {
-            console.log(response);
-            // let data = response.data;
-            matchFR(blob)
-
-        },
-        error: function (error) {
-            console.log(error);
-            sendRecognition(blob)
-
-        },
-    });
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+            // Panggil fungsi matchFR dengan blob
+            matchFR(blob);
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            // Panggil fungsi sendRecognition dengan blob jika ada kesalahan
+            sendRecognition(blob);
+        });
 }
 
 
-$('#faceReaction').on('hidden.bs.modal', function () {
+
+document.getElementById("faceReaction").addEventListener("hidden.bs.modal", function () {
     video.pause();
     video.srcObject = null;
-    stopDetection()
+    console.log('Stop')
+    stopDetection();
 });
 
 function startDetection() {
@@ -208,80 +234,88 @@ async function sendRecognition(img) {
     form.append("nik", idData.id);
     form.append("name", idData.nama);
 
-    let settings = {
-        url: "https://fr.spairum.my.id/api/cdn/upload/fr/recognition",
-        method: "POST",
-        processData: false,
-        mimeType: "multipart/form-data",
-        contentType: false,
-        data: form
-    };
+    try {
+        const response = await fetch("https://fr.spairum.my.id/api/cdn/upload/fr/recognition", {
+            method: "POST",
+            body: form,
+        });
 
-    $.ajax(settings).done(function (response) {
-        response = JSON.parse(response);
-        console.log(response)
-    });
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+        } else {
+            console.error("Error:", response.status, response.statusText);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
 }
 
 async function matchFR(img) {
     let form = new FormData();
-    form.append("image", img, idData.nama + '.jpg');
+    form.append("image", img, idData.nama.replace(/[^\w]|_/g, "") + ".jpg");
     form.append("nik", idData.id);
-    form.append("metadata", '0_' + idData.id + '.json');
+    form.append("metadata", "0_" + idData.id + ".json");
 
-    let settings = {
-        url: "https://fr.spairum.my.id/api/cdn/upload/fr/recognition",
-        method: "PUT",
-        processData: false,
-        mimeType: "multipart/form-data",
-        contentType: false,
-        data: form
-    };
+    try {
+        // Request untuk pengenalan wajah
+        const response = await fetch("https://fr.spairum.my.id/api/cdn/upload/fr/recognition", {
+            method: "PUT",
+            body: form,
+        });
 
-    $.ajax(settings).done(function (response) {
-        response = JSON.parse(response);
-        console.log(response.output)
-        if (response.output != undefined) {
-            if (response.output.data) {
-                console.log(response.output.data)
-                console.log(dataPostAbsen)
-                $.ajax({
-                    url: "/api/presensi/absen",
-                    method: "POST",
-                    data: dataPostAbsen,
-                    success: function (response) {
-                        console.log(response);
+        if (response.ok) {
+            const result = await response.json();
+            if (result.output !== undefined && result.output.data) {
+                console.log(result.output.data);
+                console.log(dataPostAbsen);
+
+                // Request untuk absen
+                try {
+                    const absenResponse = await fetch("/api/presensi/absen", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(dataPostAbsen),
+                    });
+
+                    if (absenResponse.ok) {
+                        const absenResult = await absenResponse.json();
+                        console.log(absenResult);
+
                         Swal.fire({
                             icon: "success",
-                            title: response.message,
-                            text: response.data,
-                            // }).then((result) => {
-                            //     if (result.isConfirmed) {
-                            //         window.location.href = "/absen";
-                            //     }
+                            title: absenResult.message,
+                            text: absenResult.data,
                         });
-                    },
-                    error: function (error) {
-                        console.log(error.responseJSON);
+
+                        // Memperbarui riwayat setelah absen berhasil
+                        getRiwayat(periode);
+                    } else {
+                        const errorData = await absenResponse.json();
                         Swal.fire({
                             icon: "warning",
-                            title: error.responseJSON.message,
-                            text: error.responseJSON.data
-                            // }).then((result) => {
-                            //     if (result.isConfirmed) {
-                            //         window.location.href = "/absen";
-                            //     }
+                            title: errorData.message,
+                            text: errorData.data,
                         });
-                    },
-                });
+                    }
+                } catch (absenError) {
+                    console.error("Error saat mengirim data absen:", absenError);
+                }
+
+                // Menghentikan deteksi dan menutup modal
                 stopDetection();
-                $('#faceReaction').modal('hide');
+                // document.getElementById("faceReaction").classList.remove("show");
+
+                bootstrap.Modal.getInstance(document.getElementById('faceReaction')).hide()
             }
+        } else {
+            console.error("Error response:", response.status, response.statusText);
         }
-// stopDetection();
-// $('#faceReaction').modal('hide');
-    });
+    } catch (error) {
+        console.error("Error:", error);
+    }
 }
+
 
 // Fungsi untuk mengonversi Base64 ke Blob
 function base64ToBlob(base64, contentType = '', sliceSize = 512) {
@@ -336,47 +370,47 @@ async function detectCameras() {
         // }
 
 
-        const raw = JSON.stringify({
-            "appName": "SIMPEG",
-            "level": "info",
-            "message": "Deteksi kamera berhasil",
-            "metadata": {
-                "nik": idData.id,
-                "name": idData.nama,
-                'deviceInfo': videoDevices,
-                'devices': devices
-            }
-        });
+        //     const raw = JSON.stringify({
+        //         "appName": "SIMPEG",
+        //         "level": "info",
+        //         "message": "Deteksi kamera berhasil",
+        //         "metadata": {
+        //             "nik": idData.id,
+        //             "name": idData.nama,
+        //             'deviceInfo': videoDevices,
+        //             'devices': devices
+        //         }
+        //     });
 
 
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-        };
-        console.log(requestOptions)
-        await fetch("https://logs.spairum.my.id/api/logs", requestOptions)
+        //     const requestOptions = {
+        //         method: "POST",
+        //         headers: myHeaders,
+        //         body: raw,
+        //     };
+        //     console.log(requestOptions)
+        //     await fetch("https://logs.spairum.my.id/api/logs", requestOptions)
     } catch (error) {
-        console.error('Error saat mendeteksi kamera:', error);
-        document.getElementById('cameraCount').textContent = 'Tidak dapat mendeteksi kamera.';
-        const raw = JSON.stringify({
-            "appName": "SIMPEG",
-            "level": "error",
-            "message": "Deteksi kamera gagal",
-            "metadata": {
-                "nik": idData.id,
-                "name": idData.nama,
-                'error': error
-            }
-        });
+        //     console.error('Error saat mendeteksi kamera:', error);
+        //     document.getElementById('cameraCount').textContent = 'Tidak dapat mendeteksi kamera.';
+        //     const raw = JSON.stringify({
+        //         "appName": "SIMPEG",
+        //         "level": "error",
+        //         "message": "Deteksi kamera gagal",
+        //         "metadata": {
+        //             "nik": idData.id,
+        //             "name": idData.nama,
+        //             'error': error
+        //         }
+        //     });
 
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-        };
+        //     const requestOptions = {
+        //         method: "POST",
+        //         headers: myHeaders,
+        //         body: raw,
+        //     };
 
-        await fetch("https://logs.spairum.my.id/api/logs", requestOptions)
+        //     await fetch("https://logs.spairum.my.id/api/logs", requestOptions)
     }
 }
 

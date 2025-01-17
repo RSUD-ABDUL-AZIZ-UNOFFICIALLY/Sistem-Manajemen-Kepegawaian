@@ -7,15 +7,16 @@ function updateClock() {
     let monthName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     let year = date.toLocaleDateString('id-ID', { year: 'numeric' });
     let dayNumber = date.toLocaleDateString('id-ID', { day: 'numeric' });
+    let h = date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     $("#day").text(dayName[date.getDay()]);
     $("#month").text(monthName[date.getMonth()]);
     $("#year").text(year);
     $("#dayNumber").text(dayNumber);
-    let h = date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     $("#time").text(t);
     $("#date").text(dayName[date.getDay()] + ", " + dayNumber + " " + monthName[date.getMonth()] + " " + year);
 }
 setInterval(updateClock, 1000);
+
 // Update Date
 function geoFindMe() {
 
@@ -23,7 +24,7 @@ function geoFindMe() {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         let accuracyInMeter = position.coords.accuracy;
-        // console.log(`${accuracyInMeter} meters`);
+        console.log(`${accuracyInMeter} meters`);
 
         $("#posisi").text(`Latitude: ${latitude} °, Longitude: ${longitude} °`);
         // console.log(`${latitude},${longitude}`);
@@ -86,13 +87,106 @@ function geoFindMe() {
         $("#posisi").text("Perangakat tidak mendukung geolocation");
     } else {
         // $("#posisi").text("Loading...");
-        navigator.geolocation.getCurrentPosition(success, error);
+        navigator.geolocation.success(success, error);
     }
     setTimeout(() => {
         geoFindMe();
     }, 25000);
 }
-geoFindMe();
+// geoFindMe();
+let lastPosition = null;
+
+navigator.geolocation.watchPosition(
+    (position) => {
+        if (lastPosition) {
+            const distance = calculateDistance(
+                lastPosition.latitude,
+                lastPosition.longitude,
+                position.coords.latitude,
+                position.coords.longitude
+            );
+
+            const timeDiff = (position.timestamp - lastPosition.timestamp) / 1000; // Dalam detik
+            const speed = distance / (timeDiff / 3600); // Kecepatan dalam km/jam
+            console.log(position)
+            console.log(speed);
+            console.log(`${position.coords.latitude}, ${position.coords.longitude}`);
+            if (speed > 150) { // Kecepatan tidak realistis
+                console.log("Kemungkinan fake GPS terdeteksi.");
+                $("#posisi").text("Kemungkinan fake GPS terdeteksi.");
+            } else {
+                console.log("Pergerakan normal.");
+                // geoFindMe();
+                $.ajax({
+                    url: "/api/presensi/getlocation",
+                    method: "POST",
+                    data: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    },
+                    success: function (response) {
+                        $("#posisi").text(response.data.location);
+                        // console.log(response.data);
+                        if (response.data.status) {
+                            posisi = 1;
+                        } else {
+                            posisi = 0;
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        posisi = false;
+                    }
+                })
+            }
+        }
+
+        lastPosition = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            timestamp: position.timestamp,
+        };
+    },
+    (error) => {
+        console.error("Gagal memantau lokasi:", error);
+        $("#posisi").text("GPS tidak di aktifkan");
+        posisi = false;
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Mohon aktifkan lokasi anda",
+            buttons: false,
+            confirmButtonText: "OK",
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            allowOutsideClick: false, // Tidak memungkinkan untuk mengklik luar jendela SweetAlert
+            allowEscapeKey: false,   // Tidak memungkinkan untuk menutup dengan tombol "Esc"
+            allowEnterKey: false,
+            confirmButtonText: `<a href="https://api.whatsapp.com/send?phone=62895321701798&text=Bagaimana%20cara%20aktifkan%20lokasi%20GPS%20saya%20${idData.nama}" class="text-white">OK</a>`,
+        });
+
+    }
+);
+if (!navigator.geolocation) {
+    $("#posisi").text("Perangakat tidak mendukung geolocation");
+} else {
+    // $("#posisi").text("Loading...");
+    navigator.geolocation.success(success, error);
+}
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius Bumi dalam kilometer
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+
 async function getStatus() {
     try {
         // Mengambil objek battery
