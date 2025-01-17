@@ -167,12 +167,12 @@ navigator.geolocation.watchPosition(
 
     }
 );
-if (!navigator.geolocation) {
-    $("#posisi").text("Perangakat tidak mendukung geolocation");
-} else {
-    // $("#posisi").text("Loading...");
-    navigator.geolocation.success(success, error);
-}
+// if (!navigator.geolocation) {
+//     $("#posisi").text("Perangakat tidak mendukung geolocation");
+// } else {
+//     // $("#posisi").text("Loading...");
+//     navigator.geolocation.success(success, error);
+// }
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // Radius Bumi dalam kilometer
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
