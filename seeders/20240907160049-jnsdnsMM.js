@@ -16,8 +16,8 @@ module.exports = {
 
       {
         type: "LIBUR",
-        slug: "L1",
-        dep: 1,
+        slug: "L3",
+        dep: 3,
         day: '["MIN", "SAB"]',
         start_min: "00:00:00",
         start_max: "00:00:00",
@@ -29,8 +29,8 @@ module.exports = {
       },
       {
         type: "FULLDAY",
-        slug: "F1",
-        dep: 1,
+        slug: "F3",
+        dep: 3,
         day: '["SEN", "SEL", "RAB", "KAM"]',
         start_min: "07:00:00",
         start_max: "07:30:00",
@@ -42,8 +42,8 @@ module.exports = {
       },
       {
         type: "FULLDAY",
-        slug: "J1",
-        dep: 1,
+        slug: "J3",
+        dep: 3,
         day: '["JUM"]',
         start_min: "06:30:00",
         start_max: "07:00:00",
@@ -55,8 +55,8 @@ module.exports = {
       },
       {
         type: "CUTI",
-        slug: "C1",
-        dep: 1,
+        slug: "C3",
+        dep: 3,
         day: '[]',
         start_min: "00:00:00",
         start_max: "00:00:00",
