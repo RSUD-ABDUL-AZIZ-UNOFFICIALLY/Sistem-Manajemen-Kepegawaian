@@ -5,6 +5,7 @@ let typeDns,
     keteranganIn,
     nilaiIn,
     geoIn,
+    loactionIn,
     wifi,
     posisi,
     visitIdIn,
@@ -101,6 +102,19 @@ function check(state) {
     if (posisi === false) {
         return window.location.href = '/absen';
     }
+    if (geoIn === undefined) {
+        return Swal.fire({
+            icon: "warning",
+            title: "Mohon tunggu...",
+            text: "Sedang menunggu data GPS",
+            buttons: false,
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            allowOutsideClick: false, // Tidak memungkinkan untuk mengklik luar jendela SweetAlert
+            allowEscapeKey: false,   // Tidak memungkinkan untuk menutup dengan tombol "Esc"
+            allowEnterKey: false,
+        })
+    }
     dataPostAbsen = {
         state: state,
         type: typeDns,
@@ -108,6 +122,7 @@ function check(state) {
         geoIn: geoIn,
         wifi: wifi,
         posisi: posisi,
+        loactionIn: loactionIn,
         visitIdIn: visitIdIn
     }
 
