@@ -216,7 +216,7 @@ module.exports = {
   });
 
       let data = {
-        title: "Laporan Produktivitas Kerja Pegawai",
+        title: "Laporan Produktivitas Kinerja Pegawai",
         user: user,
         periode: dateString,
         progress: progress,

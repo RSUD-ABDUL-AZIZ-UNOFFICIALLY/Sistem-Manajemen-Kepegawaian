@@ -9,6 +9,7 @@ $("#periodeTahun").on("change", function (data) {
 
 async function getTabel(periode) {
     console.log("periode tahun", periode);
+    $('#tableCuti').DataTable().destroy();
     $('#tableCuti').DataTable({
         "ajax": {
             "url": "/api/cuti/approve/all?tahun=" + periode,
