@@ -45,6 +45,9 @@ module.exports = {
       geoIn: {
         type: Sequelize.STRING
       },
+      loactionIn: {
+        type: Sequelize.STRING
+      },
       visitIdIn: {
         type: Sequelize.STRING
       },
@@ -66,7 +69,7 @@ module.exports = {
       visitIdOut: {
         type: Sequelize.STRING
       },
-      nilaiOut: {
+      loactionOut: {
         type: Sequelize.INTEGER
       },
       createdAt: {
