@@ -282,6 +282,7 @@ module.exports = {
                     typeDns: body.type,
                     date: body.date,
                     geoIn: body.geoIn,
+                    loactionIn: body.loactionIn,
                     visitIdIn: body.visitIdIn,
                     cekIn: timeNow
                 }
@@ -372,6 +373,7 @@ module.exports = {
                 }
                 let data = {
                     geoOut: body.geoIn,
+                    loactionOut: body.loactionIn,
                     visitIdOut: body.visitIdIn,
                     cekOut: timeNow
                 }

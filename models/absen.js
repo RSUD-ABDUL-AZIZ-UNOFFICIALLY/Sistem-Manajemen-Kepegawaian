@@ -32,13 +32,15 @@ module.exports = (sequelize, DataTypes) => {
     keteranganIn: DataTypes.STRING,
     nilaiIn: DataTypes.INTEGER,
     geoIn: DataTypes.STRING,
+    loactionIn: DataTypes.STRING,
     visitIdIn: DataTypes.STRING,
     cekOut: DataTypes.TIME,
     statusOut: DataTypes.ENUM('Pulang Cepat', 'Pulang Terlambat', 'Pulang Tepat Waktu'),
     keteranganOut: DataTypes.STRING,
     nilaiOut: DataTypes.INTEGER,
     geoOut: DataTypes.STRING,
-    visitIdOut: DataTypes.STRING
+    visitIdOut: DataTypes.STRING,
+    loactionOut: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Absen',
