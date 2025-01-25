@@ -114,6 +114,8 @@ navigator.geolocation.watchPosition(
             if (speed > 150) { // Kecepatan tidak realistis
                 console.log("Kemungkinan fake GPS terdeteksi.");
                 $("#posisi").text("Kemungkinan fake GPS terdeteksi.");
+                geoIn = undefined
+                geoOut = undefined
             } else {
                 console.log("Pergerakan normal.");
                 console.log(position)
@@ -178,6 +180,41 @@ if (!navigator.geolocation) {
     $("#posisi").text("Perangakat tidak mendukung geolocation");
 } else {
     $("#posisi").text("Loading...");
+    function success(position) {
+        console.log(`x ${position}, ${position.coords.longitude}`);
+        $.ajax({
+            url: "/api/presensi/getlocation",
+            method: "POST",
+            data: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            },
+            success: function (response) {
+                $("#posisi").text(response.data.location);
+                loactionIn = response.data.location
+                console.log(response.data);
+                if (response.data.status) {
+                    posisi = 1;
+                } else {
+                    posisi = 0;
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                posisi = false;
+            }
+        })
+    }
+
+    function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+    let options = {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: 0
+    }
+    navigator.geolocation.getCurrentPosition(success, error, options);
     // navigator.geolocation.getCurrentPosition(success, error);
 }
 

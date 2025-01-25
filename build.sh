@@ -26,5 +26,5 @@ minify public/js/fullcalendar/jadwal.js >public/js/src/presensi/jadwal_2.min.js
 
 minify public/js/admin/admincuti.js >public/js/src/admin/admincuti_1.min.js
 
-minify public/js/fullcalendar/jadwal.js >public/js/src/presensi/jadwal_5.min.js
-minify public/js/fullcalendar/absen.js >public/js/src/presensi/absen_5.min.js
+minify public/js/fullcalendar/jadwal.js >public/js/src/presensi/jadwal_6.min.js
+minify public/js/fullcalendar/absen.js >public/js/src/presensi/absen_6.min.js
