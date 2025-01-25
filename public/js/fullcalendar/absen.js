@@ -18,83 +18,6 @@ function updateClock() {
 setInterval(updateClock, 1000);
 
 // Update Date
-function geoFindMe() {
-
-    function success(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        let accuracyInMeter = position.coords.accuracy;
-        console.log(`${accuracyInMeter} meters`);
-
-        $("#posisi").text(`Latitude: ${latitude} °, Longitude: ${longitude} °`);
-        // console.log(`${latitude},${longitude}`);
-        geoIn = `${latitude},${longitude}`
-        geoOut = `${latitude},${longitude}`
-
-        // $.ajax({
-        //     url: "/api/presensi/getlocation",
-        //     method: "POST",
-        //     data: {
-        //         latitude: latitude,
-        //         longitude: longitude
-        //     },
-        //     success: function (response) {
-        //         $("#posisi").text(response.data.location);
-        //         // console.log(response.data);
-        //         if (response.data.status) {
-        //             posisi = 1;
-        //         } else {
-        //             posisi = 0;
-        //         }
-        //     },
-        //     error: function (error) {
-        //         console.log(error);
-        //         posisi = false;
-        //     }
-        // })
-    }
-
-    function error() {
-        $("#posisi").text("GPS tidak di aktifkan");
-        posisi = false;
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Mohon aktifkan lokasi anda",
-            buttons: false,
-            confirmButtonText: "OK",
-            showCancelButton: false,
-            confirmButtonColor: "#3085d6",
-            allowOutsideClick: false, // Tidak memungkinkan untuk mengklik luar jendela SweetAlert
-            allowEscapeKey: false,   // Tidak memungkinkan untuk menutup dengan tombol "Esc"
-            allowEnterKey: false,
-        });
-
-        navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
-            if (result.state === 'granted') {
-                geoFindMe();
-            } else if (result.state === 'prompt') {
-                result.onchange = function () {
-                    if (result.state === 'granted') {
-                        geoFindMe();
-                    }
-                }
-            }
-        });
-    }
-    console.log(navigator.geolocation)
-
-    if (!navigator.geolocation) {
-        $("#posisi").text("Perangakat tidak mendukung geolocation");
-    } else {
-        $("#posisi").text("Loading...");
-        // navigator.geolocation.success(success, error);
-    }
-    setTimeout(() => {
-        geoFindMe();
-    }, 25000);
-}
-// geoFindMe();
 let lastPosition = null;
 
 navigator.geolocation.watchPosition(
@@ -182,6 +105,8 @@ if (!navigator.geolocation) {
     $("#posisi").text("Loading...");
     function success(position) {
         console.log(`x ${position}, ${position.coords.longitude}`);
+        geoIn = `${position.coords.latitude},${position.coords.longitude}`
+        geoOut = `${position.coords.latitude},${position.coords.longitude}`
         $.ajax({
             url: "/api/presensi/getlocation",
             method: "POST",
