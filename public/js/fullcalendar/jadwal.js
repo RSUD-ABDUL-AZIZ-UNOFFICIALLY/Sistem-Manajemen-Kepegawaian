@@ -156,7 +156,7 @@ async function startVideo() {
             video: {
                 width: { ideal: 1280 },
                 height: { ideal: 1024 },
-                facingMode: "environment"
+                facingMode: { ideal: "user" }
             }
         });
         console.log('Kamera diakses');
@@ -166,7 +166,36 @@ async function startVideo() {
         console.error('Error mengakses kamera:', error);
     }
 }
+let camera = "user";
+async function flipCamera() {
+    if (camera === "user") {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 1280 },
+                height: { ideal: 1024 },
+                facingMode: { ideal: "environment" }
+            }
+        });
+        console.log('Kamera diakses');
+        console.log(stream);
+        video.srcObject = stream;
+        camera = "environment";
+    } else {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 1280 },
+                height: { ideal: 1024 },
+                facingMode: { ideal: "user" }
+            }
+        });
+        console.log('Kamera diakses');
+        console.log(stream);
+        video.srcObject = stream;
+        camera = "user";
+    }
 
+
+}
 // Deteksi wajah
 async function detectFaces() {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
@@ -373,7 +402,7 @@ function base64ToBlob(base64, contentType = '', sliceSize = 512) {
 async function detectCameras() {
     try {
         // const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } } });
         console.log(stream);
         // await navigator.mediaDevices.getUserMedia({ video: false });
         if (stream) {

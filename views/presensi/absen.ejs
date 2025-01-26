@@ -12,9 +12,12 @@
             text-align: center;
         }
         video, canvas {
+              transform: scaleX(-1); /* Membalik tampilan secara horizontal */
+      -webkit-transform: scaleX(-1); /* Untuk browser dengan prefix */
             max-width: 100%;
             width: 640px;
             height: auto;
+            
         }
     </style>
 </head>
@@ -171,11 +174,11 @@
             <!-- fullCalendar -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-            <script src="/asset/js/src/presensi/absen_6.min.js"></script>
             <!-- <script src="/asset/js/fullcalendar/absen.js"></script> -->
+            <script src="/asset/js/src/presensi/absen_6.min.js"></script>
             <script src="/asset/js/fullcalendar/riwayat.js"></script>
-            <!-- <script src="/asset/js/fullcalendar/jadwal.js"></script> -->
-            <script src="/asset/js/src/presensi/jadwal_6.min.js"></script>
+            <script src="/asset/js/fullcalendar/jadwal.js"></script>
+            <!-- <script src="/asset/js/src/presensi/jadwal_6.min.js"></script> -->
 
 </body>
 
