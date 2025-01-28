@@ -362,6 +362,7 @@ async function matchFR(img) {
                 }
 
                 // Menghentikan deteksi dan menutup modal
+                video.pause();
                 stopDetection();
                 // document.getElementById("faceReaction").classList.remove("show");
 
