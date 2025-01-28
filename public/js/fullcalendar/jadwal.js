@@ -201,8 +201,8 @@ async function detectFaces() {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    // context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    faceapi.draw.drawDetections(canvas, detections);
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // faceapi.draw.drawDetections(canvas, detections);
 
     // Jika wajah terdeteksi, lakukan auto-capture
     if (detections.length > 0) {
