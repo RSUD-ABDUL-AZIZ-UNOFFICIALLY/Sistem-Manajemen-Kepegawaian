@@ -1,10 +1,11 @@
-let typeDns,
+let 
     date,
     cekIn,
     statusIn,
     keteranganIn,
     nilaiIn,
     geoIn,
+    loactionIn,
     wifi,
     posisi,
     visitIdIn,
@@ -101,6 +102,19 @@ function check(state) {
     if (posisi === false) {
         return window.location.href = '/absen';
     }
+    if (geoIn === undefined) {
+        return Swal.fire({
+            icon: "warning",
+            title: "Mohon tunggu...",
+            text: "Sedang menunggu data GPS",
+            buttons: false,
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            allowOutsideClick: false, // Tidak memungkinkan untuk mengklik luar jendela SweetAlert
+            allowEscapeKey: false,   // Tidak memungkinkan untuk menutup dengan tombol "Esc"
+            allowEnterKey: false,
+        })
+    }
     dataPostAbsen = {
         state: state,
         type: typeDns,
@@ -108,6 +122,7 @@ function check(state) {
         geoIn: geoIn,
         wifi: wifi,
         posisi: posisi,
+        loactionIn: loactionIn,
         visitIdIn: visitIdIn
     }
 
@@ -137,7 +152,13 @@ async function loadModels() {
 // Mulai kamera
 async function startVideo() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 1280 },
+                height: { ideal: 1024 },
+                facingMode: { ideal: "user" }
+            }
+        });
         console.log('Kamera diakses');
         console.log(stream);
         video.srcObject = stream;
@@ -145,7 +166,36 @@ async function startVideo() {
         console.error('Error mengakses kamera:', error);
     }
 }
+let camera = "user";
+async function flipCamera() {
+    if (camera === "user") {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 1280 },
+                height: { ideal: 1024 },
+                facingMode: { ideal: "environment" }
+            }
+        });
+        console.log('Kamera diakses');
+        console.log(stream);
+        video.srcObject = stream;
+        camera = "environment";
+    } else {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 1280 },
+                height: { ideal: 1024 },
+                facingMode: { ideal: "user" }
+            }
+        });
+        console.log('Kamera diakses');
+        console.log(stream);
+        video.srcObject = stream;
+        camera = "user";
+    }
 
+
+}
 // Deteksi wajah
 async function detectFaces() {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
@@ -156,9 +206,13 @@ async function detectFaces() {
 
     // Jika wajah terdeteksi, lakukan auto-capture
     if (detections.length > 0) {
+
         const currentTime = Date.now();
         if (currentTime - lastCaptureTime > captureInterval) {
+            console.log('Wajah terdeteksi');
+            document.getElementById("ket").innerText = "";
             autoCapture();
+            stopDetection();
             lastCaptureTime = currentTime;
         }
     }
@@ -180,6 +234,7 @@ function sendImageToServer(imageData) {
 
     // Konversi Base64 menjadi Blob
     const blob = base64ToBlob(base64Data, "image/jpeg");
+    console.log('send');
 
     // Lakukan permintaan menggunakan fetch
     fetch(`https://fr.spairum.my.id/api/cdn/upload/fr/recognition?metadata=0_${idData.id}.json`, {
@@ -214,7 +269,7 @@ document.getElementById("faceReaction").addEventListener("hidden.bs.modal", func
 
 function startDetection() {
     if (!intervalId) {
-        intervalId = setInterval(detectFaces, 100);
+        intervalId = setInterval(detectFaces, 1000);
         console.log('Deteksi wajah dimulai');
     }
 }
@@ -246,6 +301,7 @@ async function sendRecognition(img) {
         } else {
             console.error("Error:", response.status, response.statusText);
         }
+        startDetection()
     } catch (error) {
         console.error("Error:", error);
     }
@@ -264,13 +320,16 @@ async function matchFR(img) {
             body: form,
         });
 
+
         if (response.ok) {
             const result = await response.json();
+            console.log(result);
             if (result.output !== undefined && result.output.data) {
                 console.log(result.output.data);
                 console.log(dataPostAbsen);
 
                 // Request untuk absen
+                document.getElementById("ket").innerText = `HI ${idData.nama}`;
                 try {
                     const absenResponse = await fetch("/api/presensi/absen", {
                         method: "POST",
@@ -303,10 +362,14 @@ async function matchFR(img) {
                 }
 
                 // Menghentikan deteksi dan menutup modal
+                video.pause();
                 stopDetection();
                 // document.getElementById("faceReaction").classList.remove("show");
 
                 bootstrap.Modal.getInstance(document.getElementById('faceReaction')).hide()
+            } else {
+                startDetection()
+                document.getElementById("ket").innerText = ` Mohon wajah anda tidak cocok dengan yang tersimpan di database, silahkan coba lagi.`;
             }
         } else {
             console.error("Error response:", response.status, response.statusText);
@@ -340,7 +403,7 @@ function base64ToBlob(base64, contentType = '', sliceSize = 512) {
 async function detectCameras() {
     try {
         // const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } } });
         console.log(stream);
         // await navigator.mediaDevices.getUserMedia({ video: false });
         if (stream) {
@@ -360,57 +423,13 @@ async function detectCameras() {
         // Dapatkan daftar perangkat media
         const devices = await navigator.mediaDevices.enumerateDevices();
         console.log(devices);
-
-
         // Filter perangkat untuk jenis "videoinput" (kamera)
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
         console.log(videoDevices);
-        // for (let e of videoDevices) {
-        //     $('#cameraList').append(`<li>${e.label}</li>`);
-        // }
 
-
-        //     const raw = JSON.stringify({
-        //         "appName": "SIMPEG",
-        //         "level": "info",
-        //         "message": "Deteksi kamera berhasil",
-        //         "metadata": {
-        //             "nik": idData.id,
-        //             "name": idData.nama,
-        //             'deviceInfo': videoDevices,
-        //             'devices': devices
-        //         }
-        //     });
-
-
-        //     const requestOptions = {
-        //         method: "POST",
-        //         headers: myHeaders,
-        //         body: raw,
-        //     };
-        //     console.log(requestOptions)
-        //     await fetch("https://logs.spairum.my.id/api/logs", requestOptions)
     } catch (error) {
-        //     console.error('Error saat mendeteksi kamera:', error);
-        //     document.getElementById('cameraCount').textContent = 'Tidak dapat mendeteksi kamera.';
-        //     const raw = JSON.stringify({
-        //         "appName": "SIMPEG",
-        //         "level": "error",
-        //         "message": "Deteksi kamera gagal",
-        //         "metadata": {
-        //             "nik": idData.id,
-        //             "name": idData.nama,
-        //             'error': error
-        //         }
-        //     });
+        console.log(error);
 
-        //     const requestOptions = {
-        //         method: "POST",
-        //         headers: myHeaders,
-        //         body: raw,
-        //     };
-
-        //     await fetch("https://logs.spairum.my.id/api/logs", requestOptions)
     }
 }
 

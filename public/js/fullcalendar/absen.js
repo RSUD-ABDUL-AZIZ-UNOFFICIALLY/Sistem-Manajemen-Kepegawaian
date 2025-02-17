@@ -18,86 +18,11 @@ function updateClock() {
 setInterval(updateClock, 1000);
 
 // Update Date
-function geoFindMe() {
-
-    function success(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        let accuracyInMeter = position.coords.accuracy;
-        console.log(`${accuracyInMeter} meters`);
-
-        $("#posisi").text(`Latitude: ${latitude} °, Longitude: ${longitude} °`);
-        // console.log(`${latitude},${longitude}`);
-        geoIn = `${latitude},${longitude}`
-        geoOut = `${latitude},${longitude}`
-
-        $.ajax({
-            url: "/api/presensi/getlocation",
-            method: "POST",
-            data: {
-                latitude: latitude,
-                longitude: longitude
-            },
-            success: function (response) {
-                $("#posisi").text(response.data.location);
-                // console.log(response.data);
-                if (response.data.status) {
-                    posisi = 1;
-                } else {
-                    posisi = 0;
-                }
-            },
-            error: function (error) {
-                console.log(error);
-                posisi = false;
-            }
-        })
-    }
-
-    function error() {
-        $("#posisi").text("GPS tidak di aktifkan");
-        posisi = false;
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Mohon aktifkan lokasi anda",
-            buttons: false,
-            confirmButtonText: "OK",
-            showCancelButton: false,
-            confirmButtonColor: "#3085d6",
-            allowOutsideClick: false, // Tidak memungkinkan untuk mengklik luar jendela SweetAlert
-            allowEscapeKey: false,   // Tidak memungkinkan untuk menutup dengan tombol "Esc"
-            allowEnterKey: false,
-        });
-
-        navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
-            if (result.state === 'granted') {
-                geoFindMe();
-            } else if (result.state === 'prompt') {
-                result.onchange = function () {
-                    if (result.state === 'granted') {
-                        geoFindMe();
-                    }
-                }
-            }
-        });
-    }
-
-    if (!navigator.geolocation) {
-        $("#posisi").text("Perangakat tidak mendukung geolocation");
-    } else {
-        // $("#posisi").text("Loading...");
-        navigator.geolocation.success(success, error);
-    }
-    setTimeout(() => {
-        geoFindMe();
-    }, 25000);
-}
-// geoFindMe();
 let lastPosition = null;
 
 navigator.geolocation.watchPosition(
     (position) => {
+        console.log(`L ${position.coords.latitude}, ${position.coords.longitude}`);
         if (lastPosition) {
             const distance = calculateDistance(
                 lastPosition.latitude,
@@ -108,15 +33,17 @@ navigator.geolocation.watchPosition(
 
             const timeDiff = (position.timestamp - lastPosition.timestamp) / 1000; // Dalam detik
             const speed = distance / (timeDiff / 3600); // Kecepatan dalam km/jam
-            console.log(position)
-            console.log(speed);
-            console.log(`${position.coords.latitude}, ${position.coords.longitude}`);
+
             if (speed > 150) { // Kecepatan tidak realistis
                 console.log("Kemungkinan fake GPS terdeteksi.");
                 $("#posisi").text("Kemungkinan fake GPS terdeteksi.");
+                geoIn = undefined
+                geoOut = undefined
             } else {
                 console.log("Pergerakan normal.");
-                // geoFindMe();
+                console.log(position)
+                geoIn = `${position.coords.latitude},${position.coords.longitude}`
+                geoOut = `${position.coords.latitude},${position.coords.longitude}`
                 $.ajax({
                     url: "/api/presensi/getlocation",
                     method: "POST",
@@ -126,7 +53,8 @@ navigator.geolocation.watchPosition(
                     },
                     success: function (response) {
                         $("#posisi").text(response.data.location);
-                        // console.log(response.data);
+                        loactionIn = response.data.location
+                        console.log(response.data);
                         if (response.data.status) {
                             posisi = 1;
                         } else {
@@ -164,15 +92,57 @@ navigator.geolocation.watchPosition(
             allowEnterKey: false,
             confirmButtonText: `<a href="https://api.whatsapp.com/send?phone=62895321701798&text=Bagaimana%20cara%20aktifkan%20lokasi%20GPS%20saya%20${idData.nama}" class="text-white">OK</a>`,
         });
-
+    },
+    (options) => {
+        options.enableHighAccuracy = true;
+        options.timeout = 5000;
+        options.maximumAge = 0;
     }
 );
-// if (!navigator.geolocation) {
-//     $("#posisi").text("Perangakat tidak mendukung geolocation");
-// } else {
-//     // $("#posisi").text("Loading...");
-//     navigator.geolocation.success(success, error);
-// }
+if (!navigator.geolocation) {
+    $("#posisi").text("Perangakat tidak mendukung geolocation");
+} else {
+    $("#posisi").text("Loading...");
+    function success(position) {
+        console.log(`x ${position}, ${position.coords.longitude}`);
+        geoIn = `${position.coords.latitude},${position.coords.longitude}`
+        geoOut = `${position.coords.latitude},${position.coords.longitude}`
+        $.ajax({
+            url: "/api/presensi/getlocation",
+            method: "POST",
+            data: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            },
+            success: function (response) {
+                $("#posisi").text(response.data.location);
+                loactionIn = response.data.location
+                console.log(response.data);
+                if (response.data.status) {
+                    posisi = 1;
+                } else {
+                    posisi = 0;
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                posisi = false;
+            }
+        })
+    }
+
+    function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+    let options = {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: 0
+    }
+    navigator.geolocation.getCurrentPosition(success, error, options);
+    // navigator.geolocation.getCurrentPosition(success, error);
+}
+
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // Radius Bumi dalam kilometer
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -248,7 +218,6 @@ pingLocalDevice('api.rsudaa.singkawangkota.go.id/ping');
 
 function getLocalIP(callback) {
     const pc = new RTCPeerConnection(); // Membuat koneksi WebRTC
-    console.log(pc);
     const noop = () => { };
     pc.createDataChannel(""); // Membuat channel dummy
     pc.createOffer()

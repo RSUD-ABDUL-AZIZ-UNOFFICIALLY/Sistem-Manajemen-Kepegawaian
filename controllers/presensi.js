@@ -197,19 +197,13 @@ module.exports = {
     },
     getlocation: async (req, res) => {
         try {
-            // let data = await Location.findAll();
-            let nama = process.env.GEONAME
             let body = req.body;
-            let cek = cekLocation([body.latitude, body.longitude]);
-            let data = cek ? nama : "Tidak di lokasi";
+            let cek = await cekLocation([body.latitude, body.longitude]);
+            console.log(cek)
             return res.status(200).json({
                 error: false,
                 message: "success",
-                data:
-                {
-                    location: data,
-                    status: cek
-                }
+                data: cek
             });
 
         } catch (error) {
@@ -288,6 +282,7 @@ module.exports = {
                     typeDns: body.type,
                     date: body.date,
                     geoIn: body.geoIn,
+                    loactionIn: body.loactionIn,
                     visitIdIn: body.visitIdIn,
                     cekIn: timeNow
                 }
@@ -378,6 +373,7 @@ module.exports = {
                 }
                 let data = {
                     geoOut: body.geoIn,
+                    loactionOut: body.loactionIn,
                     visitIdOut: body.visitIdIn,
                     cekOut: timeNow
                 }
