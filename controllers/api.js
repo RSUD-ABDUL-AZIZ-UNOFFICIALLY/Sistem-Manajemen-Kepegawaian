@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
-const { Otp, User } = require("../models");
+const { Otp, User, Session } = require("../models");
 const secretKey = process.env.SECRET_WA;
 const payload = {
   gid: "Server Side",
@@ -10,6 +10,19 @@ module.exports = {
   sendOtp: async (req, res) => {
     try {
       let body = req.body;
+      let checksttOtp = req.cookies.otp;
+      console.log(checksttOtp);
+      if (checksttOtp) {
+        return res.status(401).json({
+          error: true,
+          message: "Silahkan Tunggu Sebentar ...",
+        });
+      }
+      res.cookie("otp", body.phone, {
+        secure: false,
+        maxAge: 1000 * 60,
+        // httpOnly: true,
+      });
       let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
       let user = await User.findOne({
         where: {
@@ -138,6 +151,14 @@ module.exports = {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: false,
     });
+    Session.create({
+      nik: user.nik,
+      session_token: token,
+      ip_address: req.ip,
+      visited_id: req.cookies.visite,
+      user_agent: req.headers['user-agent'],
+      status: "login"
+    })
     return res.status(200).json({
       error: false,
       message: "Selamat datang, " + user.nama + "!",
