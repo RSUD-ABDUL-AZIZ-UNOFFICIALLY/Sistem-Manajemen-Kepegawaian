@@ -47,7 +47,6 @@ module.exports = {
                         session_token: token,
                     },
                 });
-                console.log(cek_session);
                 if (!cek_session) {
                     res.clearCookie("token");
                     return res.redirect("/");
