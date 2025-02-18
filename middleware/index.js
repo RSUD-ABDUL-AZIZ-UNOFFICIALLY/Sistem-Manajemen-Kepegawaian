@@ -1,34 +1,94 @@
 const jwt = require("jsonwebtoken");
-const { User, Atasan, Access } = require("../models");
+const { User, Atasan, Access, Session } = require("../models");
 const { Buffer } = require('buffer');
+const secretKey = process.env.JWT_SECRET_KEY;
+
+const { createClient } = require('redis');
+const client = createClient({
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_URL,
+        port: process.env.REDIS_URL_PORT
+    }
+});
+client.connect();
 
 module.exports = {
     login: async (req, res, next) => {
         try {
             const token = req.cookies.token;
-            res.cookie("tokens", "a", {
-                domain: ".rsudaa.singkawangkota.go.id",
-                secure: false,
-                maxAge: 1000 * 60 * 60 * 24 * 7,
-                httpOnly: true,
-            });
             if (!token) {
+                res.clearCookie("token");   
                 return res.redirect("/");
             }
-            const secretKey = process.env.JWT_SECRET_KEY;
             const decoded = jwt.verify(token, secretKey);
-            let getUser = await User.findOne({
-                where: {
-                    nik: decoded.id,
-                },
-            });
+            let getUser = await client.json.get('SIMPEG:user:' + decoded.id);
             if (!getUser) {
-                res.clearCookie("token");
-                return res.redirect("/");
+                getUser = await User.findOne({
+                    where: {
+                        nik: decoded.id,
+                    },
+                });
+                if (!getUser) {
+                    res.clearCookie("token");
+                    return res.redirect("/");
+                } else {
+                    await client.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
+                    client.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24 * 2);
+                    req.account = getUser;
+                }
             }
+            req.account = getUser;
+            const value = await client.get('SIMPEG:seen:' + token);
+            if (!value) {
+                let cek_session = await Session.findOne({
+                    where: {
+                        nik: decoded.id,
+                        session_token: token,
+                    },
+                });
+                console.log(cek_session);
+                if (!cek_session) {
+                    res.clearCookie("token");
+                    return res.redirect("/");
+                }
+                if (cek_session.status == 'close') {
+                    res.clearCookie("token");
+                    return res.redirect("/");
+                }
+                let newToken = jwt.sign({
+                    id: getUser.nik,
+                    nama: getUser.nama,
+                    wa: getUser.wa,
+                }, secretKey, { expiresIn: 60 * 60 * 24 * 7 });
+                res.cookie("token", newToken, {
+                    maxAge: 1000 * 60 * 60 * 24 * 7,
+                    httpOnly: false,
+                });
+                Session.update({
+                    session_token: newToken,
+                    ip_address: req.ip,
+                    user_agent: req.headers['user-agent'],
+                    status: 'online',
+                }, {
+                    where: {
+                        nik: decoded.id,
+                        session_token: token,
+                    },
+                });
+                await client.set('SIMPEG:seen:' + newToken, getUser.nik);
+                client.expire('SIMPEG:seen:' + newToken, 30);
+            }
+
+            // let getUser = await User.findOne({
+            //     where: {
+            //         nik: decoded.id,
+            //     },
+            // });
+
             let getAtasan = await Atasan.findOne({
                 where: {
-                    user: getUser.nik,
+                    user: decoded.id,
                 },
             });
             if (!getAtasan) {
@@ -48,30 +108,20 @@ module.exports = {
                 });
             }else{
             res.clearCookie("status");
+                await client.json.set('SIMPEG:atasan:' + decoded.id, '$', getAtasan);
+                client.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24 * 2);
             }
-            let newToken = jwt.sign({
-                id: decoded.id,
-                nama: decoded.nama,
-                wa: decoded.wa,
-            },
-                secretKey, { expiresIn: 60 * 60 * 24 * 7 }
-            );
-            // set cookie
-            res.cookie("token", newToken, {
-                maxAge: 1000 * 60 * 60 * 24 * 7,
-                httpOnly: false,
-            });
-            req.account = getUser;
             next();
         } catch (err) {
-            res.clearCookie("token");
-            return res.redirect("/");
+            console.log('err');
+            console.log(err);
+            // res.clearCookie("token");
+            // return res.redirect("/");
         }
     },
     checkLogin: (req, res, next) => {
         try {
             const token = req.cookies.token;
-            const secretKey = process.env.JWT_SECRET_KEY;
             const decoded = jwt.verify(token, secretKey);
             if (decoded) {
                 return res.redirect("/daily");
@@ -84,8 +134,24 @@ module.exports = {
         }
     },
     logout: (req, res) => {
-        res.clearCookie("token");
-        res.redirect("/");
+        try {
+            const token = req.cookies.token;
+            const decoded = jwt.verify(token, secretKey);
+            Session.update({
+                status: 'logout',
+            }, {
+                where: {
+                    nik: decoded.id,
+                    session_token: token,
+                },
+            });
+            res.clearCookie("token");
+            return res.redirect("/");
+        } catch (error) {
+            res.clearCookie("token");
+            return res.redirect("/");
+        }
+
     },
     checkHakAkses: (data) => {
         return async (req, res, next) => {
