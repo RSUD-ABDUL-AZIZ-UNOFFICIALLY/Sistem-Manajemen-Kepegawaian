@@ -12,6 +12,7 @@ function getCookie(cname) {
     }
     return "";
 }
+
 if (!localStorage.getItem("visite")) {
     const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load())
     // // Get the visitor identifier when you need it.
@@ -19,5 +20,8 @@ if (!localStorage.getItem("visite")) {
         .then(fp => fp.get())
         .then(result =>
             localStorage.setItem("visite", result.visitorId),
-        )
+            document.cookie = `visite=result.visitorId;`
+        );
+} else {
+    document.cookie = "visite=" + localStorage.getItem("visite") + ";";
 }
