@@ -154,9 +154,9 @@ module.exports = {
     Session.create({
       nik: user.nik,
       session_token: token,
-      ip_address: req.ip,
+      ip_address: req.headers['x-real-ip'],
       visited_id: req.cookies.visite,
-      user_agent: req.headers['user-agent'],
+      user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
       status: "login"
     })
     return res.status(200).json({

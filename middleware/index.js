@@ -67,8 +67,8 @@ module.exports = {
                 });
                 Session.update({
                     session_token: newToken,
-                    ip_address: req.ip,
-                    user_agent: req.headers['user-agent'],
+                    ip_address: req.headers['x-real-ip'],
+                    user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
                     status: 'online',
                 }, {
                     where: {
