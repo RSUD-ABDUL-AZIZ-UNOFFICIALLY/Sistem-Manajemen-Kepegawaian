@@ -16,7 +16,6 @@ client.connect();
 module.exports = {
     login: async (req, res, next) => {
         try {
-            console.log(req)
             const token = req.cookies.token;
             if (!token) {
                 res.clearCookie("token");   
