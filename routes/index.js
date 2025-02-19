@@ -41,6 +41,7 @@ router.get('/helpDeskAdmin', middleware.login, controller.helpDeskAdmin);
 
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
+router.get('/api/lastActivity', middleware.login, api.lastActivity);
 router.get('/api/simrs/userpas', middleware.login, api.getUserSimrs);
 router.get('/api/microtik/userpas', middleware.login, ajax.getUserMicrotik);
 

@@ -1,101 +1,116 @@
 <!DOCTYPE html>
 <html lang="id">
 
-<head>
-  <%- include('template/head'); %>
+  <head>
+    <%- include('template/head'); %>
 
-</head>
+  </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
+  <body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
 
-    <!-- Navbar -->
-    <%- include('template/navbar'); %>
+      <!-- Navbar -->
+      <%- include('template/navbar'); %>
       <!-- /.navbar -->
 
       <!-- Main Sidebar Container -->
       <%- include('template/sidebar'); %>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('template/content-header'); %>
-            <!-- /.content-header -->
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <%- include('template/content-header'); %>
+        <!-- /.content-header -->
 
-            <!-- Main content -->
-            <section class="content">
-              <div class="container-fluid">
-                <!-- Horizontal Form -->
-                <div class="card card-info">
-                  <div class="card-header">
-                    <h3 class="card-title">Profil saya</h3>
+        <!-- Main content -->
+        <section class="content">
+          <div class="container-fluid">
+            <!-- Horizontal Form -->
+            <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Profil saya</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form id="profil" class="form-horizontal">
+                <div class="card-body">
+                  <div class="form-group row">
+                    <label for="inputEmail3"
+                      class="col-sm-2 col-form-label">NIK</label>
+                    <div class="col-sm-10">
+                      <input type="number" class="form-control" id="nik"
+                        name="nik" value='<%= user.nik %>'
+                        disabled />
+                    </div>
                   </div>
-                  <!-- /.card-header -->
-                  <!-- form start -->
-                  <form id="profil" class="form-horizontal">
-                    <div class="card-body">
-                      <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">NIK</label>
-                        <div class="col-sm-10">
-                          <input type="number" class="form-control" id="nik" name="nik" value='<%= user.nik %>'
-                            disabled />
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">NIP</label>
-                        <div class="col-sm-10">
-                          <input type="number" class="form-control" id="nip" name="nip"
-                            placeholder="Nomor Identitas Pegawai" value='<%= user.nip %>' />
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Nama lengkap</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="nama" name="nama"
-                            placeholder="Nama lengkap dengan gelar" value='<%= user.nama %>' />
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="departemen" class="col-sm-2 col-form-label">Unit Kerja</label>
-                        <div class="col-sm-10">
-                          <select class="form-control select2" id="departemen">
-                            <option selected="selected" value='<%= user.dep%>'>
-                              <%= user.departemen.bidang%>
-                            </option>
-                            <% for(let i=0; i<departemen.length; i++) { %>
-                              <option value='<%= departemen[i].id %>'>
-                                <%= departemen[i].bidang %>
-                              </option>
-                              <% } %>
+                  <div class="form-group row">
+                    <label for="inputEmail3"
+                      class="col-sm-2 col-form-label">NIP</label>
+                    <div class="col-sm-10">
+                      <input type="number" class="form-control" id="nip"
+                        name="nip"
+                        placeholder="Nomor Identitas Pegawai"
+                        value='<%= user.nip %>' />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputEmail3"
+                      class="col-sm-2 col-form-label">Nama lengkap</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="nama"
+                        name="nama"
+                        placeholder="Nama lengkap dengan gelar"
+                        value='<%= user.nama %>' />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="departemen" class="col-sm-2 col-form-label">Unit
+                      Kerja</label>
+                    <div class="col-sm-10">
+                      <select class="form-control select2" id="departemen">
+                        <option selected="selected" value='<%= user.dep%>'>
+                          <%= user.departemen.bidang%>
+                        </option>
+                        <% for(let i=0; i<departemen.length; i++) { %>
+                          <option value='<%= departemen[i].id %>'>
+                            <%= departemen[i].bidang %>
+                          </option>
+                          <% } %>
 
-                          </select>
-                        </div>
+                        </select>
                       </div>
-                      <div class="form-group row">
-                        <label for="jab" class="col-sm-2 col-form-label">Tanggal lahir</label>
-                        <div class="col-sm-10">
-                          <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir"
-                            placeholder="Tanggal lahir" value='<%= user.tgl_lahir %>' />
-                        </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="jab" class="col-sm-2 col-form-label">Tanggal
+                        lahir</label>
+                      <div class="col-sm-10">
+                        <input type="date" class="form-control" id="tgl_lahir"
+                          name="tgl_lahir"
+                          placeholder="Tanggal lahir"
+                          value='<%= user.tgl_lahir %>' />
                       </div>
-                      <div class="form-group row">
-                        <label for="jab" class="col-sm-2 col-form-label">Jabatan</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="jab" name="jab" placeholder="Jabatan"
-                            value='<%= user.jab %>' />
-                        </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="jab"
+                        class="col-sm-2 col-form-label">Jabatan</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="jab"
+                          name="jab" placeholder="Jabatan"
+                          value='<%= user.jab %>' />
                       </div>
-                      <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Atasan langsung</label>
-                        <div class="col-sm-10">
-                          <select class="form-control select2" id="atasan">
-                            <option selected="selected" value=<%=bos%>><%= bos%>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputEmail3"
+                        class="col-sm-2 col-form-label">Atasan langsung</label>
+                      <div class="col-sm-10">
+                        <select class="form-control select2" id="atasan">
+                          <option selected="selected" value=<%=bos%>><%= bos%>
+                          </option>
+                          <% for(let i=0; i<atasan.length; i++) { %>
+                            <option value='<%= atasan[i].nik %>'>
+                              <%= atasan[i].nama %> - <%= atasan[i].jab %>
                             </option>
-                            <% for(let i=0; i<atasan.length; i++) { %>
-                              <option value='<%= atasan[i].nik %>'>
-                                <%= atasan[i].nama %> - <%= atasan[i].jab %>
-                              </option>
-                              <% } %>
+                            <% } %>
                           </select>
                         </div>
                       </div>
@@ -126,16 +141,22 @@
                   <form id="biodata" class="form-horizontal">
                     <div class="card-body">
                       <div class="form-group row">
-                        <label for="alamat" class="col-sm-2 col-form-label">Alamat</label>
+                        <label for="alamat"
+                          class="col-sm-2 col-form-label">Alamat</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="alamat" name="alamat" required />
+                          <input type="text" class="form-control" id="alamat"
+                            name="alamat" required />
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="pangkat" class="col-sm-2 col-form-label">Pangkat</label>
+                        <label for="pangkat"
+                          class="col-sm-2 col-form-label">Pangkat</label>
                         <div class="col-sm-10">
-                          <select class="form-control  select2-danger" data-dropdown-css-class="select2-danger" id="pangkat" name="pangkat">
-                            <option value="" disabled selected="selected">Pilih Golongan pangkat</option>
+                          <select class="form-control  select2-danger"
+                            data-dropdown-css-class="select2-danger"
+                            id="pangkat" name="pangkat">
+                            <option value disabled selected="selected">Pilih
+                              Golongan pangkat</option>
                             <option value='IVe'>IVe</option>
                             <option value='IVd'>IVd</option>
                             <option value='IVc'>IVc</option>
@@ -160,24 +181,32 @@
                             <option value='-'>Non ASN</option>
                           </select>
                         </div>
-                        </div>
-                        <div class="form-group row">
-                          <label for="tmt_pangkat" class="col-sm-2 col-form-label">TMT Pangkat/Gol. R</label>
-                          <div class="col-sm-10">
-                              <div class="input-group">
-                                <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                                </div>
-                                <input type="date" class="form-control" data-inputmask-alias="date" data-inputmask-inputformat="dd/mm/yyyy" data-mask
-                                  id="tmt_pangkat" name="tmt_pangkat">
-                              </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="tmt_pangkat"
+                          class="col-sm-2 col-form-label">TMT Pangkat/Gol.
+                          R</label>
+                        <div class="col-sm-10">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i
+                                  class="far fa-calendar-alt"></i></span>
+                            </div>
+                            <input type="date" class="form-control"
+                              data-inputmask-alias="date"
+                              data-inputmask-inputformat="dd/mm/yyyy" data-mask
+                              id="tmt_pangkat" name="tmt_pangkat">
+                          </div>
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="marital" class="col-sm-2 col-form-label">Status Pernikahan</label>
+                        <label for="marital"
+                          class="col-sm-2 col-form-label">Status
+                          Pernikahan</label>
                         <div class="col-sm-10">
                           <select class="form-control " id="marital" required>
-                            <option value="" disabled selected="selected">Pilih status</option>
+                            <option value disabled selected="selected">Pilih
+                              status</option>
                             <option value='Belum kawin'> belum kawin</option>
                             <option value='kawin'>kawin</option>
                             <option value='Cerai hidup'>Cerai hidup</option>
@@ -186,10 +215,14 @@
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="golongan_darah" class="col-sm-2 col-form-label">Golongan Darah</label>
+                        <label for="golongan_darah"
+                          class="col-sm-2 col-form-label">Golongan Darah</label>
                         <div class="col-sm-10">
-                          <select class="form-control  select2-danger" data-dropdown-css-class="select2-danger" id="golongan_darah">
-                            <option value="" disabled selected="selected">Pilih Golongan Darah</option>
+                          <select class="form-control  select2-danger"
+                            data-dropdown-css-class="select2-danger"
+                            id="golongan_darah">
+                            <option value disabled selected="selected">Pilih
+                              Golongan Darah</option>
                             <option value='A'>A</option>
                             <option value='B'>B</option>
                             <option value='AB'>AB </option>
@@ -198,95 +231,169 @@
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="jns_kerja" class="col-sm-2 col-form-label">Status Kerja</label>
+                        <label for="jns_kerja"
+                          class="col-sm-2 col-form-label">Status Kerja</label>
                         <div class="col-sm-10">
-                          <select class="form-control  " style="width:100%;" id="jns_kerja" required>
-                            <option value="" disabled selected="selected">Pilih status</option>
+                          <select class="form-control  " style="width:100%;"
+                            id="jns_kerja" required>
+                            <option value disabled selected="selected">Pilih
+                              status</option>
                             <option value='5 Hari kerja'>5 Hari kerja</option>
                             <option value='6 Hari kerja'>6 Hari kerja</option>
-                            <option value='6 Hari kerja shifting'>6 Hari kerja shifting</option>
+                            <option value='6 Hari kerja shifting'>6 Hari kerja
+                              shifting</option>
                           </select>
                         </div>
                       </div>
-                        <div class="form-group row">
-                          <label for="tmt_kerja" class="col-sm-2 col-form-label">TMT Kerja</label>
-                          <div class="col-sm-10">
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                              </div>
-                              <input type="date" class="form-control" data-inputmask-alias="date" data-inputmask-inputformat="dd/mm/yyyy"
-                                data-mask id="tmt_kerja" name="tmt_kerja">
+                      <div class="form-group row">
+                        <label for="tmt_kerja"
+                          class="col-sm-2 col-form-label">TMT Kerja</label>
+                        <div class="col-sm-10">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i
+                                  class="far fa-calendar-alt"></i></span>
                             </div>
+                            <input type="date" class="form-control"
+                              data-inputmask-alias="date"
+                              data-inputmask-inputformat="dd/mm/yyyy"
+                              data-mask id="tmt_kerja" name="tmt_kerja">
                           </div>
+                        </div>
                       </div>
                       <!-- /.card-body -->
                       <div class="card-footer">
-                        <button type="submit" class="btn btn-primary float-right">
+                        <button type="submit"
+                          class="btn btn-primary float-right">
                           Simpan
                         </button>
                       </div>
                       <!-- /.card-footer -->
-                      </form>
-                      </div>
-                      <!-- /.card -->
-                      </div><!-- /.container-fluid -->
-                      </section>
-                      <!-- /.content -->
-                      <!-- Main content -->
-                      <section class="content">
-                        <div class="container-fluid">
-                          <!-- Horizontal Form -->
-                          <div class="card card-info">
-                            <div class="card-header">
-                              <h3 class="card-title">Foto Profile</h3>
+                    </form>
+                  </div>
+                  <!-- /.card -->
+                </div><!-- /.container-fluid -->
+              </section>
+              <!-- /.content -->
+              <!-- Main content -->
+              <section class="content">
+                <div class="container-fluid">
+                  <!-- Horizontal Form -->
+                  <div class="card card-info">
+                    <div class="card-header">
+                      <h3 class="card-title">Foto Profile</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form id="profilePicForm" enctype="multipart/form-data">
+                      <div class="card-body">
+                        <div class="row justify-content-center">
+                          <div class="col-md-6">
+                            <div class="m-3">
+                              <div class="center-image" style="height: 200px;">
+                                <img
+                                  src="https://api.rsudaa.singkawangkota.go.id/api/cdn/image/1722657433888-image-150.webp"
+                                  class="card-img preview-image" id="preview"
+                                  alt="Preview Foto">
+                              </div>
                             </div>
-                            <!-- /.card-header -->
-                            <!-- form start -->
-                            <form id="profilePicForm" enctype="multipart/form-data">
-                              <div class="card-body">
-                                <div class="row justify-content-center">
-                                  <div class="col-md-6">
-                                    <div class="m-3">
-                                      <div class="center-image" style="height: 200px;">
-                                        <img src="https://api.rsudaa.singkawangkota.go.id/api/cdn/image/1722657433888-image-150.webp"
-                                          class="card-img preview-image" id="preview"
-                                          alt="Preview Foto">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="form-group row">
-                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Pilih Foto Profil</label>
-                                  <div class="col-sm-10">
-                                    <input type="file" class="form-control" id="profilePic" accept="image/*" required>
-                                  </div>
-                                </div>
-                              </div>
-                              <!-- /.card-body -->
-                              <div class="card-footer">
-                                <button type="submit" class="btn btn-primary float-right">
-                                  Simpan
-                                </button>
-                              </div>
-                              <!-- /.card-footer -->
-                            </form>
                           </div>
-                          <!-- /.card -->
-                        </div><!-- /.container-fluid -->
-                      </section>
-                      <!-- /.content -->
+                        </div>
+                        <div class="form-group row">
+                          <label for="inputEmail3"
+                            class="col-sm-2 col-form-label">Pilih Foto
+                            Profil</label>
+                          <div class="col-sm-10">
+                            <input type="file" class="form-control"
+                              id="profilePic" accept="image/*" required>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- /.card-body -->
+                      <div class="card-footer">
+                        <button type="submit"
+                          class="btn btn-primary float-right">
+                          Simpan
+                        </button>
+                      </div>
+                      <!-- /.card-footer -->
+                    </form>
+                  </div>
+                  <!-- /.card -->
+                </div><!-- /.container-fluid -->
+              </section>
+              <section class="content">
+                <div class="container-fluid">
+                  <!-- Horizontal Form -->
+                  <div class="card card-info">
+                    <div class="card-header">
+                      <h3 class="card-title">Perangkat & sesion</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body" id="userActivity">
+                     
+                    </div>
+
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                      <button type="submit" class="btn btn-primary float-right">
+                        Simpan
+                      </button>
+                    </div>
+                    <!-- /.card-footer -->
+                  </div>
+                  <!-- /.card -->
+                </div><!-- /.container-fluid -->
+              </section>
+              <!-- /.content -->
+            </div>
+            <!-- /.content-wrapper -->
+      
+
+          </div>
+          <!-- ./wrapper -->
+
+          <%- include('template/footer'); %>
+          <script src="/asset/js/src/profile.min.js"></script>
+          <script src="/asset/js/src/biodata-1.min.js"></script>
+          <script>
+
+  async function fetchData() {
+    try {
+      const response = await fetch('/api/lastActivity');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log(data);
+      for (let item of data.data) {
+        const activity = document.createElement('div');
+        activity.innerHTML = `
+        <div class="info-box bg-info">
+          <span class="info-box-icon"><i class="fa-solid fa-user-secret"></i></span>
+
+          <div class="info-box-content">
+            <span class="info-box-text">Perangkat ${item.user_agent}</span>
+            <span class="progress-description">Login pada ${item.createdAt}</span>
+            <span class="progress-description">Aktivitas terakhir ${item.updateAt}</span>
+          </div>
+           <span class="info-box-icon"><i class="fa-solid fa-square-xmark"></i></span>
+          <!-- /.info-box-content -->
         </div>
-        <!-- /.content-wrapper -->
-        <footer class="main-footer">
-        </footer>
+        <!-- /.info-box -->
+      `;
+        document.getElementById('userActivity').appendChild(activity);
+      }
+      // Process the data as needed
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  }
 
-  </div>
-  <!-- ./wrapper -->
+  fetchData();
 
-  <%- include('template/footer'); %>
-    <script src="/asset/js/src/profile.min.js"></script>
-    <script src="/asset/js/src/biodata-1.min.js"></script>
-</body>
 
-</html>
+          </script>
+        </body>
+
+      </html>

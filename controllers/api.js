@@ -1,10 +1,13 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
+const moment = require("moment");
 const { Otp, User, Session } = require("../models");
+const { update } = require("./seen");
 const secretKey = process.env.SECRET_WA;
 const payload = {
   gid: "Server Side",
 };
+moment.locale('id'); 
 
 module.exports = {
   sendOtp: async (req, res) => {
@@ -163,6 +166,45 @@ module.exports = {
       error: false,
       message: "Selamat datang, " + user.nama + "!",
     });
+  },
+  lastActivity: async (req, res) => {
+    let user = req.account;
+    try {
+      let sessions = await Session.findAll({
+        where: {
+          nik: user.nik,
+          status: 'online'
+        },
+        attributes: {
+          exclude: ['session_token', 'id']
+        },
+
+        order: [["createdAt", "DESC"]],
+      })
+      console.log(sessions[0].user_agent.split('#')[1]);
+      let userAgent = sessions[0].user_agent.split('#')[1]
+      let dataSesi = [];
+      for (let item of sessions) {
+        dataSesi.push({
+          ip_address: item.ip_address,
+          visited_id: item.visited_id,
+          user_agent: item.user_agent.split('#')[1],
+          createdAt: moment(item.createdAt).format('DD MMM YYYY, HH:mm'),
+          updateAt: moment(item.updatedAt, "YYYYMMDD").fromNow()
+        })
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: dataSesi
+      });
+
+    } catch (error) {
+      return res.status(501).json({
+        error: true,
+        message: error.message,
+      });
+    }
   },
   getUserSimrs: async (req, res) => {
     let token = req.cookies.token;
