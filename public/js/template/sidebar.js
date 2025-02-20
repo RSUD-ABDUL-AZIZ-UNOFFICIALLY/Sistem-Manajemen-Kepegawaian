@@ -43,6 +43,7 @@ function menuAkses() {
     let l = $('<li class="nav-item" id="admin" name="admin"><a href="#" class="nav-link"><i class="nav-icon fas fa-tachometer-alt"></i><p>Menu Admin<i class="right fas fa-angle-left"></i></p></a><ul class="nav nav-treeview"id="ul_admin" name="ul_admin" ></ul></li>');
     let i = $('<li class="nav-item"><a href="/contact" class="nav-link"><i class="far fa-regular fa-address-book nav-icon"></i><p>contact</p></a></li>');
     let s = $('<li class="nav-item">  <a href="/helpdeskadmin" class="nav-link"><i class="far fa-solid fa-hand-holding-hand nav-icon"></i><p>Admin Helpdesk</p></a></li>');
+    let v = $('<li class="nav-item">  <a href="/kepegawaian" class="nav-link"><i class="far fa-solid fa-user-nurse nav-icon"></i><p>Admin kepegawaian</p></a></li>');
     let u = $('<li class="nav-item">  <a href="/aprovecuti/admin" class="nav-link"><i class="far fa-solid fa-book-bookmark nav-icon"></i><p>Recapitulasi Cuti</p></a></li>');
     let present = $('<li class="nav-item"><a href="/presensi" class="nav-link"><i class="fa-solid fa-person-chalkboard nav-icon"></i><p>Jadwal Absen</p></a></li>');
     let simrs = $('<li class="nav-item" id="simrs" name="simrs"><a href="#" class="nav-link"><i class="nav-icon fa-regular fa-hospital"></i><p>Menu simrs<i class="right fas fa-angle-left"></i></p></a><ul class="nav nav-treeview"id="ul_simrs" name="ul_simrs" ></ul></li>');
@@ -55,7 +56,9 @@ function menuAkses() {
     t.includes("admin") && ($("#navbar").append(l),
         t.includes("cuti") && $("#ul_cuti").append(u),
         t.includes("contact") && $("#ul_admin").append(i),
-        t.includes("helpdesk") && $("#ul_admin").append(s)),
+            t.includes("helpdesk") && $("#ul_admin").append(s),
+            t.includes("kepegawaian") && $("#ul_admin").append(v)),
+
         t.includes("simrs") && $("#navbar").append(simrs),
         t.includes("rm") && $("#ul_simrs").append(rm),
         $("#navbar").append('<li class="nav-item" id="helpdesk" name="helpdesk">    <a href="/helpdesk" class="nav-link">        <i class="fa-solid fa-bug text-warning nav-icon"></i>        <p class="text">Helpdesk</p>    </a></li>'),
