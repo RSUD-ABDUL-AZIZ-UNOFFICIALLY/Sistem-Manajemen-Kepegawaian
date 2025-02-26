@@ -25,3 +25,26 @@ if (!localStorage.getItem("visite")) {
 } else {
     document.cookie = "visite=" + localStorage.getItem("visite") + ";";
 }
+
+
+
+
+async function fetchData() {
+    try {
+        let dataSession = sessionStorage.getItem("session");
+        if (!dataSession) {
+            let response = await fetch('https://api.example.com/data');
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+        }
+
+
+        console.log("Data berhasil diambil:", data);
+    } catch (error) {
+        console.error("Gagal mengambil data:", error.message);
+    }
+}
+
+fetchData();

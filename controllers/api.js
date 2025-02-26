@@ -264,10 +264,32 @@ module.exports = {
   edtoken: async (req, res) => {
     let user = req.account
     try {
+      let findAllSession = await Session.findAll({
+        where: {
+          nik: user.nik,
+          status: 'online'
+        }
+      })
+      let filteredSession = findAllSession.filter(session => {
+        let now = new Date();
+        let createdAt = new Date(session.updatedAt);
+        let diffTime = Math.abs(now - createdAt);
+        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays > 7;
+      })
+      for (let item of filteredSession) {
+        await Session.update({
+          status: 'expire'
+        }, {
+          where: {
+            id: item.id
+          }
+        })
+      }
       return res.status(200).json({
         error: false,
         message: "success",
-        data: user
+        data: findAllSession
       })
 
     } catch (error) {
