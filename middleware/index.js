@@ -62,9 +62,10 @@ module.exports = {
                 }, secretKey, { expiresIn: 60 * 60 * 24 * 7 });
                 res.cookie("token", newToken, {
                     maxAge: 1000 * 60 * 60 * 24 * 7,
-                    httpOnly: false,
+                    httpOnly: true,
+                    secure: true
                 });
-                Session.update({
+                await Session.update({
                     session_token: newToken,
                     ip_address: req.headers['x-real-ip'],
                     user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
@@ -76,7 +77,7 @@ module.exports = {
                     },
                 });
                 await client.set('SIMPEG:seen:' + newToken, getUser.nik);
-                client.expire('SIMPEG:seen:' + newToken, 30);
+                client.expire('SIMPEG:seen:' + newToken, 90);
             }
 
             // let getUser = await User.findOne({

@@ -24,7 +24,7 @@ module.exports = {
       res.cookie("otp", body.phone, {
         secure: false,
         maxAge: 1000 * 60,
-        // httpOnly: true,
+        httpOnly: true,
       });
       let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
       let user = await User.findOne({
@@ -152,7 +152,8 @@ module.exports = {
     // set cookie
     res.cookie("token", token, {
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      httpOnly: false,
+      httpOnly: true,
+      secure: true
     });
     Session.create({
       nik: user.nik,
