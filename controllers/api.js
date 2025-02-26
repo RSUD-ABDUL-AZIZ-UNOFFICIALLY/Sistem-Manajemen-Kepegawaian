@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const moment = require("moment");
-const { Otp, User, Session } = require("../models");
+const { Otp, User, Session, sequelize } = require("../models");
 const { update } = require("./seen");
 const secretKey = process.env.SECRET_WA;
 const payload = {
@@ -111,14 +111,16 @@ module.exports = {
     }
   },
   verifyOtp: async (req, res) => {
+    let t = await sequelize.transaction();
     let body = req.body;
     let checkOtp = await Otp.findOne({
       where: {
         token: body.otp,
         wa: body.phone,
       },
-    });
+    }, { transaction: t });
     if (!checkOtp) {
+      await t.rollback();
       return res.status(401).json({
         error: true,
         message: "Invalid OTP",
@@ -138,7 +140,7 @@ module.exports = {
       where: {
         wa: body.phone,
       },
-    });
+    }, { transaction: t });
     // create jwt
     let token = jwt.sign(
       {
@@ -162,7 +164,8 @@ module.exports = {
       visited_id: req.cookies.visite,
       user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
       status: "login"
-    })
+    }, { transaction: t });
+    await t.commit();
     return res.status(200).json({
       error: false,
       message: "Selamat datang, " + user.nama + "!",
@@ -257,5 +260,21 @@ module.exports = {
       });
     }
   },
+  edtoken: async (req, res) => {
+    let user = req.account
+    try {
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: user
+      })
+
+    } catch (error) {
+      return res.status(500).json({
+        error: false,
+        message: error.message,
+      });
+    }
+  }
  
 };

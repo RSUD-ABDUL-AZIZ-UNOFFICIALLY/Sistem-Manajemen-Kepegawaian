@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { User, Atasan, Access, Session } = require("../models");
+const { User, Atasan, Access, Session, sequelize } = require("../models");
 const { Buffer } = require('buffer');
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -41,17 +41,20 @@ module.exports = {
             req.account = getUser;
             const value = await client.get('SIMPEG:seen:' + token);
             if (!value) {
+                let t = await sequelize.transaction();
                 let cek_session = await Session.findOne({
                     where: {
                         nik: decoded.id,
                         session_token: token,
                     },
-                });
+                }, { transaction: t });
                 if (!cek_session) {
+                    await t.rollback();
                     res.clearCookie("token");
                     return res.redirect("/");
                 }
-                if (cek_session.status == 'close') {
+                if (cek_session.status == 'close' || cek_session.status == 'logout') {
+                    await t.rollback();
                     res.clearCookie("token");
                     return res.redirect("/");
                 }
@@ -75,9 +78,10 @@ module.exports = {
                         nik: decoded.id,
                         session_token: token,
                     },
-                });
+                }, { transaction: t });
                 await client.set('SIMPEG:seen:' + newToken, getUser.nik);
                 client.expire('SIMPEG:seen:' + newToken, 90);
+                await t.commit();
             }
 
             // let getUser = await User.findOne({
