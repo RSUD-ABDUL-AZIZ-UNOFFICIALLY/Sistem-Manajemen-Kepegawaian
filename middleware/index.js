@@ -62,7 +62,7 @@ module.exports = {
                 }, secretKey, { expiresIn: 60 * 60 * 24 * 7 });
                 res.cookie("token", newToken, {
                     maxAge: 1000 * 60 * 60 * 24 * 7,
-                    httpOnly: true,
+                    httpOnly: false,
                     secure: true
                 });
                 await Session.update({
