@@ -111,8 +111,8 @@ module.exports = {
     }
   },
   verifyOtp: async (req, res) => {
-    let t = await sequelize.transaction();
     let body = req.body;
+    let t = await sequelize.transaction();
     let checkOtp = await Otp.findOne({
       where: {
         token: body.otp,
@@ -131,6 +131,7 @@ module.exports = {
     let createdAt = new Date(checkOtp.createdAt); // Ganti dengan nilai yang sesuai dari createdAt
     let diff = (now.getTime() - createdAt.getTime()) / 1000; // Menghitung selisih waktu dalam detik
     if (diff > 300) {
+      await t.rollback();
       return res.status(401).json({
         error: true,
         message: "OTP kedaluwarsa silahkan klik Minta OTP",
@@ -157,7 +158,7 @@ module.exports = {
       httpOnly: false,
       secure: true
     });
-    Session.create({
+    await Session.create({
       nik: user.nik,
       session_token: token,
       ip_address: req.headers['x-real-ip'],
