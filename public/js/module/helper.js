@@ -33,11 +33,12 @@ async function fetchData() {
     try {
         let dataSession = sessionStorage.getItem("session");
         if (!dataSession) {
-            let response = await fetch('https://api.example.com/data');
+            let response = await fetch('/api/session');
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
+            sessionStorage.setItem("session", "true");
         }
 
 
