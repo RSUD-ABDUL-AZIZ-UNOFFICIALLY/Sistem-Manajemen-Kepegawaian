@@ -1,6 +1,6 @@
 {
   "name": "lpkp",
-  "version": "2.6.2-security",
+  "version": "2.6.3-security",
   "description": "",
   "main": "app.js",
   "scripts": {
