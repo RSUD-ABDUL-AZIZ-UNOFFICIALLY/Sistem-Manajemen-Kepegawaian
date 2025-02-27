@@ -32,6 +32,8 @@ module.exports = {
     let body = req.body;
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
+    req.cache.del('SIMPEG:user:' + decoded.id);
+    req.cache.del('SIMPEG:atasan:' + decoded.id);
     try {
       await User.update(
         {

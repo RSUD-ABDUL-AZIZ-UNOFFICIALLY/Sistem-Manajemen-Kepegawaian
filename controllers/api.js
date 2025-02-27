@@ -158,6 +158,8 @@ module.exports = {
       httpOnly: false,
       secure: true
     });
+    await req.cache.set('SIMPEG:seen:' + token, user.nik);
+    req.cache.expire('SIMPEG:seen:' + token, 90);
     await Session.create({
       nik: user.nik,
       session_token: token,

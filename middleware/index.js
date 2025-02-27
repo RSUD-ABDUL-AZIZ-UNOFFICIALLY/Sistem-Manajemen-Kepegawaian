@@ -3,16 +3,6 @@ const { User, Atasan, Access, Session, sequelize } = require("../models");
 const { Buffer } = require('buffer');
 const secretKey = process.env.JWT_SECRET_KEY;
 
-const { createClient } = require('redis');
-const client = createClient({
-    password: process.env.REDIS_PASSWORD,
-    socket: {
-        host: process.env.REDIS_URL,
-        port: process.env.REDIS_URL_PORT
-    }
-});
-client.connect();
-
 module.exports = {
     login: async (req, res, next) => {
         try {
@@ -22,26 +12,27 @@ module.exports = {
                 return res.redirect("/");
             }
             const decoded = jwt.verify(token, secretKey);
-            let getUser = await client.json.get('SIMPEG:user:' + decoded.id);
+            let t = await sequelize.transaction();
+            let getUser = await req.cache.json.get('SIMPEG:user:' + decoded.id);
             if (!getUser) {
                 getUser = await User.findOne({
                     where: {
                         nik: decoded.id,
                     },
-                });
+                }, { transaction: t });
                 if (!getUser) {
+                    await t.rollback();
                     res.clearCookie("token");
                     return res.redirect("/");
                 } else {
-                    await client.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
-                    client.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24 * 2);
+                    await req.cache.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
+                    req.cache.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24);
                     req.account = getUser;
                 }
             }
             req.account = getUser;
-            const value = await client.get('SIMPEG:seen:' + token);
+            const value = await req.cache.get('SIMPEG:seen:' + token);
             if (!value) {
-                let t = await sequelize.transaction();
                 let cek_session = await Session.findOne({
                     where: {
                         nik: decoded.id,
@@ -79,9 +70,8 @@ module.exports = {
                         session_token: token,
                     },
                 }, { transaction: t });
-                await client.set('SIMPEG:seen:' + newToken, getUser.nik);
-                client.expire('SIMPEG:seen:' + newToken, 90);
-                await t.commit();
+                await req.cache.set('SIMPEG:seen:' + newToken, getUser.nik);
+                req.cache.expire('SIMPEG:seen:' + newToken, 90);
             }
 
             // let getUser = await User.findOne({
@@ -89,32 +79,34 @@ module.exports = {
             //         nik: decoded.id,
             //     },
             // });
+            let getAtasan = await req.cache.json.get('SIMPEG:atasan:' + decoded.id);
 
-            let getAtasan = await Atasan.findOne({
-                where: {
-                    user: decoded.id,
-                },
-            });
             if (!getAtasan) {
-                // set cookie
-                let data = {
-                    "pesan": "Biodata anda belum lengkap, harap lengkapi profil Anda.",
-                    "status" : "warning",
-                    "title" : "Warning,",
-                    "url" : "/profile",
+                getAtasan = await Atasan.findOne({
+                    where: {
+                        user: decoded.id,
+                    },
+                }, { transaction: t });
+                if (!getAtasan) {
+                    let data = {
+                        "pesan": "Biodata anda belum lengkap, harap lengkapi profil Anda.",
+                        "status": "warning",
+                        "title": "Warning,",
+                        "url": "/profile",
+                    }
+                    data = JSON.stringify(data);
+                    const encodedData = Buffer.from(data).toString('base64');
+                    res.cookie("status", encodedData, {
+                        // maxAge 5 minutes
+                        maxAge: 1000 * 60 * 5,
+                        httpOnly: false,
+                    });
                 }
-                data = JSON.stringify(data);
-                const encodedData = Buffer.from(data).toString('base64');
-                res.cookie("status", encodedData, {
-                    // maxAge 5 minutes
-                    maxAge: 1000 * 60 * 5,
-                    httpOnly: false,
-                });
-            }else{
-            res.clearCookie("status");
-                await client.json.set('SIMPEG:atasan:' + decoded.id, '$', getAtasan);
-                client.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24 * 2);
+                res.clearCookie("status");
+                await req.cache.json.set('SIMPEG:atasan:' + decoded.id, '$', getAtasan);
+                req.cache.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24 * 5);        
             }
+            await t.commit();
             next();
         } catch (err) {
             console.log('err');
