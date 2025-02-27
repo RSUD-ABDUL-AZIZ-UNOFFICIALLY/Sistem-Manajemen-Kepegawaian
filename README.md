@@ -84,5 +84,6 @@ REDIS_PASSWORD=""
 #### Diubah
 - Menyiman IP dari proxy.
 - Membuat redis menjadi singleton pattern.
+- Tidak mengirim pesan pada untuk nomor yang tidak di kenal.
 
 

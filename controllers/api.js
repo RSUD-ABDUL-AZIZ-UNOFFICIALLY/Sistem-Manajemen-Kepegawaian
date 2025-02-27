@@ -33,28 +33,28 @@ module.exports = {
         },
       });
       if (!user) {
-        let data = JSON.stringify({
-          message:
-            "Maaf, nomor Anda tidak terdaftar di sistem kami. Silahkan hubungi IT RSUD dr. Abdul Aziz untuk mendaftar.",
-          telp: body.phone,
-        });
-        let config = {
-          method: "post",
-          url: process.env.HOSTWA + "/api/wa/send",
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-          },
-          data: data,
-        };
-        axios
-          .request(config)
-          .then((response) => {
-       
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        // let data = JSON.stringify({
+        //   message:
+        //     "Maaf, nomor Anda tidak terdaftar di sistem kami. Silahkan hubungi IT RSUD dr. Abdul Aziz untuk mendaftar.",
+        //   telp: body.phone,
+        // });
+        // let config = {
+        //   method: "post",
+        //   url: process.env.HOSTWA + "/api/wa/send",
+        //   headers: {
+        //     Authorization: "Bearer " + token,
+        //     "Content-Type": "application/json",
+        //   },
+        //   data: data,
+        // };
+        // axios
+        //   .request(config)
+        //   .then((response) => {
+
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //   });
         return res.status(404).json({
           error: true,
           message: "Nomor Anda belum terdaftar di sistem kami",
