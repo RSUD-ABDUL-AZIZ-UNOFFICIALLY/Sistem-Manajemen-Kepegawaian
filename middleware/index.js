@@ -106,7 +106,7 @@ module.exports = {
             }
             await t.commit();
             await req.cache.set('SIMPEG:seen:' + newToken, getUser.nik);
-            req.cache.expire('SIMPEG:seen:' + newToken, 90);
+            req.cache.expire('SIMPEG:seen:' + newToken, 60 * 60);
             next();
         } catch (err) {
             console.log('err');
