@@ -70,8 +70,6 @@ module.exports = {
                         session_token: token,
                     },
                 }, { transaction: t });
-                await req.cache.set('SIMPEG:seen:' + newToken, getUser.nik);
-                req.cache.expire('SIMPEG:seen:' + newToken, 90);
             }
 
             // let getUser = await User.findOne({
@@ -107,6 +105,8 @@ module.exports = {
                 req.cache.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24 * 5);        
             }
             await t.commit();
+            await req.cache.set('SIMPEG:seen:' + newToken, getUser.nik);
+            req.cache.expire('SIMPEG:seen:' + newToken, 90);
             next();
         } catch (err) {
             console.log('err');
