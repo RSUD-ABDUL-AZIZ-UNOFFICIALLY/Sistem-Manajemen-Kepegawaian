@@ -87,3 +87,9 @@ REDIS_PASSWORD=""
 - Tidak mengirim pesan pada untuk nomor yang tidak di kenal.
 
 
+### [2.6.4-security] - 2025-03-06
+#### Ditambahkan
+- UUID.
+
+#### Diubah
+-  Visit_id ganti dengan UUID.
