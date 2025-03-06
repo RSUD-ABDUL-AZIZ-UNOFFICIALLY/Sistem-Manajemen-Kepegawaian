@@ -1,12 +1,7 @@
-/.env
-/node_modules
-/package-lock.json
-/public/cache/*
-!/public/cache/.gitkeep
-.env prod
-under.json
-tidakAda.json
-hakases.json
-uitest.js
-.env dev
-.DS_Store
+/nbproject/
+/.idea/*
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
