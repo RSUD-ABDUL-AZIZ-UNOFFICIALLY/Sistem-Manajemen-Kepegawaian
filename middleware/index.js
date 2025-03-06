@@ -2,14 +2,22 @@ const jwt = require("jsonwebtoken");
 const { User, Atasan, Access, Session, sequelize } = require("../models");
 const { Buffer } = require('buffer');
 const secretKey = process.env.JWT_SECRET_KEY;
+const uuid = require('uuid');
 
 module.exports = {
     login: async (req, res, next) => {
         try {
             const token = req.cookies.token;
-            if (!token) {
-                res.clearCookie("token");   
+            if (!token) { 
                 return res.redirect("/");
+            }
+            let userID = req.cookies.userID;
+            if (!userID) {
+                userID = uuid.v7();
+                res.cookie("userID", userID, {
+                    httpOnly: true,
+                    secure: true,
+                });
             }
             const decoded = jwt.verify(token, secretKey);
             let t = await sequelize.transaction();
@@ -31,20 +39,29 @@ module.exports = {
                 }
             }
             req.account = getUser;
-            const value = await req.cache.get('SIMPEG:seen:' + token);
+            const value = await req.cache.get('SIMPEG:seen:' + userID);
             if (!value) {
                 let cek_session = await Session.findOne({
                     where: {
                         nik: decoded.id,
-                        session_token: token,
+                        visited_id: userID,
                     },
+                    order: [["updatedAt", "DESC"]]
                 }, { transaction: t });
+                console.log(cek_session);
                 if (!cek_session) {
-                    await t.rollback();
-                    res.clearCookie("token");
-                    return res.redirect("/");
-                }
-                if (cek_session.status == 'close' || cek_session.status == 'logout') {
+                    console.log('err');
+                    await Session.create({
+                        nik: decoded.id,
+                        session_token: token,
+                        ip_address: req.headers['x-real-ip'],
+                        visited_id: userID,
+                        user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
+                        status: "online"
+                    }, { transaction: t });
+                    await t.commit();
+                    next();
+                } else if (cek_session.status == 'close' || cek_session.status == 'logout' || cek_session.status == 'expire') {
                     await t.rollback();
                     res.clearCookie("token");
                     return res.redirect("/");
@@ -54,11 +71,7 @@ module.exports = {
                     nama: getUser.nama,
                     wa: getUser.wa,
                 }, secretKey, { expiresIn: 60 * 60 * 24 * 7 });
-                res.cookie("token", newToken, {
-                    maxAge: 1000 * 60 * 60 * 24 * 7,
-                    httpOnly: false,
-                    secure: true
-                });
+
                 await Session.update({
                     session_token: newToken,
                     ip_address: req.headers['x-real-ip'],
@@ -66,10 +79,17 @@ module.exports = {
                     status: 'online',
                 }, {
                     where: {
-                        nik: decoded.id,
-                        session_token: token,
+                        id: cek_session.id,
                     },
+                    order: [["updatedAt", "DESC"]]
                 }, { transaction: t });
+                res.cookie("token", newToken, {
+                    maxAge: 1000 * 60 * 60 * 24 * 7,
+                    httpOnly: false,
+                    secure: true
+                });
+                await req.cache.set('SIMPEG:seen:' + userID, getUser.nama);
+                req.cache.expire('SIMPEG:seen:' + userID, 60);
             }
 
             // let getUser = await User.findOne({
@@ -105,12 +125,11 @@ module.exports = {
                 req.cache.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24 * 5);        
             }
             await t.commit();
-            await req.cache.set('SIMPEG:seen:' + newToken, getUser.nik);
-            req.cache.expire('SIMPEG:seen:' + newToken, 60 * 60);
             next();
         } catch (err) {
             console.log('err');
             console.log(err);
+            // await t.rollback();
             // res.clearCookie("token");
             // return res.redirect("/");
         }
@@ -133,12 +152,13 @@ module.exports = {
         try {
             const token = req.cookies.token;
             const decoded = jwt.verify(token, secretKey);
+            let userID = req.cookies.userID;
             Session.update({
                 status: 'logout',
             }, {
                 where: {
                     nik: decoded.id,
-                    session_token: token,
+                    visited_id: userID,
                 },
             });
             res.clearCookie("token");

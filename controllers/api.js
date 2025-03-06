@@ -8,6 +8,7 @@ const payload = {
   gid: "Server Side",
 };
 moment.locale('id'); 
+const uuid = require('uuid');
 
 module.exports = {
   sendOtp: async (req, res) => {
@@ -160,11 +161,20 @@ module.exports = {
     });
     await req.cache.set('SIMPEG:seen:' + token, user.nik);
     req.cache.expire('SIMPEG:seen:' + token, 90);
+    let userID = req.cookies.userID;
+    if (!userID) {
+      userID = uuid.v7();
+      console.log(userID);
+      res.cookie("userID", userID, {
+        httpOnly: true,
+        secure: true,
+      });
+    }
     await Session.create({
       nik: user.nik,
       session_token: token,
       ip_address: req.headers['x-real-ip'],
-      visited_id: req.cookies.visite,
+      visited_id: userID,
       user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
       status: "login"
     }, { transaction: t });
