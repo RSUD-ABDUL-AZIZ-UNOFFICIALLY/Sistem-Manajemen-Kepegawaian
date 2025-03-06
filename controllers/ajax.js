@@ -22,7 +22,7 @@ const {
   Hotspot,
   Instalasi
 } = require("../models");
-const { Op, or, where } = require("sequelize");
+const { Op } = require("sequelize");
 const fs = require("fs");
 const { convertdate, convertdatetime } = require("../helper");
 const { uploadImage } = require("../helper/upload");
