@@ -90,6 +90,7 @@ REDIS_PASSWORD=""
 ### [2.6.4-security] - 2025-03-06
 #### Ditambahkan
 - UUID.
+- Halaman 404.
 
 #### Diubah
 -  Visit_id ganti dengan UUID.
