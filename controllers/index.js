@@ -284,6 +284,16 @@ module.exports = {
     };
     res.render("admin/helpdesk", data);
   },
+  pegawaiAdmin: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "Admin Pegawai | SIMPEG",
+      page: "Dasbord Pegawai",
+      token: decoded,
+    };
+    res.render("admin/pegawai", data);
+  },
   getContact: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);

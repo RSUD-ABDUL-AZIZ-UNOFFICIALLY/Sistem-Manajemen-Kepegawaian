@@ -22,7 +22,7 @@ const {
   Hotspot,
   Instalasi
 } = require("../models");
-const { Op, or } = require("sequelize");
+const { Op } = require("sequelize");
 const fs = require("fs");
 const { convertdate, convertdatetime } = require("../helper");
 const { uploadImage } = require("../helper/upload");
@@ -32,6 +32,8 @@ module.exports = {
     let body = req.body;
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
+    req.cache.del('SIMPEG:user:' + decoded.id);
+    req.cache.del('SIMPEG:atasan:' + decoded.id);
     try {
       await User.update(
         {
@@ -1915,6 +1917,100 @@ Lampiran   : ${urlLampiran}`
         error: false,
         message: "success",
         data: hakakses,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getPegawaiStatus: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      let getAnggota = await Instalasi.findOne({
+        where: {
+          bos: decoded.id,
+        },
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: getAnggota,
+      });
+    } catch (error) {
+      return res.status(400).json({
+
+      })
+    }
+  },
+  getPegawaiCount: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      let getAnggota = await User.findAll({
+        where: {
+          dep: { [Op.ne]: 47 },
+        },
+        attributes: ["status"],
+      });
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: {
+          PNS: getAnggota.filter((i) => i.status === "PNS").length,
+          PPPK: getAnggota.filter((i) => i.status === "PPPK").length,
+          "Non ASN": getAnggota.filter((i) => i.status === "Non ASN").length
+        },
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getDepCount: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      let labelAnggota = await Departemen.findAll({
+        attributes: ["id", "bidang"],
+        where: {
+          id: { [Op.notIn]: [47, 1, 2] },
+        },
+      })
+      for (let item of labelAnggota) {
+        let getAnggota = await User.findAll({
+          where: {
+            dep: item.id,
+          },
+          attributes: ["status"],
+        });
+        item.dataValues.PNS = getAnggota.filter((i) => i.status === "PNS").length;
+        item.dataValues.PPPK = getAnggota.filter((i) => i.status === "PPPK").length;
+        item.dataValues["Non ASN"] = getAnggota.filter((i) => i.status === "Non ASN").length
+      }
+      const fourthpart = Math.ceil(labelAnggota.length / 4);
+      const firstFourth = labelAnggota.slice(0, fourthpart);
+      const secondFourth = labelAnggota.slice(fourthpart, fourthpart * 2);
+      const thirdFourth = labelAnggota.slice(fourthpart * 2, fourthpart * 3);
+      const fourthFourth = labelAnggota.slice(fourthpart * 3);
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: {
+          length: labelAnggota.length,
+          firstFourth,
+          secondFourth,
+          thirdFourth,
+          fourthFourth
+        },
       });
     } catch (error) {
       return res.status(400).json({

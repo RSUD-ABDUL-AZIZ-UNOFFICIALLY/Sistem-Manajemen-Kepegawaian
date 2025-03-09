@@ -82,6 +82,10 @@ app.use('/rest', routeRest);
 
 const hardin = require('./routes/hardin');
 app.use('/rest/hardin', hardin);
+// Middleware 404
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, '/public/404.html'));
+});
 
 app.use((err, req, res, next) => {
     console.error(err.stack)
