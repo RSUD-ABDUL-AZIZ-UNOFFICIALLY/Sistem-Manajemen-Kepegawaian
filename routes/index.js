@@ -39,6 +39,7 @@ router.get('/logout', middleware.logout);
 
 router.get('/helpDeskAdmin', middleware.login, controller.helpDeskAdmin);
 router.get('/kepegawaian', middleware.login, controller.pegawaiAdmin);
+router.get('/kepegawaian/:id', middleware.login, controller.dataAdmin);
 
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/verify-otp', api.verifyOtp);
@@ -89,6 +90,8 @@ router.get('/api/contact/menu', middleware.login, ajax.getMenu);
 router.get('/api/pegawai/status', middleware.login, ajax.getPegawaiStatus);
 router.get('/api/pegawai/count', middleware.login, ajax.getPegawaiCount);
 router.get('/api/pegawai/countDep', middleware.login, ajax.getDepCount);
+router.get('/api/pegawai/gologan/:id', middleware.login, ajax.getGologan);
+router.put('/api/pegawai/data', middleware.checkHakAkses('kepegawaian'), ajax.updateDataPegawai);
 
 
 router.get('/api/report', middleware.login, report.person);

@@ -1983,18 +1983,34 @@ Lampiran   : ${urlLampiran}`
         where: {
           id: { [Op.notIn]: [47, 1, 2] },
         },
-      })
-      for (let item of labelAnggota) {
-        let getAnggota = await User.findAll({
-          where: {
-            dep: item.id,
-          },
-          attributes: ["status"],
-        });
-        item.dataValues.PNS = getAnggota.filter((i) => i.status === "PNS").length;
-        item.dataValues.PPPK = getAnggota.filter((i) => i.status === "PPPK").length;
-        item.dataValues["Non ASN"] = getAnggota.filter((i) => i.status === "Non ASN").length
-      }
+      });
+
+      // Ambil semua data anggota dalam satu query, bukan dalam loop
+      let allAnggota = await User.findAll({
+        where: {
+          dep: { [Op.in]: labelAnggota.map((item) => item.id) },
+        },
+        attributes: ["dep", "status"],
+      });
+
+      // Buat mapping untuk menghitung jumlah anggota berdasarkan departemen dan status
+      let anggotaCount = {};
+      allAnggota.forEach(({ dep, status }) => {
+        if (!anggotaCount[dep]) {
+          anggotaCount[dep] = { PNS: 0, PPPK: 0, "Non ASN": 0 };
+        }
+        if (anggotaCount[dep][status] !== undefined) {
+          anggotaCount[dep][status]++;
+        }
+      });
+
+      // Gabungkan hasil ke dalam `labelAnggota`
+      labelAnggota.forEach((item) => {
+        item.dataValues.PNS = anggotaCount[item.id]?.PNS || 0;
+        item.dataValues.PPPK = anggotaCount[item.id]?.PPPK || 0;
+        item.dataValues["Non ASN"] = anggotaCount[item.id]?.["Non ASN"] || 0;
+      });
+
       const fourthpart = Math.ceil(labelAnggota.length / 4);
       const firstFourth = labelAnggota.slice(0, fourthpart);
       const secondFourth = labelAnggota.slice(fourthpart, fourthpart * 2);
@@ -2017,6 +2033,123 @@ Lampiran   : ${urlLampiran}`
         error: true,
         message: "error",
         data: error.message,
+      });
+    }
+  },
+  getGologan: async (req, res) => {
+    try {
+      let path = req.params.id;
+      let pegawai = await User.findAll({
+        where: {
+          status: path,
+          dep: { [Op.ne]: 47 },
+        },
+        include: [
+          {
+            model: Biodatas,
+            as: "biodata",
+            required: false,
+            attributes: ["pangkat", "tmt_pangkat", "tmt_kerja", "marital"],
+          },
+          {
+            model: Departemen,
+            as: "departemen",
+            attributes: ["bidang"],
+            required: false,
+          },
+        ],
+        attributes: ["nik", "nama", "nip", "JnsKel", "jab"],
+      });
+      let result = pegawai.map((item, index) => ({
+        // no: index + 1,
+        nik: item.nik,
+        nama: item.nama,
+        nip: item.nip || '',
+        JnsKel: item.JnsKel || null,
+        jab: item.jab || null,
+        pangkat: item.biodata?.pangkat || null,
+        tmt_pangkat: item.biodata?.tmt_pangkat || null,
+        tmt_kerja: item.biodata?.tmt_kerja || null,
+        marital: item.biodata?.marital || null,
+        bidang: item.departemen?.bidang || null,
+      }));
+      result.sort((a, b) => {
+        const order = ['IVe', 'IVd', 'IVc', 'IVb', 'IVa', 'IIId', 'IIIc', 'IIIb', 'IIIa', 'IId', 'IIc', 'IIb', 'IIa', 'XI', 'X', 'IX', 'VIII', 'VII', 'VI', 'V', 'IV', '-'];
+        const aIndex = order.indexOf(a.pangkat);
+        const bIndex = order.indexOf(b.pangkat);
+        if (aIndex === -1 && bIndex === -1) {
+          return 0;
+        }
+        if (aIndex === -1) {
+          return 1;
+        }
+        if (bIndex === -1) {
+          return -1;
+        }
+        if (aIndex !== bIndex) {
+          return aIndex - bIndex;
+        }
+        const aDate = new Date(a.tmt_pangkat);
+        const bDate = new Date(b.tmt_pangkat);
+        return aDate - bDate;
+      });
+      result.forEach((item, index) => {
+        item.no = index + 1;
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        recoud: result.length,
+        data: result
+      });
+    }
+    catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  updateDataPegawai: async (req, res) => {
+    let t = await sequelize.transaction();
+    try {
+      let { nik, nama, nip, jab, pangkat, tmt_pangkat, tmt_kerja } = req.body;
+      console.log(req.body);
+      await User.update({
+        nama: nama,
+        nip: nip,
+        jab: jab,
+      }, {
+        where: {
+          nik: nik,
+        }
+
+      }, { transaction: t });
+      await Biodatas.update({
+        pangkat: pangkat,
+        tmt_pangkat: tmt_pangkat,
+        tmt_kerja: tmt_kerja,
+      }, {
+        where: {
+          nik: nik,
+        },
+
+      }, { transaction: t });
+      await t.commit();
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        // data: result
+      });
+
+    }
+    catch (error) {
+      await t.rollback();
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error,
       });
     }
   },

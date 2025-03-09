@@ -294,6 +294,21 @@ module.exports = {
     };
     res.render("admin/pegawai", data);
   },
+  dataAdmin: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let path = req.params.id;
+    console.log(path);
+    let data = {
+      title: `Admin Pegawai ${path} | SIMPEG`,
+      page: `Dasbord Pegawai ${path.toUpperCase()}`,
+      token: decoded,
+    };
+    if (path == "pns" || path == "pppk") {
+      res.render("admin/asn", data);
+    }
+    res.render("admin/asn", data);
+  },
   getContact: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);

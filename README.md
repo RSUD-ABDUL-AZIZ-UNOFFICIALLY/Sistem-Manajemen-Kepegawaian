@@ -94,3 +94,9 @@ REDIS_PASSWORD=""
 
 #### Diubah
 -  Visit_id ganti dengan UUID.
+
+### [2.7.0-pegawai] - 2025-03-10
+#### Ditambahkan
+- Modul Kepegawaian.
+- Data statistik pegawai.
+- Pembaruhuan data pegawai.
