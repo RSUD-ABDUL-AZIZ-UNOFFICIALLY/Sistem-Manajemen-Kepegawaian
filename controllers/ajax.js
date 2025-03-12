@@ -1952,7 +1952,7 @@ Lampiran   : ${urlLampiran}`
       let decoded = jwt.verify(token, secretKey);
       let getAnggota = await User.findAll({
         where: {
-          dep: { [Op.ne]: 47 },
+          [Op.or]: [{ dep: { [Op.ne]: 47 } }, { dep: null }],
         },
         attributes: ["status"],
       });
@@ -2042,7 +2042,7 @@ Lampiran   : ${urlLampiran}`
       let pegawai = await User.findAll({
         where: {
           status: path,
-          dep: { [Op.ne]: 47 },
+          [Op.or]: [{ dep: { [Op.ne]: 47 } }, { dep: null }],
         },
         include: [
           {

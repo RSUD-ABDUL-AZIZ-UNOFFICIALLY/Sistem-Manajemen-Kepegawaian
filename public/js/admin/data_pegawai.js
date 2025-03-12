@@ -5,30 +5,18 @@ fetch('/api/pegawai/gologan/' + page)
     .then(response => response.json())
     .then(data => {
         console.log(data.data);
-        //   $('#dataPegawi').DataTable({
-        //   data: data.data,
-        //   columns: [
-        //     { title: "Column 1", data: "field1" },
-        //     { title: "Column 2", data: "field2" },
-        //     // Add more columns as needed
-        //   ]
-        // });
-        //   let table = new Tabulator("#dataPegawi", {
-        //       data: tabledata, //assign data to table
-        //       autoColumns: true, //create columns from data field names
-        //   });
         let table = new Tabulator("#tableDataPegawi", {
             data: data.data,
             columns: [
-                { title: "NO", field: "no" },
+                { title: "NO", field: "no", width: '5px' },
                 { title: "NIP", field: "nip", editor: "number" },
-                { title: "Nama", field: "nama", editor: "input" },
+                { title: "Nama", field: "nama", editor: "input", width: '25px' },
                 {
                     title: "Golongan", field: "pangkat",
                     editor: "list",
                     editorParams: {
                         values: ['IVe', 'IVd', 'IVc', 'IVb', 'IVa', 'IIId', 'IIIc', 'IIIb', 'IIIa', 'IId', 'IIc', 'IIb', 'IIa', 'XI', 'X', 'IX', 'VIII', 'VII', 'VI', 'V', 'IV', '-']
-                    }
+                    }, width: '10px'
                 },
                 { title: "TMT Pangkat", field: "tmt_pangkat", editor: "date" },
                 { title: "Jabatan", field: "jab", editor: "input" },
@@ -37,6 +25,7 @@ fetch('/api/pegawai/gologan/' + page)
                 {
                     title: "ACTION",
                     field: "action",
+                    width: '7px',
                     formatter: function (cell, formatterParams, onRendered) {
                         // Create an edit button
                         //   return `<button class="btn btn-primary btn-sm" onclick="editRecord('${cell.getRow().getData().nik},${cell.getRow()}')">Edit</button>`;
@@ -81,7 +70,20 @@ fetch('/api/pegawai/gologan/' + page)
                             });
                     }
                 },
-            ]
+            ],
+            pagination: "local",
+            pageNavigation: "local",
+            paginationSize: 20,
+            paginationSizeSelector: [10, 20, 30, 50, 100],
+            layout: "fitColumns",
+        });
+        document.getElementById("search-input").addEventListener("keyup", function () {
+            let value = this.value;
+            table.setFilter((data) => {
+                return Object.values(data).some(val =>
+                    String(val).toLowerCase().includes(value.toLowerCase())
+                );
+            });
         });
         document.getElementById("download-xlsx").addEventListener("click", function () {
             table.download("xlsx", "data_pegawai.xlsx", { sheetName: "Data Pegawai" });
