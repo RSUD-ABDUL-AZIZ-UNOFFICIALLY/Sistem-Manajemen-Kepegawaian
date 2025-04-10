@@ -110,3 +110,7 @@ REDIS_PASSWORD=""
 - Pagination pada data pegawai.
 - Pencarian data pegawai.
 - Filter data pegawai.
+
+### [2.7.2-pegawai] - 2025-04-10
+#### Ditambahkan
+- Notifikasi alamat cuti pegawai.

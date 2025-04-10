@@ -1168,12 +1168,13 @@ Terima kasih atas perhatiannya.`;
       });
 
       let pesanGrub = `*Pemberitahuan Cuti Pegawai*
-Nama       : ${decoded.nama}
-NIK        : ${decoded.id}
-Bidang     : ${dep.bidang} 
-Jenis Cuti : ${getJenisCuti.type_cuti}
-Tanggal    : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)
-Lampiran   : ${urlLampiran}`
+Nama              : ${decoded.nama}
+NIK               : ${decoded.id}
+Bidang            : ${dep.bidang} 
+Jenis Cuti        : ${getJenisCuti.type_cuti}
+Tanggal           : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)
+Alamat Selama Cuti: ${body.alamat}
+Lampiran          : ${urlLampiran}`
       let dataGrub = JSON.stringify({
         message: pesanGrub,
         telp: process.env.GROUP_HR
