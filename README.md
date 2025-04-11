@@ -94,3 +94,23 @@ REDIS_PASSWORD=""
 
 #### Diubah
 -  Visit_id ganti dengan UUID.
+
+### [2.7.0-pegawai] - 2025-03-10
+#### Ditambahkan
+- Modul Kepegawaian.
+- Data statistik pegawai.
+- Pembaruhuan data pegawai.
+
+### [2.7.1-pegawai] - 2025-03-12
+#### Diperbaiki
+- Bug pada perhitungan jumlah pegawi.
+- Bug pada data pegawai.
+
+#### Ditambahkan
+- Pagination pada data pegawai.
+- Pencarian data pegawai.
+- Filter data pegawai.
+
+### [2.7.2-pegawai] - 2025-04-10
+#### Ditambahkan
+- Notifikasi alamat cuti pegawai.
