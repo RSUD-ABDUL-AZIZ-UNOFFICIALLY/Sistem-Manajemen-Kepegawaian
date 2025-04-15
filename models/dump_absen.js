@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     id_finger: DataTypes.INTEGER,
     tanggal: DataTypes.DATEONLY,
     jam: DataTypes.TIME,
-    status: DataTypes.ENUM("0", "1"),
+    status: DataTypes.STRING,
+    // status: DataTypes.ENUM("0", "1"),
     sn: DataTypes.STRING
   }, {
     sequelize,

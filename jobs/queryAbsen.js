@@ -1,4 +1,4 @@
-const { Dump_Absen, Mesin_Absen } = require("../models");
+const { Dump_Absen, Mesin_Absen, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const axios = require("axios");
 const qs = require('qs');
@@ -64,13 +64,54 @@ async function getAbsen(cookie,sn) {
     const jsonData = convertToJson(res.data);
     // console.log(jsonData);
     // Dump_Absen.bulkCreate(jsonData)
-    let x =  await Dump_Absen.bulkCreate(jsonData, {
-        ignoreDuplicates: true // hanya works di MySQL dan MariaDB
+    // let x =  await Dump_Absen.bulkCreate(jsonData, {
+    //     ignoreDuplicates: true // hanya works di MySQL dan MariaDB
+    // });
+    // console.log(x.length);
+    let x = await Dump_Absen.bulkCreate(jsonData, {
+        updateOnDuplicate: ['status'] // field yang boleh di-update
     });
+    console.log(x);
     console.log(x.length);
+    await updateAutoIncrement(Dump_Absen, 'Dump_Absens');
+
     return;
     // console.log(JSON.stringify(jsonData, null, 2));
 }
 
+const updateAutoIncrement = async (model, tableName) => {
+    const max = await model.max('id');
+    const nextAutoIncrement = max + 1;
+
+    await sequelize.query(`ALTER TABLE ${tableName} AUTO_INCREMENT = ${nextAutoIncrement}`);
+    console.log(`AUTO_INCREMENT untuk ${tableName} diset ke ${nextAutoIncrement}`);
+};
 
 queryAbsen()
+
+function cekUrutan(array) {
+    for (let i = 1; i < array.length; i++) {
+        if (array[i] !== array[i - 1] + 1) {
+            console.log(`Tidak berurutan di indeks ${i}, nilai: ${array[i]}`);
+            return false;
+        }
+    }
+    console.log("Array berurutan.");
+    return true;
+}
+async function test() {
+    let data = await Dump_Absen.findAll({
+        attributes: ['id'],
+        order: [
+            ['id', 'ASC']
+        ],
+        // limit: 10
+    })
+    let array = data.map((item) => item.id);
+    // console.log(array);
+    cekUrutan(array);
+    // console.log(array);
+    // let x = await Dump_Absen.findAll({
+}
+// test()
+// console.log("tes");
