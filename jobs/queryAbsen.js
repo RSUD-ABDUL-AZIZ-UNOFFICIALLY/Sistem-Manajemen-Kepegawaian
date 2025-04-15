@@ -1,9 +1,9 @@
-const { Dump_Absen, mesin_absen } = require("../models");
+const { Dump_Absen, Mesin_Absen } = require("../models");
 const { Op } = require("sequelize");
 const axios = require("axios");
 const qs = require('qs');
 async function queryAbsen() {
-    let find_mesin = await mesin_absen.findAll();
+    let find_mesin = await Mesin_Absen.findAll();
     console.log(find_mesin);
     for (let m of find_mesin) {
       let login = await login_mesin(m.sn, m.pass)
