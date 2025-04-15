@@ -68,6 +68,7 @@ async function getAbsen(cookie,sn) {
     //     ignoreDuplicates: true // hanya works di MySQL dan MariaDB
     // });
     // console.log(x.length);
+    await updateAutoIncrement(Dump_Absen, 'Dump_Absens');
     let x = await Dump_Absen.bulkCreate(jsonData, {
         updateOnDuplicate: ['status'] // field yang boleh di-update
     });
@@ -109,8 +110,9 @@ async function test() {
     })
     let array = data.map((item) => item.id);
     // console.log(array);
-    cekUrutan(array);
-    // console.log(array);
+    await cekUrutan(array);
+    console.log(array.length);
+    console.log(array[array.length - 1]);
     // let x = await Dump_Absen.findAll({
 }
 // test()
