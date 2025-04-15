@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.TIME
       },
       status: {
-        type: Sequelize.ENUM("0","1")
+        type: Sequelize.STRING,
       },
       sn: {
         type: Sequelize.STRING,
