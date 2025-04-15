@@ -22,7 +22,7 @@ const {
   Hotspot,
   Instalasi
 } = require("../models");
-const { Op, or } = require("sequelize");
+const { Op } = require("sequelize");
 const fs = require("fs");
 const { convertdate, convertdatetime } = require("../helper");
 const { uploadImage } = require("../helper/upload");
@@ -32,6 +32,8 @@ module.exports = {
     let body = req.body;
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
+    req.cache.del('SIMPEG:user:' + decoded.id);
+    req.cache.del('SIMPEG:atasan:' + decoded.id);
     try {
       await User.update(
         {
@@ -1166,12 +1168,13 @@ Terima kasih atas perhatiannya.`;
       });
 
       let pesanGrub = `*Pemberitahuan Cuti Pegawai*
-Nama       : ${decoded.nama}
-NIK        : ${decoded.id}
-Bidang     : ${dep.bidang} 
-Jenis Cuti : ${getJenisCuti.type_cuti}
-Tanggal    : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)
-Lampiran   : ${urlLampiran}`
+Nama              : ${decoded.nama}
+NIK               : ${decoded.id}
+Bidang            : ${dep.bidang} 
+Jenis Cuti        : ${getJenisCuti.type_cuti}
+Tanggal           : ${body.mulai} s/d ${body.samapi} (${body.jumlah} hari)
+Alamat Selama Cuti: ${body.alamat}
+Lampiran          : ${urlLampiran}`
       let dataGrub = JSON.stringify({
         message: pesanGrub,
         telp: process.env.GROUP_HR
@@ -1921,6 +1924,233 @@ Lampiran   : ${urlLampiran}`
         error: true,
         message: "error",
         data: error.message,
+      });
+    }
+  },
+  getPegawaiStatus: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      let getAnggota = await Instalasi.findOne({
+        where: {
+          bos: decoded.id,
+        },
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: getAnggota,
+      });
+    } catch (error) {
+      return res.status(400).json({
+
+      })
+    }
+  },
+  getPegawaiCount: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      let getAnggota = await User.findAll({
+        where: {
+          [Op.or]: [{ dep: { [Op.ne]: 47 } }, { dep: null }],
+        },
+        attributes: ["status"],
+      });
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: {
+          PNS: getAnggota.filter((i) => i.status === "PNS").length,
+          PPPK: getAnggota.filter((i) => i.status === "PPPK").length,
+          "Non ASN": getAnggota.filter((i) => i.status === "Non ASN").length
+        },
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getDepCount: async (req, res) => {
+    try {
+      let token = req.cookies.token;
+      let decoded = jwt.verify(token, secretKey);
+      let labelAnggota = await Departemen.findAll({
+        attributes: ["id", "bidang"],
+        where: {
+          id: { [Op.notIn]: [47, 1, 2] },
+        },
+      });
+
+      // Ambil semua data anggota dalam satu query, bukan dalam loop
+      let allAnggota = await User.findAll({
+        where: {
+          dep: { [Op.in]: labelAnggota.map((item) => item.id) },
+        },
+        attributes: ["dep", "status"],
+      });
+
+      // Buat mapping untuk menghitung jumlah anggota berdasarkan departemen dan status
+      let anggotaCount = {};
+      allAnggota.forEach(({ dep, status }) => {
+        if (!anggotaCount[dep]) {
+          anggotaCount[dep] = { PNS: 0, PPPK: 0, "Non ASN": 0 };
+        }
+        if (anggotaCount[dep][status] !== undefined) {
+          anggotaCount[dep][status]++;
+        }
+      });
+
+      // Gabungkan hasil ke dalam `labelAnggota`
+      labelAnggota.forEach((item) => {
+        item.dataValues.PNS = anggotaCount[item.id]?.PNS || 0;
+        item.dataValues.PPPK = anggotaCount[item.id]?.PPPK || 0;
+        item.dataValues["Non ASN"] = anggotaCount[item.id]?.["Non ASN"] || 0;
+      });
+
+      const fourthpart = Math.ceil(labelAnggota.length / 4);
+      const firstFourth = labelAnggota.slice(0, fourthpart);
+      const secondFourth = labelAnggota.slice(fourthpart, fourthpart * 2);
+      const thirdFourth = labelAnggota.slice(fourthpart * 2, fourthpart * 3);
+      const fourthFourth = labelAnggota.slice(fourthpart * 3);
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: {
+          length: labelAnggota.length,
+          firstFourth,
+          secondFourth,
+          thirdFourth,
+          fourthFourth
+        },
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  getGologan: async (req, res) => {
+    try {
+      let path = req.params.id;
+      let pegawai = await User.findAll({
+        where: {
+          status: path,
+          [Op.or]: [{ dep: { [Op.ne]: 47 } }, { dep: null }],
+        },
+        include: [
+          {
+            model: Biodatas,
+            as: "biodata",
+            required: false,
+            attributes: ["pangkat", "tmt_pangkat", "tmt_kerja", "marital"],
+          },
+          {
+            model: Departemen,
+            as: "departemen",
+            attributes: ["bidang"],
+            required: false,
+          },
+        ],
+        attributes: ["nik", "nama", "nip", "JnsKel", "jab"],
+      });
+      let result = pegawai.map((item, index) => ({
+        // no: index + 1,
+        nik: item.nik,
+        nama: item.nama,
+        nip: item.nip || '',
+        JnsKel: item.JnsKel || null,
+        jab: item.jab || null,
+        pangkat: item.biodata?.pangkat || null,
+        tmt_pangkat: item.biodata?.tmt_pangkat || null,
+        tmt_kerja: item.biodata?.tmt_kerja || null,
+        marital: item.biodata?.marital || null,
+        bidang: item.departemen?.bidang || null,
+      }));
+      result.sort((a, b) => {
+        const order = ['IVe', 'IVd', 'IVc', 'IVb', 'IVa', 'IIId', 'IIIc', 'IIIb', 'IIIa', 'IId', 'IIc', 'IIb', 'IIa', 'XI', 'X', 'IX', 'VIII', 'VII', 'VI', 'V', 'IV', '-'];
+        const aIndex = order.indexOf(a.pangkat);
+        const bIndex = order.indexOf(b.pangkat);
+        if (aIndex === -1 && bIndex === -1) {
+          return 0;
+        }
+        if (aIndex === -1) {
+          return 1;
+        }
+        if (bIndex === -1) {
+          return -1;
+        }
+        if (aIndex !== bIndex) {
+          return aIndex - bIndex;
+        }
+        const aDate = new Date(a.tmt_pangkat);
+        const bDate = new Date(b.tmt_pangkat);
+        return aDate - bDate;
+      });
+      result.forEach((item, index) => {
+        item.no = index + 1;
+      });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        recoud: result.length,
+        data: result
+      });
+    }
+    catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error.message,
+      });
+    }
+  },
+  updateDataPegawai: async (req, res) => {
+    let t = await sequelize.transaction();
+    try {
+      let { nik, nama, nip, jab, pangkat, tmt_pangkat, tmt_kerja } = req.body;
+      console.log(req.body);
+      await User.update({
+        nama: nama,
+        nip: nip,
+        jab: jab,
+      }, {
+        where: {
+          nik: nik,
+        }
+
+      }, { transaction: t });
+      await Biodatas.update({
+        pangkat: pangkat,
+        tmt_pangkat: tmt_pangkat,
+        tmt_kerja: tmt_kerja,
+      }, {
+        where: {
+          nik: nik,
+        },
+
+      }, { transaction: t });
+      await t.commit();
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        // data: result
+      });
+
+    }
+    catch (error) {
+      await t.rollback();
+      return res.status(400).json({
+        error: true,
+        message: "error",
+        data: error,
       });
     }
   },

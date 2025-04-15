@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+
+  <head>
+    <%- include('../template/head'); %>
+  </head>
+
+  <body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+      <!-- Navbar -->
+      <%- include('../template/navbar'); %>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <%- include('../template/sidebar'); %>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <%- include('../template/content-header'); %>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-lg-4 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                  <div class="inner">
+                    <h3 id="data_PNS">0</h3>
+
+                    <p>PNS</p>
+                  </div>
+                  <div class="icon">
+                    <i class="ion fa-regular fa-address-card"></i>
+                  </div>
+                  <a href="/kepegawaian/pns" class="small-box-footer">More info <i
+                      class="fas fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-4 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                  <div class="inner">
+                    <h3 id="data_PPPK">0</h3>
+
+                    <p>PPPK</p>
+                  </div>
+                  <div class="icon">
+                    <i class="ion fa-regular fa-id-card"></i>
+                  </div>
+                  <a href="/kepegawaian/pppk" class="small-box-footer">More info <i
+                      class="fas fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-4 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                  <div class="inner">
+                    <h3 id="data_NASN">0</h3>
+
+                    <p>Non ASN</p>
+                  </div>
+                  <div class="icon">
+                    <i class="icon fa-regular fa-id-badge"></i>
+                  </div>
+                  <a href="/kepegawaian/non%20asn" class="small-box-footer">More info <i
+                      class="fas fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <!-- ./col -->
+            </div>
+          </div>
+          <!-- /.container-fluid -->
+        </section>
+        <section class="container">
+          <div class="card card-success">
+            <div class="card-header">
+              <h3 class="card-title">Grafik Sebaran Pegawai</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool"
+                  data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart">
+                <canvas id="barChart_pegawai_firstFourth"
+                  style="min-height: 250px; height: 250px;"></canvas>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </section>
+        <section class="container">
+          <div class="card card-success">
+            <div class="card-header">
+              <h3 class="card-title">Grafik Sebaran Pegawai</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool"
+                  data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart">
+                <canvas id="barChart_pegawai_secondFourth"
+                  style="min-height: 250px; height: 250px;"></canvas>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </section>
+        <section class="container">
+          <div class="card card-success">
+            <div class="card-header">
+              <h3 class="card-title">Grafik Sebaran Pegawai</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool"
+                  data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart">
+                <canvas id="barChart_pegawai_thirdFourth"
+                  style="min-height: 250px; height: 250px;"></canvas>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </section>
+        <section class="container">
+          <div class="card card-success">
+            <div class="card-header">
+              <h3 class="card-title">Grafik Sebaran Pegawai</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool"
+                  data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart">
+                <canvas id="barChart_pegawai_fourthFourth"
+                  style="min-height: 250px; height: 250px;"></canvas>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </section>
+
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+      <footer class="main-footer"></footer>
+    </div>
+    <!-- ./wrapper -->
+    <%- include('../template/footer'); %>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+    <script src="/asset/js/admin/pegawai.js"></script>
+    <scrip>
+
+    </scrip>
+  </body>
+
+</html>
