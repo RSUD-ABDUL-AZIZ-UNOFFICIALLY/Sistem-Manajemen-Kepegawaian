@@ -40,8 +40,8 @@ async function getAbsen(cookie,sn) {
         }
     };
     let res = await axios(config)
-    console.log(res.data);
-    console.log(typeof res.data);
+    // console.log(res.data);
+    // console.log(typeof res.data);
     const convertToJson = (str) => {
         return str
             .trim()
