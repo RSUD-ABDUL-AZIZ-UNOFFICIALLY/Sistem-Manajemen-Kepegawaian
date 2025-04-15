@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.STRING,
         references: {
           model: {
-            tableName: 'mesin_absens'
+            tableName: 'Mesin_Absens'
           },
           key: 'sn',
         }
