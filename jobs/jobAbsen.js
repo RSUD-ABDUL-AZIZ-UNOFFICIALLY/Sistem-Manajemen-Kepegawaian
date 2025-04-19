@@ -41,8 +41,7 @@ async function cekIn(date) {
       let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: 'http://localhost:3001/absensi?month='+date,
-            // url: 'http://10.8.0.9:3001/absensi?month='+date,
+          url: process.env.FIGER + '/absensi?month=' + date,
           data: idFinger
         };
         let res = await axios(config)
@@ -124,8 +123,7 @@ async function cekOut(date) {
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: 'http://localhost:3001/absensi?month=' + date,
-        // url: 'http://10.8.0.9:3001/absensi?month='+date,
+        url: process.env.FIGER + '/absensi?month=' + date,
         data: idFinger
     };
     let res = await axios(config)
