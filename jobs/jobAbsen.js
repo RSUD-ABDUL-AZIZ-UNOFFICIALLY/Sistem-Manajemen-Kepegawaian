@@ -1,8 +1,10 @@
 const { Absen, Dump_Absen, Mesin_Absen, Maps_Absen, Jdldns, Jnsdns, sequelize } = require("../models");
 const { Op, where } = require("sequelize");
 const axios = require("axios");
+// require('dotenv').config();
 // cekIn('2025-04-16');
 // cekOut('2025-04-16');
+console.log(process.env.HOST_FIGER);
 
 async function cekIn(date) {
     let find_jdl = await Jdldns.findAll({
@@ -41,7 +43,7 @@ async function cekIn(date) {
       let config = {
             method: 'get',
             maxBodyLength: Infinity,
-          url: process.env.FIGER + '/absensi?month=' + date,
+          url: process.env.HOST_FIGER + '/absensi?month=' + date,
           data: idFinger
         };
         let res = await axios(config)
@@ -123,7 +125,7 @@ async function cekOut(date) {
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: process.env.FIGER + '/absensi?month=' + date,
+        url: process.env.HOST_FIGER + '/absensi?month=' + date,
         data: idFinger
     };
     let res = await axios(config)
