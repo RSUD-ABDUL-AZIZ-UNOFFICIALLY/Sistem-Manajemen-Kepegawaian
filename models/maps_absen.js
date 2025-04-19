@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Maps_Absen.hasMany(models.Dump_Absen, {
+        foreignKey: "id_finger",
+        sourceKey: "id_finger",
+        as: "dump_absen",
+      });
     }
   }
   Maps_Absen.init({
