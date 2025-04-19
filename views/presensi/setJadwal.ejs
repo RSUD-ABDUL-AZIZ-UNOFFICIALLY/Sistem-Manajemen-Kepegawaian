@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jadwal Dinas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto space-y-10">
+
+    <!-- Form Input Jadwal -->
+    <div class="bg-white shadow-xl rounded-2xl p-6">
+      <h2 class="text-xl font-bold mb-4 text-gray-700">Input Jadwal Dinas</h2>
+      <form id="formSetJadwal" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="dep" class="block text-gray-600 mb-1">Departemen / Bidang</label>
+          <select required id="dep" name="dep" class="w-full p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <option value="">Pilih Departemen / Bidang</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Jenis Jam Kerja</label>
+          <input type="text" name="jnsDNS" required class="w-full p-2 border border-gray-300 rounded-xl" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm text-gray-600 mb-1">Hari (bisa pilih lebih dari satu)</label>
+          <select id="hari" name="hari[]" multiple required class="w-full p-2 border border-gray-300 rounded-xl h-32">
+            <option value="SEN">Senin</option>
+            <option value="SEL">Selasa</option>
+            <option value="RAB">Rabu</option>
+            <option value="KAM">Kamis</option>
+            <option value="JUM">Jumat</option>
+            <option value="SAB">Sabtu</option>
+            <option value="MIN">Minggu</option>
+          </select>
+          <small class="text-gray-500">Tahan Ctrl (Windows) / Cmd (Mac) untuk memilih lebih dari satu hari</small>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Jam Masuk</label>
+          <input type="time" id="jamMulai" name="jamMulai" required class="w-full p-2 border border-gray-300 rounded-xl" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Masuk Telat</label>
+          <input type="time" id="jamTelat" name="jamTelat" required class="w-full p-2 border border-gray-300 rounded-xl" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Jam Pulang</label>
+          <input type="time" id="pulangCepat" name="pulangCepat" required class="w-full p-2 border border-gray-300 rounded-xl" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Pulang Telat</label>
+          <input type="time" id="pulangTelat" name="pulangTelat" required class="w-full p-2 border border-gray-300 rounded-xl" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="inline-flex items-center">
+            <input type="checkbox" name="libur" id="libur" value="true" class="form-checkbox text-blue-600 rounded">
+            <span class="ml-2 text-sm text-gray-600">Jadwal ini adalah hari libur</span>
+          </label>
+        </div>
+        <div class="md:col-span-2">
+          <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-xl shadow-md transition duration-200">
+            Simpan Jadwal
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tabel Jadwal Dinas -->
+    <div class="bg-white shadow-xl rounded-2xl p-6">
+      <h2 class="text-xl font-bold mb-4 text-gray-700">Daftar Jadwal Dinas</h2>
+ 
+        <div class="overflow-x-auto">
+          <table class="min-w-full border border-gray-200 rounded-xl overflow-hidden text-sm">
+            <thead>
+              <tr class="bg-blue-500 text-white text-left">
+                <th class="p-3">Nama DNS</th>
+                <th class="p-3">Hari</th>
+                <th class="p-3">Jam Masuk</th>
+                <th class="p-3">Masuk Telat</th>
+                <th class="p-3">Pulang Cepat</th>
+                <th class="p-3">Pulang Telat</th>
+              </tr>
+            </thead>
+            <tbody>
+  
+            </tbody>
+          </table>
+        </div>
+  
+    </div>
+  </div>
+    <script src="/asset/js/fullcalendar/setJadwal.js"></script>
+</body>
+</html>

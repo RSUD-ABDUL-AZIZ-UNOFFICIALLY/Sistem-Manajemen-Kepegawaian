@@ -339,6 +339,16 @@ module.exports = {
     };
     res.render("presensi/jadwal", data);
   },
+  setJadwal: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "presensi | SIMPEG",
+      page: "Jadwal jam presensi",
+      token: decoded,
+    };
+    res.render("presensi/setJadwal", data);
+  },
   absensi: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);

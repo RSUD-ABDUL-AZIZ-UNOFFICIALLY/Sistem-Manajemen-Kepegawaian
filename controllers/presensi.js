@@ -6,6 +6,7 @@ const {
     Instalasi,
     Departemen,
     Absen,
+    Admin_Absen,
     Jnsdns,
     Jdldns,
 } = require("../models");
@@ -94,9 +95,9 @@ module.exports = {
     departemen: async (req, res) => {
         let token = req.cookies.token;
         let decoded = jwt.verify(token, secretKey);
-        let isIntalasi = await Instalasi.findAll({
+        let isIntalasi = await Admin_Absen.findAll({
             where: {
-                bos: decoded.id
+                nik: decoded.id
             },
             attributes: ["dep"],
             include: [
@@ -158,6 +159,98 @@ module.exports = {
         }
 
 
+    },
+    postTypeJadwal: async (req, res) => {
+        let params = req.body;
+        try {
+            let findID = await Jnsdns.findOne({
+                where: {
+                    slug: params.jnsDNS + "-" + params.departemen
+                },
+                attributes: ["id"]
+            })
+            if (!findID) {
+                if (params.libur) {
+                    let setDNS = await Jnsdns.create({
+                        type: params.jnsDNS,
+                        slug: params.jnsDNS + "-" + params.departemen,
+                        dep: params.departemen,
+                        start_min: "00:00:00",
+                        start_max: "00:00:00",
+                        end_min: "00:00:00",
+                        end_max: "00:00:00",
+                        state: 0,
+                        day: JSON.stringify(params.hari),
+                    });
+                    return res.status(200).json({
+                        error: false,
+                        message: "success",
+                        data: setDNS
+                    });
+                }
+                let setDNS = await Jnsdns.create({
+                    type: params.jnsDNS,
+                    slug: params.jnsDNS + "-" + params.departemen,
+                    dep: params.departemen,
+                    start_min: params.jamMulai,
+                    start_max: params.jamTelat,
+                    end_min: params.pulangCepat,
+                    end_max: params.pulangTelat,
+                    state: 1,
+                    day: JSON.stringify(params.hari),
+                });
+                return res.status(200).json({
+                    error: false,
+                    message: "success",
+                    data: setDNS
+                });
+            } else {
+                if (params.libur) {
+                    let setDNS = await Jnsdns.update({
+                        start_min: "00:00:00",
+                        start_max: "00:00:00",
+                        end_min: "00:00:00",
+                        end_max: "00:00:00",
+                        state: 0,
+                        day: JSON.stringify(params.hari),
+                    }, {
+                        where: {
+                            id: findID.id,
+                        },
+                    });
+                    return res.status(200).json({
+                        error: false,
+                        message: "success",
+                        data: setDNS
+                    });
+                }
+                let setDNS = await Jnsdns.update({
+                    start_min: params.jamMulai,
+                    start_max: params.jamTelat,
+                    end_min: params.pulangCepat,
+                    end_max: params.pulangTelat,
+                    state: 1,
+                    day: JSON.stringify(params.hari),
+                }, {
+                    where: {
+                        id: findID.id,
+                    },
+                });
+                return res.status(200).json({
+                    error: false,
+                    message: "success",
+                    data: setDNS
+                });
+
+            }
+        } catch (error) {
+            return res.status(400).json({
+                error: true,
+                message: "error",
+                data: error,
+            });
+
+        }
     },
     updateJadwal: async (req, res) => {
         let params = req.body;
