@@ -64,7 +64,7 @@ function listRiwayat(data) {
               <div>
                 <p class="text-sm text-left text-gray-600">Pulang: <span class="font-medium text-gray-800">${d.cekOut ? d.cekOut : "-"}</span></p>
                 ${getStatusPulang(d.statusOut)}
-                 <p class="text-xs text-left font-medium">Lokasi: ${d.loactionOut}</p>
+                 <p class="text-xs text-left font-medium">Lokasi:${d.loactionOut ? d.loactionOut : "-"}</p>
                  <p class="text-xs text-left font-medium">Ket:${d.keteranganOut ? d.keteranganOut : "-"}</p>
               </div>
             </div>
