@@ -357,6 +357,6 @@ module.exports = {
       page: "Absensi",
       token: decoded,
     };
-    res.render("presensi/absen", data);
+    res.render("presensi/riwayat", data);
   }
 };
