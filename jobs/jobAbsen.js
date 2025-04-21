@@ -1,10 +1,25 @@
 const { Absen, Dump_Absen, Mesin_Absen, Maps_Absen, Jdldns, Jnsdns, sequelize } = require("../models");
 const { Op, where } = require("sequelize");
+const cron = require('node-cron');
 const axios = require("axios");
 // require('dotenv').config();
 // cekIn('2025-04-16');
 // cekOut('2025-04-16');
 console.log(process.env.HOST_FIGER);
+
+cron.schedule('*/2 * * * *', () => {
+    let onlyDate = new Date().toISOString().slice(0, 10);
+    // let date = onlyDate.slice(5, 10);
+    console.log(onlyDate + ' cekIn');
+    cekIn(onlyDate);
+    console.log(onlyDate);
+});
+cron.schedule('*/11 * * * *', () => {
+    let onlyDate = new Date().toISOString().slice(0, 10);
+    // let date = onlyDate.slice(5, 10);
+    console.log(onlyDate + ' cekOut');
+    cekOut(onlyDate);
+});
 
 async function cekIn(date) {
     let find_jdl = await Jdldns.findAll({
