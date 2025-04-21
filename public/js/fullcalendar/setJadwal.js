@@ -93,3 +93,40 @@ console.log(data);
 
 
 });
+document.getElementById('dep').addEventListener('change', function () {
+    const selectedDep = this.value;
+    console.log('Selected Departemen:', selectedDep);
+    fetch('/api/presensi/jnsdns?dep=' + selectedDep)
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#tableJadwal tbody');
+            console.log(tbody);
+            // tbody.innerHTML = ''; // bersihkan dulu
+
+            data.data.forEach(item => {
+                console.log(item);
+                const tr = document.createElement('tr');
+                tr.className = !item.state ? 'bg-red-100 text-gray-500 italic' : '';
+
+                tr.innerHTML = `
+                    <td class="p-3">${item.type}</td>
+                    <td class="p-3">${item.slug}</td>
+                    <td class="p-3">${item.state ? 'Libur' : 'Dinas'}</td>
+                    <td class="p-3">${item.day}</td>
+                    <td class="p-3">${item.start_max}</td>
+                    <td class="p-3">${item.start_min}</td>
+                    <td class="p-3">${item.end_min}</td>
+                    <td class="p-3">${item.end_max}</td>
+          
+                `;
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching schedule data:', error);
+        });
+
+
+
+});
+
