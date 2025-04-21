@@ -102,10 +102,11 @@ document.getElementById('dep').addEventListener('change', function () {
             const tbody = document.querySelector('#tableJadwal tbody');
             console.log(tbody);
             // tbody.innerHTML = ''; // bersihkan dulu
-
+            tbody.innerHTML = ''; // bersihkan dulu
             data.data.forEach(item => {
                 console.log(item);
                 const tr = document.createElement('tr');
+
                 tr.className = !item.state ? 'bg-red-100 text-gray-500 italic' : '';
 
                 tr.innerHTML = `
