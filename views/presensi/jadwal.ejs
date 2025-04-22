@@ -5,6 +5,8 @@
     <%- include('../template/head'); %>
         <!-- fullCalendar -->
     <link rel="stylesheet" href="/asset/css/presensi/presensi.css">
+<script src="https://unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js"></script>
+<link href="https://unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css" rel="stylesheet">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -41,29 +43,20 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body">
-                                        <div class="table-container">
-                                            <table class="table table-bordered border-primary table-responsive"
-                                                id="tabel-jadwal">
-                                                <thead>
-                                                    <tr>
-
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                    </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
-                                    </div>
-
+                                </div>
+                            </div>
+                            <!-- /.container-fluid -->
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><%= page %></h3>
+                                        <button type="button" id="download-xlsx" class="btn btn-success float-right"><i class="fas fa-file-excel"></i> Export ke Excel</button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="tableJadwaldns"></div>
+                                </div>
+                                <!-- /.card-body -->
                                 </div>
                             </div>
                             <!-- /.container-fluid -->
@@ -80,7 +73,8 @@
             <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
             <!-- fullCalendar -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
-            <script src="/asset/js/fullcalendar/presensi.js"></script>
+                   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+            <script src="/asset/js/fullcalendar/tableJadwaldns.js"></script>
             <script src="/asset/js/fullcalendar/edit.js"></script>
 
 </body>

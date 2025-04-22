@@ -114,3 +114,8 @@ REDIS_PASSWORD=""
 ### [2.7.2-pegawai] - 2025-04-10
 #### Ditambahkan
 - Notifikasi alamat cuti pegawai.
+
+
+### [2.7.3-pegawai] - 2025-04-10
+#### Ditambahkan
+- Pengaturan Jam Dinas.
