@@ -119,3 +119,11 @@ REDIS_PASSWORD=""
 ### [2.7.3-pegawai] - 2025-04-10
 #### Ditambahkan
 - Pengaturan Jam Dinas.
+
+
+### [2.7.4-absen] - 2025-04-10
+#### Ditambahkan
+- Briging dengan finger print.
+
+#### Diubah
+-  Pengaturan jam dinas.
