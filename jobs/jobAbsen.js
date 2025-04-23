@@ -160,7 +160,7 @@ async function cekOut(date) {
         let statusout = checkPulang(data_absen[0].checktime_wib.jam, i.dnsType.end_min, i.dnsType.end_max);
                let keteranganOut = '';
                if (statusout == 'Pulang Cepat') {
-                   let terlambat = hitungMenitTerlambat(data_absen[0].checktime_wib.jam, i.dnsType.end_min);
+                   let terlambat = hitungCepatPulang(data_absen[0].checktime_wib.jam, i.dnsType.end_min);
                    keteranganOut += 'Pulang Cepat ' + terlambat + ' menit';
                }
                let absen = await Absen.update({
@@ -261,5 +261,20 @@ function hitungMenitTerlambat(jam, start_max) {
     if (diffMs <= 0) {
         return 0; // Tidak terlambat
     }
+    return Math.floor(diffMs / 60000); // Konversi ms ke menit
+}
+
+function hitungCepatPulang(jam, end_min) {
+    const toDate = (timeStr) => new Date(`1970-01-01T${timeStr}Z`);
+
+    const time = toDate(jam);
+    const min = toDate(end_min);
+
+    const diffMs = min - time;
+
+    if (diffMs <= 0) {
+        return 0; // Tidak cepat pulang
+    }
+
     return Math.floor(diffMs / 60000); // Konversi ms ke menit
 }
