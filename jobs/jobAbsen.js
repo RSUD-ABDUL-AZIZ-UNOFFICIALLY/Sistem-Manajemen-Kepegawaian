@@ -4,7 +4,7 @@ const cron = require('node-cron');
 const axios = require("axios");
 // require('dotenv').config();
 // cekIn('2025-04-16');
-// cekOut('2025-04-16');
+//cekOut('2025-04-16');
 console.log(process.env.HOST_FIGER);
 
 cron.schedule('*/2 * * * *', () => {
@@ -162,6 +162,25 @@ async function cekOut(date) {
                if (statusout == 'Pulang Cepat') {
                    let terlambat = hitungCepatPulang(data_absen[0].checktime_wib.jam, i.dnsType.end_min);
                    keteranganOut += 'Pulang Cepat ' + terlambat + ' menit';
+                   if (terlambat > 150) {
+                       console.log("Pulang Cepat lebih dari 2,5 jam");
+                       console.log(data_absen[data_absen.length - 1].checktime_wib.jam);
+                       let statusout2 = checkPulang(data_absen[data_absen.length - 1].checktime_wib.jam, i.dnsType.end_min, i.dnsType.end_max);
+                       if (statusout2 == 'Pulang Cepat') {
+                           let terlambat2 = hitungCepatPulang(data_absen[data_absen.length - 1].checktime_wib.jam, i.dnsType.end_min);
+                           console.log(terlambat2);
+                           if (terlambat2 > 150) {
+                               console.log("Pulang Cepat lebih dari 2,5 jam");
+                               continue;
+                           }
+                           keteranganOut += 'Pulang Cepat ' + terlambat2 + ' menit';
+                       } else {
+                           statusout = statusout2;
+                       }
+
+                   } else {
+                       keteranganOut += 'Pulang Cepat ' + terlambat + ' menit';
+                   }
                }
                let absen = await Absen.update({
                    cekOut: data_absen[0].checktime_wib.jam,
@@ -187,8 +206,26 @@ async function cekOut(date) {
         let statusout = checkPulang(data_absen[0].checktime_wib.jam, i.dnsType.end_min, i.dnsType.end_max);
         let keteranganOut = '';
         if (statusout == 'Pulang Cepat') {
-            let terlambat = hitungMenitTerlambat(data_absen[0].checktime_wib.jam, i.dnsType.end_min);
-            keteranganOut += 'Pulang Cepat ' + terlambat + ' menit';
+            let terlambat = hitungCepatPulang(data_absen[0].checktime_wib.jam, i.dnsType.end_min);
+            if (terlambat > 150) {
+                console.log("Pulang Cepat lebih dari 2,5 jam");
+                console.log(data_absen[data_absen.length - 1].checktime_wib.jam);
+                let statusout2 = checkPulang(data_absen[data_absen.length - 1].checktime_wib.jam, i.dnsType.end_min, i.dnsType.end_max);
+                if (statusout2 == 'Pulang Cepat') {
+                    let terlambat2 = hitungCepatPulang(data_absen[data_absen.length - 1].checktime_wib.jam, i.dnsType.end_min);
+                    console.log(terlambat2);
+                    if (terlambat2 > 150) {
+                        console.log("Pulang Cepat lebih dari 2,5 jam");
+                        continue;
+                    }
+                    keteranganOut += 'Pulang Cepat ' + terlambat2 + ' menit';
+                } else {
+                    statusout = statusout2;
+                }
+
+            } else {
+                keteranganOut += 'Pulang Cepat ' + terlambat + ' menit';
+            }
         }
         let absen = await Absen.create({
             nik: i.dataValues.nik,
