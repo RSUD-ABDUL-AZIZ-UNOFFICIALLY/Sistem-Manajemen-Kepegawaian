@@ -164,6 +164,13 @@ async function cekOut(date) {
         let keteranganOut = hasil.keteranganOut;
         let jamPulang = hasil.checktime;
         let location = hasil.location;
+        let typeDns = i.typeDns;
+        let date = data_absen[0].checktime_wib.tanggal;
+        let split = typeDns.split("-");
+        if (split[0] == "X") {
+            typeDns = "Malam-" + split[1];
+            date = new Date(new Date(data_absen[0].checktime_wib.tanggal) - 1000 * 60 * 60 * 24);
+        }
                let absen = await Absen.update({
                    cekOut: jamPulang,
                    statusOut: statusout,
@@ -174,7 +181,8 @@ async function cekOut(date) {
                    visitIdOut: '',
                }, {
                    where: {
-                       id: i.absen.id
+                       nik: i.dataValues.nik,
+                       date: date
                    }
                });
     }
@@ -192,11 +200,19 @@ async function cekOut(date) {
         let keteranganOut = hasil.keteranganOut;
         let jamPulang = hasil.checktime;
         let location = hasil.location;
+        let typeDns = i.typeDns;
+        let date = data_absen[0].checktime_wib.tanggal;
+        let split = typeDns.split("-");
+        if (split[0] == "X") {
+            typeDns = "Malam-" + split[1];
+            date = new Date(new Date(data_absen[0].checktime_wib.tanggal) - 1000 * 60 * 60 * 24);
+        }
+
 
         let absen = await Absen.create({
             nik: i.dataValues.nik,
-            typeDns: i.typeDns,
-            date: data_absen[0].checktime_wib.tanggal,
+            typeDns: typeDns,
+            date: date,
             cekIn: null,
             statusIn: null,
             keteranganIn: 'Tidak Absen Masuk',
