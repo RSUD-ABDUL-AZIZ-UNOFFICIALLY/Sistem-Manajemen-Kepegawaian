@@ -206,6 +206,29 @@ async function cekOut(date) {
         if (split[0] == "X") {
             typeDns = "Malam-" + split[1];
             date = new Date(new Date(data_absen[0].checktime_wib.tanggal) - 1000 * 60 * 60 * 24);
+            let findAbsen = await Absen.findOne({
+                where: {
+                    nik: i.dataValues.nik,
+                    date: date
+                }
+            });
+            if (findAbsen) {
+                await Absen.update({
+                    cekOut: jamPulang,
+                    statusOut: statusout,
+                    keteranganOut: keteranganOut,
+                    nilaiOut: 3,
+                    geoOut: '',
+                    loactionOut: location,
+                    visitIdOut: '',
+                }, {
+                    where: {
+                        nik: i.dataValues.nik,
+                        date: date
+                    }
+                });
+                continue;
+            }
         }
 
 
