@@ -4,7 +4,7 @@ const cron = require('node-cron');
 const axios = require("axios");
 // require('dotenv').config();
 // cekIn('2025-04-16');
-cekOut('2025-04-16');
+// cekOut('2025-04-16');
 console.log(process.env.HOST_FIGER);
 
 cron.schedule('*/2 * * * *', () => {
