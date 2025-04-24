@@ -4,7 +4,7 @@ const cron = require('node-cron');
 const axios = require("axios");
 // require('dotenv').config();
 // cekIn('2025-04-16');
-//cekOut('2025-04-16');
+cekOut('2025-04-16');
 console.log(process.env.HOST_FIGER);
 
 cron.schedule('*/2 * * * *', () => {
@@ -157,33 +157,14 @@ async function cekOut(date) {
             continue;
         }
 
-        let statusout = checkPulang(data_absen[0].checktime_wib.jam, i.dnsType.end_min, i.dnsType.end_max);
-               let keteranganOut = '';
-               if (statusout == 'Pulang Cepat') {
-                   let terlambat = hitungCepatPulang(data_absen[0].checktime_wib.jam, i.dnsType.end_min);
-                   keteranganOut += 'Pulang Cepat ' + terlambat + ' menit';
-                   if (terlambat > 150) {
-                       console.log("Pulang Cepat lebih dari 2,5 jam");
-                       console.log(data_absen[data_absen.length - 1].checktime_wib.jam);
-                       let statusout2 = checkPulang(data_absen[data_absen.length - 1].checktime_wib.jam, i.dnsType.end_min, i.dnsType.end_max);
-                       if (statusout2 == 'Pulang Cepat') {
-                           let terlambat2 = hitungCepatPulang(data_absen[data_absen.length - 1].checktime_wib.jam, i.dnsType.end_min);
-                           console.log(terlambat2);
-                           if (terlambat2 > 150) {
-                               console.log("Pulang Cepat lebih dari 2,5 jam");
-                               continue;
-                           }
-                           keteranganOut += 'Pulang Cepat ' + terlambat2 + ' menit';
-                       } else {
-                           statusout = statusout2;
-                       }
+        let hasil = evaluasiPulang(data_absen, i.dnsType.end_min, i.dnsType.end_max);
+        if (!hasil) continue;
 
-                   } else {
-                       keteranganOut += 'Pulang Cepat ' + terlambat + ' menit';
-                   }
-               }
+        let statusout = hasil.statusout;
+        let keteranganOut = hasil.keteranganOut;
+        let jamPulang = hasil.checktime;
                let absen = await Absen.update({
-                   cekOut: data_absen[0].checktime_wib.jam,
+                   cekOut: jamPulang,
                    statusOut: statusout,
                    keteranganOut: keteranganOut,
                    nilaiOut: 3,
@@ -203,30 +184,13 @@ async function cekOut(date) {
             continue;
         }
 
-        let statusout = checkPulang(data_absen[0].checktime_wib.jam, i.dnsType.end_min, i.dnsType.end_max);
-        let keteranganOut = '';
-        if (statusout == 'Pulang Cepat') {
-            let terlambat = hitungCepatPulang(data_absen[0].checktime_wib.jam, i.dnsType.end_min);
-            if (terlambat > 150) {
-                console.log("Pulang Cepat lebih dari 2,5 jam");
-                console.log(data_absen[data_absen.length - 1].checktime_wib.jam);
-                let statusout2 = checkPulang(data_absen[data_absen.length - 1].checktime_wib.jam, i.dnsType.end_min, i.dnsType.end_max);
-                if (statusout2 == 'Pulang Cepat') {
-                    let terlambat2 = hitungCepatPulang(data_absen[data_absen.length - 1].checktime_wib.jam, i.dnsType.end_min);
-                    console.log(terlambat2);
-                    if (terlambat2 > 150) {
-                        console.log("Pulang Cepat lebih dari 2,5 jam");
-                        continue;
-                    }
-                    keteranganOut += 'Pulang Cepat ' + terlambat2 + ' menit';
-                } else {
-                    statusout = statusout2;
-                }
+        let hasil = evaluasiPulang(data_absen, i.dnsType.end_min, i.dnsType.end_max);
+        if (!hasil) continue;
 
-            } else {
-                keteranganOut += 'Pulang Cepat ' + terlambat + ' menit';
-            }
-        }
+        let statusout = hasil.statusout;
+        let keteranganOut = hasil.keteranganOut;
+        let jamPulang = hasil.checktime;
+
         let absen = await Absen.create({
             nik: i.dataValues.nik,
             typeDns: i.typeDns,
@@ -238,7 +202,7 @@ async function cekOut(date) {
             geoIn: '',
             loactionIn: '',
             visitIdIn: '',
-            cekOut: data_absen[0].checktime_wib.jam,
+            cekOut: jamPulang,
             statusOut: statusout,
             keteranganOut: keteranganOut,
             nilaiOut: 3,
@@ -286,6 +250,32 @@ function checkPulang(jam_pulang, end_min, end_max) {
     } else {
         return 'Pulang Terlambat';
     }
+}
+function evaluasiPulang(data_absen, end_min, end_max) {
+    let awal = data_absen[0];
+    let akhir = data_absen[data_absen.length - 1];
+
+    let statusAwal = checkPulang(awal.checktime_wib.jam, end_min, end_max);
+    let menitAwal = hitungCepatPulang(awal.checktime_wib.jam, end_min);
+
+    if (statusAwal === 'Pulang Cepat' && menitAwal > 150) {
+        let statusAkhir = checkPulang(akhir.checktime_wib.jam, end_min, end_max);
+        let menitAkhir = hitungCepatPulang(akhir.checktime_wib.jam, end_min);
+        if (statusAkhir === 'Pulang Cepat' && menitAkhir > 150) {
+            return null; // tidak valid
+        }
+        return {
+            statusout: statusAkhir,
+            keteranganOut: menitAkhir > 0 ? `Pulang Cepat ${menitAkhir} menit` : '',
+            checktime: akhir.checktime_wib.jam,
+        };
+    }
+
+    return {
+        statusout: statusAwal,
+        keteranganOut: menitAwal > 0 ? `Pulang Cepat ${menitAwal} menit` : '',
+        checktime: awal.checktime_wib.jam
+    };
 }
 
 
