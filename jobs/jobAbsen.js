@@ -163,13 +163,14 @@ async function cekOut(date) {
         let statusout = hasil.statusout;
         let keteranganOut = hasil.keteranganOut;
         let jamPulang = hasil.checktime;
+        let location = hasil.location;
                let absen = await Absen.update({
                    cekOut: jamPulang,
                    statusOut: statusout,
                    keteranganOut: keteranganOut,
                    nilaiOut: 3,
                    geoOut: '',
-                   loactionOut: data_absen[0].Alias,
+                   loactionOut: location,
                    visitIdOut: '',
                }, {
                    where: {
@@ -190,6 +191,7 @@ async function cekOut(date) {
         let statusout = hasil.statusout;
         let keteranganOut = hasil.keteranganOut;
         let jamPulang = hasil.checktime;
+        let location = hasil.location;
 
         let absen = await Absen.create({
             nik: i.dataValues.nik,
@@ -207,7 +209,7 @@ async function cekOut(date) {
             keteranganOut: keteranganOut,
             nilaiOut: 3,
             geoOut: '',
-            loactionOut: data_absen[0].Alias,
+            loactionOut: location,
             visitIdOut: '',
         });
 
@@ -268,13 +270,15 @@ function evaluasiPulang(data_absen, end_min, end_max) {
             statusout: statusAkhir,
             keteranganOut: menitAkhir > 0 ? `Pulang Cepat ${menitAkhir} menit` : '',
             checktime: akhir.checktime_wib.jam,
+            location: akhir.Alias
         };
     }
 
     return {
         statusout: statusAwal,
         keteranganOut: menitAwal > 0 ? `Pulang Cepat ${menitAwal} menit` : '',
-        checktime: awal.checktime_wib.jam
+        checktime: awal.checktime_wib.jam,
+        location: awal.Alias
     };
 }
 
