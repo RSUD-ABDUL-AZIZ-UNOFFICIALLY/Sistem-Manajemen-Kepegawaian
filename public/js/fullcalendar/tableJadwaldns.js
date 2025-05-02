@@ -113,6 +113,11 @@ async function getTabel(periode) {
         columns.push({
             title: `${hari}, ${i}`, field: `${i}`, editor: "list", editorParams: {
                 values: jnsDNS,
+                elementAttributes: {
+                    readonly: true,
+                    tabindex: "-1",
+                    inputmode: "none",
+                }
                
             },
             cellEdited: function (cell) {
@@ -133,6 +138,7 @@ async function getTabel(periode) {
                 }
                 row.update(newTotals);
 
+
                 // === Update baris total bawah per jenis ===
                 jnsDNS.forEach(jns => {
                     let totalRow = table.getRows().find(r => r.getData().nama === `Total ${jns}`);
@@ -150,7 +156,9 @@ async function getTabel(periode) {
                     }
                 });
                 
-            }, width: '14px' });
+            }, minWidth: 80,
+            responsive: 2
+        });
         // columns.push({ title: `${hari}, ${i}`, field: `nik`, width: '15px' });
     }
     jnsDNS.forEach(jns => {
