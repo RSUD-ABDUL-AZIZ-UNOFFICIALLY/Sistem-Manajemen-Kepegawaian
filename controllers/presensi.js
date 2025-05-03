@@ -323,6 +323,24 @@ module.exports = {
                     }
                 ]
             });
+            let typeDns = data.dataValues.typeDns.split("-");
+            if (typeDns[0] == "X") {
+                let day = new Date(date.getTime() - (24 * 60 * 60 * 1000));
+                data = await Jdldns.findOne({
+                    where: {
+                        nik: user.nik,
+                        date: day
+                    },
+                    include: [
+                        {
+                            model: Jnsdns,
+                            as: 'dnsType'
+                        }
+                    ]
+                });
+
+            }
+
             if (data == null) {
                 return res.status(404).json({
                     error: true,
