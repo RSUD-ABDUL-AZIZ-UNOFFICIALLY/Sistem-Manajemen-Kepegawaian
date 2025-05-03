@@ -6,7 +6,6 @@ let periode = periodeElement.value = year + "-" + (month < 10 ? "0" + month : mo
 
 
 // console.log(year + "-" + (month < 10 ? "0" + month : month));
-console.log(periode);
 getRiwayat(periode)
 
 // Event listener untuk perubahan nilai pada elemen dengan id 'periode'
@@ -23,7 +22,6 @@ async function getRiwayat(date) {
         });
         if (response.ok) {
             const data = await response.json();
-            console.log(data);
             listRiwayat(data.data);
         } else {
             console.error("Error fetching data:", response.status);
