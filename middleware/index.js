@@ -48,7 +48,7 @@ module.exports = {
                     },
                     order: [["updatedAt", "DESC"]]
                 }, { transaction: t });
-                console.log(cek_session);
+                // console.log(cek_session);
                 if (!cek_session) {
                     console.log('err');
                     await Session.create({
