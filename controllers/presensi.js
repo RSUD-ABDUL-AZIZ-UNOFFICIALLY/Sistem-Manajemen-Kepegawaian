@@ -259,12 +259,12 @@ module.exports = {
         dateJadwal.setHours(0, 0, 0, 0);
         dateNow.setHours(0, 0, 0, 0);
         console.log(dateJadwal, dateNow)
-        if (dateJadwal < dateNow) {
-            return res.status(400).json({
-                error: true,
-                message: "Tidak dapat mengubah tanggal mudur",
-            });
-        }
+        // if (dateJadwal < dateNow) {
+        //     return res.status(400).json({
+        //         error: true,
+        //         message: "Tidak dapat mengubah tanggal mudur",
+        //     });
+        // }
         try {
             let updateData = await Jdldns.update({
                 typeDns: params.typeDns
