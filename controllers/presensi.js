@@ -2,6 +2,7 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
 const {
+    Sequelize,
     User,
     Instalasi,
     Departemen,
@@ -9,9 +10,13 @@ const {
     Admin_Absen,
     Jnsdns,
     Jdldns,
+    Cuti,
+    Jns_cuti,
+    Ledger_cuti,
 } = require("../models");
 const { cekLocation } = require("../helper/casting");
-const { Op, where, or } = require("sequelize");
+const { formatDateToLocalYMD, hitungMenitTerlambat, hitungCepatPulang } = require("../helper");
+const { Op, literal } = require("sequelize");
 module.exports = {
     anggota: async (req, res) => {
         let token = req.cookies.token;
@@ -587,6 +592,211 @@ module.exports = {
                 error: false,
                 message: "Sukses",
                 data: dataAbsen
+            })
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                error: true,
+                message: "internal server error",
+                data: error,
+            });
+        }
+    },
+    recap: async (req, res) => {
+        try {
+            let query = req.query
+            let account = req.account
+            if (query.periode == undefined) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Periode tidak di temukan",
+                });
+            }
+            let today = new Date().toISOString().split('T')[0];
+
+            if (query.periode > today.slice(0, 7)) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Periode tidak boleh lebih besar dari bulan ini",
+                });
+            }
+            let cache = await req.cache.json.get(`SIMPEG:recapAbens:${query.periode}:${account.nik}`, '$');
+            if (cache != null) {
+                return res.status(200).json({
+                    error: false,
+                    message: "success",
+                    data: cache,
+                });
+            }
+            let periode = new Date(`${query.periode}-01`);
+            let endOfMonth = new Date(periode.getFullYear(), periode.getMonth() + 1, 0);
+            let lastDay = formatDateToLocalYMD(endOfMonth);
+            if (endOfMonth > new Date()) {
+                lastDay = formatDateToLocalYMD(new Date());
+            } else {
+                lastDay = formatDateToLocalYMD(endOfMonth);
+            }
+
+            let year = new Date(query.periode).getFullYear();
+            let findCuti = await Ledger_cuti.findAll({
+                where: {
+                    nik_user: account.nik,
+                    periode: year
+                },
+                attributes: ['periode', 'sisa_cuti'],
+                include: [
+                    {
+                        model: Cuti,
+                        as: 'data_cuti',
+                        attributes: ['id', 'type_cuti', 'mulai', 'samapi'],
+                        where: {
+
+                            [Op.or]: [
+                                { mulai: { [Op.startsWith]: query.periode }, },
+                                { samapi: { [Op.startsWith]: query.periode } },
+
+                            ]
+                        },
+                        include: [
+                            {
+                                model: Jns_cuti,
+                                as: 'jenis_cuti',
+                                attributes: ['type_cuti']
+                            }
+                        ]
+                    }
+                ],
+                order: [
+                    ["createdAt", "ASC"]
+                ]
+            })
+            for (let i of findCuti) {
+                let cuti = i.data_cuti.dataValues;
+                console.log(cuti.mulai)
+                console.log(cuti.samapi)
+                console.log(cuti.jenis_cuti.type_cuti)
+                const typeMap = {
+                    "Cuti Tahunan": "CT",
+                    "Cuti Bersama": "CB",
+                    "Cuti Sakit": "CS",
+                    "Cuti Melahirkan": "CM"
+                };
+
+                const typeCT = typeMap[cuti.jenis_cuti.type_cuti];
+                const mulai = new Date(cuti.mulai);
+                const sampai = new Date(cuti.samapi);
+
+                for (let d = new Date(mulai); d <= sampai; d.setDate(d.getDate() + 1)) {
+                    const tanggal = d.toISOString().split('T')[0];
+                    console.log(tanggal);
+                    let update = await Jdldns.update({
+                        typeDns: typeCT + "-" + account.dep,
+                    }, {
+                        where: {
+                            nik: account.nik,
+                            date: tanggal
+                        }
+                    })
+                    console.log(update)
+                }
+            }
+            let getAbsenDNS = await Jdldns.findAll({
+                where: {
+                    nik: account.nik,
+                    date: { [Op.between]: [query.periode + '-01', lastDay] }
+                    // date: { [Op.startsWith]: query.periode }
+                },
+                include: [
+                    {
+                        model: Absen,
+                        as: 'absen',
+                        required: false, // LEFT JOIN
+                        on: literal(
+                            '`absen`.`date` = `Jdldns`.`date` AND `absen`.`nik` = `Jdldns`.`nik` AND `absen`.`typeDns` = `Jdldns`.`typeDns`'
+                        )
+                    }, {
+                        model: Jnsdns,
+                        as: 'dnsType',
+                        where: {
+                            state: 1
+                        },
+                        attributes: ["type", "state", "start_min", "start_max", "end_min", "end_max"]
+                    }
+                ]
+            })
+            getAbsenDNS = getAbsenDNS.filter(item => item.dnsType.type !== 'X');
+            let getjdlDNS = await Jdldns.findAll({
+                where: {
+                    nik: account.nik,
+                    date: { [Op.between]: [query.periode + '-01', lastDay] }
+                    // date: { [Op.startsWith]: query.periode }
+                },
+                include: [
+                    {
+                        model: Jnsdns,
+                        as: 'dnsType',
+                        where: {
+                            state: 0
+                        },
+                        attributes: ["type", "state", "start_min", "start_max", "end_min", "end_max"]
+                    }]
+            })
+            const countByType = getjdlDNS.reduce((acc, item) => {
+                const type = item.dnsType.type;
+                acc[type] = (acc[type] || 0) + 1;
+                return acc;
+            }, {});
+            let tidakAbsen = 0, tidakAbsenMasuk = 0, tidakAbsenPulang = 0, masukTepatWaktu = 0, pulangTepatWaktu = 0, telatmasuk = 0, cepatPulang = 0;
+
+            for (let i of getAbsenDNS) {
+                if (i.absen == null) {
+                    tidakAbsen += 1
+                    continue;
+                }
+                if (i.absen.cekIn == null) {
+                    tidakAbsenMasuk += 1
+                }
+                if (i.absen.cekOut == null) {
+                    tidakAbsenPulang += 1
+                }
+                if (i.absen.statusIn == "Masuk Tepat Waktu") {
+                    masukTepatWaktu += 1
+                }
+                if (i.absen.statusOut == "Pulang Tepat Waktu") {
+                    pulangTepatWaktu += 1
+                }
+                if (i.absen.statusIn == "Masuk Terlambat") {
+                    hitungMenitTerlambat(i.absen.cekIn, i.dnsType.start_max)
+                    telatmasuk += hitungMenitTerlambat(i.absen.cekIn, i.dnsType.start_max)
+                }
+                if (i.absen.statusOut == "Pulang Cepat") {
+                    hitungCepatPulang(i.absen.cekOut, i.dnsType.end_min)
+                    cepatPulang += hitungCepatPulang(i.absen.cekOut, i.dnsType.end_min)
+                }
+            }
+            let result = {
+                hariKerja: getAbsenDNS.length,
+                libur: getjdlDNS.length,
+                typeLibur: countByType,
+                tidakAbsen: tidakAbsen,
+                tidakAbsenMasuk: tidakAbsenMasuk,
+                tidakAbsenPulang: tidakAbsenPulang,
+                masukTepatWaktu: masukTepatWaktu,
+                pulangTepatWaktu: pulangTepatWaktu,
+                telatmasuk: telatmasuk,
+                cepatPulang: cepatPulang
+            }
+            req.cache.json.set(`SIMPEG:recapAbens:${query.periode}:${account.nik}`, '$', result);
+            req.cache.expire(`SIMPEG:recapAbens:${query.periode}:${account.nik}`, 60 * 10);
+
+            return res.status(200).json({
+                error: false,
+                message: "Sukses",
+                range: [query.periode + '-01', lastDay],
+                data: result,
+
+
             })
 
         } catch (error) {

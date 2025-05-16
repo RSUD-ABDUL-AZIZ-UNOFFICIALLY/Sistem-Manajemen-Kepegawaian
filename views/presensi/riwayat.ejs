@@ -83,8 +83,105 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <!-- /.card-body -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Recap Presensi</h3>
+                                    </div>
+                                    <div class="card-body">
+                                       <div class="grid grid-cols-2 gap-4">
+                                            <!-- Hari Kerja -->
+                                            <div class="bg-green-50 p-4 rounded-lg flex items-center space-x-4">
+                                                <i class="fa-solid fa-briefcase text-green-600 text-2xl"></i>
+                                                <div>
+                                                <p class="text-sm text-gray-600">Hari Kerja</p>
+                                                <p class="font-bold text-lg text-green-700"><span id="hariKerja">0</span></p>
+                                                </div>
+                                            </div>
 
+                                            <!-- Total Libur -->
+                                            <div class="bg-red-50 p-4 rounded-lg">
+                                                <div class="flex items-center space-x-4">
+                                                <i class="fa-solid fa-calendar-xmark text-red-600 text-2xl"></i>
+                                                <div>
+                                                    <p class="text-sm text-gray-600">Total Libur</p>
+                                                    <p class="font-bold text-lg text-red-700"><span id="totalLibur">0</span></p>
+                                                </div>
+                                                </div>
+                                                <ul class="text-xs text-gray-500 mt-2 ml-8" id="listLibur">
+                                                <li>Libur: x</li>
+                                                <li>Dinas Luar (DL): x</li>
+                                                <li>Cuti Tahunan (CT): x</li>
+                                                <li>Cuti Bersama (CB): x</li>
+                                                </ul>
+                                            </div>
+
+                                            <!-- Masuk Tepat Waktu -->
+                                            <div class="bg-blue-50 p-4 rounded-lg flex items-center space-x-4">
+                                                <i class="fa-solid fa-clock text-blue-600 text-2xl"></i>
+                                                <div>
+                                                <p class="text-sm text-gray-600">Masuk Tepat Waktu</p>
+                                                <p class="font-bold text-lg text-blue-700"><span id="masukTepatWaktu">0</span></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Pulang Tepat Waktu -->
+                                            <div class="bg-indigo-50 p-4 rounded-lg flex items-center space-x-4">
+                                                <i class="fa-solid fa-person-walking-arrow-loop-left text-indigo-600 text-2xl"></i>
+                                                <div>
+                                                <p class="text-sm text-gray-600">Pulang Tepat Waktu</p>
+                                                <p class="font-bold text-lg text-indigo-700"><span id="pulangTepatWaktu">0</span></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Telat Masuk -->
+                                            <div class="bg-yellow-50 p-4 rounded-lg flex items-center space-x-4">
+                                                <i class="fa-solid fa-person-running text-yellow-600 text-2xl"></i>
+                                                <div>
+                                                <p class="text-sm text-gray-600">Terlambat Masuk</p>
+                                                <p class="font-bold text-lg text-yellow-700"><span id="terlambatMasuk">0</span> menit</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Cepat Pulang -->
+                                            <div class="bg-pink-50 p-4 rounded-lg flex items-center space-x-4">
+                                                <i class="fa-solid fa-person-walking-dashed-line-arrow-right text-pink-600 text-2xl"></i>
+                                                <div>
+                                                <p class="text-sm text-gray-600">Cepat Pulang</p>
+                                                <p class="font-bold text-lg text-pink-600"><span id="cepatPulang">0</span> menit</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Tidak Absen Masuk -->
+                                            <div class="bg-gray-50 p-4 rounded-lg flex items-center space-x-4">
+                                                <i class="fa-solid fa-door-closed text-gray-600 text-2xl"></i>
+                                                <div>
+                                                <p class="text-sm text-gray-600">Tidak Absen Masuk</p>
+                                                <p class="font-bold text-lg text-gray-700"><span id="tidakAbsenMasuk">0</span></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Tidak Absen Pulang -->
+                                            <div class="bg-gray-50 p-4 rounded-lg flex items-center space-x-4">
+                                                <i class="fa-solid fa-door-open text-gray-600 text-2xl"></i>
+                                                <div>
+                                                <p class="text-sm text-gray-600">Tidak Absen Pulang</p>
+                                                <p class="font-bold text-lg text-gray-700"><span id="tidakAbsenPulang">0</span></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Tidak Absen Umum -->
+                                            <div class="bg-gray-50 p-4 rounded-lg flex items-center space-x-4">
+                                                <i class="fa-solid fa-user-slash text-gray-600 text-2xl"></i>
+                                                <div>
+                                                <p class="text-sm text-gray-600">Tidak Absen</p>
+                                                <p class="font-bold text-lg text-gray-700"><span id="tidakAbsen">0</span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
                 </div>
     </div>
     <!-- /.container-fluid -->

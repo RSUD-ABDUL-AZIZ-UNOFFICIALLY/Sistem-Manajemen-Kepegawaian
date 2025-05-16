@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       Jdldns.hasOne(models.Absen, {
         foreignKey: 'nik',
         sourceKey: 'nik',
-        as: 'absen'
+        as: 'absen',
+        constraints: false //
       })
       Jdldns.hasOne(models.Maps_Absen, {
         foreignKey: 'nik',

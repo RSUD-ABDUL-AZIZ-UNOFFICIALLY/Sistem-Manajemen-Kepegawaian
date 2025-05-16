@@ -7,11 +7,13 @@ let periode = periodeElement.value = year + "-" + (month < 10 ? "0" + month : mo
 
 // console.log(year + "-" + (month < 10 ? "0" + month : month));
 getRiwayat(periode)
+recapAbsen(periode);
 
 // Event listener untuk perubahan nilai pada elemen dengan id 'periode'
 document.getElementById("periode").addEventListener("change", function () {
     console.log(this.value);
     getRiwayat(this.value);
+    recapAbsen(this.value);
 });
 
 // Fungsi async untuk mengambil data riwayat
@@ -84,4 +86,60 @@ function getStatusPulang(stt) {
         return `<p class="text-xs text-left text-red-600">${stt}</p>`;
     }
     return `<p class="text-xs text-left text-green-600">${stt ? stt : "-"}</p>`;
+}
+
+async function recapAbsen(date) {
+    try {
+        const response = await fetch(`/api/presensi/recap?periode=${date}`, {
+            method: "GET",
+        });
+        if (response.ok) {
+            const data = await response.json();
+            recap(data.data);
+        } else {
+            console.error("Error fetching data:", response.status);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+async function recap(data) {
+    console.log(data);
+    const hariKerjaElement = document.getElementById("hariKerja");
+    hariKerjaElement.textContent = 0;
+    hariKerjaElement.textContent = data.hariKerja ? data.hariKerja : "-";
+    const totalLibur = document.getElementById("totalLibur");
+    totalLibur.textContent = 0;
+    totalLibur.textContent = data.libur ? data.libur : "-";
+    const LisLibur = document.getElementById("listLibur");
+    LisLibur.innerHTML = ""; // Mengosongkan elemen
+    Object.entries(data.typeLibur).forEach(([key, value]) => {
+        const itemHTML = `
+          <li>${key} : ${value}</li>
+        `;
+        LisLibur.innerHTML += itemHTML;
+    });
+    const masukTepatWaktu = document.getElementById("masukTepatWaktu");
+    masukTepatWaktu.textContent = 0;
+    masukTepatWaktu.textContent = data.masukTepatWaktu ? data.masukTepatWaktu : "-";
+    const terlambatMasuk = document.getElementById("terlambatMasuk");
+    terlambatMasuk.textContent = 0;
+    terlambatMasuk.textContent = data.telatmasuk ? data.telatmasuk : "0";
+    const pulangTepatWaktu = document.getElementById("pulangTepatWaktu");
+    pulangTepatWaktu.textContent = 0;
+    pulangTepatWaktu.textContent = data.pulangTepatWaktu ? data.pulangTepatWaktu : "-";
+    const cepatPulang = document.getElementById("cepatPulang");
+    cepatPulang.textContent = 0;
+    cepatPulang.textContent = data.cepatPulang ? data.cepatPulang : "0";
+    const tidakAbsenMasuk = document.getElementById("tidakAbsenMasuk");
+    tidakAbsenMasuk.textContent = 0;
+    tidakAbsenMasuk.textContent = data.tidakAbsenMasuk ? data.tidakAbsenMasuk : "-";
+    const tidakAbsenPulang = document.getElementById("tidakAbsenPulang");
+    tidakAbsenPulang.textContent = 0;
+    tidakAbsenPulang.textContent = data.tidakAbsenPulang ? data.tidakAbsenPulang : "-";
+    const tidakAbsen = document.getElementById("tidakAbsen");
+    tidakAbsen.textContent = 0;
+    tidakAbsen.textContent = data.tidakAbsen ? data.tidakAbsen : "-";
+
+
 }

@@ -77,10 +77,47 @@ function toRoman(num) {
   return result;
 }
 
+function formatDateToLocalYMD(date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function hitungMenitTerlambat(jam, start_max) {
+  const toDate = (timeStr) => new Date(`1970-01-01T${timeStr}Z`);
+  const time = toDate(jam);
+  const max = toDate(start_max);
+  const diffMs = time - max;
+
+  if (diffMs <= 0) {
+    return 0; // Tidak terlambat
+  }
+  return Math.floor(diffMs / 60000); // Konversi ms ke menit
+}
+
+function hitungCepatPulang(jam, end_min) {
+  const toDate = (timeStr) => new Date(`1970-01-01T${timeStr}Z`);
+
+  const time = toDate(jam);
+  const min = toDate(end_min);
+
+  const diffMs = min - time;
+
+  if (diffMs <= 0) {
+    return 0; // Tidak cepat pulang
+  }
+
+  return Math.floor(diffMs / 60000); // Konversi ms ke menit
+}
+
 module.exports = {
     convertdate,
     convertdatetime,
   generateUID,
   generateDelay,
-  toRoman
+  toRoman,
+  formatDateToLocalYMD,
+  hitungMenitTerlambat,
+  hitungCepatPulang
 }
