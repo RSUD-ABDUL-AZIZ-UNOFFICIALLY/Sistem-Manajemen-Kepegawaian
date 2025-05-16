@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'nik',
         as: 'id_finger'
       })
+      Jdldns.hasOne(models.User, {
+        foreignKey: 'nik',
+        sourceKey: 'nik',
+        as: 'user'
+      })
 
     }
   }

@@ -807,5 +807,86 @@ module.exports = {
                 data: error,
             });
         }
-    }
+    },
+    attendance: async (req, res) => {
+        try {
+            let query = req.query
+            let account = req.account
+            let findUser = await User.findAll({
+                where: {
+                    dep: query.dep
+                },
+                attributes: ['nik'],
+            })
+            findUser = findUser.map((item) => {
+                return item.nik
+            })
+            let getAbsenDNS = await Jdldns.findAll({
+                where: {
+                    nik: { [Op.in]: findUser },
+                    date: { [Op.between]: [query.start, query.end] }
+                    // date: { [Op.startsWith]: query.periode }
+                },
+                order: [
+                    ["date", "DESC"]
+                ],
+                include: [
+                    {
+                        model: Absen,
+                        as: 'absen',
+                        required: false, // LEFT JOIN
+                        on: literal(
+                            '`absen`.`date` = `Jdldns`.`date` AND `absen`.`nik` = `Jdldns`.`nik` AND `absen`.`typeDns` = `Jdldns`.`typeDns`'
+                        ),
+                        attributes: ["cekIn", "statusIn", "keteranganIn", "loactionIn", "keteranganIn", "cekOut", "statusOut", "keteranganOut", "loactionOut"]
+                    }, {
+                        model: Jnsdns,
+                        as: 'dnsType',
+                        where: {
+                            state: 1
+                        },
+                        attributes: ["type", "state"]
+                    },
+                    {
+                        model: User,
+                        as: 'user',
+                        attributes: ['nik', 'nama'],
+                        on: literal(
+                            '`User`.`nik` = `Jdldns`.`nik`'
+                        )
+                    }
+                ]
+            })
+            getAbsenDNS = getAbsenDNS.filter(item => item.dnsType.type !== 'X');
+            for (let i of getAbsenDNS) {
+                if (i.absen == null) {
+                    console.log(i)
+                    i.dataValues.absen = {
+                        cekIn: null,
+                        statusIn: null,
+                        keteranganIn: null,
+                        loactionIn: null,
+                        keteranganIn: null,
+                        cekOut: null,
+                        statusOut: null,
+                        keteranganOut: null,
+                        loactionOut: null
+                    }
+                }
+            }
+            return res.status(200).json({
+                error: false,
+                message: "Sukses",
+                data: getAbsenDNS
+            })
+        }
+        catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                error: true,
+                message: "internal server error",
+                data: error,
+            });
+        }
+    },
 }

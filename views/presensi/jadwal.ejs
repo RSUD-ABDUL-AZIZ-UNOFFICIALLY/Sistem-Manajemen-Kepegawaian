@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/asset/css/presensi/presensi.css">
 <script src="https://unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js"></script>
 <link href="https://unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -33,7 +34,7 @@
                                         <br>
                                         <hr>
                                         <div class="form-group">
-                                            <label for="periode">Bidang</label>
+                                            <label for="periode">Periode</label>
                                             <input type="month" class="form-control" id="periode" name="start"
                                                 min="2025-04" max="2025-05" value="" />
                                         </div>
@@ -63,6 +64,88 @@
                         </section>
 
                         <!-- /.content -->
+                           <section class="content">
+                            <div class="container-fluid">
+                                <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Daftar Kehadiran</h3>
+                                    <br>
+                                    <hr>
+                                    <!-- Form Filter -->
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                            <label for="tanggalAwal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Awal</label>
+                                            <input type="date" id="tanggalAwal" name="tanggalAwal"
+                                                    class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm px-3 py-2">
+                                            </div>
+                                            <div>
+                                            <label for="tanggalAkhir" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Akhir</label>
+                                            <input type="date" id="tanggalAkhir" name="tanggalAkhir"
+                                                    class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm px-3 py-2">
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-right">
+                                            <button type="button" onclick="cari()" id="cariTanggal"
+                                                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            <i class="fas fa-search"></i> Cari
+                                            </button>
+                                        </div>
+                            
+                                </div>
+                                <div class="card-body">
+                                  <div class="space-y-4" id="listKehadiran">
+                                          <!-- Card Absensi -->
+                                        <div class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row items-start md:items-center justify-between space-y-3 md:space-y-0">
+                                            <div>
+                                            <p class="text-lg font-semibold text-gray-700">👤 Andi Saputra</p>
+                                            <p class="text-sm text-gray-500">📍 Dinas Pendidikan</p>
+                                            </div>
+
+                                            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                                            <!-- Jam Masuk -->
+                                            <div class="flex items-center gap-1 text-sm text-gray-600">
+                                                ⏰ <span>Masuk: <strong class="text-gray-800">08:12</strong></span>
+                                                <span class="ml-2 text-yellow-500">(Terlambat 12m)</span>
+                                            </div>
+
+                                            <!-- Jam Pulang -->
+                                            <div class="flex items-center gap-1 text-sm text-gray-600">
+                                                🏁 <span>Pulang: <strong class="text-gray-800">16:04</strong></span>
+                                                <span class="ml-2 text-green-600">(Tepat Waktu)</span>
+                                            </div>
+                                            </div>
+                                        </div>
+                                             <!-- Card: Andi Saputra -->
+                                        <div class="bg-white rounded-xl shadow p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                            <div>
+                                            <!-- Tanggal dan Jenis Dinas -->
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <p class="text-sm text-gray-600"><i class="fas fa-calendar-alt mr-1"></i> 16 Mei 2025</p>
+                                                <span class="text-xs bg-blue-100 text-blue-700 font-medium px-2 py-0.5 rounded">Dinas Pagi</span>
+                                            </div>
+                                            <p class="text-lg font-semibold text-gray-700"><i class="fas fa-user mr-1 text-gray-500"></i> Andi Saputra</p>
+                                            <p class="text-sm text-gray-500"><i class="fas fa-location-dot mr-1 text-gray-400"></i> Dinas Pendidikan</p>
+                                            </div>
+                                            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                                <i class="fas fa-sign-in-alt text-yellow-500"></i>
+                                                <span>Masuk: <strong class="text-gray-800">08:12</strong></span>
+                                                <span class="text-yellow-600">(Terlambat 12m)</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                                <i class="fas fa-sign-out-alt text-green-500"></i>
+                                                <span>Pulang: <strong class="text-gray-800">16:04</strong></span>
+                                                <span class="text-green-600">(Tepat Waktu)</span>
+                                            </div>
+                                            </div>
+                                        </div>
+                                  </div>
+                                </div>
+                                <!-- /.card-body -->
+                                </div>
+                            </div>
+                            <!-- /.container-fluid -->
+                        </section>
                 </div>
                 <!-- /.content-wrapper -->
                 <footer class="main-footer"></footer>
@@ -76,6 +159,7 @@
                    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
             <script src="/asset/js/fullcalendar/tableJadwaldns.js"></script>
             <script src="/asset/js/fullcalendar/edit.js"></script>
+            <script src="/asset/js/fullcalendar/kehadiran.js"></script>
 
 </body>
 
