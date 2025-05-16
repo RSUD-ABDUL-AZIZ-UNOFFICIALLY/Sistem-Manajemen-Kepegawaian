@@ -127,3 +127,7 @@ REDIS_PASSWORD=""
 
 #### Diubah
 -  Pengaturan jam dinas.
+
+### [2.7.5-absen] - 2025-05-16
+#### Ditambahkan
+- Rekap Presensi Pegawai.
