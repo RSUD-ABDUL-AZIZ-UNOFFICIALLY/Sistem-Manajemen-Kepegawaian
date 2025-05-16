@@ -852,7 +852,7 @@ module.exports = {
                         as: 'user',
                         attributes: ['nik', 'nama'],
                         on: literal(
-                            '`User`.`nik` = `Jdldns`.`nik`'
+                            '`user`.`nik` = `Jdldns`.`nik`'
                         )
                     }
                 ]
