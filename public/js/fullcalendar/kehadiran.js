@@ -89,7 +89,7 @@ async function listKehadiran(data) {
           </div>
           <p class="text-lg font-semibold text-gray-700"><i class="fas fa-user mr-1 text-gray-500"></i> <span>${d.user.nama}</span></p>
           <p class="text-sm text-gray-500"><i class="fas fa-location-dot mr-1 text-gray-400"></i>Masuk  : ${d.absen.loactionIn ? d.absen.loactionIn : '-'}</p>
-          <p class="text-sm text-gray-500"><i class="fas fa-location-dot mr-1 text-gray-400"></i>Pulang : ${d.absen.loactionIn ? d.absen.loactionOut : '-'}</p>
+          <p class="text-sm text-gray-500"><i class="fas fa-location-dot mr-1 text-gray-400"></i>Pulang : ${d.absen.loactionOut ? d.absen.loactionOut : '-'}</p>
         </div>
         <div class="flex flex-col sm:flex-row sm:items-center gap-4">
           <div class="flex items-center gap-2 text-sm text-gray-600">
