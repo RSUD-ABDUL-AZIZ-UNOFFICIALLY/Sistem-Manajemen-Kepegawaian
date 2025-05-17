@@ -131,3 +131,6 @@ REDIS_PASSWORD=""
 ### [2.7.5-absen] - 2025-05-16
 #### Ditambahkan
 - Rekap Presensi Pegawai.
+
+#### Diubah
+-  Order absen ubah no urtan jadwal dns.

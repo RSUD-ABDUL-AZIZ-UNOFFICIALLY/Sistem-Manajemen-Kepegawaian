@@ -53,6 +53,9 @@ module.exports = {
       email: {
         type: Sequelize.STRING(300),
       },
+      order: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

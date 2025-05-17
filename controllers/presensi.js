@@ -29,6 +29,7 @@ module.exports = {
                     dep: params.dep,
                 },
                 attributes: ["nik", "nama"],
+                order: [["order", "ASC"]]
             });
             let year = new Date(params.periode).getFullYear();
             let month = new Date(params.periode).getMonth();

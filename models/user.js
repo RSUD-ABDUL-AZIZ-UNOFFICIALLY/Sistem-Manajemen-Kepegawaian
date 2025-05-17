@@ -41,7 +41,8 @@ module.exports = (sequelize, DataTypes) => {
     jab: DataTypes.STRING(300),
     wa: DataTypes.STRING,
     status: DataTypes.ENUM('PNS', 'PPPK', 'Non ASN'),
-    email: DataTypes.STRING(300)
+    email: DataTypes.STRING(300),
+    order: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'User',
