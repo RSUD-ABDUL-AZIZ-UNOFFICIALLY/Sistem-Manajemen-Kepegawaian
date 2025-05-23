@@ -3,9 +3,17 @@ const { Op, where } = require("sequelize");
 const cron = require('node-cron');
 const axios = require("axios");
 // require('dotenv').config();
-// cekIn('2025-04-16');
-// cekOut('2025-04-16');
+// cekIn('2025-05-18');
+// cekOut('2025-05-18');
 console.log(process.env.HOST_FIGER);
+(async () => {
+    for (let i = 1; i <= 23; i++) {
+        //await cekIn(`2025-04-${i < 10 ? '0' + i : i}`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        // await cekOut(`2025-04-${i < 10 ? '0' + i : i}`);
+        console.log(`2025-04-${i < 10 ? '0' + i : i}`);
+    }
+})();
 
 cron.schedule('*/2 * * * *', () => {
     let onlyDate = new Date().toISOString().slice(0, 10);
@@ -114,7 +122,7 @@ async function cekOut(date) {
             as: 'dnsType',
             attributes: ['start_min', 'start_max', 'end_min', 'end_max'],
             where: {
-                state: 1
+                // state: 1
             }
 
         }, {
@@ -132,7 +140,7 @@ async function cekOut(date) {
         }]
     });
     let idFinger = find_jdl.map(item => item.id_finger.id_finger);
-    console.log(idFinger);
+    // console.log(idFinger);
     if (idFinger.length == 0) {
         console.log("tidak ada data");
         return;
@@ -156,6 +164,33 @@ async function cekOut(date) {
             console.log("tidak ada data");
             continue;
         }
+        let typeDns = i.typeDns;
+        let date = data_absen[0].checktime_wib.tanggal;
+        let split = typeDns.split("-");
+        if (split[0] == "X" || split[0] == "Malam" || split[0] == "Libur") {
+            // typeDns = "Malam-" + split[1];
+            date = new Date(new Date(data_absen[0].checktime_wib.tanggal) - 1000 * 60 * 60 * 24);
+            let getDnsType = await Jdldns.findOne({
+                where: {
+                    date: date,
+                    nik: i.dataValues.nik
+                },
+                include: [{
+                    model: Jnsdns,
+                    as: 'dnsType',
+                    attributes: ['start_min', 'start_max', 'end_min', 'end_max'],
+                    where: {
+                        state: 1
+                    }
+                }]
+            });
+            if (getDnsType == null) {
+                console.log(typeDns);
+                continue;
+            }
+            typeDns = getDnsType.dataValues.typeDns;
+            i.dnsType = getDnsType.dnsType;
+        }
 
         let hasil = evaluasiPulang(data_absen, i.dnsType.end_min, i.dnsType.end_max);
         if (!hasil) continue;
@@ -164,13 +199,6 @@ async function cekOut(date) {
         let keteranganOut = hasil.keteranganOut;
         let jamPulang = hasil.checktime;
         let location = hasil.location;
-        let typeDns = i.typeDns;
-        let date = data_absen[0].checktime_wib.tanggal;
-        let split = typeDns.split("-");
-        if (split[0] == "X" || split[0] == "Malam") {
-            typeDns = "Malam-" + split[1];
-            date = new Date(new Date(data_absen[0].checktime_wib.tanggal) - 1000 * 60 * 60 * 24);
-        }
                let absen = await Absen.update({
                    cekOut: jamPulang,
                    statusOut: statusout,
@@ -192,6 +220,33 @@ async function cekOut(date) {
             console.log("tidak ada data");
             continue;
         }
+        let typeDns = i.typeDns;
+        let date = data_absen[0].checktime_wib.tanggal;
+        let split = typeDns.split("-");
+        if (split[0] == "X" || split[0] == "Malam" || split[0] == "Libur") {
+            // typeDns = "Malam-" + split[1];
+            date = new Date(new Date(data_absen[0].checktime_wib.tanggal) - 1000 * 60 * 60 * 24);
+            let getDnsType = await Jdldns.findOne({
+                where: {
+                    date: date,
+                    nik: i.dataValues.nik
+                },
+                include: [{
+                    model: Jnsdns,
+                    as: 'dnsType',
+                    attributes: ['start_min', 'start_max', 'end_min', 'end_max'],
+                    where: {
+                        state: 1
+                    }
+                }]
+            });
+            if (getDnsType == null) {
+                console.log(typeDns);
+                continue;
+            }
+            typeDns = getDnsType.dataValues.typeDns;
+            i.dnsType = getDnsType.dnsType;
+        }
 
         let hasil = evaluasiPulang(data_absen, i.dnsType.end_min, i.dnsType.end_max);
         if (!hasil) continue;
@@ -200,19 +255,17 @@ async function cekOut(date) {
         let keteranganOut = hasil.keteranganOut;
         let jamPulang = hasil.checktime;
         let location = hasil.location;
-        let typeDns = i.typeDns;
-        let date = data_absen[0].checktime_wib.tanggal;
-        let split = typeDns.split("-");
-        if (split[0] == "X" || split[0] == "Malam") {
-            typeDns = "Malam-" + split[1];
-            date = new Date(new Date(data_absen[0].checktime_wib.tanggal) - 1000 * 60 * 60 * 24);
-            let findAbsen = await Absen.findOne({
+        let findAbsen = await Absen.findOne({
                 where: {
                     nik: i.dataValues.nik,
                     date: date
                 }
-            });
-            if (findAbsen) {
+        });
+        if (findAbsen) {
+            if (findAbsen.cekOut != null) {
+                console.log("sudah absen pulang");
+                continue;
+            }
                 await Absen.update({
                     cekOut: jamPulang,
                     statusOut: statusout,
@@ -229,7 +282,7 @@ async function cekOut(date) {
                 });
                 continue;
             }
-        }
+
 
 
         let absen = await Absen.create({
