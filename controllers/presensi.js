@@ -796,10 +796,147 @@ module.exports = {
                 message: "Sukses",
                 range: [query.periode + '-01', lastDay],
                 data: result,
-
-
             })
 
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                error: true,
+                message: "internal server error",
+                data: error,
+            });
+        }
+    },
+    recapbyNik: async (req, res) => {
+        try {
+            let query = req.query
+            let params = req.params
+            if (query.periode == undefined) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Periode tidak di temukan",
+                });
+            }
+            let today = new Date().toISOString().split('T')[0];
+
+            if (query.periode > today.slice(0, 7)) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Periode tidak boleh lebih besar dari bulan ini",
+                });
+            }
+            let cache = await req.cache.json.get(`SIMPEG:recapAbens:${query.periode}:${params.nik}`, '$');
+            if (cache != null) {
+                console.log("Cache Hit")
+                return res.status(200).json({
+                    error: false,
+                    message: "success",
+                    data: cache,
+                });
+            }
+            let periode = new Date(`${query.periode}-01`);
+            let endOfMonth = new Date(periode.getFullYear(), periode.getMonth() + 1, 0);
+            let lastDay = formatDateToLocalYMD(endOfMonth);
+            if (endOfMonth > new Date()) {
+                lastDay = formatDateToLocalYMD(new Date());
+            } else {
+                lastDay = formatDateToLocalYMD(endOfMonth);
+            }
+            let getAbsenDNS = await Jdldns.findAll({
+                where: {
+                    nik: params.nik,
+                    date: { [Op.between]: [query.periode + '-01', lastDay] }
+                    // date: { [Op.startsWith]: query.periode }
+                },
+                include: [
+                    {
+                        model: Absen,
+                        as: 'absen',
+                        required: false, // LEFT JOIN
+                        on: literal(
+                            '`absen`.`date` = `Jdldns`.`date` AND `absen`.`nik` = `Jdldns`.`nik` AND `absen`.`typeDns` = `Jdldns`.`typeDns`'
+                        )
+                    }, {
+                        model: Jnsdns,
+                        as: 'dnsType',
+                        where: {
+                            state: 1
+                        },
+                        attributes: ["type", "state", "start_min", "start_max", "end_min", "end_max"]
+                    }
+                ]
+            })
+            // getAbsenDNS = getAbsenDNS.filter(item => item.dnsType.type !== 'X');
+            let getjdlDNS = await Jdldns.findAll({
+                where: {
+                    nik: params.nik,
+                    date: { [Op.between]: [query.periode + '-01', lastDay] }
+                    // date: { [Op.startsWith]: query.periode }
+                },
+                include: [
+                    {
+                        model: Jnsdns,
+                        as: 'dnsType',
+                        where: {
+                            state: 0
+                        },
+                        attributes: ["type", "state", "start_min", "start_max", "end_min", "end_max"]
+                    }]
+            })
+            const countByType = getjdlDNS.reduce((acc, item) => {
+                const type = item.dnsType.type;
+                acc[type] = (acc[type] || 0) + 1;
+                return acc;
+            }, {});
+            let tidakAbsen = 0, tidakAbsenMasuk = 0, tidakAbsenPulang = 0, masukTepatWaktu = 0, pulangTepatWaktu = 0, telatmasuk = 0, cepatPulang = 0;
+
+            for (let i of getAbsenDNS) {
+                if (i.absen == null) {
+                    tidakAbsen += 1
+                    continue;
+                }
+                if (i.absen.cekIn == null) {
+                    tidakAbsenMasuk += 1
+                }
+                if (i.absen.cekOut == null) {
+                    tidakAbsenPulang += 1
+                }
+                if (i.absen.statusIn == "Masuk Tepat Waktu") {
+                    masukTepatWaktu += 1
+                }
+                if (i.absen.statusOut == "Pulang Tepat Waktu") {
+                    pulangTepatWaktu += 1
+                }
+                if (i.absen.statusIn == "Masuk Terlambat") {
+                    hitungMenitTerlambat(i.absen.cekIn, i.dnsType.start_max)
+                    telatmasuk += hitungMenitTerlambat(i.absen.cekIn, i.dnsType.start_max)
+                }
+                if (i.absen.statusOut == "Pulang Cepat") {
+                    hitungCepatPulang(i.absen.cekOut, i.dnsType.end_min)
+                    cepatPulang += hitungCepatPulang(i.absen.cekOut, i.dnsType.end_min)
+                }
+            }
+            let result = {
+                hariKerja: getAbsenDNS.length,
+                libur: getjdlDNS,
+                typeLibur: countByType,
+                tidakAbsen: tidakAbsen,
+                tidakAbsenMasuk: tidakAbsenMasuk,
+                tidakAbsenPulang: tidakAbsenPulang,
+                masukTepatWaktu: masukTepatWaktu,
+                pulangTepatWaktu: pulangTepatWaktu,
+                telatmasuk: telatmasuk,
+                cepatPulang: cepatPulang
+            }
+            let caches = await req.cache.json.set(`SIMPEG:recapAbens:${query.periode}:${params.nik}`, '$', result);
+            await req.cache.expire(`SIMPEG:recapAbens:${query.periode}:${params.nik}`, 60);
+            console.log(caches)
+            return res.status(200).json({
+                error: false,
+                message: "Sukses",
+                range: [query.periode + '-01', lastDay],
+                data: result,
+            })
         } catch (error) {
             console.log(error)
             return res.status(500).json({
