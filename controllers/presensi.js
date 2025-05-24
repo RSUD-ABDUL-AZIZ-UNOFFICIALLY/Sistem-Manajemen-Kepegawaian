@@ -918,7 +918,7 @@ module.exports = {
             }
             let result = {
                 hariKerja: getAbsenDNS.length,
-                libur: getjdlDNS,
+                libur: getjdlDNS.length,
                 typeLibur: countByType,
                 tidakAbsen: tidakAbsen,
                 tidakAbsenMasuk: tidakAbsenMasuk,
