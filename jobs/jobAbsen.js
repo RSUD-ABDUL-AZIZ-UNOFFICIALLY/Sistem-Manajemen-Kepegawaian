@@ -15,7 +15,7 @@ console.log(process.env.HOST_FIGER);
 //     }
 // })();
 
-cron.schedule('*/2 * * * *', () => {
+cron.schedule('*/3 * * * *', () => {
     let onlyDate = new Date().toISOString().slice(0, 10);
     // let date = onlyDate.slice(5, 10);
     console.log(onlyDate + ' cekIn');
