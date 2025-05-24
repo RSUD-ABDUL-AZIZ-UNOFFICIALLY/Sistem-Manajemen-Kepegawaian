@@ -6,14 +6,14 @@ const axios = require("axios");
 // cekIn('2025-05-18');
 // cekOut('2025-05-18');
 console.log(process.env.HOST_FIGER);
-(async () => {
-    for (let i = 1; i <= 23; i++) {
-        //await cekIn(`2025-04-${i < 10 ? '0' + i : i}`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // await cekOut(`2025-04-${i < 10 ? '0' + i : i}`);
-        console.log(`2025-04-${i < 10 ? '0' + i : i}`);
-    }
-})();
+// (async () => {
+//     for (let i = 10; i <= 10; i++) {
+//         // await cekIn(`2025-05-${i < 10 ? '0' + i : i}`);
+//         // await new Promise(resolve => setTimeout(resolve, 1000));
+//         await cekOut(`2025-05-${i < 10 ? '0' + i : i}`);
+//         await console.log(`Selesai 2025-05-${i < 10 ? '0' + i : i}`);
+//     }
+// })();
 
 cron.schedule('*/2 * * * *', () => {
     let onlyDate = new Date().toISOString().slice(0, 10);
@@ -22,7 +22,7 @@ cron.schedule('*/2 * * * *', () => {
     cekIn(onlyDate);
     console.log(onlyDate);
 });
-cron.schedule('*/11 * * * *', () => {
+cron.schedule('*/5 * * * *', () => {
     let onlyDate = new Date().toISOString().slice(0, 10);
     // let date = onlyDate.slice(5, 10);
     console.log(onlyDate + ' cekOut');
