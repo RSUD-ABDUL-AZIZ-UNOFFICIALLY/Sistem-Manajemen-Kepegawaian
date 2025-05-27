@@ -110,6 +110,21 @@ function hitungCepatPulang(jam, end_min) {
 
   return Math.floor(diffMs / 60000); // Konversi ms ke menit
 }
+function hitungTpp(persen) {
+  if (persen >= 100) {
+    return [100, 'BAIK'];
+  } else if (persen > 94) {
+    return [90, 'CUKUP'];
+  } else if (persen > 88) {
+    return [80, 'KURANG'];
+  } else if (persen > 82) {
+    return [70, 'WKE MINIMAL TIDAK TERPENUHI'];
+  } else if (persen > 76) {
+    return [60, 'WKE MINIMAL TIDAK TERPENUHI'];
+  } else {
+    return [0, 'WKE MINIMAL TIDAK TERPENUHI'];
+  }
+}
 
 module.exports = {
     convertdate,
@@ -119,5 +134,6 @@ module.exports = {
   toRoman,
   formatDateToLocalYMD,
   hitungMenitTerlambat,
-  hitungCepatPulang
+  hitungCepatPulang,
+  hitungTpp
 }

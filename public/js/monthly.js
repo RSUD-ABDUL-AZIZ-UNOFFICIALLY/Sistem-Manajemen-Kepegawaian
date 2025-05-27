@@ -41,17 +41,129 @@ function hapus(data, id) {
   getScore(monthly);
 }
 
-function getScore(monthly) {
-  $.ajax({
-    url: "/api/monthly/score?date=" + monthly,
-    method: "GET",
-    success: function (response) {
-      // console.log(response);
-      $("#capaian").text(response.data.capaian);
-      $("#kategori").text(response.data.kategori);
-      $("#tpp").text(response.data.tpp);
-    },
-  });
+async function fetchData(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error fetching data: ${error.message}`);
+    return null; // or handle the error as needed
+  }
+}
+async function getScore(monthly) {
+  let cekPeriode = await fetchData("/api/monthly/periode?date=" + monthly);
+  let status = await fetchData("/api/v2/monthly?date=" + monthly);
+  let stt = document.getElementById('status');
+  console.log(status);
+  stt.innerHTML = status.data.status;
+  stt.className = 'badge rounded-pill ml-2 ' + status.data.className;
+  if (cekPeriode === null) {
+    let score = await fetchData("/api/monthly/score?date=" + monthly);
+    if (score) {
+      // $("#capaian").text(score.data.capaian);
+      // $("#kategori").text(score.data.kategori);
+      // $("#tpp").text(score.data.tpp);
+      let summary = document.getElementById('summary');
+      return summary.innerHTML = `
+    <div class="row">
+      <div class="col-sm-6">
+        Pencapaian Kinerja Bulanan
+      </div>
+      <div class="col-sm-5">
+        Menit<span id="capaian" class="float-left">${score.data.capaian}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        Kategori
+      </div>
+      <div class="col-sm-5">
+        <span id="kategori" class="float-left">${score.data.kategori}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        Tambahan Penghasilan Pegawai
+      </div>
+      <div class="col-sm-5">
+        <span id="tpp" class="float-left">${score.data.tpp}</span>
+      </div>
+    </div>
+    <hr>
+          <div class="row no-print">
+        <div class="col-12">
+          <button type="button" class="btn btn-success float-right" onclick="submit()">
+            <i class="fa-regular fa-paper-plane"></i> Kirim
+          </button>
+          <button type="button" class="btn btn-primary float-right" style="margin-right: 5px" onclick="cetak()">
+            <i class="fas fa-print"></i> Mencetak
+          </button>
+        </div>
+      </div>
+    `;
+    } else {
+      console.error("Failed to fetch score data.");
+    }
+  }
+  else {
+    console.log(cekPeriode);
+    let summary = document.getElementById('summary');
+    return summary.innerHTML = `
+    <div class="row">
+      <div class="col-sm-6">
+        Capaian Kinerja / Jumlah WK yang sudah divalidasi dalam 1 bulan
+      </div>
+      <div class="col-sm-5">
+        <span class="float-left">${cekPeriode.data.capaian} Menit</span>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-6">
+        Jumlah HK dalam 1 bulan
+      </div>
+      <div class="col-sm-5">
+        <span class="float-left">${cekPeriode.data.days} HK</span>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-6">
+        Jumlah WK pelaporan aktivitas dalam 1 hari
+      </div>
+      <div class="col-sm-5">
+        <span class="float-left">${cekPeriode.data.wk}</span>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-6">
+        Persentasi Produktivitas Kerja
+      </div>
+      <div class="col-sm-5">
+        <span class="float-left">${cekPeriode.data.tpp} %</span>
+      </div>
+    </div>
+    <hr>
+    <div class="row no-print">
+        <div class="col-12">
+          <button type="button" class="btn btn-success float-right" onclick="submit2()">
+            <i class="fa-regular fa-paper-plane"></i> Kirim
+          </button>
+          <button type="button" class="btn btn-primary float-right" style="margin-right: 5px" onclick="cetak()">
+            <i class="fas fa-print"></i> Mencetak
+          </button>
+        </div>
+      </div>
+      <hr>
+    `;
+  }
+
+
 }
 function getTabel(newDateValue) {
 
@@ -129,6 +241,28 @@ function submit() {
     },
   });
     return;
+}
+function submit2() {
+  let monthly = $("#InputTanggal").val();
+  // ajax post
+  $.ajax({
+    url: "/api/v2/monthly",
+    method: "POST",
+    data: {
+      monthly: monthly,
+    },
+    success: function (response) {
+      Swal.fire({
+        icon: 'success',
+        title: response.message,
+        text: response.data,
+      })
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+  return;
 }
 
 function edit(data, id) {

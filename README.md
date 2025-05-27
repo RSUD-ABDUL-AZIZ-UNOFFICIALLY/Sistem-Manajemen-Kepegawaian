@@ -134,3 +134,10 @@ REDIS_PASSWORD=""
 
 #### Diubah
 -  Order absen ubah no urtan jadwal dns.
+
+### [2.7.6-absen] - 2025-05-27
+#### Ditambahkan
+- Infromasi status LPKP
+- Model Baru
+#### Diubah
+-  Rekap LPKP.
