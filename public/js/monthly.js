@@ -54,13 +54,19 @@ async function fetchData(url) {
     return null; // or handle the error as needed
   }
 }
-async function getScore(monthly) {
-  let cekPeriode = await fetchData("/api/monthly/periode?date=" + monthly);
+async function badgeStatus(monthly) {
   let status = await fetchData("/api/v2/monthly?date=" + monthly);
   let stt = document.getElementById('status');
   console.log(status);
   stt.innerHTML = status.data.status;
   stt.className = 'badge rounded-pill ml-2 ' + status.data.className;
+  return true
+
+}
+async function getScore(monthly) {
+  let cekPeriode = await fetchData("/api/monthly/periode?date=" + monthly);
+  let status = await fetchData("/api/v2/monthly?date=" + monthly);
+  badgeStatus(monthly);
   if (cekPeriode === null) {
     let score = await fetchData("/api/monthly/score?date=" + monthly);
     if (score) {
@@ -257,6 +263,7 @@ function submit2() {
         title: response.message,
         text: response.data,
       })
+      badgeStatus(monthly);
     },
     error: function (error) {
       console.log(error);
