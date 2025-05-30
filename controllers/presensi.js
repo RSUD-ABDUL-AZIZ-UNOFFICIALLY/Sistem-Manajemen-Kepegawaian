@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
 const {
-    Sequelize,
+    sequelize,
     User,
     Instalasi,
     Departemen,
@@ -61,6 +61,7 @@ module.exports = {
                     // attributes: ["typeDns"],
                 });
                 if (presensi.length == 0) {
+                    let setJadwalUser = [];
                     for (let x = 0; x < jumlahHari; x++) {
                         let namaHari = ["MIN", "SEN", "SEL", "RAB", "KAM", "JUM", "SAB"];
                         let hari = (namaHari[new Date(year, month, x + 1).getDay()]);
@@ -73,12 +74,19 @@ module.exports = {
                                     typeDns: y.dataValues.slug,
                                     date: new Date(year, month, x + 1)
                                 }
-                                await Jdldns.create(jadwal);
+                                setJadwalUser.push(jadwal);
+                                // await Jdldns.create(jadwal);
                                 break;
                             }
 
                         }
                     }
+                    let t = await sequelize.transaction();
+                    i.dataValues.jadwal = setJadwalUser;
+                    await Jdldns.bulkCreate(setJadwalUser, {
+                        ignoreDuplicates: true
+                    }, { transaction: t })
+                    await t.commit();
                 } else {
                     i.dataValues.jadwal = presensi
                 }
