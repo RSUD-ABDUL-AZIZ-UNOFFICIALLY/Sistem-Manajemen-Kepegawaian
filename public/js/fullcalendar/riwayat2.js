@@ -53,6 +53,7 @@ function listRiwayat(data) {
         });
         const itemHTML = `
           <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+          <span class="text-xs bg-blue-100 text-blue-700 font-medium px-2 py-0.5  rounded">${d.Jnsdn.type}</span>
             <div class="mb-2 font-medium text-gray-700">${tanggal}</div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
