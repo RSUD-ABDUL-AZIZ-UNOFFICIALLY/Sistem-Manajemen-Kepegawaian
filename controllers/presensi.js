@@ -776,12 +776,14 @@ module.exports = {
                     pulangTepatWaktu += 1
                 }
                 if (i.absen.statusIn == "Masuk Terlambat") {
-                    hitungMenitTerlambat(i.absen.cekIn, i.dnsType.start_max)
-                    telatmasuk += hitungMenitTerlambat(i.absen.cekIn, i.dnsType.start_max)
+                    // hitungMenitTerlambat(i.absen.cekIn, i.dnsType.start_max)
+                    let mapping = i.absen.keteranganIn.split(' ');
+                    telatmasuk += parseInt(mapping[1]);
                 }
                 if (i.absen.statusOut == "Pulang Cepat") {
-                    hitungCepatPulang(i.absen.cekOut, i.dnsType.end_min)
-                    cepatPulang += hitungCepatPulang(i.absen.cekOut, i.dnsType.end_min)
+                    // hitungCepatPulang(i.absen.cekOut, i.dnsType.end_min)
+                    let mapping = i.absen.keteranganOut.split(' ');
+                    cepatPulang += parseInt(mapping[2]);
                 }
             }
             let result = {
@@ -916,12 +918,12 @@ module.exports = {
                     pulangTepatWaktu += 1
                 }
                 if (i.absen.statusIn == "Masuk Terlambat") {
-                    hitungMenitTerlambat(i.absen.cekIn, i.dnsType.start_max)
-                    telatmasuk += hitungMenitTerlambat(i.absen.cekIn, i.dnsType.start_max)
+                    let mapping = i.absen.keteranganIn.split(' ');
+                    telatmasuk += parseInt(mapping[1]);
                 }
                 if (i.absen.statusOut == "Pulang Cepat") {
-                    hitungCepatPulang(i.absen.cekOut, i.dnsType.end_min)
-                    cepatPulang += hitungCepatPulang(i.absen.cekOut, i.dnsType.end_min)
+                    let mapping = i.absen.keteranganOut.split(' ');
+                    cepatPulang += parseInt(mapping[2]);
                 }
             }
             let result = {
