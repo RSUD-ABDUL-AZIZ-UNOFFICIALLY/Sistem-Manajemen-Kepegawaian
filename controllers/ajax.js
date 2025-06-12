@@ -1693,13 +1693,15 @@ Lampiran   : ${urlLampiran}`
   },
   getSisaCuti: async (req, res) => {
     let user = req.account;
+    let yearNow = new Date().getFullYear();
 
     let { type_cuti } = req.query;
     try {
       let data = await Ledger_cuti.findOne({
         where: {
           nik_user: user.nik,
-          type_cuti: type_cuti
+          type_cuti: type_cuti,
+          periode: yearNow,
         },
         attributes: ["sisa_cuti", "periode"],
         include: [
