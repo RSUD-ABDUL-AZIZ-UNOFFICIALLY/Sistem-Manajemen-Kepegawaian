@@ -46,7 +46,7 @@ function menuAkses() {
     let v = $('<li class="nav-item">  <a href="/kepegawaian" class="nav-link"><i class="far fa-solid fa-user-nurse nav-icon"></i><p>Admin kepegawaian</p></a></li>');
     let u = $('<li class="nav-item">  <a href="/aprovecuti/admin" class="nav-link"><i class="far fa-solid fa-book-bookmark nav-icon"></i><p>Recapitulasi Cuti</p></a></li>');
     let present = $('<li class="nav-item"><a href="/presensi" class="nav-link"><i class="fa-solid fa-person-chalkboard nav-icon"></i><p>Jadwal Absen</p></a></li>');
-    let att = $('<li class="nav-item"><a href="/presensi/attendence" class="nav-link"><i class="fa-solid fa-person-chalkboard nav-icon"></i><p>Jadwal Absen</p></a></li>');
+    let att = $('<li class="nav-item"><a href="/presensi/attendence" class="nav-link"><i class="fa-solid fa-calendar-check nav-icon"></i><p>Attendence</p></a></li>');
     let simrs = $('<li class="nav-item" id="simrs" name="simrs"><a href="#" class="nav-link"><i class="nav-icon fa-regular fa-hospital"></i><p>Menu simrs<i class="right fas fa-angle-left"></i></p></a><ul class="nav nav-treeview"id="ul_simrs" name="ul_simrs" ></ul></li>');
     let rm = $('<li class="nav-item">  <a href="/simrs/regis" class="nav-link"><i class="far fa-solid fa-hospital-user nav-icon"></i><p>Registrasi Pasien</p></a></li>');
     1 == a[0].bos && ($("#cuti").append(e),
