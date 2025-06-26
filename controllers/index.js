@@ -358,5 +358,15 @@ module.exports = {
       token: decoded,
     };
     res.render("presensi/riwayat", data);
-  }
+  },
+  attendence: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "atendence | SIMPEG",
+      page: "Atendence",
+      token: decoded,
+    };
+    res.render("presensi/attendence", data);
+  },
 };

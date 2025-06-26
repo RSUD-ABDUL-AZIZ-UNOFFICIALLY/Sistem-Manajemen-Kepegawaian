@@ -110,6 +110,37 @@ function hitungCepatPulang(jam, end_min) {
 
   return Math.floor(diffMs / 60000); // Konversi ms ke menit
 }
+function checkAttendance(jam, start_min, start_max) {
+  const toDate = (timeStr) => new Date(`1970-01-01T${timeStr}Z`);
+
+  const time = toDate(jam);
+  const min = toDate(start_min);
+  const max = toDate(start_max);
+
+  if (time < min) {
+    return 'Masuk Cepat';
+  } else if (time >= min && time <= max) {
+    return 'Masuk Tepat Waktu';
+  } else {
+    return 'Masuk Terlambat';
+  }
+}
+
+function checkPulang(jam_pulang, end_min, end_max) {
+  const toDate = (timeStr) => new Date(`1970-01-01T${timeStr}Z`);
+
+  const time = toDate(jam_pulang);
+  const min = toDate(end_min);
+  const max = toDate(end_max);
+
+  if (time < min) {
+    return 'Pulang Cepat';
+  } else if (time >= min && time <= max) {
+    return 'Pulang Tepat Waktu';
+  } else {
+    return 'Pulang Terlambat';
+  }
+}
 function hitungTpp(persen) {
   if (persen >= 100) {
     return [100, 'BAIK'];
@@ -135,5 +166,7 @@ module.exports = {
   formatDateToLocalYMD,
   hitungMenitTerlambat,
   hitungCepatPulang,
+  checkAttendance,
+  checkPulang,
   hitungTpp
 }

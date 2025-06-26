@@ -2068,6 +2068,7 @@ Lampiran   : ${urlLampiran}`
         let x = {
           nama: profil.nama,
           nik: profil.nik.toString().substring(0, 13) + "xxxx",
+          fullnik: profil.nik,
           nip: profil.nip.substring(0, 12) + "xxxx",
           fnik: profil.nik,
           jab: profil.jab,

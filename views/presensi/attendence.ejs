@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <%- include('../template/head'); %>
+        <!-- fullCalendar -->
+        <link rel="stylesheet" href="/asset/css/presensi/absen.css">
+        <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.0.1/dist/face-api.min.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <%- include('../template/navbar'); %>
+            <!-- /.navbar -->
+
+            <!-- Main Sidebar Container -->
+            <%- include('../template/sidebar'); %>
+
+                <!-- Content Wrapper. Contains page content -->
+                <div class="content-wrapper">
+                    <!-- Content Header (Page header) -->
+                    <%- include('../template/content-header'); %>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Presensi</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <form id="formPresensi" class="space-y-5">
+                                        <!-- Untuk edit, aktifkan input ini -->
+                                        <!-- <input type="hidden" name="id" value="123"> -->
+
+                                        <div>
+                                            <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
+                                            <input
+                                            type="text"
+                                            id="nama"
+                                            name="nama",
+                                            placeholder="Tulis nama / nik / nip / no WA"
+                                            required
+                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label for="nik" class="block text-sm font-medium text-gray-700">NIK</label>
+                                            <input
+                                            type="text"
+                                            id="nik"
+                                            name="nik",
+                                            disabled
+                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                                            <input
+                                            disabled
+                                            type="text"
+                                            id="username"
+                                            name="username",
+                                            required
+                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal</label>
+                                            <input
+                                            disabled
+                                            type="date"
+                                            id="tanggal"
+                                            name="tanggal"
+                                            required
+                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label for="jamMasuk" class="block text-sm font-medium text-gray-700">Jam Masuk</label>
+                                            <input
+                                            disabled
+                                            type="time"
+                                            id="jamMasuk"
+                                            name="jamMasuk"
+                                            step="2"
+                                            required
+                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label for="locatonIn" class="block text-sm font-medium text-gray-700">Lokasi Cek IN</label>
+                                            <select
+                                            id="locatonIn"
+                                            name="locatonIn"
+                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            >
+                                            <!-- <option value="Hadir">Hadir</option>
+                                            <option value="Sakit">Sakit</option>
+                                            <option value="Izin">Izin</option>
+                                            <option value="Libur">Libur</option> -->
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label for="jamKeluar" class="block text-sm font-medium text-gray-700">Jam Keluar</label>
+                                            <input
+                                            disabled
+                                            type="time"
+                                            id="jamKeluar"
+                                            name="jamKeluar"
+                                            step="2"
+                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label for="locatonOut" class="block text-sm font-medium text-gray-700">Lokasi Cek OUT</label>
+                                            <select
+                                            id="locatonOut"
+                                            name="locatonOut"
+                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                            <!-- <option value="Hadir">Hadir</option>
+                                            <option value="Sakit">Sakit</option>
+                                            <option value="Izin">Izin</option>
+                                            <option value="Libur">Libur</option> -->
+                                            </select>
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+                                        >
+                                            Simpan
+                                        </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Presensi</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label>Periode</label>
+                                                    <input type="month" class="form-control" id="periode" name="periode">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                             <!-- Container Daftar Kehadiran -->
+                                            <div id="listKehadiran" class="space-y-4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                    </section>
+
+    <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer"></footer>
+    </div>
+    <!-- ./wrapper -->
+         <%- include('../modal/modalFaceReaction'); %>
+        <%- include('../template/footer'); %>
+            <!-- fullCalendar -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+            <script src="/asset/js/fullcalendar/backdate.js"></script>
+            <script src="/asset/js/fullcalendar/periodeBackdate.js"></script>
+</body>
+
+</html>

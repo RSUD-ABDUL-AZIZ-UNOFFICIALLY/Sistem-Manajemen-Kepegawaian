@@ -34,6 +34,7 @@ router.get('/aprovecuti/admin', middleware.login, controller.leagercuti);
 
 router.get('/presensi', middleware.login, controller.presensi);
 router.get('/presensi/setJadwal', middleware.login, controller.setJadwal);
+router.get('/presensi/attendence', middleware.login, middleware.checkHakAkses('adminAttendence'), controller.attendence);
 router.get('/absen', middleware.login, controller.absensi);
 
 router.get('/logout', middleware.logout);
@@ -125,6 +126,8 @@ router.get('/api/presensi/riwayat', middleware.login, presensi.riwayat);
 router.get('/api/presensi/recap', middleware.login, presensi.recap);
 router.get('/api/presensi/recap/:nik', presensi.recapbyNik);
 router.get('/api/presensi/attendance', middleware.login, presensi.attendance);
+router.get('/api/presensi/riwayat/:nik', presensi.riwayatByNik);
+router.post('/api/presensi/backdate/:nik', middleware.login, middleware.checkHakAkses('adminAttendence'), presensi.backdate);
 
 // router.get('/api/presensi/bos', middleware.login, presensi.jadwal);
 

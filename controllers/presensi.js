@@ -15,8 +15,10 @@ const {
     Ledger_cuti,
 } = require("../models");
 const { cekLocation } = require("../helper/casting");
-const { formatDateToLocalYMD, hitungMenitTerlambat, hitungCepatPulang } = require("../helper");
+const { formatDateToLocalYMD, hitungMenitTerlambat, hitungCepatPulang, checkAttendance,
+    checkPulang, } = require("../helper");
 const { Op, literal } = require("sequelize");
+const { param } = require("../routes");
 module.exports = {
     anggota: async (req, res) => {
         let token = req.cookies.token;
@@ -601,6 +603,169 @@ module.exports = {
                 error: false,
                 message: "Sukses",
                 data: dataAbsen
+            })
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                error: true,
+                message: "internal server error",
+                data: error,
+            });
+        }
+    },
+    riwayatByNik: async (req, res) => {
+        try {
+            let query = req.query
+            let params = req.params
+            let dataAbsen = await Absen.findAll({
+                where: {
+                    nik: params.nik,
+                    date: { [Op.startsWith]: query.periode, }
+                },
+                include: [{
+                    model: Jnsdns,
+                    attributes: ["type", "start_min", "start_max", "end_min", "end_max"]
+                }],
+                order: [
+                    ["date", "DESC"]
+                ]
+            })
+
+            return res.status(200).json({
+                error: false,
+                message: "Sukses",
+                data: dataAbsen
+            })
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                error: true,
+                message: "internal server error",
+                data: error,
+            });
+        }
+    },
+    backdate: async (req, res) => {
+        try {
+            let body = req.body
+            console.log(body)
+            let perams = req.params
+            let account = req.account
+            console.log(account)
+
+            let find_absen = await Absen.findOne({
+                where: {
+                    nik: body.nik,
+                    date: body.tanggal,
+                }
+            })
+            let find_jdl = await Jdldns.findOne({
+                where: {
+                    date: body.tanggal,
+                    nik: body.nik,
+                },
+                include: [{
+                    model: Jnsdns,
+                    as: 'dnsType',
+                    attributes: ['start_min', 'start_max', 'end_min', 'end_max'],
+                    where: {
+                        state: 1
+                    }
+
+                }]
+            });
+
+            if (find_jdl == null) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Jadwal tidak ditemukan",
+                });
+            }
+            console.log(find_jdl)
+            let statusin = checkAttendance(body.jamMasuk, find_jdl.dnsType.start_min, find_jdl.dnsType.start_max);
+            let keteranganIn = '';
+            if (statusin == 'Masuk Terlambat') {
+                let terlambat = hitungMenitTerlambat(body.jamMasuk, find_jdl.dnsType.start_max);
+                keteranganIn += 'Terlambat ' + terlambat + ' menit';
+            }
+            console.log(statusin);
+            let statusOut = checkPulang(body.jamKeluar, find_jdl.dnsType.end_min, find_jdl.dnsType.end_max);
+            let menitAwal = hitungCepatPulang(body.jamKeluar, find_jdl.dnsType.end_min);
+            let keteranganOut = '';
+
+            if (statusOut === 'Pulang Cepat' && menitAwal > 150) {
+                let statusAkhir = checkPulang(akhir.checktime_wib.jam, find_jdl.dnsType.end_min, find_jdl.dnsType.end_max);
+                let menitAkhir = hitungCepatPulang(akhir.checktime_wib.jam, find_jdl.dnsType.end_min);
+                if (statusAkhir === 'Pulang Cepat' && menitAkhir > 150) {
+                    return null; // tidak valid
+                }
+                keteranganOut += menitAkhir > 0 ? `Pulang Cepat ${menitAkhir} menit` : '';
+            }
+
+            if (find_absen == null) {
+
+                let data = {
+                    nik: body.nik,
+                    typeDns: find_jdl.typeDns,
+                    date: body.tanggal,
+                    cekIn: body.jamMasuk,
+                    statusIn: statusin,
+                    keteranganIn: keteranganIn,
+                    nilaiIn: 2,
+                    geoIn: '',
+                    loactionIn: body.locatonIn,
+                    visitIdIn: account.nik,
+                    cekOut: body.jamKeluar,
+                    statusOut: statusOut,
+                    keteranganOut: keteranganOut,
+                    nilaiOut: 2,
+                    geoOut: '',
+                    loactionOut: body.locatonOut,
+                    visitIdOut: account.nik,
+                }
+                console.log(data)
+                await Absen.create(data)
+            } else {
+                if (find_absen.cekOut != body.jamKeluar) {
+                    let data = {
+                        cekOut: body.jamKeluar,
+                        statusOut: statusOut,
+                        keteranganOut: keteranganOut,
+                        nilaiOut: 2,
+                        geoOut: '',
+                        loactionOut: body.locatonOut,
+                        visitIdOut: account.nik,
+                    }
+                    await Absen.update(data, {
+                        where: {
+                            nik: body.nik,
+                            date: body.tanggal,
+                        }
+                    })
+                }
+                if (find_absen.cekIn != body.jamMasuk) {
+                    let data = {
+                        cekIn: body.jamMasuk,
+                        statusIn: statusin,
+                        keteranganIn: keteranganIn,
+                        nilaiIn: 2,
+                        geoIn: '',
+                        loactionIn: body.locatonIn,
+                        visitIdIn: account.nik,
+                    }
+                    await Absen.update(data, {
+                        where: {
+                            nik: body.nik,
+                            date: body.tanggal,
+                        }
+                    })
+                }
+            }
+            return res.status(200).json({
+                error: false,
+                message: "Sukses",
             })
 
         } catch (error) {
