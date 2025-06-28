@@ -45,14 +45,20 @@ $('#tanggal').on('change', function () {
             // $('#locatonOut').val('sakit');
             if (data.length > 0) {
                 if (data[0].cekIn == null) {
-                    $('#locatonIn').append('<option value="Loby">Loby</option>');
+                    $('#locatonIn').append('<option value="LOBBY">LOBBY</option>');
+                    $('#locatonIn').append('<option value="IGD">IGD</option>');
+                    $('#locatonIn').append('<option value="Kelas 1">Kelas 1</option>');
+                    $('#locatonIn').append('<option value="BANGSAL BEDAH">BANGSAL BEDAH</option>');
                     $('#locatonIn').append('<option value="Dinas Luar">Dinas Luar</option>');
                 } else {
                     $('#jamMasuk').val(data[0].cekIn);
                     $('#locatonIn').append(`<option selected value="${data[0].loactionIn}">${data[0].loactionIn}</option>`);
                 }
                 if (data[0].cekOut == null) {
-                    $('#locatonOut').append('<option value="Loby">Loby</option>');
+                    $('#locatonOut').append('<option value="LOBBY">LOBBY</option>');
+                    $('#locatonOut').append('<option value="IGD">IGD</option>');
+                    $('#locatonOut').append('<option value="Kelas 1">Kelas 1</option>');
+                    $('#locatonOut').append('<option value="BANGSAL BEDAH">BANGSAL BEDAH</option>');
                     $('#locatonOut').append('<option value="Dinas Luar">Dinas Luar</option>');
                 } else {
                     $('#jamKeluar').val(data[0].cekOut);
@@ -60,9 +66,15 @@ $('#tanggal').on('change', function () {
 
                 }
             } else {
-                $('#locatonIn').append('<option value="Loby">Loby</option>');
+                $('#locatonIn').append('<option value="LOBBY">LOBBY</option>');
+                $('#locatonIn').append('<option value="IGD">IGD</option>');
+                $('#locatonIn').append('<option value="Kelas 1">Kelas 1</option>');
+                $('#locatonIn').append('<option value="BANGSAL BEDAH">BANGSAL BEDAH</option>');
                 $('#locatonIn').append('<option value="Dinas Luar">Dinas Luar</option>');
-                $('#locatonOut').append('<option value="Loby">Loby</option>');
+                $('#locatonOut').append('<option value="LOBBY">LOBBY</option>');
+                $('#locatonOut').append('<option value="IGD">IGD</option>');
+                $('#locatonOut').append('<option value="Kelas 1">Kelas 1</option>');
+                $('#locatonOut').append('<option value="BANGSAL BEDAH">BANGSAL BEDAH</option>');
                 $('#locatonOut').append('<option value="Dinas Luar">Dinas Luar</option>');
 
             }
