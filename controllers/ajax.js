@@ -1129,8 +1129,9 @@ module.exports = {
     }
     try {
       body.nik = decoded.id;
-      console.log(body);
+      // console.log(body);
       let addTemplate = await Template.create(body);
+      req.cache.json.del(`SIMPEG:template:bynik:${decoded.id}`);
       return res.status(200).json({
         error: false,
         message: "success",
@@ -1154,11 +1155,24 @@ module.exports = {
     let query = req.query;
     if (query.id == undefined) {
       try {
+        let cacheTemplate = await req.cache.json.get(`SIMPEG:template:bynik:${decoded.id}`, '$');
+        if (cacheTemplate) {
+          return res.status(200).json({
+            error: false,
+            message: "cached",
+            data: {
+              nama: decoded.nama,
+              template: cacheTemplate
+            },
+          });
+        }
         let getTemplate = await Template.findAll({
           where: {
             nik: decoded.id,
           },
         });
+        req.cache.json.set(`SIMPEG:template:bynik:${decoded.id}`, '$', getTemplate);
+        req.cache.expire(`SIMPEG:template:bynik:${decoded.id}`, 60 * 60 * 48);
         return res.status(200).json({
           error: false,
           message: "success",
@@ -1168,6 +1182,7 @@ module.exports = {
           },
         });
       } catch (error) {
+        console.log(error);
         return res.status(500).json({
           error: true,
           message: "error",
@@ -1176,6 +1191,17 @@ module.exports = {
       }
     } else {
       try {
+        let cacheTemplate = await req.cache.json.get(`SIMPEG:template:bynik:${decoded.id}`, {
+          path: [`$[?(@.id==${query.id})]`]  // Gunakan ID yang ingin dicari
+        });
+        // console.log(cacheTemplate);
+        if (cacheTemplate.length > 0 || cacheTemplate != null) {
+          return res.status(200).json({
+            error: false,
+            message: "cached",
+            data: cacheTemplate[0],
+          });
+        }
         let getTemplate = await Template.findOne({
           where: {
             nik: decoded.id,
@@ -1207,6 +1233,7 @@ module.exports = {
           id: body.id,
         },
       });
+      req.cache.json.del(`SIMPEG:template:bynik:${decoded.id}`);
       return res.status(200).json({
         error: false,
         message: "success",
