@@ -697,8 +697,8 @@ module.exports = {
             let keteranganOut = '';
 
             if (statusOut === 'Pulang Cepat' && menitAwal > 150) {
-                let statusAkhir = checkPulang(akhir.checktime_wib.jam, find_jdl.dnsType.end_min, find_jdl.dnsType.end_max);
-                let menitAkhir = hitungCepatPulang(akhir.checktime_wib.jam, find_jdl.dnsType.end_min);
+                let statusAkhir = checkPulang(body.jamKeluar, find_jdl.dnsType.end_min, find_jdl.dnsType.end_max);
+                let menitAkhir = hitungCepatPulang(body.jamKeluar, find_jdl.dnsType.end_min);
                 if (statusAkhir === 'Pulang Cepat' && menitAkhir > 150) {
                     return null; // tidak valid
                 }
