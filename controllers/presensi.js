@@ -701,10 +701,13 @@ module.exports = {
                 // let statusAkhir = checkPulang(body.jamKeluar, find_jdl.dnsType.end_min, find_jdl.dnsType.end_max);
                 let menitAkhir = hitungCepatPulang(body.jamKeluar, find_jdl.dnsType.end_min);
                 console.log(menitAkhir);
-                if (statusAkhir === 'Pulang Cepat' && menitAkhir > 150) {
-                    return null; // tidak valid
-                }
                 keteranganOut += menitAkhir > 0 ? `Pulang Cepat ${menitAkhir} menit` : '';
+            } else {
+                return res.status(401).json({
+                    error: true,
+                    message: "Tidak boleh pulang cepat lebih dari 150 menit",
+                    data: '',
+                });
             }
 
             if (find_absen == null) {
