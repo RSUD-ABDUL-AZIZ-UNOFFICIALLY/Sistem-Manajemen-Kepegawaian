@@ -651,10 +651,10 @@ module.exports = {
     backdate: async (req, res) => {
         try {
             let body = req.body
-            console.log(body)
+            // console.log(body)
             let perams = req.params
             let account = req.account
-            console.log(account)
+            // console.log(account)
 
             let find_absen = await Absen.findOne({
                 where: {
@@ -684,24 +684,26 @@ module.exports = {
                     message: "Jadwal tidak ditemukan",
                 });
             }
-            console.log(find_jdl)
+            // console.log(find_jdl)
             let statusin = checkAttendance(body.jamMasuk, find_jdl.dnsType.start_min, find_jdl.dnsType.start_max);
             let keteranganIn = '';
             if (statusin == 'Masuk Terlambat') {
                 let terlambat = hitungMenitTerlambat(body.jamMasuk, find_jdl.dnsType.start_max);
                 keteranganIn += 'Terlambat ' + terlambat + ' menit';
             }
-            console.log(statusin);
+            // console.log(statusin);
             let statusOut = checkPulang(body.jamKeluar, find_jdl.dnsType.end_min, find_jdl.dnsType.end_max);
             let menitAwal = hitungCepatPulang(body.jamKeluar, find_jdl.dnsType.end_min);
             let keteranganOut = '';
-
-            if (statusOut === 'Pulang Cepat' && menitAwal > 150) {
+            console.log(menitAwal);
+            console.log(statusOut);
+            if (statusOut === 'Pulang Cepat' && menitAwal < 150) {
                 // let statusAkhir = checkPulang(body.jamKeluar, find_jdl.dnsType.end_min, find_jdl.dnsType.end_max);
                 let menitAkhir = hitungCepatPulang(body.jamKeluar, find_jdl.dnsType.end_min);
-                // if (statusAkhir === 'Pulang Cepat' && menitAkhir > 150) {
-                //     return null; // tidak valid
-                // }
+                console.log(menitAkhir);
+                if (statusAkhir === 'Pulang Cepat' && menitAkhir > 150) {
+                    return null; // tidak valid
+                }
                 keteranganOut += menitAkhir > 0 ? `Pulang Cepat ${menitAkhir} menit` : '';
             }
 
@@ -739,6 +741,7 @@ module.exports = {
                         loactionOut: body.locatonOut,
                         visitIdOut: account.nik,
                     }
+                    console.log(data)
                     await Absen.update(data, {
                         where: {
                             nik: body.nik,
