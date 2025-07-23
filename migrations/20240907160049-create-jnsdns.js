@@ -45,6 +45,9 @@ module.exports = {
       state: {
         type: Sequelize.INTEGER
       },
+      hours: {
+        type: Sequelize.DOUBLE
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

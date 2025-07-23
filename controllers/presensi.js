@@ -93,6 +93,23 @@ module.exports = {
                     i.dataValues.jadwal = presensi
                 }
             }
+            if (params.nik != null) {
+                let dataFilter = users.filter((x) => x.dataValues.nik == params.nik);
+                let jamKerja = 0
+                for (let i of dataFilter[0].dataValues.jadwal) {
+                    jamKerja += i.dnsType.hours
+
+                }
+                return res.status(200).json({
+                    error: false,
+                    message: "success",
+                    data: {
+                        nik: dataFilter[0].dataValues.nik,
+                        nama: dataFilter[0].dataValues.nama,
+                        totalJam: jamKerja
+                    },
+                });
+            }
 
             return res.status(200).json({
                 error: false,

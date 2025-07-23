@@ -21,6 +21,7 @@ $("#periode").on("change", function () {
 $("#departemen").on("change", function () {
     departemen = $(this).val();
     getTabel($("#periode").val());
+
 });
 
 async function getAnggota(dep) {
@@ -29,6 +30,7 @@ async function getAnggota(dep) {
         method: "GET",
         success: function (data) {
            jnsDNS = data.data.map(item => item.type);
+            jnsDNS.push("jamKerja");
         },
         error: function (error) {
             console.log(error)
@@ -55,7 +57,24 @@ async function getAnggota(dep) {
         }
     })
 }
+async function updateJamkerja(nik) {
+    return await $.ajax({
+        url: "/api/presensi/anggota?dep=" + departemen + "&periode=" + $("#periode").val() + "&nik=" + nik,
+        method: "GET",
+        success: function (data) {
+            return data.data;
+        },
+        error: function (error) {
+            console.log(error)
+            return Swal.fire({
+                icon: "error",
+                title: "Gagal",
+                text: error.responseJSON.message
+            })
+        }
+    })
 
+}
 async function getTabel(periode) {
     let id_departemen = $("#departemen").val();
     if (id_departemen == '') {
@@ -71,9 +90,12 @@ async function getTabel(periode) {
     let dataTable = anggota.map(a => {
         let data = { nama: a.nama,nik: a.nik };
         let countDNS = {}; 
+        let jamKerja = 0;
 
         a.jadwal?.forEach((j, idx) => {
             let type = j.dnsType?.type || "";
+            // console.log(j.dnsType.hours);
+            jamKerja += j.dnsType.hours
             data[(idx + 1).toString()] = type;
 
             if (type) {
@@ -85,9 +107,11 @@ async function getTabel(periode) {
         jnsDNS.forEach(jns => {
             data["Total " + jns] = countDNS[jns] || 0;
         });
+        data["Total jamKerja"] = jamKerja
 
         return data;
     });
+    // console.log(dataTable);
     let date = new Date(periode);
     let year = date.getFullYear();
     let month = date.getMonth();
@@ -120,7 +144,7 @@ async function getTabel(periode) {
                 }
                
             },
-            cellEdited: function (cell) {
+            cellEdited: async function (cell) {
                 let row = cell.getRow();
                 let data = row.getData();
                 let value = cell.getValue();
@@ -128,6 +152,8 @@ async function getTabel(periode) {
                 if (day < 10) day = "0" + day;
                 updrateJadwal(data.nik, `${periode}-${day}`, `${value}-${id_departemen}`);
                 // Hitung ulang total di baris
+                let jamkerja = await updateJamkerja(data.nik)
+                console.log(jamkerja.data.totalJam);
                 let newTotals = {};
                 jnsDNS.forEach(jns => { newTotals[`Total ${jns}`] = 0; });
                 for (let i = 1; i <= jumlahHari; i++) {
@@ -136,8 +162,8 @@ async function getTabel(periode) {
                         newTotals[`Total ${val}`]++;
                     }
                 }
+                newTotals["Total jamKerja"] = jamkerja.data.totalJam
                 row.update(newTotals);
-
 
                 // === Update baris total bawah per jenis ===
                 jnsDNS.forEach(jns => {
