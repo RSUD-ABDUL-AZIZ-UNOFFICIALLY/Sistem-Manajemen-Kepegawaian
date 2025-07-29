@@ -877,7 +877,8 @@ module.exports = {
                     "Cuti Tahunan": "CT",
                     "Cuti Bersama": "CB",
                     "Cuti Sakit": "CS",
-                    "Cuti Melahirkan": "CM"
+                    "Cuti Melahirkan": "CM",
+                    "Cuti Alasan Penting": "CAP"
                 };
 
                 const typeCT = typeMap[cuti.jenis_cuti.type_cuti];
