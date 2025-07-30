@@ -3,15 +3,15 @@ const { Op, where } = require("sequelize");
 const cron = require('node-cron');
 const axios = require("axios");
 // require('dotenv').config();
-// cekIn('2025-05-18');
-// cekOut('2025-05-18');
+// cekIn('2025-06-17');
+// cekOut('2025-06-17');
 console.log(process.env.HOST_FIGER);
 // (async () => {
-//     for (let i = 10; i <= 10; i++) {
-//         // await cekIn(`2025-05-${i < 10 ? '0' + i : i}`);
+//     for (let i = 28; i <= 28; i++) {
+//         await cekIn(`2025-07-${i < 10 ? '0' + i : i}`);
 //         // await new Promise(resolve => setTimeout(resolve, 1000));
-//         await cekOut(`2025-05-${i < 10 ? '0' + i : i}`);
-//         await console.log(`Selesai 2025-05-${i < 10 ? '0' + i : i}`);
+//         await cekOut(`2025-07-${i < 10 ? '0' + i : i}`);
+//         // await console.log(`Selesai 2025-05-${i < 10 ? '0' + i : i}`);
 //     }
 // })();
 
@@ -83,20 +83,42 @@ async function cekIn(date) {
             console.log("tidak ada data");
             continue;
         }
-
-        let statusin = checkAttendance(data_absen[0].checktime_wib.jam, i.dnsType.start_min, i.dnsType.start_max);
+        let jamCekIn = data_absen[0].checktime_wib.jam;
+        let statusin = checkAttendance(jamCekIn, i.dnsType.start_min, i.dnsType.start_max);
         console.log(statusin);
         let keteranganIn = '';
         if (statusin == 'Masuk Terlambat') {
-            let terlambat = hitungMenitTerlambat(data_absen[0].checktime_wib.jam, i.dnsType.start_max);
+            let terlambat = hitungMenitTerlambat(jamCekIn, i.dnsType.start_max);
             keteranganIn += 'Terlambat ' + terlambat + ' menit';
+        }
+        if (statusin == 'Masuk Cepat') {
+            let cepat = hitungCepatPulang(jamCekIn, i.dnsType.start_min);
+            if (cepat > 150) {
+                jamCekIn = data_absen[data_absen.length - 1].checktime_wib.jam;
+                jamCekIn = jamCekIn;
+                statusin = checkAttendance(jamCekIn, i.dnsType.start_min, i.dnsType.start_max);
+                if (statusin == 'Masuk Terlambat') {
+                    let terlambat = hitungMenitTerlambat(jamCekIn, i.dnsType.start_max);
+                    keteranganIn += 'Terlambat ' + terlambat + ' menit';
+                }
+                if (statusin == 'Masuk Cepat') {
+                    let cepat = hitungCepatPulang(jamCekIn, i.dnsType.start_min);
+                    if (cepat > 150) {
+                        continue;
+                    }
+                    keteranganIn += 'Cepat ' + cepat + ' menit';
+                }
+                console.log('cepat');
+            } else {
+                keteranganIn += 'Cepat ' + cepat + ' menit';
+            }
         }
         console.log(i.dataValues);
         let absenIn = {
             nik: i.dataValues.nik,
             typeDns: i.typeDns,
             date: data_absen[0].checktime_wib.tanggal,
-            cekIn: data_absen[0].checktime_wib.jam,
+            cekIn: jamCekIn,
             statusIn: statusin,
             keteranganIn: keteranganIn,
             nilaiIn: 3,
