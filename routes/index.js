@@ -10,6 +10,7 @@ const complaint = require('../controllers/complaint');
 const { upload } = require('../middleware/upload');
 const seen = require('../controllers/seen');
 const presensi = require('../controllers/presensi');
+const dokumen = require('../controllers/dokumen');
 
 
 router.get('/',middleware.checkLogin, controller.login);
@@ -26,6 +27,7 @@ router.get('/helpdesk', middleware.login, controller.helpDesk);
 
 router.get('/profile', middleware.login, controller.profile);
 router.get('/account', middleware.login, controller.account);
+router.get('/document', middleware.login, controller.doc);
 
 router.get('/cuti', middleware.login, controller.cuti);
 router.get('/cuti/admin', middleware.login, controller.adminCuti);
@@ -75,6 +77,11 @@ router.get('/api/template', middleware.login, ajax.getTemplate);
 router.post('/api/template', middleware.login, ajax.createTemplate);
 router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
+router.post('/api/document/:id', middleware.login, dokumen.uploadDoc);
+router.get('/api/document/doc/all/', middleware.login, dokumen.getDocAll);
+router.delete('/api/document/:id', middleware.login, dokumen.deleteDoc);
+
+
 
 router.get('/api/cuti/jns', middleware.login, ajax.getJns_cuti);
 router.post('/api/cuti', middleware.login, ajax.postCuti);
@@ -115,6 +122,7 @@ router.get('/api/complaint/updateTiket', middleware.login, complaint.getUpdateTi
 // router.post('/api/complaint/grubtiket', middleware.login, complaint.updateTiket);
 
 router.get('/api/presensi/anggota', middleware.login, presensi.anggota);
+// router.get('/api/presensi/jamDns', middleware.login, presensi.jamDns);
 router.get('/api/presensi/departemen', middleware.login, presensi.departemen);
 router.get('/api/presensi/jnsdns', middleware.login, presensi.getTypeJadwal);
 router.post('/api/presensi/jnsdns', middleware.login, presensi.postTypeJadwal);

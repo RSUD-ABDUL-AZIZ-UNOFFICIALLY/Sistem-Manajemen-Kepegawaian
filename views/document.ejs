@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <%- include('template/head'); %>   
+
+ <link rel="stylesheet" href="/asset/css/doc.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap5.min.css">
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <%- include('template/navbar'); %>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <%- include('template/sidebar'); %>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <%- include('template/content-header'); %>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+       <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Document Completeness Overview -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="completeness-card">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4><i class="fas fa-chart-pie mr-2"></i>Status Kelengkapan Dokumen</h4>
+                                    <p class="mb-0">Lengkapi dokumen wajib untuk menyelesaikan proses administrasi kepegawaian</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Tambah Berkas
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary mr-2" onclick="openAddDocumentModal()">
+                                    <i class="fas fa-file-plus mr-2"></i>Tambah Dokumen Baru
+                                </button>
+                                <button type="button" class="btn btn-info mr-2" onclick="checkRequiredDocuments()">
+                                    <i class="fas fa-check-circle mr-2"></i>Cek Dokumen Wajib
+                                </button>
+                                <button type="button" class="btn btn-warning" onclick="viewPendingDocuments()">
+                                    <i class="fas fa-clock mr-2"></i>Dokumen Pending
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Status Cards -->
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-success"><i class="fas fa-check"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Terverifikasi</span>
+                                <span class="info-box-number" id="verifiedCount">7</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-warning"><i class="fas fa-clock"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Pending Review</span>
+                                <span class="info-box-number" id="pendingCount">x</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-danger"><i class="fas fa-times"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Ditolak</span>
+                                <span class="info-box-number" id="rejectedCount">x</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-info"><i class="fas fa-file"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Dokumen</span>
+                                <span class="info-box-number" id="totalDocuments">x</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document List Section -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-list mr-2"></i>
+                                    Daftar Dokumen Saya
+                                </h3>
+                                <div class="card-tools">
+                                    <div class="input-group input-group-sm" style="width: 250px;">
+                                        <input type="text" class="form-control" placeholder="Cari dokumen..." id="searchInput">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-default">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap" id="documentsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Jenis Dokumen</th>
+                                            <th>Detail Dokumen</th>
+                                            <th>Tanggal Upload</th>
+                                            <th>Status</th>
+                                            <th>Catatan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+
+  </footer>
+
+</div>
+<%- include('modal/modalDoc.ejs'); %>
+<!-- ./wrapper -->
+
+<%- include('template/footer'); %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap5.min.js"></script>
+<script src="/asset/js/doc.js"></script>
+</body>
+</html>

@@ -1,0 +1,659 @@
+<!-- Add Document Modal -->
+<div class="modal fade" id="addDocumentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-file-plus mr-2"></i>Tambah Dokumen Baru
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addDocumentForm">
+                    <!-- Document Type Selection -->
+                    <div class="form-group">
+                        <label for="documentType">Jenis Dokumen <span class="text-danger">*</span></label>
+                        <select class="form-control" id="documentType" required onchange="showDocumentFields()">
+                            <option value="">-- Pilih Jenis Dokumen --</option>
+                            <option value="ijazah">Ijazah</option>
+                            <option value="str">Surat Tanda Registrasi (STR)</option>
+                            <option value="kk">Kartu Keluarga</option>
+                            <option value="ktp">KTP</option>
+                            <option value="npwp">NPWP</option>
+                            <option value="cv">Curriculum Vitae</option>
+                            <option value="sertifikat">Sertifikat Pelatihan</option>
+                            <option value="skck">SKCK</option>
+                            <option value="kontrak">Kontrak Kerja</option>
+                            <option value="pangkat">Pangkat</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <!-- Dynamic Form Fields Based on Document Type -->
+                    <!-- Ijazah Fields -->
+                    <div id="ijazah-fields" class="form-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tingkat Pendidikan <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="education_level" required>
+                                        <option value="">-- Pilih Tingkat --</option>
+                                        <option value="SD">SD</option>
+                                        <option value="SMP">SMP</option>
+                                        <option value="SMA">SMA/SMK</option>
+                                        <option value="D1">Diploma I</option>
+                                        <option value="D2">Diploma II</option>
+                                        <option value="D3">Diploma III</option>
+                                        <option value="S1">Sarjana (S1)</option>
+                                        <option value="Profesi">Profesi</option>
+                                        <option value="S2">Magister (S2)</option>
+                                        <option value="S3">Doktor (S3)</option>
+                                        <option value="Spesialis">Spesialis</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Jurusan/Program Studi</label>
+                                    <input type="text" class="form-control" name="major" placeholder="Contoh: Teknik Informatika">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nama Institusi  <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="institution" placeholder="Nama Sekolah/Universitas" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tahun Lulus <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="graduation_date" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nomor Ijazah</label>
+                                    <input type="text" class="form-control" name="ijazah_number" placeholder="D1123456789">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                     <label>IPK/Nilai (Opsional)</label>
+                                     <input type="number" class="form-control" name="gpa" step="0.01" max="4.00" placeholder="3.50">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STR Fields -->
+                    <div id="str-fields" class="form-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nomor STR <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="str_number" placeholder="Nomor STR" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Profesi <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="profession" required>
+                                        <option value="">-- Pilih Profesi --</option>
+                                        <option value="Dokter">Dokter</option>
+                                        <option value="Dokter Gigi">Dokter Gigi</option>
+                                        <option value="Perawat">Perawat</option>
+                                        <option value="Perawat Gigi">Perawat Gigi</option>
+                                        <option value="Bidan">Bidan</option>
+                                        <option value="Apoteker">Apoteker/ Asisten Apoteker</option>
+                                        <option value="Ahli Gizi">Ahli Gizi</option>
+                                        <option value="Fisioterapis">Fisioterapis</option>
+                                        <option value="Rekam Medis">Rekam Medis</option>
+                                        <option value="Tenaga Kesehatan Masyarakat">Tenaga Kesehatan Masyarakat</option>
+                                        <option value="lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Terbit  <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="issue_date" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Berakhir</label>
+                                    <div class="input-group">
+                                        <input type="date" class="form-control" name="expiry_date" placeholder="Tanggal berakhir" id="expiryDate">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" onclick="berlakuSeumurHidup()" type="button">Berlaku Seumur Hidup</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Penerbit</label>
+                            <input type="text" class="form-control" name="issuer" placeholder="Nama Organisasi Penerbit">
+                        </div>
+                    </div>
+
+                    <!-- kartu Keluarga Fields -->
+                    <div id="kk-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Nomor Kartu Keluarga <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="kk_number" placeholder="Nomor Kartu Keluarga" required required-number>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Kepala Keluarga <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="kk_head_name" placeholder="Nama sesuai Kartu Keluarga" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat Kartu Keluarga</label>
+                            <textarea class="form-control" name="kk_address" rows="3" placeholder="Alamat sesuai Kartu Keluarga"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Anggota Keluarga</label>
+                            <input type="number" class="form-control" name="family_members" placeholder="Jumlah anggota keluarga" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Terbit</label>
+                            <input type="date" class="form-control" name="kk_issue_date" placeholder="Tanggal terbit Kartu Keluarga">
+                        </div>
+                    </div>
+
+                    <!-- KTP Fields -->
+                    <div id="ktp-fields" class="form-section">
+                        <div class="form-group">
+                            <label>NIK <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="ktp_number" placeholder="NIK" maxlength="16" required required-number>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama di KTP <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="ktp_name" placeholder="NIK" maxlength="16" required required-number>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tempat Lahir <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="birth_place" placeholder="Kota Kelahiran" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Lahir <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="birth_date" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Terbit <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="ktp_issue_date" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat KTP <span class="text-danger">*</span></label>
+                            <textarea class="form-control" name="ktp_address" rows="3" placeholder="Alamat lengkap sesuai KTP" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- NPWP Fields -->
+                    <div id="npwp-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Nomor NPWP <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="npwp_number" placeholder="XX.XXX.XXX.X-XXX.XXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Wajib Pajak <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="taxpayer_name" placeholder="Nama sesuai NPWP" required>
+                        </div>
+                    </div>
+
+                    <!-- CV Fields -->
+                    <div id="cv-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Versi CV <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="cv_version" placeholder="Contoh: Versi Januari 2024" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi Singkat</label>
+                            <textarea class="form-control" name="cv_description" rows="3" placeholder="Ringkasan perubahan atau highlight CV"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Sertifikat Fields -->
+                    <div id="sertifikat-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Nama Sertifikat <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="certificate_name" placeholder="Nama pelatihan/sertifikat" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Penyelenggara</label>
+                                    <input type="text" class="form-control" name="organizer" placeholder="Nama penyelenggara">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Pelatihan <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="training_date" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Durasi (Jam)</label>
+                                    <input type="number" class="form-control" name="duration" placeholder="Jam pelatihan">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nomor Sertifikat</label>
+                                    <input type="text" class="form-control" name="certificate_number" placeholder="Nomor sertifikat">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SKCK Fields -->
+                    <div id="skck-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Nomor SKCK <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="skck_number" placeholder="Nomor SKCK" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Penerbit</label>
+                                    <select class="form-control" name="skck_issuer">
+                                        <option value="">-- Pilih Penerbit --</option>
+                                        <option value="polres">Polres</option>
+                                        <option value="polda">Polda</option>
+                                        <option value="mabes">Mabes Polri</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Terbit <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="skck_issue_date" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Keperluan</label>
+                            <input type="text" class="form-control" name="skck_purpose" placeholder="Untuk keperluan kerja, dll">
+                        </div>
+                    </div>
+
+                    <!-- Kontrak Fields -->
+                    <div id="kontrak-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Jenis Kontrak / SK</label>
+                            <select class="form-control" name="contract_type">
+                                <option value="">-- Pilih Jenis --</option>
+                                <option value="pkwt">PKWT (Kontrak)</option>
+                                <option value="pppk">PPPK</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Mulai</label>
+                                    <input type="date" class="form-control" name="contract_start">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Berakhir</label>
+                                    <input type="date" class="form-control" name="contract_end">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Jabatan</label>
+                            <input type="text" class="form-control" name="position" placeholder="Jabatan dalam kontrak">
+                        </div>
+                    </div>
+                    <!-- Pangkat Fields -->
+                    <div id="pangkat-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Pendidikan</label>
+                            <input type="text" class="form-control" name="pendidikan" placeholder="D-III Keperawatan">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Pangkat/Gol. Ruang Lama</label>
+                                    <input type="text" class="form-control" name="gol_ruang" placeholder="Penata TK I (IV/b)">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>TMT Pangkat/Gol. Ruang Lama</label>
+                                    <input type="date" class="form-control" name="gol_ruang_tmt">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Jabatan/Angka Kredit</label>
+                                    <input type="text" class="form-control" name="jabatan" placeholder="Perawat Peneylia">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>TMT Jabatan/Angka Kredit</label>
+                                    <input type="date" class="form-control" name="jabatan_tmt">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Dokumen</label>
+                                    <input type="date" class="form-control" name="document_date">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Pejabat</label>
+                                    <input type="text" class="form-control" name="document_issuer" placeholder="Nama Walikota, Bupati, dll">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Lainnya Fields -->
+                    <div id="lainnya-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Nama Dokumen</label>
+                            <input type="text" class="form-control" name="document_name" placeholder="Nama dokumen">
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi</label>
+                            <textarea class="form-control" name="other_description" rows="3" placeholder="Deskripsi dokumen"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Dokumen</label>
+                                    <input type="date" class="form-control" name="document_date">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Penerbit</label>
+                                    <input type="text" class="form-control" name="document_issuer" placeholder="Penerbit dokumen">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File Upload Section -->
+                    <div class="form-group mt-4">
+                        <label>Upload File <span class="text-danger">*</span></label>
+                        <div class="file-upload-area" id="modalUploadArea">
+                            <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-2"></i>
+                            <h6>Drag & Drop file di sini atau klik untuk memilih</h6>
+                            <p class="text-muted small">Format: PDF, JPG, PNG, DOC, DOCX (Max: 10MB)</p>
+                            <input type="file" id="modalFileInput" class="d-none" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="document.getElementById('modalFileInput').click()">
+                                <i class="fas fa-file-plus mr-1"></i>Pilih File
+                            </button>
+                        </div>
+                        <div class="mt-2" id="modalSelectedFile" style="display: none;">
+                            <div class="alert alert-info alert-sm mb-0">
+                                <i class="fas fa-file mr-2"></i>
+                                <span id="selectedFileName"></span>
+                                <button type="button" class="close" onclick="clearModalFile()">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- General Notes -->
+                    <div class="form-group">
+                        <label>Catatan Tambahan</label>
+                        <textarea class="form-control" name="catatan" id="catatan" rows="2" placeholder="Catatan atau keterangan tambahan (opsional)"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times mr-2"></i>Batal
+                </button>
+                <button type="submit" class="btn btn-primary" onclick="saveDocument()">
+                    <i class="fas fa-save mr-2"></i>Simpan Dokumen
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Document Modal -->
+<div class="modal fade" id="editDocumentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-edit mr-2"></i>Edit Dokumen
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="editFormContent">
+                    <!-- Content will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times mr-2"></i>Batal
+                </button>
+                <button type="button" class="btn btn-primary" onclick="updateDocument()">
+                    <i class="fas fa-save mr-2"></i>Update Dokumen
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Preview Dokumen</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="previewContent">
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
+                    <p class="mt-2">Loading...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" onclick="downloadCurrentPreview()">
+                    <i class="fas fa-download mr-2"></i>Download
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rejection Reason Modal -->
+<div class="modal fade" id="rejectionReasonModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title text-white">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Alasan Penolakan
+                </h4>
+                <button type="button" class="close text-white" data-bs-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <h6>Dokumen: CV Terbaru</h6>
+                    <hr>
+                    <strong>Verifikator:</strong> HR Manager<br>
+                    <strong>Tanggal:</strong> 18 Januari 2024, 09:15<br>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h6>Alasan Penolakan:</h6>
+                        <p>Format CV tidak sesuai dengan standar perusahaan. Mohon gunakan template yang telah disediakan dan pastikan informasi kontak lengkap tercantum.</p>
+                        
+                        <h6 class="mt-3">Dokumen yang Diperlukan:</h6>
+                        <ul>
+                            <li>CV dengan format template perusahaan</li>
+                            <li>Informasi kontak lengkap (email, telepon, alamat)</li>
+                            <li>Riwayat pendidikan dan pekerjaan yang detail</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" onclick="resubmitDocument(5, 'cv')">
+                    <i class="fas fa-redo mr-2"></i>Ajukan Ulang
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Required Documents Modal -->
+<div class="modal fade" id="requiredDocumentsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h4 class="modal-title text-white">
+                    <i class="fas fa-check-circle mr-2"></i>Dokumen Wajib
+                </h4>
+                <button type="button" class="close text-white" data-bs-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Dokumen</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-graduation-cap mr-2"></i>
+                                    <strong>Ijazah Terakhir</strong>
+                                </td>
+                                <td>
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-check mr-1"></i>Lengkap
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> Lihat
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-id-card mr-2"></i>
+                                    <strong>KTP</strong>
+                                </td>
+                                <td>
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-check mr-1"></i>Lengkap
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> Lihat
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-file-invoice mr-2"></i>
+                                    <strong>NPWP</strong>
+                                </td>
+                                <td>
+                                    <span class="badge badge-danger">
+                                        <i class="fas fa-times mr-1"></i>Belum Upload
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="openAddDocumentModal('npwp')">
+                                        <i class="fas fa-plus"></i> Upload
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-file-alt mr-2"></i>
+                                    <strong>CV</strong>
+                                </td>
+                                <td>
+                                    <span class="badge badge-warning">
+                                        <i class="fas fa-exclamation mr-1"></i>Perlu Perbaikan
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning" onclick="resubmitDocument(5, 'cv')">
+                                        <i class="fas fa-redo"></i> Perbaiki
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-camera mr-2"></i>
+                                    <strong>Pas Foto</strong>
+                                </td>
+                                <td>
+                                    <span class="badge badge-danger">
+                                        <i class="fas fa-times mr-1"></i>Belum Upload
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="openAddDocumentModal('foto')">
+                                        <i class="fas fa-plus"></i> Upload
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-info mt-3">
+                    <h6><i class="fas fa-info-circle mr-2"></i>Informasi</h6>
+                    <p class="mb-0">Pastikan semua dokumen wajib telah diupload dan terverifikasi untuk menyelesaikan proses administrasi kepegawaian.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>

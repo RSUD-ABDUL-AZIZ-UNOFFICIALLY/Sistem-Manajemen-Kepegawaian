@@ -2470,6 +2470,26 @@ Lampiran   : ${urlLampiran}`
       });
     }
 
-
   },
+  postDocument: async (req, res) => {
+    let { id } = req.body;
+    let params = req.params;
+    try {
+      // let document = await Document.findOne({
+      //   where: {
+      //     id: id
+      //   }
+      // });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: params
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+  }
 };

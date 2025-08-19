@@ -63,6 +63,17 @@ module.exports = {
     };
     res.render("account", data);
   },
+  doc: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "document   Pegawai | SIMPEG",
+      page: "Document Pegawai",
+      token: decoded,
+      csrf: token
+    };
+    res.render("document", data);
+  },
   daily: (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
