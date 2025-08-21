@@ -21,15 +21,18 @@ async function profilepic() {
                     };
                     reader.readAsDataURL(blob);
                 });
-
             }
         } catch (err) {
             console.error("Fetch error:", err);
         }
     } else {
-        // document.getElementById("imgUser").src = a;
         let dataURL = sessionStorage.getItem("imgProfile");
-        let img = document.getElementById("imgUser").src = dataURL;
+        console.log(dataURL);
+        if (!dataURL) {
+            document.getElementById("imgUser").src = a;
+        } else {
+            let img = document.getElementById("imgUser").src = dataURL;
+        }
 
     }
 }
