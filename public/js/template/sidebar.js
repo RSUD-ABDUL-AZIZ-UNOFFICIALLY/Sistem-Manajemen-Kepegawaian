@@ -29,7 +29,7 @@ async function profilepic() {
         let dataURL = sessionStorage.getItem("imgProfile");
         console.log(dataURL);
         if (!dataURL) {
-            document.getElementById("imgUser").src = a;
+            document.getElementById("imgUser").src = a + "?w=500&h=500";
         } else {
             let img = document.getElementById("imgUser").src = dataURL;
         }
