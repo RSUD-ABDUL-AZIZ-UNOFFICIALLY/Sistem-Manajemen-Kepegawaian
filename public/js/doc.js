@@ -1,16 +1,15 @@
 $(document).ready(function () {
-  
     // Initialize DataTable
     $('#documentsTable').DataTable({
         "ajax": {
-            url: "/api/document/doc/all/",
+            url: "/api/document/doc/all",
             dataSrc: function (json) {
                 Swal.close(); // tutup loading setelah data diterima
                 if (json.error) {
                     Swal.fire('Error', json.message, 'error');
                     return [];
                 }
-                return json.data;
+                return json.data.data;
             },
             error: function () {
                 Swal.close();
@@ -138,11 +137,13 @@ async function statistik(id) {
         headers: {
             'Content-Type': 'application/json'
         }
-    })
-    console.log(data);
-    // document.getElementById('verifiedCount').text(json.record.verifiedCount);
-    // document.getElementById('pendingCount').text(json.record.pendingCount);
+    }).then(res => res.json());
+    document.getElementById('verifiedCount').innerHTML = data.data.record.verifiedCount;
+    document.getElementById('pendingCount').innerHTML = data.data.record.pendingCount;
+    document.getElementById('rejectedCount').innerHTML = data.data.record.rejectedCount;
+    document.getElementById('totalDocuments').innerHTML = data.data.record.totalDocuments;
 }
+statistik();
 async function deleteDocument(id) {
     // table.ajax.reload();
     await fetch(`/api/document/${id}`, {
@@ -153,6 +154,7 @@ async function deleteDocument(id) {
     });
     const table = $('#documentsTable').DataTable();
     table.ajax.reload();
+    statistik();
     showToast('success', id);
 }
 // Show document fields based on type
@@ -304,6 +306,9 @@ async function saveDocument() {
             console.log('Success:', result);
             showToast('success', 'Dokumen berhasil disimpan dan sedang menunggu verifikasi!');
             $('#addDocumentModal').modal('hide');
+            const table = $('#documentsTable').DataTable();
+            table.ajax.reload();
+            statistik();
         })
         .catch(error => {
             console.error('Error:', error);

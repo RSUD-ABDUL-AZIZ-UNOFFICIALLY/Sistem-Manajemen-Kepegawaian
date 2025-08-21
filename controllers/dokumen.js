@@ -53,7 +53,7 @@ module.exports = {
                     })
             }
 
-
+            await req.cache.del('SIMPEG:dokumen:' + account.nik);
             return res.status(200).json({
                 error: false,
                 message: "success",
@@ -75,7 +75,7 @@ module.exports = {
             return res.status(200).json({
                 error: false,
                 message: "success",
-                data: findchace
+                data: JSON.parse(findchace),
             })
         }
         try {
@@ -90,6 +90,7 @@ module.exports = {
                     nik: req.account.nik
                 }
             });
+            console.log(dataIjasah);
             for (let i of dataIjasah) {
                 if (i.status == "Pending") {
                     pendingCount += 1;
@@ -394,7 +395,16 @@ module.exports = {
                 }
                 data.push(result)
             }
-            await req.cache.set(`SIMPEG:dokumen:${req.account.nik}`, JSON.stringify(data));
+            await req.cache.set(`SIMPEG:dokumen:${req.account.nik}`, JSON.stringify({
+                record: {
+                    verifiedCount,
+                    pendingCount,
+                    rejectedCount,
+                    totalDocuments
+                },
+                data
+            }));
+            await req.cache.expire(`SIMPEG:dokumen:${req.account.nik}`, 60 * 60);
             return res.status(200).json({
                 error: false,
                 message: "success",
@@ -623,6 +633,7 @@ module.exports = {
                 )
             }
             t.commit();
+            await req.cache.del('SIMPEG:dokumen:' + nik);
             return res.status(200).json({
                 error: false,
                 message: "success",

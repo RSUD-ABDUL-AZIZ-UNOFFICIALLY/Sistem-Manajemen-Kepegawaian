@@ -1,15 +1,37 @@
 async function profilepic() {
     let a = sessionStorage.getItem("img");
-    null == a ? await $.ajax({
-        url: "/api/getPic",
-        method: "GET",
-        success: function (a) {
-            a && (sessionStorage.setItem("img", a.data.url), $("#imgUser").attr("src", a.data.url));
-        },
-        error: function (a) {
-            console.log(a);
+    if (a === null) {
+        try {
+            const res = await fetch("/api/getPic", { method: "GET" });
+            if (!res.ok) throw new Error("Network response was not ok");
+
+            const data = await res.json();
+
+            if (data && data.data && data.data.url) {
+                sessionStorage.setItem("img", data.data.url);
+                let img = document.getElementById("imgUser").src = data.data.url + "?w=500&h=500";
+                let fetchImg = await fetch(data.data.url + "?w=500&h=500");
+                let blob = await fetchImg.blob();
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = function () {
+                        sessionStorage.setItem("imgProfile", reader.result); // simpan base64
+                        console.log("✅ Gambar tersimpan di localStorage");
+                        resolve();
+                    };
+                    reader.readAsDataURL(blob);
+                });
+
+            }
+        } catch (err) {
+            console.error("Fetch error:", err);
         }
-    }) : $("#imgUser").attr("src", a);
+    } else {
+        // document.getElementById("imgUser").src = a;
+        let dataURL = sessionStorage.getItem("imgProfile");
+        let img = document.getElementById("imgUser").src = dataURL;
+
+    }
 }
 
 function queryselec() {
@@ -17,7 +39,7 @@ function queryselec() {
     let e = document.querySelectorAll(".nav-link");
     let n = e.length;
     for (let l = 0; l < n; l++) e[l].href === a && (e[l].className = "nav-link active");
-    (a.includes("profile") || a.includes("account")) && $("#documen").addClass("menu-open"),
+    (a.includes("profile") || a.includes("account") || a.includes("document")) && $("#documen").addClass("menu-open"),
         (a.includes("cuti") || a.includes("aprovecuti")) && $("#cuti").addClass("menu-open"),
         (a.includes("daily") || a.includes("approvement") || a.includes("monthly") || a.includes("Report")) && $("#laporan").addClass("menu-open"),
         (a.includes("helpdeskadmin") || a.includes("contact")) && $("#admin").addClass("menu-open"),
