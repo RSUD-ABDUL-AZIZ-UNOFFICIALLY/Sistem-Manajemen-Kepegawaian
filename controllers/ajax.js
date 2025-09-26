@@ -1400,7 +1400,7 @@ module.exports = {
         { transaction: t }
       );
       let urlLampiran = body.lampiran || "-";
-      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan") {
+      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan" || getJenisCuti.type_cuti == "Cuti Alasan Penting") {
         urlLampiran = body.lampiran
         await Cuti_lampiran.create(
           {
