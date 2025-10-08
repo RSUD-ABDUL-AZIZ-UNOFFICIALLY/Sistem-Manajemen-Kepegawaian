@@ -76,7 +76,7 @@ $('#jnsCuti').change(function () {
     $('#Keterangan_cuti').text(jnsCuti.type_cuti + ' maksimal ' + jnsCuti.max + ' hari secara berturut-turut dan maksimal ' + jnsCuti.total + ' hari dalam setahun.');
     $('#reservation').val('');
     $('#totalReservation').val('');
-    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan") {
+    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan" || jnsCuti.type_cuti == "Cuti Alasan Penting") {
 
         $('#lampiran').empty();
         $('#lampiran').append(`<label for="InputActivities">Lampiran Surat ${jnsCuti.type_cuti}</label>
@@ -142,7 +142,7 @@ $('#Cuti').submit(function (event) {
     let jnsCuti = dataCuti.find(x => x.id == id);
 
     // let jnsCuti = dataCuti.find(x => x.id == id);
-    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan") {
+    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan" || jnsCuti.type_cuti == "Cuti Alasan Penting") {
         if ($('#inputSuratCuti').prop('files')[0] == undefined) {
             Swal.fire({
                 icon: 'error',

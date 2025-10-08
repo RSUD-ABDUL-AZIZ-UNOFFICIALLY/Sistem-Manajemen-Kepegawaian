@@ -1546,7 +1546,7 @@ Lampiran          : ${urlLampiran}`
           status: "Menunggu",
         }, { transaction: t });
       let urlLampiran = lampiran || "-";
-      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan") {
+      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan" || getJenisCuti.type_cuti == "Cuti Alasan Penting") {
         urlLampiran = lampiran
         await Cuti_lampiran.create(
           {
