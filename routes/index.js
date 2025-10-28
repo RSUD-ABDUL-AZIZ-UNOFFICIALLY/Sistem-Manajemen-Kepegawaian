@@ -143,4 +143,6 @@ router.get('/api/seen', seen.update);
 router.get('/api/seen/online', seen.online);
 router.get('/api/seen/last_seen', seen.last_seen);
 
+router.get('/api/health', api.health);
+
 module.exports = router;

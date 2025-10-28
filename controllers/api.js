@@ -310,6 +310,12 @@ module.exports = {
         message: error.message,
       });
     }
-  }
+  },
+  health: async (req, res) => {
+    return res.status(200).json({
+      error: false,
+      message: "success",
+    });
+  },
  
 };
