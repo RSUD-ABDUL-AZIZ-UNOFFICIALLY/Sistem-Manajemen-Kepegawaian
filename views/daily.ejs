@@ -4,6 +4,61 @@
 <head>
   <%- include('template/head'); %>
   <meta name="description" content="Produktivitas kerja Kepegawaian RSUD dr. Abdul Aziz Singkawang">
+<style>
+  /* Tinggi input Select2 lebih rapi */
+.select2-container .select2-selection--single {
+  height: 42px;
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+}
+
+/* Placeholder dan teks dalam input */
+.select2-selection__rendered {
+  line-height: 28px !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Icon panah lebih kecil */
+.select2-selection__arrow {
+  height: 100% !important;
+}
+
+/* Tampilan list item hasil pencarian */
+.select2-results__option {
+  padding: 6px 10px;
+  display: flex !important;
+  align-items: center !important;
+  font-size: 15px;
+}
+
+/* Gambar */
+.select2-results__option img,
+.select2-selection__rendered img {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+/* Hover & selected item */
+.select2-results__option--highlighted {
+  background-color: #007bff !important;
+  color: white !important;
+}
+
+.select2-results__option--selected {
+  background-color: #eef4ff !important;
+  color: black !important;
+}
+.select2-container--default .select2-selection--single {
+  border-radius: 8px;
+  border-color: #ccc;
+}
+
+</style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -94,9 +149,16 @@
         <footer class="main-footer"></footer>
   </div>
   <!-- ./wrapper -->
-  <%- include('modal/modalTemplate'); %> <%- include('template/footer'); %>
+  <%- include('modal/modalTemplate'); %> 
+  <%- include('modal/modalVote'); %> 
+  <%- include('template/footer'); %>
+
       <script src="/asset/js/src/daily.min.js"></script>
       <script src="/asset/js/src/template.min.js"></script>
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+      <script src="/asset/js/voters.js"></script>
 </body>
 
 </html>

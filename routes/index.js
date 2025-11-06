@@ -145,4 +145,9 @@ router.get('/api/seen/last_seen', seen.last_seen);
 
 router.get('/api/health', api.health);
 
+const rest = require('../controllers/voters');
+router.get('/api/voters/participants', middleware.login, rest.index);
+router.get('/api/voters/cek', middleware.login, rest.cek);
+router.post('/api/voters/vote', middleware.login, rest.vote);
+
 module.exports = router;
