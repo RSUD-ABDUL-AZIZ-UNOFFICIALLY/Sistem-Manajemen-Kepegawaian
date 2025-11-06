@@ -83,6 +83,7 @@ function simpanPegawaiTeladan() {
                                 confirmButtonText: 'OK'
                             }).then(function () {
                                 modal.hide();
+                                window.location.reload();
                             });
                         } else {
                             Swal.fire({
