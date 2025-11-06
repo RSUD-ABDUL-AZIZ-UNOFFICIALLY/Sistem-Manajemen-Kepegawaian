@@ -7,12 +7,55 @@
         <h5 class="modal-title" id="modalTitle">📢 Mari Berpartisipasi! Pilih ASN Teladan RSUD dr. Abdul Aziz Tahun Ini! 🌟</h5>
       </div>
       <div class="modal-body">
-         <p>Ketik dan pilih nama pegawai ASN yang Anda nominasikan. Pegawai yang dipilih adalah calon ASN Teladan RSUD dr. Abdul Aziz Tahun Ini.</p>
-        <label class="form-label">Cari Pegawai:</label>
+
+        <p class="mb-3">
+          Silakan ketik dan pilih nama Pegawai ASN yang Anda nominasikan sebagai
+          <strong>Pegawai Teladan RSUD dr. Abdul Aziz</strong> pada tahun ini.
+        </p>
+
+        <div class="p-3 border rounded bg-light mb-3">
+          <p class="mb-2">
+            Penilaian <strong>Pegawai Teladan</strong> dilakukan dengan memperhatikan sikap, kinerja, dan karakter pegawai dalam melaksanakan tugas. 
+            Adapun aspek penilaian meliputi:
+          </p>
+
+          <ul class="list-group list-group-flush small">
+            <li class="list-group-item d-flex align-items-center">
+              <i class="bi bi-check-circle text-primary me-2"></i> Kedisiplinan
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <i class="bi bi-check-circle text-primary me-2"></i> Kerapihan
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <i class="bi bi-check-circle text-primary me-2"></i> Kinerja
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <i class="bi bi-check-circle text-primary me-2"></i> Kompetensi
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <i class="bi bi-lightbulb text-warning me-2"></i> Inovasi
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <i class="bi bi-stars text-info me-2"></i> Kreativitas
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <i class="bi bi-emoji-smile text-success me-2"></i> Sikap
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <i class="bi bi-people text-success me-2"></i> Perilaku
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <i class="bi bi-award text-danger me-2"></i> Kontribusi positif lainnya
+            </li>
+          </ul>
+        </div>
+
+        <label for="selectPegawai" class="form-label fw-semibold">Cari dan Pilih Pegawai:</label>
         <select id="selectPegawai" class="form-control" style="width:100%;"></select>
       </div>
 
       <div class="modal-footer">
+         <p class="text-warning small">Note: Pilihan Anda tidak dapat diubah. Anda hanya dapat memilih satu pegawai.</p>
         <button type="button" class="btn btn-primary" onclick="simpanPegawaiTeladan()">Simpan</button>
       </div>
 
