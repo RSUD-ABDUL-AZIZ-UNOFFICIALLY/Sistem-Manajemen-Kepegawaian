@@ -24,7 +24,7 @@ $.ajax({
   
     // Initialize Select2 when modal is fully visible
     $('#modalPegawaiTeladan').on('shown.bs.modal', function () {
-        $('#selectPegawai').select2({
+        $('#selectPegawaiL').select2({
             dropdownParent: $('#modalPegawaiTeladan'), // << WAJIB kalau Select2 di dalam modal
             placeholder: 'Ketik nama pegawai...',
             minimumInputLength: 1,
@@ -32,7 +32,29 @@ $.ajax({
                 url: '/api/voters/participants', // GANTI KE API ANDA
                 dataType: 'json',
                 delay: 300,
-                data: params => ({ name: params.term }),
+                data: params => ({ name: params.term, gender: 'Laki-laki' }),
+                processResults: data => ({
+                    results: data.data.map(p => ({
+                        id: p.nik,
+                        nik: p.nik,
+                        text: p.nama,
+                        foto: p.profile.url
+                    }))
+                })
+            },
+            templateResult: formatPegawai,
+            templateSelection: formatPegawai,
+            width: '100%'
+        });
+        $('#selectPegawaiP').select2({
+            dropdownParent: $('#modalPegawaiTeladan'), // << WAJIB kalau Select2 di dalam modal
+            placeholder: 'Ketik nama pegawai...',
+            minimumInputLength: 1,
+            ajax: {
+                url: '/api/voters/participants', // GANTI KE API ANDA
+                dataType: 'json',
+                delay: 300,
+                data: params => ({ name: params.term, gender: 'Perempuan' }),
                 processResults: data => ({
                     results: data.data.map(p => ({
                         id: p.nik,
@@ -50,12 +72,14 @@ $.ajax({
 
 });
 function simpanPegawaiTeladan() {
-    const nikPegawai = $('#selectPegawai').select2('data')[0];
-    console.log(nikPegawai);
-    if (!nikPegawai) {
+    const nikPegawaiL = $('#selectPegawaiL').select2('data')[0];
+    const nikPegawaiP = $('#selectPegawaiP').select2('data')[0];
+    console.log(nikPegawaiL);
+    console.log(nikPegawaiP);
+    if (!nikPegawaiL || !nikPegawaiP) {
         Swal.fire({
             title: 'Oops...',
-            text: 'Harap mengisi nama pegawai yang akan dijadikan teladan!',
+            text: 'Harap mengisi nama pegawai Laki-laki dan Perempuan yang akan dijadikan teladan!',
             icon: 'warning',
             confirmButtonText: 'OK'
         })
@@ -73,7 +97,7 @@ function simpanPegawaiTeladan() {
                 $.ajax({
                     url: '/api/voters/vote',
                     method: 'POST',
-                    data: { nik: nikPegawai.nik },
+                    data: { nikL: nikPegawaiL.nik, nikP: nikPegawaiP.nik },
                     success: function (data) {
                         if (data.message === 'success') {
                             Swal.fire({
@@ -103,6 +127,7 @@ function simpanPegawaiTeladan() {
                         });
                     }
                 });
+
             }
         });
     }
