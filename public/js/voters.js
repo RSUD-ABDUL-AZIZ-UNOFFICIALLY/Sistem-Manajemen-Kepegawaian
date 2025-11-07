@@ -106,6 +106,9 @@ function simpanPegawaiTeladan() {
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(function () {
+                                const modal = bootstrap.Modal.getInstance(
+                                    document.getElementById('modalPegawaiTeladan')
+                                );
                                 modal.hide();
                             });
                         } else {
