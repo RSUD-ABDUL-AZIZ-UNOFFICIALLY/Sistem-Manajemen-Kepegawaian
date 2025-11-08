@@ -1,0 +1,112 @@
+/* ===== Select2 Input & Box ===== */
+.select2-container .select2-selection--single {
+  min-height: 42px;
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+/* Teks placeholder / yang dipilih */
+.select2-selection__rendered {
+  line-height: normal !important;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  padding-left: 2px;
+}
+
+/* Panah dropdown */
+.select2-selection__arrow {
+  height: 100% !important;
+  right: 8px !important;
+}
+
+/* Hasil pencarian list */
+.select2-results__option {
+  padding: 6px 10px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px;
+  font-size: 15px;
+}
+
+/* Foto pegawai */
+.select2-results__option img,
+.select2-selection__rendered img {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Hover list */
+.select2-results__option--highlighted {
+  background-color: #007bff !important;
+  color: white !important;
+}
+
+/* Option terpilih */
+.select2-results__option--selected {
+  background-color: #eef4ff !important;
+  color: #000 !important;
+}
+
+/* ===== RESPONSIVE (Mobile Optimization) ===== */
+@media (max-width: 576px) {
+
+  .select2-container .select2-selection--single {
+    min-height: 38px;
+    padding: 4px 8px;
+  }
+
+  .select2-selection__rendered {
+    font-size: 14px;
+  }
+
+  .select2-results__option {
+    font-size: 14px;
+    padding: 5px 8px;
+  }
+
+  .select2-results__option img,
+  .select2-selection__rendered img {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  /* Modal text size scaling */
+  .modal-body p,
+  .list-group-item {
+    font-size: 14px !important;
+  }
+  .select2-container--open .select2-dropdown {
+    left: 0 !important;
+    width: 100vw !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    border-radius: 0 !important;
+    position: fixed !important;
+    margin: 0 !important;
+    height: 100vh !important;
+    z-index: 200000 !important;
+  }
+
+  /* Input search terlihat seperti header */
+  .select2-search--dropdown .select2-search__field {
+    font-size: 18px;
+    padding: 14px;
+  }
+
+  .select2-results__options {
+    max-height: calc(100vh - 60px) !important;
+  }
+.modal.show .select2-container {
+  z-index: 200000 !important;
+}
+}
+
+
+
