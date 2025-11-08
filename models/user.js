@@ -29,6 +29,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'nik',
         as: 'biodata'
       })
+      User.hasOne(models.Maps_Absen, {
+        foreignKey: 'nik',
+        sourceKey: 'nik',
+        as: 'id_finger'
+      })
     }
   }
   User.init({

@@ -18,6 +18,10 @@ module.exports = {
           key: 'nik',
         }
       },
+      jns_kelamin: {
+        type: Sequelize.ENUM,
+        values: ['Laki-laki', 'Perempuan']
+      },
       pemilih: {
         type: Sequelize.BIGINT(16),
         references: {
@@ -39,7 +43,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.addIndex('Votes', ['pemilih', 'periode'], {
+    await queryInterface.addIndex('Votes', ['pemilih', 'periode', 'jns_kelamin'], {
       name: 'Votes_pemilih_periode_unique',
       unique: true
     });

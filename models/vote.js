@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Vote.init({
     peserta: DataTypes.INTEGER,
+    jns_kelamin: DataTypes.ENUM('Laki-laki', 'Perempuan'),
     pemilih: DataTypes.INTEGER,
     periode: DataTypes.INTEGER
   }, {
