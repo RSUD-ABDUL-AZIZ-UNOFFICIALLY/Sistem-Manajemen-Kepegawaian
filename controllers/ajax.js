@@ -165,6 +165,15 @@ module.exports = {
           data: null,
         });
       }
+      const urlLama = getFoto.url;
+
+      const urlBaru = urlLama.replace(
+        "https://api.rsudaa.singkawangkota.go.id",
+        "https://api.spairum.my.id"
+      );
+
+      getFoto.url = urlBaru;
+
       return res.status(200).json({
         error: false,
         message: "success",
