@@ -35,7 +35,14 @@
           text: 'Anda telah berhasil masuk.',
         }).then(() => {
           // Redirect ke halaman setelah login berhasil
-          window.location.href = '/daily';
+          let urlParams = new URLSearchParams(window.location.search);
+          let redirectUrl = urlParams.get('redirect_url');
+          console.log(redirectUrl);
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          } else {
+            window.location.href = '/daily';
+          }
         });
       },
       error: function(xhr, status, error) {
