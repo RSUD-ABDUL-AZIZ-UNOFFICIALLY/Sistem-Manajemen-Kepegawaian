@@ -19,6 +19,17 @@ const { formatDateToLocalYMD, hitungMenitTerlambat, hitungCepatPulang, checkAtte
     checkPulang, } = require("../helper");
 const { Op, literal } = require("sequelize");
 const { param } = require("../routes");
+function formatTimeShort(timeString) {
+    if (typeof timeString === 'string' && timeString.length > 3) {
+        return timeString.slice(0, -3);
+    }
+    return timeString; // Kembalikan string asli jika formatnya tidak sesuai
+};
+const indonesianMonths = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+];
+
 module.exports = {
     anggota: async (req, res) => {
         let token = req.cookies.token;
@@ -386,6 +397,80 @@ module.exports = {
                 error: false,
                 message: "success",
                 data: data
+            });
+        } catch (error) {
+            return res.status(500).json({
+                error: true,
+                message: "internal server error",
+                data: error,
+            });
+        }
+    },
+    alljdlDNS: async (req, res) => {
+        try {
+            let date = new Date();
+            let user = req.account;
+            let query = req.query
+            let data = await Jdldns.findAll({
+                where: {
+                    nik: user.nik,
+                    date: { [Op.startsWith]: query.periode, }
+                },
+                attributes: ['date', 'typeDns'],
+                include: [
+                    {
+                        model: Jnsdns,
+                        as: 'dnsType',
+                        attributes: ['type', 'start_min', 'start_max', 'end_min', 'end_max', 'state']
+                    }
+                ],
+                // raw: true
+            });
+            if (data == null || data.length == 0) {
+                return res.status(404).json({
+                    error: true,
+                    message: "Jadwal belum di buat oleh Atasan Anda",
+                    data: "Silahkan menghubungi atasan Anda",
+                });
+            }
+
+            let x = data.map(u => u.toJSON());
+            const transformedData = x.map(item => {
+                const dateString = item.date;
+                const [year, monthIndexStr, dayStr] = dateString.split('-');
+                const monthIndex = parseInt(monthIndexStr, 10) - 1;
+                const monthName = indonesianMonths[monthIndex];
+                const newDate = `${dayStr} ${monthName} ${year}`;
+                const newDnsType = {
+                    ...item.dnsType,
+                    start_min: formatTimeShort(item.dnsType.start_min),
+                    start_max: formatTimeShort(item.dnsType.start_max),
+                    end_min: formatTimeShort(item.dnsType.end_min),
+                    end_max: formatTimeShort(item.dnsType.end_max),
+                };
+                return {
+                    ...item,        // Salin properti lain
+                    date: newDate,  // Ganti nilai properti 'date'
+                    dnsType: newDnsType // Ganti objek 'dnsType' yang sudah dimodifikasi
+                };
+            });
+            // 1. Ekstrak objek {type, state} dari properti 'dnsType'
+            const extractedData = data.map(item => ({
+                "type": item.dnsType.type,
+                "state": item.dnsType.state
+            }));
+
+            // 2. Gunakan Set untuk memfilter objek unik.
+            //    - JSON.stringify digunakan untuk mengubah objek menjadi string agar Set dapat mendeteksi duplikasi.
+            //    - JSON.parse digunakan untuk mengubah string kembali menjadi objek.
+            const uniqueData = Array.from(new Set(extractedData.map(JSON.stringify))).map(JSON.parse);
+
+            console.log(uniqueData);
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                list: uniqueData,
+                data: transformedData
             });
         } catch (error) {
             return res.status(500).json({

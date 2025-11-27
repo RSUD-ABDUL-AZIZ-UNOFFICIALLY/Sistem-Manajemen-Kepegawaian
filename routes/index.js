@@ -129,6 +129,7 @@ router.post('/api/presensi/jnsdns', middleware.login, presensi.postTypeJadwal);
 router.post('/api/presensi/anggota', middleware.login, presensi.updateJadwal);
 router.post('/api/presensi/getlocation', middleware.login, presensi.getlocation);
 router.get('/api/presensi/jdldns', middleware.login, presensi.getjdlDNS);
+router.get('/api/presensi/jdldnsall', middleware.login, presensi.alljdlDNS);
 router.post('/api/presensi/absen', middleware.login, presensi.absen);
 router.get('/api/presensi/riwayat', middleware.login, presensi.riwayat);
 router.get('/api/presensi/recap', middleware.login, presensi.recap);

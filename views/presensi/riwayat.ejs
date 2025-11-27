@@ -53,15 +53,15 @@
                                             <div class="space-y-2">
                                                     <div class="flex justify-between">
                                                     <span class="font-medium text-gray-600">Nama Shift:</span>
-                                                    <span class="text-gray-800" id="typeShift">[Shift Anda]</span>
+                                                    <span class="text-gray-800" id="typeShift"></span>
                                                     </div>
                                                     <div class="flex justify-between">
                                                     <span class="font-medium text-gray-600">Masuk:</span>
-                                                    <span class="text-gray-800" id="MasukShift">[Nama Anda]</span>
+                                                    <span class="text-gray-800" id="MasukShift"></span>
                                                     </div>
                                                     <div class="flex justify-between">
                                                     <span class="font-medium text-gray-600">Pulang:</span>
-                                                    <span class="text-gray-800" id="PulangShift">08.00 – 16.00</span>
+                                                    <span class="text-gray-800" id="PulangShift"></span>
                                                     </div>
                                             </div>
                                         </div>
@@ -71,6 +71,9 @@
                                                     <label>Periode</label>
                                                     <input type="month" class="form-control" id="periode" name="periode">
                                                 </div>
+                                                <button type="button" id="jadwalDNSModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jadwalDNSModalModern">
+                                                    Lihat Jadwal DNS
+                                                </button>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -192,6 +195,7 @@
     <!-- /.content-wrapper -->
     <footer class="main-footer"></footer>
     </div>
+      <%- include('../modal/modalJadwal'); %>
     <!-- ./wrapper -->
         <%- include('../template/footer'); %>
             <!-- fullCalendar -->
@@ -199,6 +203,8 @@
             <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
             <script src="/asset/js/fullcalendar/riwayat2.js"></script>
             <script src="/asset/js/fullcalendar/jdl.js"></script>
+            <script src="/asset/js/fullcalendar/jdldnsme.js"></script>
+            </script>
 
 
 </body>
