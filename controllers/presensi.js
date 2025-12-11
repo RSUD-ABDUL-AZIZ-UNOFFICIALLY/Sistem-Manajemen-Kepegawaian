@@ -961,6 +961,7 @@ module.exports = {
                 const typeMap = {
                     "Cuti Tahunan": "CT",
                     "Cuti Bersama": "CB",
+                    "Cuti Besar": "CB",
                     "Cuti Sakit": "CS",
                     "Cuti Melahirkan": "CM",
                     "Cuti Alasan Penting": "CAP"
