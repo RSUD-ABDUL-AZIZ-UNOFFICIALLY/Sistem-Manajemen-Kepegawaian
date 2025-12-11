@@ -68,8 +68,14 @@
       });
       return;
     }
+    let userAgentData = navigator.userAgent;
+    let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgentData);
+    if (isMobile) {
+      return window.open('https://wa.me/+62' + admin + '?text=OTP', '_blank');
+    }
     // Tampilkan SweetAlert2 loading
     $(this).prop('disabled', true); // Menonaktifkan tombol
+
     setTimeout(function () {
       $('button').prop('disabled', false); // Mengaktifkan tombol setelah 30 detik
     }, 30000);

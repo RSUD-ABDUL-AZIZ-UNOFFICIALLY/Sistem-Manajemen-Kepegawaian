@@ -2,11 +2,13 @@ const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
 const { User, Departemen, Atasan, Lpkp, Tiketgroup } = require("../models");
 const { Op } = require("sequelize");
+const admin = process.env.PHONE_NUMBER || "628123456789";
 
 module.exports = {
   login: (req, res) => {
     let data = {
       title: "login | SIMPEG",
+      admin: admin
     };
     res.render("login", data);
   },

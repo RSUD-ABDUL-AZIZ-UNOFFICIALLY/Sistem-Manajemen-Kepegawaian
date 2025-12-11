@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const moment = require("moment");
 const { Otp, User, Session, sequelize } = require("../models");
+const { verifyToken } = require("../helper/token");
 const { update } = require("./seen");
 const secretKey = process.env.SECRET_WA;
 const payload = {
@@ -114,35 +115,46 @@ module.exports = {
   verifyOtp: async (req, res) => {
     let body = req.body;
     let t = await sequelize.transaction();
-    let checkOtp = await Otp.findOne({
-      where: {
-        token: body.otp,
-        wa: body.phone,
-      },
-    }, { transaction: t });
-    if (!checkOtp) {
-      await t.rollback();
-      return res.status(401).json({
-        error: true,
-        message: "Invalid OTP",
-      });
-    }
-    // waktu sekarang + 5 menit
-    let now = new Date();
-    let createdAt = new Date(checkOtp.createdAt); // Ganti dengan nilai yang sesuai dari createdAt
-    let diff = (now.getTime() - createdAt.getTime()) / 1000; // Menghitung selisih waktu dalam detik
-    if (diff > 300) {
-      await t.rollback();
-      return res.status(401).json({
-        error: true,
-        message: "OTP kedaluwarsa silahkan klik Minta OTP",
-      });
-    }
     let user = await User.findOne({
       where: {
         wa: body.phone,
       },
     }, { transaction: t });
+    if (!user) {
+      await t.rollback();
+      return res.status(404).json({
+        error: true,
+        message: "Invalid OTP",
+      });
+    }
+    let cekOTP = verifyToken(body.otp, body.phone);
+    if (!cekOTP) {
+      let checkOtp = await Otp.findOne({
+        where: {
+          token: body.otp,
+          wa: body.phone,
+        },
+      }, { transaction: t });
+      if (!checkOtp) {
+        await t.rollback();
+        return res.status(401).json({
+          error: true,
+          message: "Invalid OTP",
+        });
+      }
+      // waktu sekarang + 5 menit
+      let now = new Date();
+      let createdAt = new Date(checkOtp.createdAt); // Ganti dengan nilai yang sesuai dari createdAt
+      let diff = (now.getTime() - createdAt.getTime()) / 1000; // Menghitung selisih waktu dalam detik
+      if (diff > 300) {
+        await t.rollback();
+        return res.status(401).json({
+          error: true,
+          message: "OTP kedaluwarsa silahkan klik Minta OTP",
+        });
+      }
+    }
+
     // create jwt
     let token = jwt.sign(
       {
