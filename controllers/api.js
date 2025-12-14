@@ -112,6 +112,38 @@ module.exports = {
       });
     }
   },
+  mobileOtp: async (req, res) => {
+    try {
+      let { phone } = req.body;
+      console.log(phone);
+      let cacheLid = await req.cache.get('SIMPEG:phone:' + phone);
+      if (!cacheLid) {
+        let token = jwt.sign(payload, secretKey, { expiresIn: '1m' });
+        let cekKontak = await axios.post(process.env.HOSTWA + "/api/wa/cek", {
+          telp: phone
+        }, { headers: { Authorization: "Bearer " + token } });
+        if (cekKontak.data.id.isRegistered) {
+          await Promise.all([
+            req.cache.set('SIMPEG:phone:' + phone, cekKontak.data.id._serialized),
+            req.cache.set('SIMPEG:lid:' + cekKontak.data.id._serialized, phone.toString()),
+            req.cache.expire('SIMPEG:phone:' + phone, 60 * 60 * 24),
+            req.cache.expire('SIMPEG:lid:' + cekKontak.data.id.id, 60 * 60 * 24),
+          ]);
+        }
+      }
+      return res.status(200).json({
+        error: false,
+        message: "success",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+
+  },
   verifyOtp: async (req, res) => {
     let body = req.body;
     let t = await sequelize.transaction();

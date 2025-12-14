@@ -57,7 +57,7 @@
   });
 
   // button send-otp click function
-  $('#send-otp').on('click', function() {
+$('#send-otp').on('click', async function () {
     const phone = $('#phone').val();
     // Validasi input field
     if (phone.length < 10) {
@@ -71,6 +71,15 @@
     let userAgentData = navigator.userAgent;
     let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgentData);
     if (isMobile) {
+      await fetch("/api/mobile-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: phone,
+        }),
+      });
       return window.open('https://wa.me/+62' + admin + '?text=OTP', '_blank');
     }
     // Tampilkan SweetAlert2 loading

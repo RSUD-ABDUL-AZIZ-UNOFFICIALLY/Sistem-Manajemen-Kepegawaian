@@ -46,6 +46,7 @@ router.get('/kepegawaian', middleware.login, controller.pegawaiAdmin);
 router.get('/kepegawaian/:id', middleware.login, controller.dataAdmin);
 
 router.post('/api/send-otp', api.sendOtp);
+router.post('/api/mobile-otp', api.mobileOtp);
 router.post('/api/verify-otp', api.verifyOtp);
 router.get('/api/lastActivity', middleware.login, api.lastActivity);
 router.get('/api/simrs/userpas', middleware.login, api.getUserSimrs);
