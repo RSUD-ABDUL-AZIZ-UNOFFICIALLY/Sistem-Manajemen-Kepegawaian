@@ -175,7 +175,7 @@ $('#Cuti').submit(function (event) {
             var form = new FormData();
             form.append("file", file, 'surat-cuti.pdf');
             var settings = {
-                url: "https://api.rsudaa.singkawangkota.go.id/api/cdn/upload/file",
+                url: "https://api.spairum.my.id/api/cdn/upload/file",
                 method: "POST",
                 timeout: 0,
                 headers: {
@@ -202,7 +202,7 @@ $('#Cuti').submit(function (event) {
             form.append("image", file, 'surat-cuti.' + fileType);
 
             let settings = {
-                url: "https://api.rsudaa.singkawangkota.go.id/api/cdn/upload/img",
+                url: "https://api.spairum.my.id/api/cdn/upload/img",
                 method: "POST",
                 timeout: 0,
                 headers: {
