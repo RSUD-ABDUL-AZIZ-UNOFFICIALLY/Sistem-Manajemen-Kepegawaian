@@ -127,7 +127,7 @@ module.exports = {
             req.cache.set('SIMPEG:phone:' + phone, cekKontak.data.id._serialized),
             req.cache.set('SIMPEG:lid:' + cekKontak.data.id._serialized, phone.toString()),
             req.cache.expire('SIMPEG:phone:' + phone, 60 * 60 * 24),
-            req.cache.expire('SIMPEG:lid:' + cekKontak.data.id.id, 60 * 60 * 24),
+            req.cache.expire('SIMPEG:lid:' + cekKontak.data.id._serialized, 60 * 60 * 24),
           ]);
         }
       }
