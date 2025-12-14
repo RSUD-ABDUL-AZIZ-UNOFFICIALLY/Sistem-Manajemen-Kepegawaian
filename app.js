@@ -36,10 +36,10 @@ app.set('view engine', 'ejs');
 
 app.use(favicon(path.join(__dirname + '/public/', 'favicon.ico')));
 app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/'), {
-    // setHeaders: (res, path, stat) => {
-    //     res.set('Cache-Control', 'public, max-age=' + maxAge);
-    //     res.set('ETag', package.version); // add etag
-    // }
+    setHeaders: (res, path, stat) => {
+        res.set('Cache-Control', 'public, max-age=' + maxAge);
+        res.set('ETag', package.version); // add etag
+    }
 }));
 app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/'), {
     setHeaders: (res, path, stat) => {
