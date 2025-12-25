@@ -126,8 +126,8 @@ module.exports = {
           await Promise.all([
             req.cache.set('SIMPEG:phone:' + phone, cekKontak.data.id._serialized),
             req.cache.set('SIMPEG:lid:' + cekKontak.data.id._serialized, phone.toString()),
-            req.cache.expire('SIMPEG:phone:' + phone, 60 * 60 * 24),
-            req.cache.expire('SIMPEG:lid:' + cekKontak.data.id._serialized, 60 * 60 * 24),
+            req.cache.expire('SIMPEG:phone:' + phone, 604800),
+            req.cache.expire('SIMPEG:lid:' + cekKontak.data.id._serialized, 604800),
           ]);
         }
       }
