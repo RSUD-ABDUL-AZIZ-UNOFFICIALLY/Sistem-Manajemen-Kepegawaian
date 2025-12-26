@@ -1,143 +1,101 @@
 
-# Sistem Manajemen Kepegawaian (SIMPEG)
+# Sistem Manajemen Kepegawaian (SIMPEG) RSUD Abdul Aziz
 
-Sistem Informasi Manajemen Kepegawaian (SIMPEG) yang digunakan oleh RSUD Abdul Aziz Kota Singkawang. Sistem ini dirancang untuk mengelola informasi terkait kepegawaian, seperti data pegawai, layanan administratif, dan otentikasi login berbasis One-Time Password (OTP) yang dikirimkan melalui WhatsApp.
+Sistem Informasi Manajemen Kepegawaian (SIMPEG) yang dikembangkan untuk RSUD Abdul Aziz Kota Singkawang. Sistem ini dirancang untuk mengelola data kepegawaian, layanan administratif, dan fitur presensi secara terintegrasi.
 
+## Fitur Utama
 
+- **Otentikasi Aman**: Login menggunakan One-Time Password (OTP) yang dikirimkan via WhatsApp.
+- **Manajemen Pegawai**: Pengelolaan data profil, statistik, dan riwayat kepegawaian.
+- **Modul Presensi**: Integrasi dengan mesin finger print (bridging) dan rekapitulasi presensi.
+- **Layanan Mandiri**: Pengajuan cuti, pelaporan LPKP, dan pengaturan jam dinas.
+- **Monitoring Sesi**: Pemantauan sesi login aktif untuk keamanan tambahan.
 
-## Installation
-Berikut adalah petunjuk instalasi untuk REST API profile matching sistem rekomendasi penentuan jurusan kuliah bagi siswa-siswi SMA:
+## Teknologi (Tech Stack)
 
-```bash
-  git clone https://github.com/RSUD-ABDUL-AZIZ-UNOFFICIALLY/Sistem-Manajemen-Kepegawaian.git
-  cd Sistem-Manajemen-Kepegawaian
-```
+Sistem ini dibangun menggunakan teknologi modern:
 
-Setelah setup Environment Variables jalankan scrip
-untuk memulai pertamakali
-```bash
-   npm run build
+- **Backend**: Express.js (Node.js framework)
+- **Database**: MariaDB via Sequelize ORM
+- **Cache**: Redis (untuk session dan singleton pattern)
+- **View Engine**: EJS
+- **Integrasi**: WhatsApp API, Finger Print Bridging
+- **Utility**: Moment.js, UUID, Morgan, Axios, Multer
+- **Monitoring**: Sentry Integration
+
+## Instalasi
+
+Ikuti langkah-langkah berikut untuk menjalankan proyek di lingkungan lokal:
+
+1. **Clone Repositori**
+   ```bash
+   git clone https://github.com/RSUD-ABDUL-AZIZ-UNOFFICIALLY/Sistem-Manajemen-Kepegawaian.git
+   cd Sistem-Manajemen-Kepegawaian
+   ```
+
+2. **Instal Dependensi**
+   ```bash
+   npm install
+   ```
+
+3. **Konfigurasi Environment**
+   Salin file `.env` contoh dan sesuaikan dengan konfigurasi server Anda. pastikan variabel database, redis, dan API WhatsApp telah terisi dengan benar.
+
+4. **Menjalankan Aplikasi**
+   ```bash
+   # Jalankan mode pengembangan (Development)
    npm run dev
-```
-## Environment Variables
 
-Untuk menjalankan proyek ini, Anda perlu menambahkan variabel lingkungan berikut ke file .env yang dapat di copy dari file env
+   # Jalankan mode produksi (Production)
+   npm run start:prod
+   ```
 
-#### SQL SECURITY
-```bash
-PORT=
-DB_HOST=localhost
-DB_USERNAME=root
-DB_PASSWORD=
-DB_NAME=
-DB_PORT=3306
-DB_DIALECT=mariadb
-JWT_SECRET_KEY=
-HOSTWA=""
+## Variabel Lingkungan (.env)
 
-SECRET_WA="DEV-TOKEN"
-HOSTCONTACT=""
-HOSTWA2=""
-GROUP_IT=""
-BASE_URL="http://"
+Berikut adalah daftar variabel lingkungan yang diperlukan:
 
-HOSTCDN=""
-SECRET_CDN=""
+### Konfigurasi Database & Keamanan
+- `PORT`: Port server aplikasi.
+- `DB_HOST`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT`: Kredensial MariaDB.
+- `JWT_SECRET_KEY`: Kunci rahasia untuk token JWT.
 
-SENTRY_DSN=""
+### Konfigurasi Integrasi WhatsApp & Layanan
+- `HOSTWA`, `SECRET_WA`, `HOSTWA2`: Konfigurasi API pengiriman pesan WhatsApp.
+- `BASE_URL`: URL dasar aplikasi.
+- `HOSTCDN`, `SECRET_CDN`: Konfigurasi Content Delivery Network.
+- `SENTRY_DSN`: Data Source Name untuk monitoring error Sentry.
 
-HOSTMAIL=""
-SECRET_MAIL=""
+### Konfigurasi Redis & Lainnya
+- `REDIS_URL`: URL koneksi Redis (e.g., `redis://localhost:6379`).
+- `MORGAN_FORMAT`: Format log aplikasi (`dev`, `combined`, dll).
+- `NODE_ENV`: Mode lingkungan (`development` atau `production`).
 
-HOSTKHNZA=
-SECRET_KHNZA=""
-
-MORGAN_FORMAT="dev"
-# MORGAN_FORMAT="combined" || "common" || "dev" || "short" || "tiny"
-NODE_ENV="development"
-
-REDIS_URL="redis://localhost:6379"
-REDIS_URL_PORT="
-REDIS_PASSWORD=""
-
-```
-
-## Authors
+## Kontributor
 
 - [@fakhryhizballah](https://github.com/fakhryhizballah)
 
+---
 
-## Changelog
-
-### [2.6.3-security] - 2025-02-27
-#### Ditambahkan
-- Hanndel brute force OTP.
-- Menambahakan session.
-- Mendambahkan Modul Momen Js.
-- Menampilakan sesi login.
-
-#### Diperbaiki
-- Bug pada visit ID.
-- Optimasi kecepatan aplikasi.
-- Bug pada session menambhakan transaksi agar data sesi konsisten.
-
-#### Diubah
-- Menyiman IP dari proxy.
-- Membuat redis menjadi singleton pattern.
-- Tidak mengirim pesan pada untuk nomor yang tidak di kenal.
-
-
-### [2.6.4-security] - 2025-03-06
-#### Ditambahkan
-- UUID.
-- Halaman 404.
-
-#### Diubah
--  Visit_id ganti dengan UUID.
-
-### [2.7.0-pegawai] - 2025-03-10
-#### Ditambahkan
-- Modul Kepegawaian.
-- Data statistik pegawai.
-- Pembaruhuan data pegawai.
-
-### [2.7.1-pegawai] - 2025-03-12
-#### Diperbaiki
-- Bug pada perhitungan jumlah pegawi.
-- Bug pada data pegawai.
-
-#### Ditambahkan
-- Pagination pada data pegawai.
-- Pencarian data pegawai.
-- Filter data pegawai.
-
-### [2.7.2-pegawai] - 2025-04-10
-#### Ditambahkan
-- Notifikasi alamat cuti pegawai.
-
-
-### [2.7.3-pegawai] - 2025-04-10
-#### Ditambahkan
-- Pengaturan Jam Dinas.
-
-
-### [2.7.4-absen] - 2025-04-10
-#### Ditambahkan
-- Briging dengan finger print.
-
-#### Diubah
--  Pengaturan jam dinas.
-
-### [2.7.5-absen] - 2025-05-16
-#### Ditambahkan
-- Rekap Presensi Pegawai.
-
-#### Diubah
--  Order absen ubah no urtan jadwal dns.
+## Riwayat Perubahan (Changelog)
 
 ### [2.7.6-absen] - 2025-05-27
-#### Ditambahkan
-- Infromasi status LPKP
-- Model Baru
-#### Diubah
--  Rekap LPKP.
+- **Ditambahkan**: Informasi status LPKP dan model baru.
+- **Diubah**: Pembaruan pada rekap LPKP.
+
+### [2.7.5-absen] - 2025-05-16
+- **Ditambahkan**: Modul Rekap Presensi Pegawai.
+- **Diubah**: Perubahan urutan absen berdasarkan jadwal dinas.
+
+### [2.7.4-absen] - 2025-04-10
+- **Ditambahkan**: Bridging dengan mesin finger print.
+- **Diubah**: Pengaturan jam dinas.
+
+### [2.7.0 - 2.7.3] - Periode Maret-April 2025
+- Penambahan modul kepegawaian, statistik, dan pagination.
+- Perbaikan bug perhitungan pegawai dan filter pencarian.
+- Notifikasi alamat cuti pegawai dan pengaturan jam dinas.
+
+### [2.6.3 - 2.6.4] - Periode Feb-Maret 2025
+- Implementasi brute force handler pada OTP.
+- Penambahan UUID dan manajemen session login.
+- Optimasi kecepatan aplikasi dan penggunaan Redis singleton pattern.
