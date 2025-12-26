@@ -114,3 +114,30 @@ REDIS_PASSWORD=""
 ### [2.7.2-pegawai] - 2025-04-10
 #### Ditambahkan
 - Notifikasi alamat cuti pegawai.
+
+
+### [2.7.3-pegawai] - 2025-04-10
+#### Ditambahkan
+- Pengaturan Jam Dinas.
+
+
+### [2.7.4-absen] - 2025-04-10
+#### Ditambahkan
+- Briging dengan finger print.
+
+#### Diubah
+-  Pengaturan jam dinas.
+
+### [2.7.5-absen] - 2025-05-16
+#### Ditambahkan
+- Rekap Presensi Pegawai.
+
+#### Diubah
+-  Order absen ubah no urtan jadwal dns.
+
+### [2.7.6-absen] - 2025-05-27
+#### Ditambahkan
+- Infromasi status LPKP
+- Model Baru
+#### Diubah
+-  Rekap LPKP.

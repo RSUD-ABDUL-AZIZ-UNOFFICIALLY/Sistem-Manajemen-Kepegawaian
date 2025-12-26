@@ -1,0 +1,288 @@
+.file-upload-area {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .file-upload-area:hover {
+            border-color: #0056b3;
+            background: #e9ecef;
+        }
+        .file-upload-area.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .document-card {
+            transition: transform 0.2s;
+            border-left: 4px solid #007bff;
+        }
+        .document-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            font-size: 0.75rem;
+        }
+        .document-type-ijazah { border-left-color: #007bff; }
+        .document-type-str { border-left-color: #ffc107; }
+        .document-type-ktp { border-left-color: #6c757d; }
+        .document-type-npwp { border-left-color: #28a745; }
+        .document-type-cv { border-left-color: #dc3545; }
+        .document-type-sertifikat { border-left-color: #17a2b8; }
+        .document-type-foto { border-left-color: #e83e8c; }
+        .document-type-skck { border-left-color: #fd7e14; }
+        .document-type-kontrak { border-left-color: #6f42c1; }
+        .document-type-lainnya { border-left-color: #20c997; }
+        
+        .completeness-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .progress-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }.file-upload-area {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .file-upload-area:hover {
+            border-color: #0056b3;
+            background: #e9ecef;
+        }
+        .file-upload-area.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .document-card {
+            transition: transform 0.2s;
+            border-left: 4px solid #007bff;
+        }
+        .document-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            font-size: 0.75rem;
+        }
+        .document-type-ijazah { border-left-color: #007bff; }
+        .document-type-str { border-left-color: #ffc107; }
+        .document-type-ktp { border-left-color: #6c757d; }
+        .document-type-npwp { border-left-color: #28a745; }
+        .document-type-cv { border-left-color: #dc3545; }
+        .document-type-sertifikat { border-left-color: #17a2b8; }
+        .document-type-foto { border-left-color: #e83e8c; }
+        .document-type-skck { border-left-color: #fd7e14; }
+        .document-type-kontrak { border-left-color: #6f42c1; }
+        .document-type-lainnya { border-left-color: #20c997; }
+        
+        .completeness-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .progress-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }.file-upload-area {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        .file-upload-area:hover {
+            border-color: #0056b3;
+            background: #e9ecef;
+        }
+        .file-upload-area.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .document-card {
+            transition: transform 0.2s;
+        }
+        .document-card:hover {
+            transform: translateY(-2px);
+        }
+        .status-badge {
+            font-size: 0.75rem;
+        }
+        .preview-modal .modal-dialog {
+            max-width: 80%;
+        }.file-upload-area {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .file-upload-area:hover {
+            border-color: #0056b3;
+            background: #e9ecef;
+        }
+        .file-upload-area.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .document-card {
+            transition: transform 0.2s;
+            border-left: 4px solid #007bff;
+        }
+        .document-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            font-size: 0.75rem;
+        }
+        .document-type-ijazah { border-left-color: #007bff; }
+        .document-type-str { border-left-color: #ffc107; }
+        .document-type-ktp { border-left-color: #6c757d; }
+        .document-type-npwp { border-left-color: #28a745; }
+        .document-type-cv { border-left-color: #dc3545; }
+        .document-type-sertifikat { border-left-color: #17a2b8; }
+        .document-type-foto { border-left-color: #e83e8c; }
+        .document-type-skck { border-left-color: #fd7e14; }
+        .document-type-kontrak { border-left-color: #6f42c1; }
+        .document-type-lainnya { border-left-color: #20c997; }
+        
+        .completeness-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .progress-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }.file-upload-area {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .file-upload-area:hover {
+            border-color: #0056b3;
+            background: #e9ecef;
+        }
+        .file-upload-area.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .document-card {
+            transition: transform 0.2s;
+            border-left: 4px solid #007bff;
+        }
+        .document-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            font-size: 0.75rem;
+        }
+        .document-type-ijazah { border-left-color: #007bff; }
+        .document-type-str { border-left-color: #ffc107; }
+        .document-type-ktp { border-left-color: #6c757d; }
+        .document-type-npwp { border-left-color: #28a745; }
+        .document-type-cv { border-left-color: #dc3545; }
+        .document-type-sertifikat { border-left-color: #17a2b8; }
+        .document-type-foto { border-left-color: #e83e8c; }
+        .document-type-skck { border-left-color: #fd7e14; }
+        .document-type-kontrak { border-left-color: #6f42c1; }
+        .document-type-lainnya { border-left-color: #20c997; }
+        
+        .completeness-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .progress-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }

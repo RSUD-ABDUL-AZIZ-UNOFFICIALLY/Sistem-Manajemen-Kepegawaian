@@ -19,8 +19,12 @@ const server = http.createServer(app);
 const morgan = require('morgan');
 const maxAge = process.env.NODE_ENV == 'production' ? 10800 : 1;
 console.log("mode = " + process.env.NODE_ENV);
-const MORGAN_FORMAT = process.env.MORGAN_FORMAT || 'dev';
-app.use(morgan(MORGAN_FORMAT));
+// Buat token custom untuk IP dari header `x-real-ip`
+morgan.token('real-ip', (req) => req.headers['x-real-ip'] || req.ip);
+// Format custom: IP + method + url + status + response-time
+const customFormat = ':real-ip :method :url :status :response-time ms';
+app.use(morgan(customFormat));
+// app.use(morgan(MORGAN_FORMAT));
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));

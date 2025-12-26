@@ -9,7 +9,7 @@ module.exports = {
         try {
             const token = req.cookies.token;
             if (!token) { 
-                return res.redirect("/");
+                return res.redirect("/?redirect_url=" + req.originalUrl);
             }
             let userID = req.cookies.userID;
             if (!userID) {
@@ -31,7 +31,7 @@ module.exports = {
                 if (!getUser) {
                     await t.rollback();
                     res.clearCookie("token");
-                    return res.redirect("/");
+                    return res.redirect("/?redirect_url=" + req.originalUrl);
                 } else {
                     await req.cache.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
                     req.cache.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24);
@@ -48,7 +48,7 @@ module.exports = {
                     },
                     order: [["updatedAt", "DESC"]]
                 }, { transaction: t });
-                console.log(cek_session);
+                // console.log(cek_session);
                 if (!cek_session) {
                     console.log('err');
                     await Session.create({

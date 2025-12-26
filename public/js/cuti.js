@@ -68,7 +68,7 @@ $('#jnsCuti').change(async function () {
     $('#totalReservation').val('1');
     // $('#totalReservation').val('');
     let mindate
-    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan") {
+    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan" || jnsCuti.type_cuti == "Cuti Alasan Penting") {
         // mindate = moment().clone().startOf('week')
         mindate = moment().subtract(1, 'weeks').startOf('day')
         $('#lampiran').empty();
@@ -145,7 +145,7 @@ $('#Cuti').submit(function (event) {
     let jnsCuti = dataCuti.find(x => x.id == id);
 
     // let jnsCuti = dataCuti.find(x => x.id == id);
-    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan") {
+    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan" || jnsCuti.type_cuti == "Cuti Alasan Penting") {
         if ($('#inputSuratCuti').prop('files')[0] == undefined) {
             Swal.fire({
                 icon: 'error',
@@ -175,7 +175,7 @@ $('#Cuti').submit(function (event) {
             var form = new FormData();
             form.append("file", file, 'surat-cuti.pdf');
             var settings = {
-                url: "https://api.rsudaa.singkawangkota.go.id/api/cdn/upload/file",
+                url: "https://api.spairum.my.id/api/cdn/upload/file",
                 method: "POST",
                 timeout: 0,
                 headers: {
@@ -202,7 +202,7 @@ $('#Cuti').submit(function (event) {
             form.append("image", file, 'surat-cuti.' + fileType);
 
             let settings = {
-                url: "https://api.rsudaa.singkawangkota.go.id/api/cdn/upload/img",
+                url: "https://api.spairum.my.id/api/cdn/upload/img",
                 method: "POST",
                 timeout: 0,
                 headers: {

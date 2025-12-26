@@ -30,7 +30,10 @@ function bulan(month) {
 async function submit(status, tanggal, kirim) {
     let users = await User.findAll({
         where: {
-            status: status
+            status: status,
+            dep: {
+                [Op.notIn]: [47, 57]
+            },
         },
         attributes: ['nik', 'nama', 'email', 'JnsKel']
     })

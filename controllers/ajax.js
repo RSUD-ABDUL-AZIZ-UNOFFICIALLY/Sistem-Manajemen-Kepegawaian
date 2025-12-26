@@ -7,6 +7,7 @@ const {
   Atasan,
   Lpkp,
   Rekap,
+  Periode,
   Aprovement,
   Template,
   Departemen,
@@ -24,7 +25,7 @@ const {
 } = require("../models");
 const { Op } = require("sequelize");
 const fs = require("fs");
-const { convertdate, convertdatetime } = require("../helper");
+const { convertdate, convertdatetime, hitungTpp } = require("../helper");
 const { uploadImage } = require("../helper/upload");
 const { sendWa, sendGrub } = require("../helper/message");
 module.exports = {
@@ -164,6 +165,15 @@ module.exports = {
           data: null,
         });
       }
+      const urlLama = getFoto.url;
+
+      const urlBaru = urlLama.replace(
+        "https://api.rsudaa.singkawangkota.go.id",
+        "https://api.spairum.my.id"
+      );
+
+      getFoto.url = urlBaru;
+
       return res.status(200).json({
         error: false,
         message: "success",
@@ -525,6 +535,172 @@ module.exports = {
       data: pesan,
     });
   },
+  createReport2: async (req, res) => {
+    try {
+      let account = req.account;
+      let body = req.body;
+      let periode = body.monthly;
+      let formattedDate = periode.replace("-", ""); // Menghapus tanda hubung (-)
+      let ket = formattedDate + account.nik;
+      var dateParts = periode.split("-");
+      var year = parseInt(dateParts[0]);
+      var month = parseInt(dateParts[1]) - 1; // Mengurangi 1 karena indeks bulan dimulai dari 0
+
+      var lastDay = new Date(year, month + 1, 0).getDate();
+      var periodedate = periode + "-" + lastDay;
+
+      let dataLpkp = await Lpkp.findAll({
+        where: {
+          nik: account.nik,
+          tgl: {
+            [Op.startsWith]: periode,
+          },
+        },
+      });
+      let totaldataLpkp = 0;
+      for (let i = 0; i < dataLpkp.length; i++) {
+        totaldataLpkp += dataLpkp[i].waktu;
+      }
+      let workType = await Biodatas.findOne({
+        where: {
+          nik: account.nik,
+        },
+        attributes: ['jns_kerja']
+      });
+      let WorkDays = await Periode.findOne({
+        where: {
+          jnskerja: workType.dataValues.jns_kerja,
+          periode: {
+            [Op.startsWith]: periode,
+          },
+
+        },
+      });
+      let persentase = (totaldataLpkp / WorkDays.dataValues.workstime) * 100;
+      persentase = Math.round(persentase);
+      if (persentase > 100) {
+        persentase = 100;
+      }
+      let tpp = hitungTpp(persentase)
+      console.log(WorkDays);
+      console.log("persentase", persentase);
+      let pesan = "";
+      try {
+        let id = await Rekap.findOne({
+          where: {
+            ket: ket,
+          },
+        });
+        console.log(id);
+        if (id == null) {
+          let user = await User.findOne({
+            where: {
+              nik: account.nik,
+            },
+          });
+          let dep = await Departemen.findOne({
+            where: {
+              id: user.dep,
+            },
+          });
+          await Rekap.create({
+            nik: account.nik,
+            capaian: totaldataLpkp,
+            kategori: tpp[1],
+            tpp: tpp[0],
+            ket: ket,
+            periode: periodedate,
+            dep: dep.bidang,
+            jab: user.jab,
+          });
+          pesan = "Progress saved successfully";
+        } else {
+          await Rekap.update(
+            {
+              capaian: totaldataLpkp,
+              kategori: tpp[1],
+              tpp: tpp[0],
+            },
+            {
+              where: {
+                ket: ket,
+                nik: account.nik,
+              },
+            }
+          );
+          pesan = "Progress updated successfully";
+        }
+      } catch (error) {
+        // Jika terjadi kesalahan, rollback transaksi
+        console.error("Transaksi gagal:", error);
+      }
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: pesan,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error
+      });
+    }
+  },
+  getStatusReport2: async (req, res) => {
+    try {
+      let account = req.account;
+      let status, className;
+      let findRekap = await Rekap.findOne({
+        where: {
+          nik: account.nik,
+          periode: {
+            [Op.startsWith]: req.query.date,
+          },
+        },
+      });
+      if (findRekap == null) {
+        status = "Belum di Kirim";
+        className = 'bg-red';
+      } else {
+        let findApprove = await Aprovement.findOne({
+          where: {
+            nik: account.nik,
+            tglberkas: {
+              [Op.startsWith]: req.query.date,
+            },
+            status_aprove: "true",
+          }
+        });
+        if (findApprove == null) {
+          status = "Sudah di Kirim";
+          className = "bg-yellow";
+        } else {
+          status = "Sudah di Aprove";
+          className = "bg-teal";
+        }
+      }
+      let pesan = {
+        status: status,
+        className: className,
+      };
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: pesan,
+      });
+    }
+    catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error
+      });
+    }
+  },
   getReport: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
@@ -880,6 +1056,76 @@ module.exports = {
       });
     }
   },
+  getperiode: async (req, res) => {
+    let account = req.account;
+    let query = req.query;
+    try {
+      let workType = await Biodatas.findOne({
+        where: {
+          nik: account.nik,
+        },
+        attributes: ['jns_kerja']
+      });
+      if (!workType) {
+        return res.status(404).json({
+          error: true,
+          message: "Lengkapi biodata terlebih dahulu",
+        });
+      }
+      let WorkDays = await Periode.findOne({
+        where: {
+          jnskerja: workType.jns_kerja,
+          periode: {
+            [Op.startsWith]: query.date,
+          },
+
+        },
+      });
+      if (!WorkDays) {
+        return res.status(404).json({
+          error: true,
+          message: "Periode tidak ditemukan",
+        });
+      }
+      let dataLpkp = await Lpkp.findAll({
+        where: {
+          nik: account.nik,
+          tgl: {
+            [Op.startsWith]: query.date,
+          },
+        },
+      });
+
+      let totaldataLpkp = 0;
+      for (let i = 0; i < dataLpkp.length; i++) {
+        totaldataLpkp += dataLpkp[i].waktu;
+      }
+      WorkDays.dataValues.capaian = totaldataLpkp;
+      WorkDays.dataValues.wk = WorkDays.dataValues.workstime / WorkDays.dataValues.days;
+      let persentase = (WorkDays.dataValues.capaian / WorkDays.dataValues.workstime) * 100;
+      persentase = Math.round(persentase);
+      if (persentase > 100) {
+        persentase = 100;
+      }
+      let tpp = hitungTpp(persentase)
+
+      WorkDays.dataValues.persentase = persentase;
+      WorkDays.dataValues.tpp = tpp[0];
+      console.log(WorkDays);
+
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: WorkDays,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: "error",
+        data: error,
+      });
+    }
+  },
   createTemplate: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
@@ -892,8 +1138,9 @@ module.exports = {
     }
     try {
       body.nik = decoded.id;
-      console.log(body);
+      // console.log(body);
       let addTemplate = await Template.create(body);
+      req.cache.json.del(`SIMPEG:template:bynik:${decoded.id}`);
       return res.status(200).json({
         error: false,
         message: "success",
@@ -917,11 +1164,24 @@ module.exports = {
     let query = req.query;
     if (query.id == undefined) {
       try {
+        let cacheTemplate = await req.cache.json.get(`SIMPEG:template:bynik:${decoded.id}`, '$');
+        if (cacheTemplate) {
+          return res.status(200).json({
+            error: false,
+            message: "cached",
+            data: {
+              nama: decoded.nama,
+              template: cacheTemplate
+            },
+          });
+        }
         let getTemplate = await Template.findAll({
           where: {
             nik: decoded.id,
           },
         });
+        req.cache.json.set(`SIMPEG:template:bynik:${decoded.id}`, '$', getTemplate);
+        req.cache.expire(`SIMPEG:template:bynik:${decoded.id}`, 60 * 60 * 48);
         return res.status(200).json({
           error: false,
           message: "success",
@@ -931,6 +1191,7 @@ module.exports = {
           },
         });
       } catch (error) {
+        console.log(error);
         return res.status(500).json({
           error: true,
           message: "error",
@@ -939,6 +1200,17 @@ module.exports = {
       }
     } else {
       try {
+        let cacheTemplate = await req.cache.json.get(`SIMPEG:template:bynik:${decoded.id}`, {
+          path: [`$[?(@.id==${query.id})]`]  // Gunakan ID yang ingin dicari
+        });
+        // console.log(cacheTemplate);
+        if (cacheTemplate.length > 0 || cacheTemplate != null) {
+          return res.status(200).json({
+            error: false,
+            message: "cached",
+            data: cacheTemplate[0],
+          });
+        }
         let getTemplate = await Template.findOne({
           where: {
             nik: decoded.id,
@@ -970,6 +1242,7 @@ module.exports = {
           id: body.id,
         },
       });
+      req.cache.json.del(`SIMPEG:template:bynik:${decoded.id}`);
       return res.status(200).json({
         error: false,
         message: "success",
@@ -1136,7 +1409,7 @@ module.exports = {
         { transaction: t }
       );
       let urlLampiran = body.lampiran || "-";
-      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan") {
+      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan" || getJenisCuti.type_cuti == "Cuti Alasan Penting") {
         urlLampiran = body.lampiran
         await Cuti_lampiran.create(
           {
@@ -1282,7 +1555,7 @@ Lampiran          : ${urlLampiran}`
           status: "Menunggu",
         }, { transaction: t });
       let urlLampiran = lampiran || "-";
-      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan") {
+      if (getJenisCuti.type_cuti == "Cuti Sakit" || getJenisCuti.type_cuti == "Cuti Melahirkan" || getJenisCuti.type_cuti == "Cuti Alasan Penting") {
         urlLampiran = lampiran
         await Cuti_lampiran.create(
           {
@@ -1456,13 +1729,15 @@ Lampiran   : ${urlLampiran}`
   },
   getSisaCuti: async (req, res) => {
     let user = req.account;
+    let yearNow = new Date().getFullYear();
 
     let { type_cuti } = req.query;
     try {
       let data = await Ledger_cuti.findOne({
         where: {
           nik_user: user.nik,
-          type_cuti: type_cuti
+          type_cuti: type_cuti,
+          periode: yearNow,
         },
         attributes: ["sisa_cuti", "periode"],
         include: [
@@ -1829,6 +2104,7 @@ Lampiran   : ${urlLampiran}`
         let x = {
           nama: profil.nama,
           nik: profil.nik.toString().substring(0, 13) + "xxxx",
+          fullnik: profil.nik,
           nip: profil.nip.substring(0, 12) + "xxxx",
           fnik: profil.nik,
           jab: profil.jab,
@@ -2203,6 +2479,26 @@ Lampiran   : ${urlLampiran}`
       });
     }
 
-
   },
+  postDocument: async (req, res) => {
+    let { id } = req.body;
+    let params = req.params;
+    try {
+      // let document = await Document.findOne({
+      //   where: {
+      //     id: id
+      //   }
+      // });
+      return res.status(200).json({
+        error: false,
+        message: "success",
+        data: params
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+  }
 };

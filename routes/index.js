@@ -10,6 +10,7 @@ const complaint = require('../controllers/complaint');
 const { upload } = require('../middleware/upload');
 const seen = require('../controllers/seen');
 const presensi = require('../controllers/presensi');
+const dokumen = require('../controllers/dokumen');
 
 
 router.get('/',middleware.checkLogin, controller.login);
@@ -26,6 +27,7 @@ router.get('/helpdesk', middleware.login, controller.helpDesk);
 
 router.get('/profile', middleware.login, controller.profile);
 router.get('/account', middleware.login, controller.account);
+router.get('/document', middleware.login, controller.doc);
 
 router.get('/cuti', middleware.login, controller.cuti);
 router.get('/cuti/admin', middleware.login, controller.adminCuti);
@@ -33,6 +35,8 @@ router.get('/aprovecuti', middleware.login, controller.approvalcuti);
 router.get('/aprovecuti/admin', middleware.login, controller.leagercuti);
 
 router.get('/presensi', middleware.login, controller.presensi);
+router.get('/presensi/setJadwal', middleware.login, controller.setJadwal);
+router.get('/presensi/attendence', middleware.login, middleware.checkHakAkses('adminAttendence'), controller.attendence);
 router.get('/absen', middleware.login, controller.absensi);
 
 router.get('/logout', middleware.logout);
@@ -42,6 +46,7 @@ router.get('/kepegawaian', middleware.login, controller.pegawaiAdmin);
 router.get('/kepegawaian/:id', middleware.login, controller.dataAdmin);
 
 router.post('/api/send-otp', api.sendOtp);
+router.post('/api/mobile-otp', api.mobileOtp);
 router.post('/api/verify-otp', api.verifyOtp);
 router.get('/api/lastActivity', middleware.login, api.lastActivity);
 router.get('/api/simrs/userpas', middleware.login, api.getUserSimrs);
@@ -59,6 +64,8 @@ router.post('/api/progress', middleware.login, ajax.progress);
 router.get('/api/monthly', middleware.login, ajax.monthly);
 router.get('/api/monthly/score', middleware.login, ajax.getScore);
 router.post('/api/monthly', middleware.login, ajax.createReport);
+router.post('/api/v2/monthly', middleware.login, ajax.createReport2);
+router.get('/api/v2/monthly', middleware.login, ajax.getStatusReport2);
 router.get('/api/monthly/report', middleware.login, ajax.getReport);
 router.get('/api/monthly/activity', middleware.login, ajax.getActivity);
 router.post('/api/monthly/activity', middleware.login, ajax.updateActivity);
@@ -66,9 +73,15 @@ router.delete('/api/monthly/activity', middleware.login, ajax.deleteActivity);
 router.get('/api/monthly/signaute', middleware.login, ajax.getSignaute);
 router.get('/api/monthly/approvement', middleware.login, ajax.getApprovement);
 router.post('/api/monthly/approvement', middleware.login, ajax.signature);
+router.get('/api/monthly/periode', middleware.login, ajax.getperiode);
 router.get('/api/template', middleware.login, ajax.getTemplate);
 router.post('/api/template', middleware.login, ajax.createTemplate);
 router.delete('/api/template', middleware.login, ajax.deleteTemplate);
+
+router.post('/api/document/:id', middleware.login, dokumen.uploadDoc);
+router.get('/api/document/doc/all/', middleware.login, dokumen.getDocAll);
+router.delete('/api/document/:id', middleware.login, dokumen.deleteDoc);
+
 
 
 router.get('/api/cuti/jns', middleware.login, ajax.getJns_cuti);
@@ -110,18 +123,28 @@ router.get('/api/complaint/updateTiket', middleware.login, complaint.getUpdateTi
 // router.post('/api/complaint/grubtiket', middleware.login, complaint.updateTiket);
 
 router.get('/api/presensi/anggota', middleware.login, presensi.anggota);
+// router.get('/api/presensi/jamDns', middleware.login, presensi.jamDns);
 router.get('/api/presensi/departemen', middleware.login, presensi.departemen);
 router.get('/api/presensi/jnsdns', middleware.login, presensi.getTypeJadwal);
+router.post('/api/presensi/jnsdns', middleware.login, presensi.postTypeJadwal);
 router.post('/api/presensi/anggota', middleware.login, presensi.updateJadwal);
 router.post('/api/presensi/getlocation', middleware.login, presensi.getlocation);
 router.get('/api/presensi/jdldns', middleware.login, presensi.getjdlDNS);
+router.get('/api/presensi/jdldnsall', middleware.login, presensi.alljdlDNS);
 router.post('/api/presensi/absen', middleware.login, presensi.absen);
 router.get('/api/presensi/riwayat', middleware.login, presensi.riwayat);
+router.get('/api/presensi/recap', middleware.login, presensi.recap);
+router.get('/api/presensi/recap/:nik', presensi.recapbyNik);
+router.get('/api/presensi/attendance', middleware.login, presensi.attendance);
+router.get('/api/presensi/riwayat/:nik', presensi.riwayatByNik);
+router.post('/api/presensi/backdate/:nik', middleware.login, middleware.checkHakAkses('adminAttendence'), presensi.backdate);
 
 // router.get('/api/presensi/bos', middleware.login, presensi.jadwal);
 
 router.get('/api/seen', seen.update);
 router.get('/api/seen/online', seen.online);
 router.get('/api/seen/last_seen', seen.last_seen);
+
+router.get('/api/health', api.health);
 
 module.exports = router;

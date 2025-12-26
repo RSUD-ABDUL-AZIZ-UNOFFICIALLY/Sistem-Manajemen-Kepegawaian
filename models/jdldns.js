@@ -16,6 +16,23 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'typeDns',
         as: 'dnsType'
       })
+      Jdldns.hasOne(models.Absen, {
+        foreignKey: 'nik',
+        sourceKey: 'nik',
+        as: 'absen',
+        constraints: false //
+      })
+      Jdldns.hasOne(models.Maps_Absen, {
+        foreignKey: 'nik',
+        sourceKey: 'nik',
+        as: 'id_finger'
+      })
+      Jdldns.hasOne(models.User, {
+        foreignKey: 'nik',
+        sourceKey: 'nik',
+        as: 'user'
+      })
+
     }
   }
   Jdldns.init({

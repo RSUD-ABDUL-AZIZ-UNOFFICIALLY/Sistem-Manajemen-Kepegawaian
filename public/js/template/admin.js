@@ -1,7 +1,6 @@
 
 const cookieName = "status";
 const cookieExists = getCookie(cookieName);
-console.log(cookieExists);
 if (cookieExists) {
   // get the cookie value
   const cookieValue = document.cookie
@@ -72,7 +71,6 @@ function getIP() {
   });
 }
 
-console.log(window.location.pathname);
 const cookieTracker = getCookie('tracker');
 if (!cookieTracker) {
   // document.cookie = "tracker=true; max-age=20; path=/";

@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     start_max: DataTypes.TIME,
     end_min: DataTypes.TIME,
     end_max: DataTypes.TIME,
-    state: DataTypes.INTEGER
+    state: DataTypes.INTEGER,
+    hours: DataTypes.DOUBLE
   }, {
     sequelize,
     modelName: 'Jnsdns',

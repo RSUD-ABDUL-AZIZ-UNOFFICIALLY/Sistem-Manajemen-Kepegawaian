@@ -5,6 +5,9 @@
     <%- include('../template/head'); %>
         <!-- fullCalendar -->
     <link rel="stylesheet" href="/asset/css/presensi/presensi.css">
+<script src="https://unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js"></script>
+<link href="https://unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -31,9 +34,9 @@
                                         <br>
                                         <hr>
                                         <div class="form-group">
-                                            <label for="periode">Bidang</label>
+                                            <label for="periode">Periode</label>
                                             <input type="month" class="form-control" id="periode" name="start"
-                                                min="2023-03" value="" />
+                                                min="2025-05" max="2026-02" value="" />
                                         </div>
                                         <div class="form-group">
                                             <label for="departemen">Bidang</label>
@@ -41,35 +44,63 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body">
-                                        <div class="table-container">
-                                            <table class="table table-bordered border-primary table-responsive"
-                                                id="tabel-jadwal">
-                                                <thead>
-                                                    <tr>
-
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                    </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
-                                    </div>
-
+                                </div>
+                            </div>
+                            <!-- /.container-fluid -->
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><%= page %></h3>
+                                        <button type="button" id="download-xlsx" class="btn btn-success float-right"><i class="fas fa-file-excel"></i> Export ke Excel</button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="tableJadwaldns"></div>
+                                </div>
+                                <!-- /.card-body -->
                                 </div>
                             </div>
                             <!-- /.container-fluid -->
                         </section>
 
                         <!-- /.content -->
+                           <section class="content">
+                            <div class="container-fluid">
+                                <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Daftar Kehadiran</h3>
+                                    <br>
+                                    <hr>
+                                    <!-- Form Filter -->
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                            <label for="tanggalAwal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Awal</label>
+                                            <input type="date" id="tanggalAwal" name="tanggalAwal"
+                                                    class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm px-3 py-2">
+                                            </div>
+                                            <div>
+                                            <label for="tanggalAkhir" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Akhir</label>
+                                            <input type="date" id="tanggalAkhir" name="tanggalAkhir"
+                                                    class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm px-3 py-2">
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-right">
+                                            <button type="button" onclick="cari()" id="cariTanggal"
+                                                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            <i class="fas fa-search"></i> Cari
+                                            </button>
+                                        </div>
+                            
+                                </div>
+                                <div class="card-body">
+                                  <div class="space-y-4" id="listKehadiran">
+                                  </div>
+                                </div>
+                                <!-- /.card-body -->
+                                </div>
+                            </div>
+                            <!-- /.container-fluid -->
+                        </section>
                 </div>
                 <!-- /.content-wrapper -->
                 <footer class="main-footer"></footer>
@@ -80,8 +111,10 @@
             <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
             <!-- fullCalendar -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
-            <script src="/asset/js/fullcalendar/presensi.js"></script>
+                   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+            <script src="/asset/js/fullcalendar/tableJadwaldns.js"></script>
             <script src="/asset/js/fullcalendar/edit.js"></script>
+            <script src="/asset/js/fullcalendar/kehadiran_v01.js"></script>
 
 </body>
 

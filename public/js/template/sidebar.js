@@ -1,15 +1,40 @@
 async function profilepic() {
     let a = sessionStorage.getItem("img");
-    null == a ? await $.ajax({
-        url: "/api/getPic",
-        method: "GET",
-        success: function (a) {
-            a && (sessionStorage.setItem("img", a.data.url), $("#imgUser").attr("src", a.data.url));
-        },
-        error: function (a) {
-            console.log(a);
+    if (a === null) {
+        try {
+            const res = await fetch("/api/getPic", { method: "GET" });
+            if (!res.ok) throw new Error("Network response was not ok");
+
+            const data = await res.json();
+
+            if (data && data.data && data.data.url) {
+                sessionStorage.setItem("img", data.data.url);
+                let img = document.getElementById("imgUser").src = data.data.url + "?w=500&h=500";
+                let fetchImg = await fetch(data.data.url + "?w=500&h=500");
+                let blob = await fetchImg.blob();
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = function () {
+                        sessionStorage.setItem("imgProfile", reader.result); // simpan base64
+                        console.log("✅ Gambar tersimpan di localStorage");
+                        resolve();
+                    };
+                    reader.readAsDataURL(blob);
+                });
+            }
+        } catch (err) {
+            console.error("Fetch error:", err);
         }
-    }) : $("#imgUser").attr("src", a);
+    } else {
+        let dataURL = sessionStorage.getItem("imgProfile");
+        console.log(dataURL);
+        if (!dataURL) {
+            document.getElementById("imgUser").src = a + "?w=500&h=500";
+        } else {
+            let img = document.getElementById("imgUser").src = dataURL;
+        }
+
+    }
 }
 
 function queryselec() {
@@ -17,7 +42,7 @@ function queryselec() {
     let e = document.querySelectorAll(".nav-link");
     let n = e.length;
     for (let l = 0; l < n; l++) e[l].href === a && (e[l].className = "nav-link active");
-    (a.includes("profile") || a.includes("account")) && $("#documen").addClass("menu-open"),
+    (a.includes("profile") || a.includes("account") || a.includes("document")) && $("#documen").addClass("menu-open"),
         (a.includes("cuti") || a.includes("aprovecuti")) && $("#cuti").addClass("menu-open"),
         (a.includes("daily") || a.includes("approvement") || a.includes("monthly") || a.includes("Report")) && $("#laporan").addClass("menu-open"),
         (a.includes("helpdeskadmin") || a.includes("contact")) && $("#admin").addClass("menu-open"),
@@ -46,6 +71,7 @@ function menuAkses() {
     let v = $('<li class="nav-item">  <a href="/kepegawaian" class="nav-link"><i class="far fa-solid fa-user-nurse nav-icon"></i><p>Admin kepegawaian</p></a></li>');
     let u = $('<li class="nav-item">  <a href="/aprovecuti/admin" class="nav-link"><i class="far fa-solid fa-book-bookmark nav-icon"></i><p>Recapitulasi Cuti</p></a></li>');
     let present = $('<li class="nav-item"><a href="/presensi" class="nav-link"><i class="fa-solid fa-person-chalkboard nav-icon"></i><p>Jadwal Absen</p></a></li>');
+    let att = $('<li class="nav-item"><a href="/presensi/attendence" class="nav-link"><i class="fa-solid fa-calendar-check nav-icon"></i><p>Attendence</p></a></li>');
     let simrs = $('<li class="nav-item" id="simrs" name="simrs"><a href="#" class="nav-link"><i class="nav-icon fa-regular fa-hospital"></i><p>Menu simrs<i class="right fas fa-angle-left"></i></p></a><ul class="nav nav-treeview"id="ul_simrs" name="ul_simrs" ></ul></li>');
     let rm = $('<li class="nav-item">  <a href="/simrs/regis" class="nav-link"><i class="far fa-solid fa-hospital-user nav-icon"></i><p>Registrasi Pasien</p></a></li>');
     1 == a[0].bos && ($("#cuti").append(e),
@@ -63,6 +89,7 @@ function menuAkses() {
         t.includes("rm") && $("#ul_simrs").append(rm),
         $("#navbar").append('<li class="nav-item" id="helpdesk" name="helpdesk">    <a href="/helpdesk" class="nav-link">        <i class="fa-solid fa-bug text-warning nav-icon"></i>        <p class="text">Helpdesk</p>    </a></li>'),
         $("#navbar").append('<li class="nav-item">    <a href="/logout" class="nav-link">        <i class="fa-solid fa-right-from-bracket text-danger nav-icon"></i>        <p class="text">Logout</p>    </a></li>    ');
+    t.includes('adminAttendence') && $("#ul_absen").append(att);
 }
 
 profilepic(), cekElemnet();

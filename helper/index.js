@@ -77,10 +77,96 @@ function toRoman(num) {
   return result;
 }
 
+function formatDateToLocalYMD(date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function hitungMenitTerlambat(jam, start_max) {
+  const toDate = (timeStr) => new Date(`1970-01-01T${timeStr}Z`);
+  const time = toDate(jam);
+  const max = toDate(start_max);
+  const diffMs = time - max;
+
+  if (diffMs <= 0) {
+    return 0; // Tidak terlambat
+  }
+  return Math.floor(diffMs / 60000); // Konversi ms ke menit
+}
+
+function hitungCepatPulang(jam, end_min) {
+  const toDate = (timeStr) => new Date(`1970-01-01T${timeStr}Z`);
+
+  const time = toDate(jam);
+  const min = toDate(end_min);
+
+  const diffMs = min - time;
+
+  if (diffMs <= 0) {
+    return 0; // Tidak cepat pulang
+  }
+
+  return Math.floor(diffMs / 60000); // Konversi ms ke menit
+}
+function checkAttendance(jam, start_min, start_max) {
+  const toDate = (timeStr) => new Date(`1970-01-01T${timeStr}Z`);
+
+  const time = toDate(jam);
+  const min = toDate(start_min);
+  const max = toDate(start_max);
+
+  if (time < min) {
+    return 'Masuk Cepat';
+  } else if (time >= min && time <= max) {
+    return 'Masuk Tepat Waktu';
+  } else {
+    return 'Masuk Terlambat';
+  }
+}
+
+function checkPulang(jam_pulang, end_min, end_max) {
+  const toDate = (timeStr) => new Date(`1970-01-01T${timeStr}Z`);
+
+  const time = toDate(jam_pulang);
+  const min = toDate(end_min);
+  const max = toDate(end_max);
+
+  if (time < min) {
+    return 'Pulang Cepat';
+  } else if (time >= min && time <= max) {
+    return 'Pulang Tepat Waktu';
+  } else {
+    return 'Pulang Terlambat';
+  }
+}
+function hitungTpp(persen) {
+  if (persen >= 100) {
+    return [100, 'BAIK'];
+  } else if (persen > 94) {
+    return [90, 'CUKUP'];
+  } else if (persen > 88) {
+    return [80, 'KURANG'];
+  } else if (persen > 82) {
+    return [70, 'WKE MINIMAL TIDAK TERPENUHI'];
+  } else if (persen > 76) {
+    return [60, 'WKE MINIMAL TIDAK TERPENUHI'];
+  } else {
+    return [0, 'WKE MINIMAL TIDAK TERPENUHI'];
+  }
+}
+
 module.exports = {
     convertdate,
     convertdatetime,
   generateUID,
   generateDelay,
-  toRoman
+  toRoman,
+  formatDateToLocalYMD,
+  hitungMenitTerlambat,
+  hitungCepatPulang,
+  checkAttendance,
+  checkPulang,
+  hitungTpp
 }

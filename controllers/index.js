@@ -2,11 +2,13 @@ const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET_KEY;
 const { User, Departemen, Atasan, Lpkp, Tiketgroup } = require("../models");
 const { Op } = require("sequelize");
+const admin = process.env.PHONE_NUMBER || "628123456789";
 
 module.exports = {
   login: (req, res) => {
     let data = {
       title: "login | SIMPEG",
+      admin: admin
     };
     res.render("login", data);
   },
@@ -62,6 +64,17 @@ module.exports = {
       token: decoded,
     };
     res.render("account", data);
+  },
+  doc: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "document   Pegawai | SIMPEG",
+      page: "Document Pegawai",
+      token: decoded,
+      csrf: token
+    };
+    res.render("document", data);
   },
   daily: (req, res) => {
     let token = req.cookies.token;
@@ -339,6 +352,16 @@ module.exports = {
     };
     res.render("presensi/jadwal", data);
   },
+  setJadwal: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "presensi | SIMPEG",
+      page: "Jadwal jam presensi",
+      token: decoded,
+    };
+    res.render("presensi/setJadwal", data);
+  },
   absensi: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
@@ -347,6 +370,16 @@ module.exports = {
       page: "Absensi",
       token: decoded,
     };
-    res.render("presensi/absen", data);
-  }
+    res.render("presensi/riwayat", data);
+  },
+  attendence: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "atendence | SIMPEG",
+      page: "Atendence",
+      token: decoded,
+    };
+    res.render("presensi/attendence", data);
+  },
 };
