@@ -86,8 +86,8 @@ $('#jnsCuti').change(async function () {
     $('#reservation').daterangepicker({
         // opens: 'left',
         // minDate: mindate,
-        minDate: moment('2025-01-01', 'YYYY-MM-DD'),
-        maxDate: moment('2025-12-31', 'YYYY-MM-DD'),
+        minDate: moment('2026-01-01', 'YYYY-MM-DD'),
+        maxDate: moment('2026-12-31', 'YYYY-MM-DD'),
         singleDatePicker: false,
         autoApply: false,
         autoUpdateInput: true,
