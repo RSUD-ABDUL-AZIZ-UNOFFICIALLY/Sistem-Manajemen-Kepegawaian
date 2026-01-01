@@ -1290,17 +1290,39 @@ module.exports = {
         where: {
           nik: decoded.id,
         },
-        attributes: ["status"],
+        attributes: ["status", "JnsKel"],
       });
       let getJenisCuti = await Jns_cuti.findAll({
         where: {
           status: user.status,
         },
       });
+      let bio = await Biodatas.findOne({
+        where: {
+          nik: decoded.id,
+        },
+        attributes: ["jns_kerja"],
+      });
+      if (bio == null) {
+        return res.status(404).json({
+          error: true,
+          message: "Biodata belum diisi",
+        });
+      }
+      let filtered = getJenisCuti
+      if (user.JnsKel == "Laki-laki") {
+        filtered = getJenisCuti.filter(cuti => cuti.type_cuti !== "Cuti Melahirkan");
+      }
+      if (user.status == "PPPK") {
+        filtered = filtered.filter(cuti => cuti.type_cuti !== "Cuti Alasan Penting");
+      }
+      if (bio.jns_kerja == "5 Hari kerja" || bio.jns_kerja == "6 Hari kerja") {
+        filtered = filtered.filter(cuti => cuti.type_cuti !== "Cuti Bersama");
+      }
       return res.status(200).json({
         error: false,
         message: "success",
-        data: getJenisCuti,
+        data: filtered
       });
     } catch (error) {
       return res.status(500).json({
