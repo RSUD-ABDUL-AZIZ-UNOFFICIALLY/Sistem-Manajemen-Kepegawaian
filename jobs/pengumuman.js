@@ -4,6 +4,7 @@ const { Op } = require("sequelize");
 const readline = require('node:readline');
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
+const { sendWa } = require('../helper/message');
 
 const secretKey = process.env.SECRET_MAIL;
 const payload = {
@@ -35,7 +36,7 @@ async function submit(status, tanggal, kirim) {
                 [Op.notIn]: [47, 57]
             },
         },
-        attributes: ['nik', 'nama', 'email', 'JnsKel']
+        attributes: ['nik', 'nama', 'email', 'wa', 'JnsKel']
     })
     console.log(tanggal)
     let rekap = await Rekap.findAll({
@@ -65,7 +66,7 @@ async function submit(status, tanggal, kirim) {
             console.log(users[index].nama + ' ' + users[index].nik + ' ' + users[index].email)
             if (kirim == "kirim") {
                 try {
-                    await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel)
+                    await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel, users[index].wa)
                     console.log('kirim email')
                 } catch (error) {
                     console.log("error kirim email")
@@ -82,7 +83,7 @@ async function submit(status, tanggal, kirim) {
 
 
 
-async function kirimEmailLaporan(nama, email, month, JnsKel) {
+async function kirimEmailLaporan(nama, email, month, JnsKel, wa) {
     let token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
     let date = new Date().toISOString().slice(0, 10);
 
@@ -114,7 +115,17 @@ async function kirimEmailLaporan(nama, email, month, JnsKel) {
         },
         data: data,
     };
-    return await axios.request(config)
+    let pesan = `*Yth. ${nama}*,\n\nMohon bantuannya untuk segera mengirim *LPKP bulan ${month}* di SIMPEG RSUD dr. Abdul Aziz.\nPaling lambat tanggal *${tanggal} jam 20.30 WIB*.\nKalau belum terkirim sampai batas waktu tersebut, *TPP bisa dipotong sampai 60%.*\nTerima kasih 🙏`;
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    let dataWa = JSON.stringify({
+        message: pesan,
+        telp: wa
+    });
+    console.log(dataWa);
+    let responseWa = await sendWa(dataWa)
+    console.log(responseWa);
+    // return await axios.request(config)
 }
 // console.log(bulan('2021-08'))
 // kirimEmailLaporan('Lady Cleophila Mardhatillah', 'falehry88@gmail.com', bulan('2023-08'), 'Perempuan')

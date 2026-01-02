@@ -19,7 +19,7 @@ const {
     Hotspot,
     Instalasi
 } = require("../models");
-const { Op, or } = require("sequelize");
+const { Op } = require("sequelize");
 
 async function approval(nik, id_cuti, periode) {
     let t = await sequelize.transaction();
@@ -139,30 +139,43 @@ async function approval(nik, id_cuti, periode) {
     }
 
 }
-// approval("6172017001950001", 1260, 2024);
+// approval("6172017112960001", 12302, 2025);
 
 async function findBelumDiApprove() {
     let dataApproval = await Cuti_approval.findAll({
         where: {
             status: "Menunggu",
             createdAt: {
-                [Op.startsWith]: "2024",
+                [Op.startsWith]: "2025",
             },
         },
-        // include: [
-        //     {
-        //         model: Cuti,
-        //         as: "cuti",
-        //     },
-        //     {
-        //         model: User,
-        //         as: "atasan",
-        //     },
-        // ],
+        include: [
+            {
+                model: Cuti,
+                as: "data_cuti",
+                include: [
+                    {
+                        model: Jns_cuti,
+                        as: "jenis_cuti",
+                        attributes: ["type_cuti"],
+                    },
+                    {
+                        model: User,
+                        as: "user",
+                        attributes: ["nama", "status", "jab"],
+                    },
+                ]
+            },
+            {
+                model: User,
+                as: "atasan",
+            },
+        ],
     });
     for (let e of dataApproval) {
-        console.log(e.dataValues.nik, e.dataValues.id_cuti);
-        await approval(e.dataValues.nik, e.dataValues.id_cuti, 2025);
+        console.log(e.dataValues.data_cuti.nik, e.dataValues.data_cuti.user.nama, e.dataValues.data_cuti.user.status, e.dataValues.data_cuti.jenis_cuti.type_cuti, e.dataValues.data_cuti.jumlah, "hari", "id:", e.dataValues.id_cuti);
+        // console.log(e.dataValues);
+        // await approval(e.dataValues.nik, e.dataValues.id_cuti, 2025);
     }
     console.log(dataApproval.length);
     return dataApproval;

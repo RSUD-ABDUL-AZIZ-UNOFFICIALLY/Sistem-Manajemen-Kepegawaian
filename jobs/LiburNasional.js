@@ -1,19 +1,53 @@
-const { Absen, Dump_Absen, Mesin_Absen, Maps_Absen, Jdldns, Jnsdns, sequelize } = require("../models");
-const { Op, where } = require("sequelize");
+const { Absen, User, Dump_Absen, Mesin_Absen, Maps_Absen, Jdldns, Jnsdns, sequelize } = require("../models");
+const { Op } = require("sequelize");
 
-async function LiburNasional(nik, date, typeDns) {
-// let updateJdl = await Jdldns.update({
-//     status: 0
-// }, {
-//     where: {
-//         [Op.and]: [
-//             { status: 1 },
-//             { tgl: { [Op.lte]: new Date() } }
-//         ]
-//     }
-// })
+async function LiburNasional(dep, date, typeDns) {
+    let t = await sequelize.transaction();
+
+
+    try {
+        let nikUsers = await User.findAll({
+            attributes: ['nik', 'dep'],
+            where: { dep: { [Op.in]: dep } }
+        });
+        let setJadwalUser = [];
+        for (let u of nikUsers) {
+            let nik = u.dataValues.nik;
+            let departemen = u.dataValues.dep;
+            // console.log("nik", nik);
+            for (let d of date) {
+                let jadwal = {
+                    nik: nik,
+                    typeDns: typeDns + '-' + departemen,
+                    date: d
+                }
+                setJadwalUser.push(jadwal);
+                await Jdldns.update({
+                    typeDns: typeDns + '-' + departemen
+                }, {
+                    where: {
+                        nik: nik,
+                        date: d
+                    },
+                    transaction: t
+                })
+
+            }
+        }
+        await t.commit();
+    } catch (error) {
+        console.error("error", error);
+        await t.rollback();
+
+    }
+
 }
-// LiburNasional([], [], ['Senin-Kamis']);
+// LiburNasional([2, 3, 4, 5, 6, 7, 8, 10, 12, 28, 29, 34, 38, 43, 45, 48], ['2025-06-01', '2025-06-06', '2025-06-27'], 'Libur');
+// LiburNasional([2, 3, 4, 5, 6, 7, 8, 10, 12, 28, 29, 34, 38, 43, 45, 48], ["2025-06-09"], 'CB');
+// LiburNasional([2, 3, 4, 5, 6, 7, 8, 10, 12, 28, 29, 34, 38, 43, 45, 48], ["2025-06-09"], 'CB');
+// LiburNasional([2, 3, 4, 5, 6, 7, 8, 10, 12, 28, 29, 34, 38, 43, 45, 48], ["2025-08-18"], 'CB');
+// LiburNasional([2, 3, 4, 5, 6, 7, 8, 10, 12, 28, 29, 34, 38, 43, 45, 48], ["2026-06-16"], 'Libur');
+// LiburNasional([2, 3, 4, 5, 6, 7, 8, 10, 12, 28, 29, 34, 38, 43, 45, 48], ["2026-01-01"], 'Libur');
 
 async function pindah(niks, dates, typeDns) {
 
