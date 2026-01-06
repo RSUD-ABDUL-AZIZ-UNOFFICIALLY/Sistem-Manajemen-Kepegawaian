@@ -89,6 +89,15 @@ $('#send-otp').on('click', function () {
     setTimeout(function () {
       $('button').prop('disabled', false); // Mengaktifkan tombol setelah 30 detik
     }, 30000);
+  fetch("/api/mobile-otp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      phone: phone,
+    }),
+  });
     swal.fire({
       title: 'Sedang mengirim OTP',
       allowOutsideClick: false,
