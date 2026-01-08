@@ -2373,7 +2373,7 @@ Lampiran   : ${urlLampiran}`
         bidang: item.departemen?.bidang || null,
       }));
       result.sort((a, b) => {
-        const order = ['IVe', 'IVd', 'IVc', 'IVb', 'IVa', 'IIId', 'IIIc', 'IIIb', 'IIIa', 'IId', 'IIc', 'IIb', 'IIa', 'XI', 'X', 'IX', 'VIII', 'VII', 'VI', 'V', 'IV', '-'];
+        const order = ['IVe', 'IVd', 'IVc', 'IVb', 'IVa', 'IIId', 'IIIc', 'IIIb', 'IIIa', 'IId', 'IIc', 'IIb', 'IIa', 'XI', 'X', 'IX', 'VIII', 'VII', 'VI', 'V', 'IV', '-', 'PPPK'];
         const aIndex = order.indexOf(a.pangkat);
         const bIndex = order.indexOf(b.pangkat);
         if (aIndex === -1 && bIndex === -1) {
