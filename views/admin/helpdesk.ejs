@@ -3,6 +3,7 @@
 
 <head>
   <%- include('../template/head'); %>
+  <link rel="stylesheet" href="/asset/css/index.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -21,17 +22,17 @@
             <!-- /.content-header -->
 
             <!-- Main content -->
-            <section class="content">
-              <div class="container-fluid">
-                <div class="card card-primary">
-                  <div class="card-header">
-                    <h3 class="card-title">Riwayat Pengaduan</h3>
+            <section class="p-6">
+              <div class="w-full">
+                <div class="bg-white border border-gray-200 rounded-lg shadow-md">
+                  <div class="bg-blue-600 text-white px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                    <h3 class="text-xl font-semibold">Riwayat Pengaduan</h3>
                   </div>
                   <!-- /.card-header -->
-                    <div class="card-body">
-                      <input type="month" class="form-control" id="riwayatDate" name="start" min="2023-03" />
+                    <div class="p-6">
+                      <input type="month" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="riwayatDate" name="start" min="2023-03" />
                       <br>
-                  <div class="card-body" id="list-tiket">
+                  <div class="mt-4" id="list-tiket">
                   </div>
                   
                     <!-- /.card-body -->

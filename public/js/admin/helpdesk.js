@@ -41,25 +41,64 @@ function getTabel(newDateValue) {
           let lastStatus = element.Tikets[element.Tikets.length - 1];
           lisTiket.append(
             `
-            <ul class="list-unstyled mb-0">
-                        <li class="p-2 border-bottom">
-                          <a href="/api/complaint/updateTiket?id=${element.noTiket}" class="d-flex justify-content-between">
-                            <div class="d-flex flex-row">
-                              <img src="${element.pic.url}" alt="avatar ${element.nama}" 
-                                class="rounded-circle d-flex img-profile align-self-center me-3 shadow-1-strong">
-                              <div class="pt-1">
-                                <p class="fw-bold mb-0">${element.nama}</p>
-                                <p class="small text-muted">${element.kendala}</p>
-                                <p class="small text-muted mb-2">ID Tiket : ${element.noTiket}</p>
-                              </div>
-                            </div>
-                            <div class="pt-1">
-                              <p class="small text-muted mb-1">${dateWib}</p>
-                              <span class="badge bg-danger float-end">${lastStatus.status}</span>
-                            </div>
-                          </a>
-                        </li>
-                      </ul>
+            <div class="mb-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+              <a href="/api/complaint/updateTiket?id=${element.noTiket}" class="block p-4 md:p-5 hover:bg-gray-50">
+                <!-- Mobile Layout -->
+                <div class="md:hidden">
+                  <div class="flex items-center gap-3 mb-3">
+                    <img 
+                      src="${element.pic.url}" 
+                      alt="avatar ${element.nama}"
+                      class="w-12 h-12 rounded-full object-cover border-2 border-blue-200 shadow shrink-0"
+                    >
+                    <div class="flex-1 min-w-0">
+                      <h3 class="font-bold text-gray-900 text-base truncate">${element.nama}</h3>
+                      <p class="text-xs text-gray-500">Tiket: ${element.noTiket}</p>
+                    </div>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-3 line-clamp-2">${element.kendala}</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-500">${dateWib}</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${lastStatus.status === 'Selesai' ? 'bg-green-100 text-green-800' :
+              lastStatus.status === 'Proses' ? 'bg-blue-100 text-blue-800' :
+                lastStatus.status === 'Tutup' ? 'bg-gray-100 text-gray-800' :
+                  'bg-red-100 text-red-800'
+            }">
+                      ${lastStatus.status}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Desktop Layout -->
+                <div class="hidden md:flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <!-- Left Section: User Info -->
+                  <div class="flex items-center gap-4 flex-1">
+                    <img 
+                      src="${element.pic.url}" 
+                      alt="avatar ${element.nama}"
+                        class="w-14 h-14 rounded-full object-cover border-2 border-blue-200 shadow-md shrink-0"
+                    >
+                    <div class="flex-1 min-w-0">
+                      <h3 class="font-bold text-gray-900 text-lg truncate">${element.nama}</h3>
+                      <p class="text-sm text-gray-600 mt-1 line-clamp-1">${element.kendala}</p>
+                      <p class="text-xs text-gray-500 mt-2 font-mono bg-gray-100 px-2 py-1 rounded inline-block">Tiket: ${element.noTiket}</p>
+                    </div>
+                  </div>
+
+                  <!-- Right Section: Date & Status -->
+                  <div class="flex flex-col items-end gap-3 md:border-l md:border-gray-200 md:pl-4">
+                    <span class="text-xs text-gray-500 font-medium">${dateWib}</span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${lastStatus.status === 'Selesai' ? 'bg-green-100 text-green-800' :
+              lastStatus.status === 'Proses' ? 'bg-blue-100 text-blue-800' :
+                lastStatus.status === 'Tutup' ? 'bg-gray-100 text-gray-800' :
+                  'bg-red-100 text-red-800'
+            }">
+                      ${lastStatus.status}
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </div>
             `
           );
 

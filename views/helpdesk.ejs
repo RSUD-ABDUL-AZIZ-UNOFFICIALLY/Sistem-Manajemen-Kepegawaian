@@ -3,6 +3,7 @@
 
 <head>
   <%- include('template/head'); %>
+  <link rel="stylesheet" href="/asset/css/index.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -21,99 +22,107 @@
             <!-- /.content-header -->
 
             <!-- Main content -->
-            <section class="content">
-              <div class="container-fluid">
-                <div class="card card-primary">
-                  <div class="card-header">
-                    <h3 class="card-title">Dukungan TI</h3>
+            <section class="p-4 md:p-6 bg-gray-50 min-h-screen">
+              <div class="max-w-6xl mx-auto space-y-6">
+                <!-- Form Section: Dukungan TI -->
+                <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                  <div class="bg-blue-400 text-white px-4 md:px-6 py-4">
+                    <h3 class="text-lg md:text-xl font-bold">Dukungan TI</h3>
                   </div>
-                  <!-- /.card-header -->
-                  <!-- form start -->
-                  <form id="lapor" class="form-horizontal">
-                    <div class="card-body">
-                      <div class="form-group">
-                        <label for="InputActivities">Rincian kendala atau masalah yang dihadapi</label>
-                        <textarea class="form-control" rows="3" id="kendala"
-                          placeholder="contoh 'Printer x macet' " required autocomplete="on"></textarea>
-                      </div>
-                      <div class="form-group">
-                        <label for="InputVolume">Unit Keja saya</label>
-                        <select class="form-control select2" id="departemen">
-                          <option selected="selected" value='<%= user.dep%>'>
-                            <%= user.departemen.bidang%>
-                          </option>
-                          <% for(let i=0; i<departemen.length; i++) { %>
-                            <option value='<%= departemen[i].id %>'>
-                              <%= departemen[i].bidang %>
-                            </option>
-                            <% } %>
-                        </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="InputVolume">Di tujukan kepada</label>
-                          <select class="form-control select2" id="grubtiket" required>
-                            <option selected="selected" value="">Pilih tujuan
-                            </option>
-                            <% for(let i=0; i<addgrubtiket.length; i++) { %>
-                              <option value='<%= addgrubtiket[i].id %>'>
-                                <%= addgrubtiket[i].nama_grup %> - <%= addgrubtiket[i].nama_pj %>
-                              </option>
-                              <% } %>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="topic">Topic</label>
-                        <select class="custom-select form-control" id="topic">
-                          <option value="-">-</option>
-                          <option value="Printer">Printer</option>
-                          <option value="Komputer">Komputer</option>
-                          <option value="Internet">Internet</option>
-                          <option value="SIMRS">SIMRS</option>
-                          <option value="Aplikasi Lainnya">Aplikasi Lainnya</option>
-                          <option value="Lainnya">Lainnya</option>
-                        </select>
-                      </div>
+                  
+                  <form id="lapor" class="p-4 md:p-6 space-y-5">
+                    <!-- Kendala Textarea -->
+                    <div>
+                      <label for="kendala" class="block text-sm font-semibold text-gray-700 mb-2">Rincian kendala atau masalah yang dihadapi</label>
+                      <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent bg-white text-gray-900 resize-vertical min-h-24" id="kendala" rows="3" placeholder="Contoh: 'Printer x macet'" required autocomplete="on"></textarea>
                     </div>
-                    <!-- /.card-body -->
 
-                    <div class="card-footer">
-                      <button id="submit" type="submit" class="btn btn-primary">Kirim</button>
+                    <!-- Departemen Select -->
+                    <div>
+                      <label for="departemen" class="block text-sm font-semibold text-gray-700 mb-2">Unit Kerja Saya</label>
+                      <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent bg-white text-gray-900" id="departemen">
+                        <option selected="selected" value='<%= user.dep%>'>
+                          <%= user.departemen.bidang%>
+                        </option>
+                        <% for(let i=0; i<departemen.length; i++) { %>
+                          <option value='<%= departemen[i].id %>'>
+                            <%= departemen[i].bidang %>
+                          </option>
+                          <% } %>
+                      </select>
+                    </div>
+
+                    <!-- Grup Tiket Select -->
+                    <div>
+                      <label for="grubtiket" class="block text-sm font-semibold text-gray-700 mb-2">Ditujukan Kepada</label>
+                      <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent bg-white text-gray-900" id="grubtiket" required>
+                        <option selected="selected" value="">Pilih tujuan</option>
+                        <% for(let i=0; i<addgrubtiket.length; i++) { %>
+                          <option value='<%= addgrubtiket[i].id %>'>
+                            <%= addgrubtiket[i].nama_grup %> - <%= addgrubtiket[i].nama_pj %>
+                          </option>
+                          <% } %>
+                      </select>
+                    </div>
+
+                    <!-- Topic Select -->
+                    <div>
+                      <label for="topic" class="block text-sm font-semibold text-gray-700 mb-2">Topik</label>
+                      <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent bg-white text-gray-900" id="topic">
+                        <option value="-">-</option>
+                        <option value="Printer">Printer</option>
+                        <option value="Komputer">Komputer</option>
+                        <option value="Internet">Internet</option>
+                        <option value="SIMRS">SIMRS</option>
+                        <option value="Aplikasi Lainnya">Aplikasi Lainnya</option>
+                        <option value="Lainnya">Lainnya</option>
+                      </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-start">
+                      <button id="submit" type="submit" class="bg-blue-400 hover:bg-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 md:py-2 px-8 rounded-lg transition-colors duration-200">
+                        Kirim
+                      </button>
                     </div>
                   </form>
                 </div>
-              </div>
-              <!-- /.container-fluid -->
-            </section>
-            <section class="content">
-              <div class="container-fluid">
-                <div class="card card-primary">
-                  <div class="card-header">
-                    <h3 class="card-title">Riwayat Pengaduan</h3>
+
+                <!-- History Section: Riwayat Pengaduan -->
+                <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                  <div class="bg-green-400 text-white px-4 md:px-6 py-4">
+                    <h3 class="text-lg md:text-xl font-bold">Riwayat Pengaduan</h3>
                   </div>
-                  <!-- /.card-header -->
-                    <div class="card-body">
-                      <input type="month" class="form-control" id="riwayatDate" name="start" min="2023-03" />
-                      <br>
-                      <div class="card-body table-responsive p-0">
-                        <table class="table table-bordered table-head-fixed text-nowrap">
-                          <thead>
-                            <tr>
-                              <th style="width: 10px">#</th>
-                              <th>Tanggal</th>
-                              <th>No Tiket</th>
-                              <th>Rincian kendala atau masalah yang dihadapi</th>
-                              <th>Topic</th>
-                              <th style="width: 40px">Lihat Status</th>
-                            </tr>
-                          </thead>
-                          <tbody></tbody>
-                        </table>
-                      </div>
+                  
+                  <div class="p-4 md:p-6">
+                    <!-- Month Filter -->
+                    <div class="mb-6">
+                      <label for="riwayatDate" class="block text-sm font-semibold text-gray-700 mb-2">Filter Bulan</label>
+                      <input type="month" class="w-full md:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-transparent" id="riwayatDate" name="start" min="2023-03" />
                     </div>
-                    <!-- /.card-body -->
+
+                    <!-- Desktop Table View -->
+                    <div class="hidden md:block overflow-x-auto">
+                      <table class="w-full border-collapse">
+                        <thead>
+                          <tr class="bg-green-400 text-white">
+                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold w-12">#</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold">Tanggal</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold">No Tiket</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold">Kendala</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold">Topik</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold w-40">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody id="table-desktop"></tbody>
+                      </table>
+                    </div>
+
+                    <!-- Mobile Card View -->
+                    <div class="md:hidden space-y-3" id="cards-mobile"></div>
+                  </div>
                 </div>
               </div>
-              <!-- /.container-fluid -->
             </section>
             <!-- /.content -->
         </div>

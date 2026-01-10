@@ -44,21 +44,41 @@ $('#lapor').submit(function(event) {
               timeZone: "Asia/Jakarta",
             });
 
-            let rows = $("tbody > tr");
-            let row = $("<tr>");
-            row.append($("<td>" + rows.length + "</td>"));
-            row.append($("<td>" + dateWib + "</td>"));
-            row.append($("<td>" + response.data.noTiket + "</td>"));
-            row.append($("<td>" + response.data.kendala + "</td>"));
-            row.append($("<td>" + response.data.topic + "</td>"));
+          let rows = $("#table-desktop > tr");
+          let nomor = rows.length + 1;
+
+          // Desktop Table Row
+          let row = $("<tr class='border-b border-gray-300 hover:bg-gray-50'>");
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + nomor + "</td>"));
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + dateWib + "</td>"));
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm font-semibold text-blue-600'>" + response.data.noTiket + "</td>"));
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + response.data.kendala + "</td>"));
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'><span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800'>" + response.data.topic + "</span></td>"));
             row.append(
                 $(
-                  "<td>" +
-                    '<button type="button" class="btn btn-outline-info"  onclick=lihat("'+ response.data.noTiket +'")><i class="fa fa-eye"></i> Lihat Status </button>' +
+                  "<td class='border border-gray-300 px-4 py-3 text-sm'>" +
+                  '<button type="button" class="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-3 rounded-lg transition-colors duration-200 flex items-center gap-2" onclick=lihat("' + response.data.noTiket + '")><i class="fa fa-eye"></i> Lihat </button>' +
                     "</td>" 
                 )
               );
-            $("tbody").append(row);
+          $("#table-desktop").append(row);
+
+          // Mobile Card
+          let card = $(
+            `<div class='bg-white rounded-lg border border-gray-200 shadow-sm p-4'>
+                <div class='flex justify-between items-start mb-3'>
+                  <div>
+                    <p class='text-xs text-gray-500 font-medium'>Tiket #` + nomor + `</p>
+                    <h4 class='text-sm font-bold text-blue-600'>` + response.data.noTiket + `</h4>
+                  </div>
+                  <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800'>` + response.data.topic + `</span>
+                </div>
+                <p class='text-sm text-gray-700 font-medium mb-2'>` + response.data.kendala + `</p>
+                <p class='text-xs text-gray-500 mb-3'>` + dateWib + `</p>
+                <button type="button" class="w-full bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2" onclick=lihat("` + response.data.noTiket + `")><i class="fa fa-eye"></i> Lihat Status </button>
+              </div>`
+          );
+          $("#cards-mobile").append(card);
             $("#kendala").val("");
           $('#submit').prop('disabled', false);
         },
@@ -103,20 +123,39 @@ function getTabel(newDateValue) {
             let dateWib = date.toLocaleString("id-ID", {
               timeZone: "Asia/Jakarta",
             });
-          let row = $("<tr>");
-          row.append($("<td>" + nomor + "</td>"));
-          row.append($("<td>" + dateWib + "</td>"));
-          row.append($("<td>" + response.data[i].noTiket + "</td>"));
-          row.append($("<td>" + response.data[i].kendala + "</td>"));
-          row.append($("<td>" + response.data[i].topic + "</td>"));
+
+          // Desktop Table Row
+          let row = $("<tr class='border-b border-gray-300 hover:bg-gray-50'>");
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + nomor + "</td>"));
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + dateWib + "</td>"));
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm font-semibold text-blue-600'>" + response.data[i].noTiket + "</td>"));
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + response.data[i].kendala + "</td>"));
+          row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'><span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800'>" + response.data[i].topic + "</span></td>"));
           row.append(
             $(
-              "<td>" +
-                '<button type="button" class="btn btn-outline-info"  onclick=lihat("'+ response.data[i].noTiket +'")><i class="fa fa-eye"></i> Lihat Status </button>' +
+              "<td class='border border-gray-300 px-4 py-3 text-sm'>" +
+              '<button type="button" class="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-3 rounded-lg transition-colors duration-200 flex items-center gap-2" onclick=lihat("' + response.data[i].noTiket + '")><i class="fa fa-eye"></i> Lihat </button>' +
                 "</td>" 
             )
           );
-          $("tbody").append(row);
+          $("#table-desktop").append(row);
+
+          // Mobile Card
+          let card = $(
+            `<div class='bg-white rounded-lg border border-gray-200 shadow-sm p-4'>
+              <div class='flex justify-between items-start mb-3'>
+                <div>
+                  <p class='text-xs text-gray-500 font-medium'>Tiket #` + nomor + `</p>
+                  <h4 class='text-sm font-bold text-blue-600'>` + response.data[i].noTiket + `</h4>
+                </div>
+                <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800'>` + response.data[i].topic + `</span>
+              </div>
+              <p class='text-sm text-gray-700 font-medium mb-2'>` + response.data[i].kendala + `</p>
+              <p class='text-xs text-gray-500 mb-3'>` + dateWib + `</p>
+              <button type="button" class="w-full bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2" onclick=lihat("` + response.data[i].noTiket + `")><i class="fa fa-eye"></i> Lihat Status </button>
+            </div>`
+          );
+          $("#cards-mobile").append(card);
         }
       },
       error: function (error) {

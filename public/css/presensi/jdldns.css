@@ -1,0 +1,36 @@
+/* CSS Tambahan untuk Pemisahan Warna dan Bayangan */
+  .header-blue {
+      background-color: #0d6efd !important; /* Warna Biru Bootstrap Primary */
+      color: white !important;
+  }
+  .jadwal-card {
+      box-shadow: 0 4px 8px rgba(0,0,0,.1); /* Bayangan untuk Kartu */
+      transition: transform 0.2s;
+      margin-bottom: 15px; /* Spasi antar kartu */
+      border-left: 5px solid; /* Garis vertikal sebagai pemisah warna */
+  }
+  .jadwal-card:hover {
+      transform: translateY(-2px); /* Efek sedikit terangkat saat hover */
+  }
+
+.shift-1 { border-left-color: #198754; } 
+.shift-2 { border-left-color: #007bff; } 
+.shift-3 { border-left-color: #6f42c1; } 
+.shift-4 { border-left-color: #17a2b8; } 
+.shift-5 { border-left-color: #20c997; } 
+.shift-6 { border-left-color: #ffc107; } 
+.shift-libur { border-left-color: #dc3545; }
+.shift-bg-1 { background-color: #198754 !important; color: #ffffff; } 
+.shift-bg-2 { background-color: #007bff !important; color: #ffffff; } 
+.shift-bg-3 { background-color: #6f42c1 !important; color: #ffffff; } 
+.shift-bg-4 { background-color: #17a2b8 !important; color: #ffffff; } 
+.shift-bg-5 { background-color: #20c997 !important; color: #ffffff; }
+.shift-bg-6 { background-color: #ffc107 !important; color: #212529; } 
+.shift-bg-libur { background-color: #dc3545 !important; color: #ffffff; } 
+
+  /* Membuat header modal lengket saat di-scroll */
+  .modal-header-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 1055; /* Pastikan di atas konten body */
+  }

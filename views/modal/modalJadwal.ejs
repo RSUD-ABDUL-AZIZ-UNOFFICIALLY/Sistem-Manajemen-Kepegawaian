@@ -1,42 +1,3 @@
-<style>
-  /* CSS Tambahan untuk Pemisahan Warna dan Bayangan */
-  .header-blue {
-      background-color: #0d6efd !important; /* Warna Biru Bootstrap Primary */
-      color: white !important;
-  }
-  .jadwal-card {
-      box-shadow: 0 4px 8px rgba(0,0,0,.1); /* Bayangan untuk Kartu */
-      transition: transform 0.2s;
-      margin-bottom: 15px; /* Spasi antar kartu */
-      border-left: 5px solid; /* Garis vertikal sebagai pemisah warna */
-  }
-  .jadwal-card:hover {
-      transform: translateY(-2px); /* Efek sedikit terangkat saat hover */
-  }
-
-.shift-1 { border-left-color: #198754; } 
-.shift-2 { border-left-color: #007bff; } 
-.shift-3 { border-left-color: #6f42c1; } 
-.shift-4 { border-left-color: #17a2b8; } 
-.shift-5 { border-left-color: #20c997; } 
-.shift-6 { border-left-color: #ffc107; } 
-.shift-libur { border-left-color: #dc3545; }
-.shift-bg-1 { background-color: #198754 !important; color: #ffffff; } 
-.shift-bg-2 { background-color: #007bff !important; color: #ffffff; } 
-.shift-bg-3 { background-color: #6f42c1 !important; color: #ffffff; } 
-.shift-bg-4 { background-color: #17a2b8 !important; color: #ffffff; } 
-.shift-bg-5 { background-color: #20c997 !important; color: #ffffff; }
-.shift-bg-6 { background-color: #ffc107 !important; color: #212529; } 
-.shift-bg-libur { background-color: #dc3545 !important; color: #ffffff; } 
-
-  /* Membuat header modal lengket saat di-scroll */
-  .modal-header-sticky {
-      position: sticky;
-      top: 0;
-      z-index: 1055; /* Pastikan di atas konten body */
-  }
-</style>
-
 <div
   class="modal fade"
   id="jadwalDNSModalModern"
@@ -77,7 +38,7 @@
             <div class="card jadwal-card shift-1">
                 <div class="card-body p-3">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div class="flex-grow-1"> 
+                        <div class="grow"> 
                             <p class="mb-0 fw-bold fs-6 text-dark">1 November</p>
                         </div>
                         <div class="text-end ms-2"> 
@@ -90,20 +51,7 @@
             <div class="card jadwal-card shift-1">
                 <div class="card-body p-3">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div class="flex-grow-1"> 
-                            <p class="mb-0 fw-bold fs-6 text-dark">1 November</p>
-                        </div>
-                        <div class="text-end ms-2"> 
-                            <span class="badge text-bg-success me-1">Pagi</span>
-                            <span class="text-muted small d-block d-sm-inline">(06:00 - 12:00)</span> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card jadwal-card shift-1">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div class="flex-grow-1"> 
+                        <div class="grow"> 
                             <p class="mb-0 fw-bold fs-6 text-dark">1 November</p>
                         </div>
                         <div class="text-end ms-2"> 

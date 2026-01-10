@@ -15,13 +15,36 @@ function lihat(noTiket) {
                       let dateWib = date.toLocaleString("id-ID", {
                         timeZone: "Asia/Jakarta",
                       });
-                    let row = $("<tr>");
-                    row.append($("<td>" + nomor + "</td>"));
-                    row.append($("<td>" + dateWib + "</td>"));
-                    row.append($("<td>" + response.data[i].nama + "</td>"));
-                    row.append($("<td>" + response.data[i].keteranagn + "</td>"));
-                    row.append($("<td>" + response.data[i].status + "</td>"));
-                    $("tbody").append(row);
+                  let status = response.data[i].status;
+                  let statusColor = status === 'Selesai' ? 'bg-green-100 text-green-800' :
+                    status === 'Proses' ? 'bg-blue-100 text-blue-800' :
+                      status === 'Tutup' ? 'bg-gray-100 text-gray-800' :
+                        'bg-red-100 text-red-800';
+
+                  // Desktop Table Row
+                  let row = $("<tr class='border-b border-gray-300 hover:bg-gray-50'>");
+                  row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + nomor + "</td>"));
+                  row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + dateWib + "</td>"));
+                  row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + response.data[i].nama + "</td>"));
+                  row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + response.data[i].keteranagn + "</td>"));
+                  row.append($("<td class='border border-gray-300 px-4 py-3 text-sm'><span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold " + statusColor + "'>" + status + "</span></td>"));
+                  $("#table-desktop").append(row);
+
+                  // Mobile Card
+                  let card = $(
+                    `<div class='mb-4 bg-white rounded-lg border border-gray-200 shadow-sm p-4'>
+                        <div class='flex justify-between items-start mb-3'>
+                          <div>
+                            <p class='text-xs text-gray-500 font-medium'>Tiket #` + nomor + `</p>
+                            <h4 class='text-sm font-bold text-gray-900'>` + response.data[i].nama + `</h4>
+                          </div>
+                          <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ` + statusColor + `'>` + status + `</span>
+                        </div>
+                        <p class='text-sm text-gray-600 mb-2 line-clamp-2'>` + response.data[i].keteranagn + `</p>
+                        <p class='text-xs text-gray-500'>` + dateWib + `</p>
+                      </div>`
+                  );
+                  $("#cards-mobile").append(card);
                   }
                   let selesai = response.data.find(element => element.status == 'Selesai');
                   let tutup = response.data.find(element => element.status == 'Tutup');
@@ -70,15 +93,38 @@ function lihat(noTiket) {
         let dateWib = date.toLocaleString("id-ID", {
           timeZone: "Asia/Jakarta",
         });
-        let rows = $("tbody > tr");
+        let status = response.data.status;
+        let statusColor = status === 'Selesai' ? 'bg-green-100 text-green-800' :
+          status === 'Proses' ? 'bg-blue-100 text-blue-800' :
+            status === 'Tutup' ? 'bg-gray-100 text-gray-800' :
+              'bg-red-100 text-red-800';
+        let rows = $("#table-desktop > tr");
         let panjang = rows.length + 1;
-        let row = $("<tr>");
-                    row.append($("<td>" + panjang + "</td>"));
-                    row.append($("<td>" + dateWib + "</td>"));
-                    row.append($("<td>" + response.data.nama + "</td>"));
-                    row.append($("<td>" + response.data.keteranagn + "</td>"));
-                    row.append($("<td>" + response.data.status + "</td>"));
-                    $("tbody").append(row);
+
+        // Desktop Table Row
+        let row = $("<tr class='border-b border-gray-300 hover:bg-gray-50'>");
+        row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + panjang + "</td>"));
+        row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + dateWib + "</td>"));
+        row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + response.data.nama + "</td>"));
+        row.append($("<td class='border border-gray-300 px-4 py-3 text-sm text-gray-800'>" + response.data.keteranagn + "</td>"));
+        row.append($("<td class='border border-gray-300 px-4 py-3 text-sm'><span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold " + statusColor + "'>" + status + "</span></td>"));
+        $("#table-desktop").append(row);
+
+        // Mobile Card
+        let card = $(
+          `<div class='mb-4 bg-white rounded-lg border border-gray-200 shadow-sm p-4'>
+            <div class='flex justify-between items-start mb-3'>
+              <div>
+                <p class='text-xs text-gray-500 font-medium'>Tiket #` + panjang + `</p>
+                <h4 class='text-sm font-bold text-gray-900'>` + response.data.nama + `</h4>
+              </div>
+              <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ` + statusColor + `'>` + status + `</span>
+            </div>
+            <p class='text-sm text-gray-600 mb-2 line-clamp-2'>` + response.data.keteranagn + `</p>
+            <p class='text-xs text-gray-500'>` + dateWib + `</p>
+          </div>`
+        );
+        $("#cards-mobile").append(card);
         Swal.fire({
             icon: 'success',
             title: 'Succeed',
