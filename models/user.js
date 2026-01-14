@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     dep: DataTypes.INTEGER,
     jab: DataTypes.STRING(300),
     wa: DataTypes.STRING,
-    status: DataTypes.ENUM('PNS', 'PPPK', 'Non ASN'),
+    status: DataTypes.ENUM('PNS', 'PPPK', 'PPPKPW', 'Non ASN'),
     email: DataTypes.STRING(300),
     order: DataTypes.INTEGER,
   }, {

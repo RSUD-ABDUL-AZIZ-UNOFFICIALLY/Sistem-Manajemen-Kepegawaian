@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     type_cuti: DataTypes.STRING,
     max: DataTypes.INTEGER,
     total: DataTypes.INTEGER,
-    status: DataTypes.ENUM('PNS', 'PPPK', 'Non ASN')
+    status: DataTypes.ENUM('PNS', 'PPPK', 'PPPKPW', 'Non ASN')
   }, {
     sequelize,
     modelName: 'Jns_cuti',

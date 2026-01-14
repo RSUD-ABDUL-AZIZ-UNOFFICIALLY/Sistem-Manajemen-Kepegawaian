@@ -6,6 +6,9 @@ $(document).ready(function () {
     $("#satusPPPK").change(function() {
         getRekap();
         });
+  $("#satusPPPKPW").change(function () {
+    getRekap();
+  });
     $("#satusPNS").change(function() {
         getRekap();
         });
@@ -22,9 +25,10 @@ $(document).ready(function () {
     let dep = $("#departemen").val();
     let satusPNS = $("#satusPNS").prop("checked");
     let satusPPPK = $("#satusPPPK").prop("checked");
+    let satusPPPKPW = $("#satusPPPKPW").prop("checked");
     let satusNonASN = $("#satusNonASN").prop("checked");
     $.ajax({
-        url: "/api/monthly/report" + "?date=" + monthly + "&dep=" + dep + "&satusPNS=" + satusPNS + "&satusPPPK=" + satusPPPK + "&satusNonASN=" + satusNonASN,
+      url: "/api/monthly/report" + "?date=" + monthly + "&dep=" + dep + "&satusPNS=" + satusPNS + "&satusPPPK=" + satusPPPK + "&satusPPPKPW=" + satusPPPKPW + "&satusNonASN=" + satusNonASN,
         method: "GET",
         success: function (response) {
             var rows = $("tbody > tr");

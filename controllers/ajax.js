@@ -707,6 +707,7 @@ module.exports = {
     let queryparams = req.query;
     let PNS = queryparams.satusPNS == "true" ? "PNS" : "";
     let PPPK = queryparams.satusPPPK == "true" ? "PPPK" : "";
+    let PPPKPW = queryparams.satusPPPKPW == "true" ? "PPPKPW" : "";
     let NonASN = queryparams.satusNonASN == "true" ? "Non ASN" : "";
     try {
       let getUser = await User.findAll({
@@ -714,7 +715,7 @@ module.exports = {
           [Op.and]: [
             { dep: queryparams.dep },
             {
-              [Op.or]: [{ status: NonASN }, { status: PPPK }, { status: PNS }],
+              [Op.or]: [{ status: NonASN }, { status: PPPK }, { status: PPPKPW }, { status: PNS }],
             },
           ],
         },
@@ -2262,6 +2263,7 @@ Lampiran   : ${urlLampiran}`
         data: {
           PNS: getAnggota.filter((i) => i.status === "PNS").length,
           PPPK: getAnggota.filter((i) => i.status === "PPPK").length,
+          PPPKPW: getAnggota.filter((i) => i.status === "PPPKPW").length,
           "Non ASN": getAnggota.filter((i) => i.status === "Non ASN").length
         },
       });
@@ -2296,7 +2298,7 @@ Lampiran   : ${urlLampiran}`
       let anggotaCount = {};
       allAnggota.forEach(({ dep, status }) => {
         if (!anggotaCount[dep]) {
-          anggotaCount[dep] = { PNS: 0, PPPK: 0, "Non ASN": 0 };
+          anggotaCount[dep] = { PNS: 0, PPPK: 0, PPPKPW: 0, "Non ASN": 0 };
         }
         if (anggotaCount[dep][status] !== undefined) {
           anggotaCount[dep][status]++;
@@ -2307,6 +2309,7 @@ Lampiran   : ${urlLampiran}`
       labelAnggota.forEach((item) => {
         item.dataValues.PNS = anggotaCount[item.id]?.PNS || 0;
         item.dataValues.PPPK = anggotaCount[item.id]?.PPPK || 0;
+        item.dataValues.PPPKPW = anggotaCount[item.id]?.PPPKPW || 0;
         item.dataValues["Non ASN"] = anggotaCount[item.id]?.["Non ASN"] || 0;
       });
 

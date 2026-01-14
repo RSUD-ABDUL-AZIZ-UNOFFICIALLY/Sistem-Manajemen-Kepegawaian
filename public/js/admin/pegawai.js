@@ -9,6 +9,7 @@ async function fetchDataPegawai() {
         );
         document.getElementById('data_PNS').innerHTML = data.data.PNS;
         document.getElementById('data_PPPK').innerHTML = data.data.PPPK;
+        document.getElementById('data_PPPKPW').innerHTML = data.data.PPPKPW;
         document.getElementById('data_NASN').innerHTML = data.data["Non ASN"];
     } catch (error) {
         console.error('Fetch error:', error);
@@ -52,6 +53,17 @@ const fetchCountPegawai = async () => {
                     pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgba(220,220,220,1)',
                     data: data.firstFourth.map(item => item.PPPK)
+                },
+                {
+                    label: 'PPPKPW',
+                    backgroundColor: 'rgb(18, 238, 54)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: data.firstFourth.map(item => item.PPPKPW)
                 },
                 {
                     label: 'Non ASN',
@@ -114,6 +126,17 @@ const fetchCountPegawai = async () => {
                     data: data.secondFourth.map(item => item.PPPK)
                 },
                 {
+                    label: 'PPPKPW',
+                    backgroundColor: 'rgb(18, 238, 54)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: data.secondFourth.map(item => item.PPPKPW)
+                },
+                {
                     label: 'Non ASN',
                     backgroundColor: 'rgb(231, 167, 28)',
                     borderColor: 'rgba(210, 214, 222, 1)',
@@ -173,6 +196,17 @@ const fetchCountPegawai = async () => {
                     data: data.thirdFourth.map(item => item.PPPK)
                 },
                 {
+                    label: 'PPPKPW',
+                    backgroundColor: 'rgb(18, 238, 54)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: data.thirdFourth.map(item => item.PPPKPW)
+                },
+                {
                     label: 'Non ASN',
                     backgroundColor: 'rgb(231, 167, 28)',
                     borderColor: 'rgba(210, 214, 222, 1)',
@@ -230,6 +264,17 @@ const fetchCountPegawai = async () => {
                     pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgba(220,220,220,1)',
                     data: data.fourthFourth.map(item => item.PPPK)
+                },
+                {
+                    label: 'PPPKPW',
+                    backgroundColor: 'rgb(18, 238, 54)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: data.fourthFourth.map(item => item.PPPKPW)
                 },
                 {
                     label: 'Non ASN',
