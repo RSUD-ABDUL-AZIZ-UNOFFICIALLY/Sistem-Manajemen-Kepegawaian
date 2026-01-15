@@ -3,7 +3,7 @@
 
 <head>
   <%- include('template/head'); %>
-    
+    <link rel="stylesheet" href="/asset/css/index.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -63,33 +63,19 @@
                 <!-- Horizontal Form -->
                 <div class="card card-info">
                   <div class="card-header">
-                    <h3 class="card-title">Akun WiFi RSUD ABDUL AZIZ</h3>
+                    <h3 class="card-title">AKTIVASI PASSKEY</h3>
                   </div>
                   <!-- /.card-header -->
                   <!-- form start -->
-                  <form id="wifi" enctype="multipart/form-data">
-                    <div class="card-body">
-                      <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">User</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="wifi_User" name="wifi_User" disabled />
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="wifi_Password" name="wifi_Password" disabled />
-                        </div>
-                      </div>
-                      <p id="wifi_accoun">
-                      </p>
+                    <div class="card-body" id="boddy_passkey">
+                      <p class="text-success" id="passkey_accoun"></p>
+                      <div id="main_auth"></div>
                     </div>
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
                 </div>
                 <!-- /.card-footer -->
-                </form>
               </div>
               <!-- /.card -->
             </section>
@@ -105,7 +91,8 @@
 
   <%- include('template/footer'); %>
     <script src="/asset/js/simrs.js"></script>
-    <script src="/asset/js/wifi.js"></script>
+    <script type="text/javascript" src="/asset/js/lib/qrcode.min.js"></script>
+    <script src="/asset/js/passkey.js"></script>
 </body>
 
 </html>

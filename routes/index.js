@@ -51,6 +51,8 @@ router.post('/api/verify-otp', api.verifyOtp);
 router.get('/api/lastActivity', middleware.login, api.lastActivity);
 router.get('/api/simrs/userpas', middleware.login, api.getUserSimrs);
 router.get('/api/session', middleware.login, api.edtoken);
+router.get('/api/passkey/generator', middleware.login, api.generatePasskey);
+router.post('/api/passkey/activate', middleware.login, api.activatePasskey);
 router.get('/api/microtik/userpas', middleware.login, ajax.getUserMicrotik);
 
 router.post('/api/updateProfile', middleware.login, ajax.updateProfile);

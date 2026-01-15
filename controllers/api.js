@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const moment = require("moment");
-const { Otp, User, Session, sequelize } = require("../models");
+const { Otp, User, Session, Passkey, sequelize } = require("../models");
 const { verifyToken } = require("../helper/token");
 const { update } = require("./seen");
+const speakeasy = require("speakeasy");
 const secretKey = process.env.SECRET_WA;
 const payload = {
   gid: "Server Side",
@@ -60,6 +61,17 @@ module.exports = {
         return res.status(404).json({
           error: true,
           message: "Nomor Anda belum terdaftar di sistem kami",
+        });
+      }
+      let PasskeyIsexist = await Passkey.findOne({
+        where: {
+          nowa: body.phone
+        }
+      })
+      if (PasskeyIsexist) {
+        return res.status(404).json({
+          error: true,
+          message: "Nomor anada telah melakaukan aktivasi passkey authenticator, Jika Ingin Mengaktifkan Ulang Silahkan Hubungi IT RSUD Dr Abdul Aziz",
         });
       }
       let jnsKel = (user.JnsKel == 'Laki-laki') ? 'Bapak ' : 'Ibu ';
@@ -158,6 +170,69 @@ module.exports = {
         error: true,
         message: "Invalid OTP",
       });
+    }
+    let PasskeyIsexist = await Passkey.findOne({
+      where: {
+        nowa: body.phone
+      }
+    })
+    if (PasskeyIsexist) {
+      console.log(PasskeyIsexist)
+      let tokenValidates = speakeasy.totp.verify({
+        secret: PasskeyIsexist.passkey,
+        encoding: 'base32',
+        token: body.otp,
+        window: 0
+      });
+      if (!tokenValidates) {
+        await t.rollback();
+        return res.status(404).json({
+          error: true,
+          message: "Gunakan OTP dari Google Authenticator",
+        });
+      } else {
+        // create jwt
+        let token = jwt.sign(
+          {
+            id: user.nik,
+            nama: user.nama,
+            wa: user.wa,
+          },
+          secretKey,
+          { expiresIn: 60 * 60 * 24 * 7 }
+        );
+        // set cookie
+        res.cookie("token", token, {
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+          httpOnly: false,
+          secure: true
+        });
+        await req.cache.set('SIMPEG:seen:' + token, user.nik);
+        req.cache.expire('SIMPEG:seen:' + token, 90);
+        let userID = req.cookies.userID;
+        if (!userID) {
+          userID = uuid.v7();
+          console.log(userID);
+          res.cookie("userID", userID, {
+            httpOnly: true,
+            secure: true,
+          });
+        }
+        await Session.create({
+          nik: user.nik,
+          session_token: token,
+          ip_address: req.headers['x-real-ip'],
+          visited_id: userID,
+          user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
+          status: "login"
+        }, { transaction: t });
+        await t.commit();
+        return res.status(200).json({
+          error: false,
+          message: "Selamat datang, " + user.nama + "!",
+        });
+      }
+
     }
     let cekOTP = verifyToken(body.otp, body.phone);
     if (!cekOTP) {
@@ -355,6 +430,93 @@ module.exports = {
       });
     }
   },
+  generatePasskey: async (req, res) => {
+    try {
+      let PasskeyIsexist = await Passkey.findOne({
+        where: {
+          nokik: req.account.nik
+        }
+      })
+      if (PasskeyIsexist) {
+        return res.status(200).json({
+          error: false,
+          status: 200,
+          message: "Anda telah melakaukan aktivasi passkey authenticator, Jika Ingin Mengaktifkan Ulang Silahkan Hubungi IT RSUD Dr Abdul Aziz",
+          data: null,
+          data2: req.account
+        });
+      }
+      let secret = speakeasy.generateSecret({
+        name: "SIMPEG:" + req.account.email,
+        length: 32,
+        encoding: 'base32'
+      });
+      console.log(secret.base32);
+      console.log(secret.otpauth_url);
+      return res.status(200).json({
+        status: 201,
+        error: false,
+        message: "Anda belum melakaukan aktivasi passkey authenticator",
+        data: secret,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        error: true,
+        message: error.message,
+      });
+    }
+  },
+  activatePasskey: async (req, res) => {
+    try {
+      let PasskeyIsexist = await Passkey.findOne({
+        where: {
+          nokik: req.account.nik
+        }
+      })
+      if (PasskeyIsexist) {
+        return res.status(200).json({
+          error: false,
+          status: 200,
+          message: "Anda telah melakaukan aktivasi",
+          data: null
+        });
+      }
+      let tokenValidates = speakeasy.totp.verify({
+        secret: req.body.base32,
+        encoding: 'base32',
+        token: req.body.otp,
+        window: 0
+      });
+      if (tokenValidates) {
+        await Passkey.create({
+          nokik: req.account.nik,
+          passkey: req.body.base32,
+          nowa: req.account.wa
+
+        })
+        return res.status(200).json({
+          status: 201,
+          error: false,
+          message: "Aktivasi passkey berhasil",
+          data: Passkey,
+        });
+      } else {
+        return res.status(401).json({
+          status: 401,
+          error: true,
+          message: "OTP anda salah",
+          data: null
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        error: true,
+        message: error.message,
+      });
+    }
+  },
   health: async (req, res) => {
     return res.status(200).json({
       error: false,
@@ -363,3 +525,4 @@ module.exports = {
   },
  
 };
+
