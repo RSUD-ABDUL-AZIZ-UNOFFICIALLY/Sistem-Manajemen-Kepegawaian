@@ -56,13 +56,13 @@ const fetchCountPegawai = async () => {
                 },
                 {
                     label: 'PPPKPW',
-                    backgroundColor: 'rgb(18, 238, 54)',
+                    backgroundColor: 'rgb(255, 69, 69)',
                     borderColor: 'rgba(210, 214, 222, 1)',
                     pointRadius: false,
                     pointColor: 'rgba(210, 214, 222, 1)',
                     pointStrokeColor: '#c1c7d1',
                     pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    pointHighlightStroke: 'rgba(255, 69, 69, 1)',
                     data: data.firstFourth.map(item => item.PPPKPW)
                 },
                 {
@@ -127,13 +127,13 @@ const fetchCountPegawai = async () => {
                 },
                 {
                     label: 'PPPKPW',
-                    backgroundColor: 'rgb(18, 238, 54)',
+                    backgroundColor: 'rgb(255, 69, 69)',
                     borderColor: 'rgba(210, 214, 222, 1)',
                     pointRadius: false,
                     pointColor: 'rgba(210, 214, 222, 1)',
                     pointStrokeColor: '#c1c7d1',
                     pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    pointHighlightStroke: 'rgba255, 69, 69,1)',
                     data: data.secondFourth.map(item => item.PPPKPW)
                 },
                 {
@@ -197,13 +197,13 @@ const fetchCountPegawai = async () => {
                 },
                 {
                     label: 'PPPKPW',
-                    backgroundColor: 'rgb(18, 238, 54)',
+                    backgroundColor: 'rgb(255, 69, 69)',
                     borderColor: 'rgba(210, 214, 222, 1)',
                     pointRadius: false,
                     pointColor: 'rgba(210, 214, 222, 1)',
                     pointStrokeColor: '#c1c7d1',
                     pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    pointHighlightStroke: 'rgba(255, 69, 69,1)',
                     data: data.thirdFourth.map(item => item.PPPKPW)
                 },
                 {
@@ -267,13 +267,13 @@ const fetchCountPegawai = async () => {
                 },
                 {
                     label: 'PPPKPW',
-                    backgroundColor: 'rgb(18, 238, 54)',
+                    backgroundColor: 'rgb(255, 69, 69)',
                     borderColor: 'rgba(210, 214, 222, 1)',
                     pointRadius: false,
                     pointColor: 'rgba(210, 214, 222, 1)',
                     pointStrokeColor: '#c1c7d1',
                     pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    pointHighlightStroke: 'rgba(255, 69, 69,1)',
                     data: data.fourthFourth.map(item => item.PPPKPW)
                 },
                 {
