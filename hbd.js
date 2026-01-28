@@ -99,7 +99,7 @@ async function kalibarsiKamar() {
   let config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: 'https://api.rsudaa.singkawangkota.go.id/api/ranap/belumpulang',
+    url: 'https://api.spairum.my.id/api/ranap/belumpulang',
     headers: {
       'Authorization': 'Bearer ' + token,
     }

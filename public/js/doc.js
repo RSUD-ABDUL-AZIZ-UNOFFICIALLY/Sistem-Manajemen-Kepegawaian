@@ -283,7 +283,7 @@ async function saveDocument() {
         filedoc.append('file', selectedFile);
         let myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + getCookie("token"));;
-        let response = await fetch('https://api.rsudaa.singkawangkota.go.id/api/cdn/upload/dir/file?file=' + docType, {
+        let response = await fetch('https://api.spairum.my.id/api/cdn/upload/dir/file?file=' + docType, {
             method: 'POST',
             headers: myHeaders,
             body: filedoc
