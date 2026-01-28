@@ -17,7 +17,6 @@ app.use(cors());
 const http = require('http');
 const server = http.createServer(app);
 const morgan = require('morgan');
-const maxAge = process.env.NODE_ENV == 'production' ? 10800 : 1;
 console.log("mode = " + process.env.NODE_ENV);
 // Buat token custom untuk IP dari header `x-real-ip`
 morgan.token('real-ip', (req) => req.headers['x-real-ip'] || req.ip);
@@ -35,25 +34,9 @@ app.use(cookieParser())
 app.set('view engine', 'ejs');
 
 app.use(favicon(path.join(__dirname + '/public/', 'favicon.ico')));
-app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/'), {
-    setHeaders: (res, path, stat) => {
-        res.set('Cache-Control', 'public, max-age=' + maxAge);
-        res.set('ETag', package.version); // add etag
-    }
-}));
-app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/'), {
-    setHeaders: (res, path, stat) => {
-        res.set('Cache-Control', 'public, max-age=86400');
-        res.set('ETag', package.version); // add etag
-    }
-}));
-app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/'),
-    {
-        setHeaders: (res, path, stat) => {
-            res.set('Cache-Control', 'public, max-age=' + maxAge);
-            res.set('ETag', package.version); // add etag
-        }
-    }));
+app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/')));
+app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/')));
+app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));
 app.use("/asset/site.webmanifest", express.static(path.join(__dirname + '/public/site.webmanifest')))
 app.use("/asset/favicon.ico", express.static(path.join(__dirname + '/public/favicon.ico')))
 
