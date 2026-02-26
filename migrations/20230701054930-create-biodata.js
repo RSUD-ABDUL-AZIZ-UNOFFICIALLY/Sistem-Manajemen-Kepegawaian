@@ -32,6 +32,9 @@ module.exports = {
       marital: {
         type: Sequelize.STRING
       },
+      jumlah_anak: {
+        type: Sequelize.INTEGER
+      },
       golongan_darah: {
         type: Sequelize.ENUM,
         values: ['A', 'B', 'AB', 'O']

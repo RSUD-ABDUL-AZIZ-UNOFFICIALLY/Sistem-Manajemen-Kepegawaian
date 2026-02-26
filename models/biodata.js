@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     pangkat: DataTypes.STRING,
     tmt_pangkat: DataTypes.DATEONLY,
     marital: DataTypes.STRING,
+    jumlah_anak: DataTypes.INTEGER,
     golongan_darah: DataTypes.ENUM('A', 'B', 'AB', 'O'),
     tmt_kerja: DataTypes.DATEONLY,
     jns_kerja: DataTypes.STRING

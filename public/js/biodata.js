@@ -9,6 +9,7 @@ $(document).ready(function () {
             $("#pangkat").val(response.data.pangkat);
             $("#tmt_pangkat").val(response.data.tmt_pangkat);
             $("#marital").val(response.data.marital);
+            $("#jumlah_anak").val(response.data.jumlah_anak);
             $("#golongan_darah").val(response.data.golongan_darah);
             $("#jns_kerja").val(response.data.jns_kerja);
             $("#tmt_kerja").val(response.data.tmt_kerja);
@@ -32,6 +33,7 @@ $("#biodata").submit(function (event) {
         pangkat: $("#pangkat").val(),
         tmt_pangkat: $("#tmt_pangkat").val(),
         marital: $("#marital").val(),
+        jumlah_anak: $("#jumlah_anak").val(),
         golongan_darah: $("#golongan_darah").val(),
         jns_kerja: $("#jns_kerja").val(),
         tmt_kerja: $("#tmt_kerja").val(),

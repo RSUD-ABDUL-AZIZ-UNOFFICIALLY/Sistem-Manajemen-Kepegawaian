@@ -216,6 +216,23 @@
                         </div>
                       </div>
                       <div class="form-group row">
+                        <label for="marital"
+                          class="col-sm-2 col-form-label">Status
+                          Pernikahan</label>
+                        <div class="col-sm-10">
+                          <select class="form-control " id="jumlah_anak" required>
+                            <option value disabled selected="selected">Jumlah tanggungan Anak</option>
+                            <option value='0'> 0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                          </select>
+                           <p class="text-muted">
+                            Jika sudah menikah anak, merupkan tanggungan suami istri tangguanan anak 0.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="form-group row">
                         <label for="golongan_darah"
                           class="col-sm-2 col-form-label">Golongan Darah</label>
                         <div class="col-sm-10">
@@ -356,7 +373,7 @@
 
           <%- include('template/footer'); %>
           <script src="/asset/js/src/profile.min.js"></script>
-          <script src="/asset/js/src/biodata-1.min.js"></script>
+          <script src="/asset/js/src/biodata-2.min.js"></script>
           <script>
 
   async function fetchData() {
