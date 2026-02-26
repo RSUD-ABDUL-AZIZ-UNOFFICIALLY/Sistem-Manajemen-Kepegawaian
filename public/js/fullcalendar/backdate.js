@@ -46,9 +46,10 @@ $('#tanggal').on('change', function () {
             if (data.length > 0) {
                 if (data[0].cekIn == null) {
                     $('#locatonIn').append('<option value="LOBBY">LOBBY</option>');
-                    $('#locatonIn').append('<option value="IGD">IGD</option>');
-                    $('#locatonIn').append('<option value="Kelas 1">Kelas 1</option>');
+                    $('#locatonIn').append('<option value="LOBBY IGD">LOBBY IGD</option>');
+                    $('#locatonIn').append('<option value="KELAS 1">KELAS 1</option>');
                     $('#locatonIn').append('<option value="BANGSAL BEDAH">BANGSAL BEDAH</option>');
+                    $('#locatonIn').append('<option value="IBS">IBS</option>');
                     $('#locatonIn').append('<option value="Dinas Luar">Dinas Luar</option>');
                 } else {
                     $('#jamMasuk').val(data[0].cekIn);
@@ -56,9 +57,10 @@ $('#tanggal').on('change', function () {
                 }
                 if (data[0].cekOut == null) {
                     $('#locatonOut').append('<option value="LOBBY">LOBBY</option>');
-                    $('#locatonOut').append('<option value="IGD">IGD</option>');
-                    $('#locatonOut').append('<option value="Kelas 1">Kelas 1</option>');
+                    $('#locatonOut').append('<option value="LOBBY IGD">LOBBY IGD</option>');
+                    $('#locatonOut').append('<option value="KELAS 1">KELAS 1</option>');
                     $('#locatonOut').append('<option value="BANGSAL BEDAH">BANGSAL BEDAH</option>');
+                    $('#locatonOut').append('<option value="IBS">IBS</option>');
                     $('#locatonOut').append('<option value="Dinas Luar">Dinas Luar</option>');
                 } else {
                     $('#jamKeluar').val(data[0].cekOut);
@@ -67,14 +69,16 @@ $('#tanggal').on('change', function () {
                 }
             } else {
                 $('#locatonIn').append('<option value="LOBBY">LOBBY</option>');
-                $('#locatonIn').append('<option value="IGD">IGD</option>');
-                $('#locatonIn').append('<option value="Kelas 1">Kelas 1</option>');
+                $('#locatonIn').append('<option value="LOBBY IGD">LOBBY IGD</option>');
+                $('#locatonIn').append('<option value="KELAS 1">KELAS 1</option>');
                 $('#locatonIn').append('<option value="BANGSAL BEDAH">BANGSAL BEDAH</option>');
+                $('#locatonIn').append('<option value="IBS">IBS</option>');
                 $('#locatonIn').append('<option value="Dinas Luar">Dinas Luar</option>');
                 $('#locatonOut').append('<option value="LOBBY">LOBBY</option>');
-                $('#locatonOut').append('<option value="IGD">IGD</option>');
-                $('#locatonOut').append('<option value="Kelas 1">Kelas 1</option>');
+                $('#locatonOut').append('<option value="LOBBY IGD">LOBBY IGD</option>');
+                $('#locatonOut').append('<option value="KELAS 1">KELAS 1</option>');
                 $('#locatonOut').append('<option value="BANGSAL BEDAH">BANGSAL BEDAH</option>');
+                $('#locatonOut').append('<option value="IBS">IBS</option>');
                 $('#locatonOut').append('<option value="Dinas Luar">Dinas Luar</option>');
 
             }
