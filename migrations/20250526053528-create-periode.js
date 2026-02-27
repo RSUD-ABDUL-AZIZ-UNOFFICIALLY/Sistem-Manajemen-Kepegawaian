@@ -21,6 +21,9 @@ module.exports = {
       workstime: {
         type: Sequelize.INTEGER
       },
+      workday: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

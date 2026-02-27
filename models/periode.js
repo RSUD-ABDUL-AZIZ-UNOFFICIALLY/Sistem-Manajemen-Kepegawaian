@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     periode: DataTypes.DATEONLY,
     jnskerja: DataTypes.STRING,
     days: DataTypes.INTEGER,
-    workstime: DataTypes.INTEGER
+    workstime: DataTypes.INTEGER,
+    workday: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Periode',

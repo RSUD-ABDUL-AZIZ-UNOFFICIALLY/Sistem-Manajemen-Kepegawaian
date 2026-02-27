@@ -142,7 +142,7 @@ async function getScore(monthly) {
         Jumlah WK pelaporan aktivitas dalam 1 hari
       </div>
       <div class="col-sm-5">
-        <span class="float-left">${cekPeriode.data.wk}</span>
+        <span class="float-left">${cekPeriode.data.workday}</span>
       </div>
     </div>
     <hr>
