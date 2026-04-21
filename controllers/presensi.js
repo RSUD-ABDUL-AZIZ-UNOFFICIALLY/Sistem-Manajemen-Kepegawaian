@@ -178,7 +178,10 @@ module.exports = {
                 where: {
                     dep: params.dep
                 },
-                attributes: ["type", "slug", "day", "state", "start_min", "start_max", "end_min", "end_max"]
+                attributes: ["type", "slug", "day", "state", "start_min", "start_max", "end_min", "end_max"],
+                order: [
+                    ["start_min", "DESC"]
+                ]
             })
             // console.log(listJadwal);
             if (listJadwal.length == 0) {
