@@ -1122,6 +1122,71 @@ module.exports = {
                     data: cache,
                 });
             }
+            let year = new Date(query.periode).getFullYear();
+            let findCuti = await Ledger_cuti.findAll({
+                where: {
+                    nik_user: params.nik,
+                    periode: year
+                },
+                attributes: ['periode', 'sisa_cuti'],
+                include: [
+                    {
+                        model: Cuti,
+                        as: 'data_cuti',
+                        attributes: ['id', 'type_cuti', 'mulai', 'samapi'],
+                        where: {
+
+                            [Op.or]: [
+                                { mulai: { [Op.startsWith]: query.periode }, },
+                                { samapi: { [Op.startsWith]: query.periode } },
+
+                            ]
+                        },
+                        include: [
+                            {
+                                model: Jns_cuti,
+                                as: 'jenis_cuti',
+                                attributes: ['type_cuti']
+                            }
+                        ]
+                    }
+                ],
+                order: [
+                    ["createdAt", "ASC"]
+                ]
+            })
+            for (let i of findCuti) {
+                let cuti = i.data_cuti.dataValues;
+                console.log(cuti.mulai)
+                console.log(cuti.samapi)
+                console.log(cuti.jenis_cuti.type_cuti)
+                const typeMap = {
+                    "Cuti Tahunan": "CT",
+                    "Cuti Bersama": "CB",
+                    "Cuti Besar": "CB",
+                    "Cuti Sakit": "CS",
+                    "Cuti Melahirkan": "CM",
+                    "Cuti Alasan Penting": "CAP"
+                };
+
+                const typeCT = typeMap[cuti.jenis_cuti.type_cuti];
+                const mulai = new Date(cuti.mulai);
+                const sampai = new Date(cuti.samapi);
+
+                for (let d = new Date(mulai); d <= sampai; d.setDate(d.getDate() + 1)) {
+                    const tanggal = d.toISOString().split('T')[0];
+                    console.log(tanggal);
+                    let update = await Jdldns.update({
+                        typeDns: typeCT + "-" + account.dep,
+                    }, {
+                        where: {
+                            nik: params.nik,
+                            date: tanggal
+                        }
+                    })
+                    console.log(update)
+                }
+            }
             let periode = new Date(`${query.periode}-01`);
             let endOfMonth = new Date(periode.getFullYear(), periode.getMonth() + 1, 0);
             let lastDay = formatDateToLocalYMD(endOfMonth);
