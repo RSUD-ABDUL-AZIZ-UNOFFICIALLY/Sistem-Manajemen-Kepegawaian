@@ -367,7 +367,18 @@ function parsingDataCuti(data) {
         } else if (i.approval.status == "Disetujui" || i.approval.status == "Ditolak" || i.approval.status == "Perubahan") {
             row.append($("<td>").append(btnCetak));
         } $("tbody").append(row);
+        if (i.lampiran != null) {
+            let btnLampiran = $("<button>");
+            btnLampiran.addClass("btn btn-primary btn-sm");
+            btnLampiran.attr("onclick", "downloadLampiran(' " + i.lampiran.file + " ')");
+            btnLampiran.html("<i class='fa-solid fa-download'></i> Download Lampiran");
+            row.append($("<td>").append(btnLampiran));
+
+        }
     }
+}
+downloadLampiran = (file) => {
+    window.open(file, '_blank');
 }
 cetakSuratCuti = (id) => {
     let data = $.ajax({

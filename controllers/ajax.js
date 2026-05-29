@@ -1728,6 +1728,12 @@ Lampiran   : ${urlLampiran}`
               },
             ],
           },
+          {
+            model: Cuti_lampiran,
+            as: "lampiran",
+            attributes: ["file"],
+            required: false,
+          },
         ],
         order: [["createdAt", "DESC"]],
       });

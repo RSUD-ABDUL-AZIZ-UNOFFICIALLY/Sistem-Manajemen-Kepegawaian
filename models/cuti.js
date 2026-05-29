@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'nik',
         as: 'user'
       })
+      Cuti.hasOne(models.Cuti_lampiran, {
+        foreignKey: 'id_cuti',
+        sourceKey: 'id',
+        as: 'lampiran'
+      })
     }
   }
   Cuti.init({
