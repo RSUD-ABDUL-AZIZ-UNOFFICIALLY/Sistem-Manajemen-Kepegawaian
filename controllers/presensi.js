@@ -18,7 +18,7 @@ const { cekLocation } = require("../helper/casting");
 const { formatDateToLocalYMD, hitungMenitTerlambat, hitungCepatPulang, checkAttendance,
     checkPulang, } = require("../helper");
 const { Op, literal } = require("sequelize");
-const { param } = require("../routes");
+// const { param } = require("../routes");
 function formatTimeShort(timeString) {
     if (typeof timeString === 'string' && timeString.length > 3) {
         return timeString.slice(0, -3);
