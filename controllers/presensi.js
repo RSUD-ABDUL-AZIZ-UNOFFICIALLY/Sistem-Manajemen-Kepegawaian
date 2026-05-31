@@ -1157,9 +1157,6 @@ module.exports = {
             })
             for (let i of findCuti) {
                 let cuti = i.data_cuti.dataValues;
-                console.log(cuti.mulai)
-                console.log(cuti.samapi)
-                console.log(cuti.jenis_cuti.type_cuti)
                 const typeMap = {
                     "Cuti Tahunan": "CT",
                     "Cuti Bersama": "CB",
@@ -1172,12 +1169,17 @@ module.exports = {
                 const typeCT = typeMap[cuti.jenis_cuti.type_cuti];
                 const mulai = new Date(cuti.mulai);
                 const sampai = new Date(cuti.samapi);
-
+                let userdep = await User.findOne({
+                    attributes: ['id', 'dep'],
+                    where: {
+                        nik: params.nik
+                    }
+                })
                 for (let d = new Date(mulai); d <= sampai; d.setDate(d.getDate() + 1)) {
                     const tanggal = d.toISOString().split('T')[0];
                     console.log(tanggal);
                     let update = await Jdldns.update({
-                        typeDns: typeCT + "-" + account.dep,
+                        typeDns: typeCT + "-" + userdep.dep,
                     }, {
                         where: {
                             nik: params.nik,
