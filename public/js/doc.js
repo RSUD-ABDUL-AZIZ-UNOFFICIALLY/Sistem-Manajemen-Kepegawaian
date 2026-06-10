@@ -291,6 +291,7 @@ async function saveDocument() {
 
         let result = await response.json();
         dataFile['fileUrl'] = result.data.url; 
+        dataFile['document_type'] = docType;
 
         await fetch('/api/document/' + docType, {
             method: 'POST',
@@ -306,9 +307,9 @@ async function saveDocument() {
             console.log('Success:', result);
             showToast('success', 'Dokumen berhasil disimpan dan sedang menunggu verifikasi!');
             $('#addDocumentModal').modal('hide');
-            const table = $('#documentsTable').DataTable();
-            table.ajax.reload();
-            statistik();
+            // const table = $('#documentsTable').DataTable();
+            // table.ajax.reload();
+            // statistik();
         })
         .catch(error => {
             console.error('Error:', error);

@@ -1,8 +1,10 @@
 "use strict";
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 const secretKey = process.env.JWT_SECRET_KEY;
+console.log(process.env.API_URL);
 const { sequelize, User, Ijazah, Riwayat_ijazah, Str, Riwayat_str, Kk, Riwayat_kk, Ktp, Riwayat_ktp, Npwp, Riwayat_npwp, Cv, Riwayat_cv, Sertifikat, Riwayat_sertifikat, Skck, Riwayat_skck, Kontrak, Riwayat_kontrak, Pangkat, Riwayat_pangkat, Lainnya, Riwayat_lainnya } = require("../models");
-const { Op, Model } = require("sequelize");
+const { Op } = require("sequelize");
 
 module.exports = {
     async uploadDoc(req, res) {
@@ -10,55 +12,25 @@ module.exports = {
             let params = req.params.id;
             let body = req.body;
             let account = req.account;
-            body.status = "Pending";
-            body.nik = account.nik;
-            switch (params) {
-                case "ijazah":
-                    await uploadIjazah(body, account);
-                    break;
-                case "str":
-                    await uploadStr(body, account);
-                    break;
-                case "kk":
-                    await uploadKk(body, account);
-                    break;
-                case "ktp":
-                    await uploadKtp(body, account);
-                    break;
-                case "npwp":
-                    await uploadNpwp(body, account);
-                    break;
-                case "cv":
-                    await uploadCv(body, account);
-                    break;
-                case "sertifikat":
-                    await uploadSertifikat(body, account);
-                    break;
-                case "skck":
-                    await uploadSkck(body, account);
-                    break;
-                case "kontrak":
-                    await uploadKontrak(body, account);
-                    break;
-                case "pangkat":
-                    await uploadPangkat(body, account);
-                    break;
-                case "lainnya":
-                    await uploadLainnya(body, account);
-                    break;
-                default:
-                    return res.status(400).json({
-                        error: true,
-                        message: "document type not found"
-                    })
-            }
+            console.log(account);
+            body.status = "active";
+            body.user = account.nik;
+            console.log(body);
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: process.env.API_URL + "/api/gobi/",
+                headers: {
+                    'Authorization': 'Bearer ' + req.cookies.token,
+                },
+                data: body
+            };
 
-            await req.cache.del('SIMPEG:dokumen:' + account.nik);
+           let x = await axios.request(config)
             return res.status(200).json({
                 error: false,
                 message: "success",
-                data: params,
-                data2: body
+                data: x,
             })
 
         } catch (error) {
@@ -649,203 +621,203 @@ module.exports = {
         }
     }
 }
-async function uploadIjazah(body, account) {
-     let t = await sequelize.transaction();
-     try {
-        let fileAdd = await Ijazah.create(body, { transaction: t });
-        console.log(fileAdd)
-         await Riwayat_ijazah.create({
-             fileId: fileAdd.dataValues.id,
-             status: "Uploaded",
-             keterangan: "File uploaded oleh " + account.nama
-         }, { transaction: t });
+// async function uploadIjazah(body, account) {
+//      let t = await sequelize.transaction();
+//      try {
+//         let fileAdd = await Ijazah.create(body, { transaction: t });
+//         console.log(fileAdd)
+//          await Riwayat_ijazah.create({
+//              fileId: fileAdd.dataValues.id,
+//              status: "Uploaded",
+//              keterangan: "File uploaded oleh " + account.nama
+//          }, { transaction: t });
          
-     } catch (error) {
-         await t.rollback();
-         throw new Error(error)
-     }
-     t.commit();
-    return;
-}
-async function uploadStr(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Str.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_str.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//      } catch (error) {
+//          await t.rollback();
+//          throw new Error(error)
+//      }
+//      t.commit();
+//     return;
+// }
+// async function uploadStr(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Str.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_str.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
-}
-async function uploadKtp(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Ktp.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_ktp.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
+// }
+// async function uploadKtp(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Ktp.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_ktp.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
-}
-async function uploadKk(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Kk.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_kk.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
+// }
+// async function uploadKk(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Kk.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_kk.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
-}
-async function uploadNpwp(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Npwp.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_npwp.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
+// }
+// async function uploadNpwp(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Npwp.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_npwp.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
-}
-async function uploadCv(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Cv.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_cv.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
+// }
+// async function uploadCv(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Cv.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_cv.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
-}
-async function uploadSertifikat(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Sertifikat.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_sertifikat.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
+// }
+// async function uploadSertifikat(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Sertifikat.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_sertifikat.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
-}
-async function uploadSkck(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Skck.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_skck.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
+// }
+// async function uploadSkck(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Skck.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_skck.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
-}
-async function uploadKontrak(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Kontrak.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_kontrak.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
+// }
+// async function uploadKontrak(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Kontrak.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_kontrak.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
-}
-async function uploadPangkat(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Pangkat.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_pangkat.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
+// }
+// async function uploadPangkat(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Pangkat.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_pangkat.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
-}
-async function uploadLainnya(body, account) {
-    let t = await sequelize.transaction();
-    try {
-       let fileAdd = await Lainnya.create(body, { transaction: t });
-       console.log(fileAdd)
-        await Riwayat_lainnya.create({
-            fileId: fileAdd.dataValues.id,
-            status: "Uploaded",
-            keterangan: "File uploaded oleh " + account.nama
-        }, { transaction: t });
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
+// }
+// async function uploadLainnya(body, account) {
+//     let t = await sequelize.transaction();
+//     try {
+//        let fileAdd = await Lainnya.create(body, { transaction: t });
+//        console.log(fileAdd)
+//         await Riwayat_lainnya.create({
+//             fileId: fileAdd.dataValues.id,
+//             status: "Uploaded",
+//             keterangan: "File uploaded oleh " + account.nama
+//         }, { transaction: t });
         
-    } catch (error) {
-        await t.rollback();
-        throw new Error(error)
-    }
-    t.commit();
-   return;
+//     } catch (error) {
+//         await t.rollback();
+//         throw new Error(error)
+//     }
+//     t.commit();
+//    return;
     
-}
+// }
 
