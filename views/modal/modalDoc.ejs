@@ -14,17 +14,24 @@
                 <form id="addDocumentForm">
                     <!-- Document Type Selection -->
                     <div class="form-group">
-                        <label for="documentType">Jenis Dokumen <span class="text-danger">*</span></label>
-                        <select class="form-control" id="documentType" required onchange="showDocumentFields()">
-                            <option value="">-- Pilih Jenis Dokumen --</option>
-                            <option value="kompetensi">Riwayat Pendidikan dan Kompetensi</option>
-                            <option value="str">Surat Tanda Registrasi (STR)</option>
-                            <option value="sip">Surat Izin Praktik (SIP)</option>
+                        <label for="documentType">Jenis Dokumen <span
+                                class="text-danger">*</span></label>
+                        <select class="form-control" id="documentType" required
+                            onchange="showDocumentFields()">
+                            <option value>-- Pilih Jenis Dokumen --</option>
+                            <option value="kompetensi">Riwayat Pendidikan dan
+                                Kompetensi</option>
+                            <option value="str">Surat Tanda Registrasi
+                                (STR)</option>
+                            <option value="sip">Surat Izin Praktik
+                                (SIP)</option>
                             <option value="sk">Surat Keputusan (SK)</option>
-                            <option value="sertifikat">Sertifikat Pelatihan</option>
+                            <option value="sertifikat">Sertifikat
+                                Pelatihan</option>
                             <option value="cv">Riwayat Pekerjaan</option>
-                            <option value="duts">Dokumen Uraian Tugas</option>
-                            <option value="dpks">Dokumen Penilaian Kinerja</option>
+                            <option value="dokumen_uraian_tugas">Dokumen Uraian Tugas</option>
+                            <option value="dokumen_penilaian_kinerja">Dokumen Penilaian
+                                Kinerja</option>
                             <option value="kk">Kartu Keluarga</option>
                             <option value="ktp">KTP</option>
                             <option value="npwp">NPWP</option>
@@ -39,39 +46,52 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tingkat Pendidikan <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="education_level" required>
-                                        <option value="">-- Pilih Tingkat --</option>
+                                    <label>Tingkat Pendidikan <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-control"
+                                        name="education_level" required>
+                                        <option value>-- Pilih Tingkat
+                                            --</option>
                                         <option value="SMA">SMA/SMK</option>
                                         <option value="D1">Diploma I</option>
                                         <option value="D2">Diploma II</option>
                                         <option value="D3">Diploma III</option>
                                         <option value="S1">Sarjana (S1)</option>
                                         <option value="Profesi">Profesi</option>
-                                        <option value="S2">Magister (S2)</option>
+                                        <option value="S2">Magister
+                                            (S2)</option>
                                         <option value="S3">Doktor (S3)</option>
-                                        <option value="Spesialis">Spesialis</option>
+                                        <option
+                                            value="Spesialis">Spesialis</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Jurusan/Program Studi</label>
-                                    <input type="text" class="form-control" name="major" placeholder="Contoh: Kedokteran">
+                                    <input type="text" class="form-control"
+                                        name="major"
+                                        placeholder="Contoh: Kedokteran">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Nama Institusi  <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="institution" placeholder="Contoh: Universitas Tanjungpura" required>
+                                    <label>Nama Institusi <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control"
+                                        name="institution"
+                                        placeholder="Contoh: Universitas Tanjungpura"
+                                        required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tahun Lulus <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="graduation_date" required>
+                                    <label>Tahun Lulus <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" class="form-control"
+                                        name="graduation_date" required>
                                 </div>
                             </div>
                         </div>
@@ -79,13 +99,17 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Nomor Ijazah</label>
-                                    <input type="text" class="form-control" name="ijazah_number" placeholder="Contoh: S1-12345">
+                                    <input type="text" class="form-control"
+                                        name="ijazah_number"
+                                        placeholder="Contoh: S1-12345">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                     <label>IPK/Nilai (Opsional)</label>
-                                     <input type="number" class="form-control" name="gpa" step="0.01" max="4.00" placeholder="3.50">
+                                    <label>IPK/Nilai (Opsional)</label>
+                                    <input type="number" class="form-control"
+                                        name="gpa" step="0.01" max="4.00"
+                                        placeholder="3.50">
                                 </div>
                             </div>
                         </div>
@@ -96,25 +120,39 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Nomor STR <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="str_number" placeholder="Nomor STR" required>
+                                    <label>Nomor STR <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control"
+                                        name="str_number"
+                                        placeholder="Nomor STR" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Profesi <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="profession" required>
-                                        <option value="">-- Pilih Profesi --</option>
+                                    <label>Profesi <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-control"
+                                        name="profession" required>
+                                        <option value>-- Pilih Profesi
+                                            --</option>
                                         <option value="Dokter">Dokter</option>
-                                        <option value="Dokter Gigi">Dokter Gigi</option>
+                                        <option value="Dokter Gigi">Dokter
+                                            Gigi</option>
                                         <option value="Perawat">Perawat</option>
-                                        <option value="Perawat Gigi">Perawat Gigi</option>
+                                        <option value="Perawat Gigi">Perawat
+                                            Gigi</option>
                                         <option value="Bidan">Bidan</option>
-                                        <option value="Apoteker">Apoteker/ Asisten Apoteker</option>
-                                        <option value="Ahli Gizi">Ahli Gizi</option>
-                                        <option value="Fisioterapis">Fisioterapis</option>
-                                        <option value="Rekam Medis">Rekam Medis</option>
-                                        <option value="Tenaga Kesehatan Masyarakat">Tenaga Kesehatan Masyarakat</option>
+                                        <option value="Apoteker">Apoteker/
+                                            Asisten Apoteker</option>
+                                        <option value="Ahli Gizi">Ahli
+                                            Gizi</option>
+                                        <option
+                                            value="Fisioterapis">Fisioterapis</option>
+                                        <option value="Rekam Medis">Rekam
+                                            Medis</option>
+                                        <option
+                                            value="Tenaga Kesehatan Masyarakat">Tenaga
+                                            Kesehatan Masyarakat</option>
                                         <option value="lainnya">Lainnya</option>
                                     </select>
                                 </div>
@@ -123,17 +161,26 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tanggal Terbit  <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="issue_date" required>
+                                    <label>Tanggal Terbit <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" class="form-control"
+                                        name="issue_date" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tanggal Berakhir</label>
                                     <div class="input-group">
-                                        <input type="date" class="form-control" name="expiry_date" placeholder="Tanggal berakhir" id="expiryDate">
+                                        <input type="date" class="form-control"
+                                            name="expiry_date"
+                                            placeholder="Tanggal berakhir"
+                                            id="expiryDate">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" onclick="berlakuSeumurHidup()" type="button">Berlaku Seumur Hidup</button>
+                                            <button
+                                                class="btn btn-outline-secondary"
+                                                onclick="berlakuSeumurHidup()"
+                                                type="button">Berlaku Seumur
+                                                Hidup</button>
                                         </div>
                                     </div>
                                 </div>
@@ -141,32 +188,48 @@
                         </div>
                         <div class="form-group">
                             <label>Penerbit</label>
-                            <input type="text" class="form-control" name="issuer" placeholder="Contoh: Kementerian Kesehatan RI">
+                            <input type="text" class="form-control"
+                                name="issuer"
+                                placeholder="Contoh: Kementerian Kesehatan RI">
                         </div>
                     </div>
-                     <div id="sip-fields" class="form-section">
+                    <div id="sip-fields" class="form-section">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Nomor STR <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="sip_number" placeholder="Nomor SIP" required>
+                                    <label>Nomor STR <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control"
+                                        name="sip_number"
+                                        placeholder="Nomor SIP" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Profesi <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="profession" required>
-                                        <option value="">-- Pilih Profesi --</option>
+                                    <label>Profesi <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-control"
+                                        name="profession" required>
+                                        <option value>-- Pilih Profesi
+                                            --</option>
                                         <option value="Dokter">Dokter</option>
-                                        <option value="Dokter Gigi">Dokter Gigi</option>
+                                        <option value="Dokter Gigi">Dokter
+                                            Gigi</option>
                                         <option value="Perawat">Perawat</option>
-                                        <option value="Perawat Gigi">Perawat Gigi</option>
+                                        <option value="Perawat Gigi">Perawat
+                                            Gigi</option>
                                         <option value="Bidan">Bidan</option>
-                                        <option value="Apoteker">Apoteker/ Asisten Apoteker</option>
-                                        <option value="Ahli Gizi">Ahli Gizi</option>
-                                        <option value="Fisioterapis">Fisioterapis</option>
-                                        <option value="Rekam Medis">Rekam Medis</option>
-                                        <option value="Tenaga Kesehatan Masyarakat">Tenaga Kesehatan Masyarakat</option>
+                                        <option value="Apoteker">Apoteker/
+                                            Asisten Apoteker</option>
+                                        <option value="Ahli Gizi">Ahli
+                                            Gizi</option>
+                                        <option
+                                            value="Fisioterapis">Fisioterapis</option>
+                                        <option value="Rekam Medis">Rekam
+                                            Medis</option>
+                                        <option
+                                            value="Tenaga Kesehatan Masyarakat">Tenaga
+                                            Kesehatan Masyarakat</option>
                                         <option value="lainnya">Lainnya</option>
                                     </select>
                                 </div>
@@ -175,151 +238,236 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tanggal Terbit  <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="issue_date" required>
+                                    <label>Tanggal Terbit <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" class="form-control"
+                                        name="issue_date" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tanggal Berakhir</label>
                                     <div class="input-group">
-                                        <input type="date" class="form-control" name="expiry_date" placeholder="Tanggal berakhir" id="expiryDate">
+                                        <input type="date" class="form-control"
+                                            name="expiry_date"
+                                            placeholder="Tanggal berakhir"
+                                            id="expiryDate">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Penerbit</label>
-                            <input type="text" class="form-control" name="issuer" placeholder="Contoh: Dinas Penanaman Modal dan Pelayanan Terpadu Kota Singkawang">
+                            <input type="text" class="form-control"
+                                name="issuer"
+                                placeholder="Contoh: Dinas Penanaman Modal dan Pelayanan Terpadu Kota Singkawang">
                         </div>
                     </div>
-                           <!-- Lainnya Fields -->
+                    <!-- Lainnya Fields -->
                     <div id="sk-fields" class="form-section">
                         <div class="form-group">
                             <label>Nama Surat Keputusan (SK)</label>
-                            <input type="text" class="form-control" name="other_description" placeholder="Contoh: SK CPNS" >
+                            <input type="text" class="form-control"
+                                name="other_description"
+                                placeholder="Contoh: SK CPNS">
                         </div>
                         <div class="form-group">
                             <label>Nomor Surat Keputusan (SK)</label>
-                            <textarea class="form-control" name="number_sk" rows="3" placeholder="contoh: 001/CPNS/2023"></textarea>
+                            <textarea class="form-control" name="number_sk"
+                                rows="3"
+                                placeholder="contoh: 001/CPNS/2023"></textarea>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tanggal Dokumen</label>
-                                    <input type="date" class="form-control" name="document_date">
+                                    <input type="date" class="form-control"
+                                        name="document_date">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Penerbit</label>
-                                    <input type="text" class="form-control" name="document_issuer" placeholder="Contoh: KANWIL DEPKES PROV. KALBAR">
+                                    <input type="text" class="form-control"
+                                        name="document_issuer"
+                                        placeholder="Contoh: KANWIL DEPKES PROV. KALBAR">
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div id="dokumen_uraian_tugas-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Jabatan</label>
+                            <input type="text" class="form-control"
+                                name="other_description"
+                                placeholder="Contoh: Ahli Gizi">
+                        </div>
+                    </div>
+                    <div id="dokumen_penilaian_kinerja-fields" class="form-section">
+                        <div class="form-group">
+                            <label>Nama Dokumen</label>
+                            <input type="text" class="form-control"
+                                name="other_description" value="Penilaian Kinerja"
+                                placeholder="Contoh: Penilaian Kinerja 2026">
+                        </div>
+                        <div class="form-group">
+                            <label>Periode</label>
+                            <input type="month" class="form-control"
+                                name="document_date">
                         </div>
                     </div>
 
                     <!-- kartu Keluarga Fields -->
                     <div id="kk-fields" class="form-section">
                         <div class="form-group">
-                            <label>Nomor Kartu Keluarga <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="kk_number" placeholder="Nomor Kartu Keluarga" required required-number>
+                            <label>Nomor Kartu Keluarga <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                name="kk_number"
+                                placeholder="Nomor Kartu Keluarga" required
+                                required-number>
                         </div>
                         <div class="form-group">
-                            <label>Nama Kepala Keluarga <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="kk_head_name" placeholder="Nama sesuai Kartu Keluarga" required>
+                            <label>Nama Kepala Keluarga <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                name="kk_head_name"
+                                placeholder="Nama sesuai Kartu Keluarga"
+                                required>
                         </div>
                         <div class="form-group">
                             <label>Alamat Kartu Keluarga</label>
-                            <textarea class="form-control" name="kk_address" rows="3" placeholder="Alamat sesuai Kartu Keluarga"></textarea>
+                            <textarea class="form-control" name="kk_address"
+                                rows="3"
+                                placeholder="Alamat sesuai Kartu Keluarga"></textarea>
                         </div>
                         <div class="form-group">
                             <label>Jumlah Anggota Keluarga</label>
-                            <input type="number" class="form-control" name="family_members" placeholder="Jumlah anggota keluarga" min="1">
+                            <input type="number" class="form-control"
+                                name="family_members"
+                                placeholder="Jumlah anggota keluarga" min="1">
                         </div>
                         <div class="form-group">
                             <label>Tanggal Terbit</label>
-                            <input type="date" class="form-control" name="kk_issue_date" placeholder="Tanggal terbit Kartu Keluarga">
+                            <input type="date" class="form-control"
+                                name="kk_issue_date"
+                                placeholder="Tanggal terbit Kartu Keluarga">
                         </div>
                     </div>
 
                     <!-- KTP Fields -->
                     <div id="ktp-fields" class="form-section">
                         <div class="form-group">
-                            <label>NIK <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="ktp_number" placeholder="NIK" maxlength="16" required required-number>
+                            <label>NIK <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                name="ktp_number" placeholder="NIK"
+                                maxlength="16" required required-number>
                         </div>
                         <div class="form-group">
-                            <label>Nama di KTP <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="ktp_name" placeholder="NIK" maxlength="16" required required-number>
+                            <label>Nama di KTP <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                name="ktp_name" placeholder="NIK" maxlength="16"
+                                required required-number>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tempat Lahir <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="birth_place" placeholder="Kota Kelahiran" required>
+                                    <label>Tempat Lahir <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control"
+                                        name="birth_place"
+                                        placeholder="Kota Kelahiran" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tanggal Lahir <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="birth_date" required>
+                                    <label>Tanggal Lahir <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" class="form-control"
+                                        name="birth_date" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tanggal Terbit <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="ktp_issue_date" required>
+                                    <label>Tanggal Terbit <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" class="form-control"
+                                        name="ktp_issue_date" required>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Alamat KTP <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="ktp_address" rows="3" placeholder="Alamat lengkap sesuai KTP" required></textarea>
+                            <label>Alamat KTP <span
+                                    class="text-danger">*</span></label>
+                            <textarea class="form-control" name="ktp_address"
+                                rows="3" placeholder="Alamat lengkap sesuai KTP"
+                                required></textarea>
                         </div>
                     </div>
 
                     <!-- NPWP Fields -->
                     <div id="npwp-fields" class="form-section">
                         <div class="form-group">
-                            <label>Nomor NPWP <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="npwp_number" placeholder="XX.XXX.XXX.X-XXX.XXX" required>
+                            <label>Nomor NPWP <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                name="npwp_number"
+                                placeholder="XX.XXX.XXX.X-XXX.XXX" required>
                         </div>
                         <div class="form-group">
-                            <label>Nama Wajib Pajak <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="taxpayer_name" placeholder="Nama sesuai NPWP" required>
+                            <label>Nama Wajib Pajak <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                name="taxpayer_name"
+                                placeholder="Nama sesuai NPWP" required>
                         </div>
                     </div>
 
                     <!-- CV Fields -->
                     <div id="cv-fields" class="form-section">
                         <div class="form-group">
-                            <label>Versi CV <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="cv_version" placeholder="Contoh: Versi Januari 2024" required>
+                            <label>Versi CV <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                name="cv_version"
+                                placeholder="Contoh: Versi Januari 2024"
+                                required>
                         </div>
                         <div class="form-group">
                             <label>Deskripsi Singkat</label>
-                            <textarea class="form-control" name="cv_description" rows="3" placeholder="Ringkasan perubahan atau highlight CV"></textarea>
+                            <textarea class="form-control" name="cv_description"
+                                rows="3"
+                                placeholder="Ringkasan perubahan atau highlight CV"></textarea>
                         </div>
                     </div>
 
                     <!-- Sertifikat Fields -->
                     <div id="sertifikat-fields" class="form-section">
                         <div class="form-group">
-                            <label>Nama Sertifikat <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="certificate_name" placeholder="Nama pelatihan/sertifikat" required>
+                            <label>Nama Sertifikat <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                name="certificate_name"
+                                placeholder="Nama pelatihan/sertifikat"
+                                required>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Penyelenggara</label>
-                                    <input type="text" class="form-control" name="organizer" placeholder="Nama penyelenggara">
+                                    <input type="text" class="form-control"
+                                        name="organizer"
+                                        placeholder="Nama penyelenggara">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tanggal Pelatihan <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="training_date" required>
+                                    <label>Tanggal Pelatihan <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" class="form-control"
+                                        name="training_date" required>
                                 </div>
                             </div>
                         </div>
@@ -327,13 +475,17 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Durasi (Jam)</label>
-                                    <input type="number" class="form-control" name="duration" placeholder="Jam pelatihan">
+                                    <input type="number" class="form-control"
+                                        name="duration"
+                                        placeholder="Jam pelatihan">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Nomor Sertifikat</label>
-                                    <input type="text" class="form-control" name="certificate_number" placeholder="Nomor sertifikat">
+                                    <input type="text" class="form-control"
+                                        name="certificate_number"
+                                        placeholder="Nomor sertifikat">
                                 </div>
                             </div>
                         </div>
@@ -344,7 +496,7 @@
                         <div class="form-group">
                             <label>Jenis Kontrak / SK</label>
                             <select class="form-control" name="contract_type">
-                                <option value="">-- Pilih Jenis --</option>
+                                <option value>-- Pilih Jenis --</option>
                                 <option value="pkwt">PKWT (Kontrak)</option>
                                 <option value="pppk">PPPK</option>
                                 <option value="pppkpw">PPPKPW</option>
@@ -354,42 +506,52 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tanggal Mulai</label>
-                                    <input type="date" class="form-control" name="contract_start">
+                                    <input type="date" class="form-control"
+                                        name="contract_start">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tanggal Berakhir</label>
-                                    <input type="date" class="form-control" name="contract_end">
+                                    <input type="date" class="form-control"
+                                        name="contract_end">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Jabatan</label>
-                            <input type="text" class="form-control" name="position" placeholder="Jabatan dalam kontrak">
+                            <input type="text" class="form-control"
+                                name="position"
+                                placeholder="Jabatan dalam kontrak">
                         </div>
                     </div>
                     <!-- Lainnya Fields -->
                     <div id="lainnya-fields" class="form-section">
                         <div class="form-group">
                             <label>Nama Dokumen</label>
-                            <input type="text" class="form-control" name="document_name" placeholder="Nama dokumen">
+                            <input type="text" class="form-control"
+                                name="document_name" placeholder="Nama dokumen">
                         </div>
                         <div class="form-group">
                             <label>Deskripsi</label>
-                            <textarea class="form-control" name="other_description" rows="3" placeholder="Deskripsi dokumen"></textarea>
+                            <textarea class="form-control"
+                                name="other_description" rows="3"
+                                placeholder="Deskripsi dokumen"></textarea>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tanggal Dokumen</label>
-                                    <input type="date" class="form-control" name="document_date">
+                                    <input type="date" class="form-control"
+                                        name="document_date">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Penerbit</label>
-                                    <input type="text" class="form-control" name="document_issuer" placeholder="Penerbit dokumen">
+                                    <input type="text" class="form-control"
+                                        name="document_issuer"
+                                        placeholder="Penerbit dokumen">
                                 </div>
                             </div>
                         </div>
@@ -397,21 +559,31 @@
 
                     <!-- File Upload Section -->
                     <div class="form-group mt-4">
-                        <label>Upload File <span class="text-danger">*</span></label>
+                        <label>Upload File <span
+                                class="text-danger">*</span></label>
                         <div class="file-upload-area" id="modalUploadArea">
-                            <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-2"></i>
-                            <h6>Drag & Drop file di sini atau klik untuk memilih</h6>
-                            <p class="text-muted small">Format: PDF, JPG, PNG, DOC, DOCX (Max: 10MB)</p>
-                            <input type="file" id="modalFileInput" class="d-none" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="document.getElementById('modalFileInput').click()">
+                            <i
+                                class="fas fa-cloud-upload-alt fa-2x text-primary mb-2"></i>
+                            <h6>Drag & Drop file di sini atau klik untuk
+                                memilih</h6>
+                            <p class="text-muted small">Format: PDF, JPG, PNG,
+                                DOC, DOCX (Max: 10MB)</p>
+                            <input type="file" id="modalFileInput"
+                                class="d-none"
+                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                            <button type="button"
+                                class="btn btn-outline-primary btn-sm mt-2"
+                                onclick="document.getElementById('modalFileInput').click()">
                                 <i class="fas fa-file-plus mr-1"></i>Pilih File
                             </button>
                         </div>
-                        <div class="mt-2" id="modalSelectedFile" style="display: none;">
+                        <div class="mt-2" id="modalSelectedFile"
+                            style="display: none;">
                             <div class="alert alert-info alert-sm mb-0">
                                 <i class="fas fa-file mr-2"></i>
                                 <span id="selectedFileName"></span>
-                                <button type="button" class="close" onclick="clearModalFile()">
+                                <button type="button" class="close"
+                                    onclick="clearModalFile()">
                                     <span>&times;</span>
                                 </button>
                             </div>
@@ -421,15 +593,19 @@
                     <!-- General Notes -->
                     <div class="form-group">
                         <label>Catatan Tambahan</label>
-                        <textarea class="form-control" name="catatan" id="catatan" rows="2" placeholder="Catatan atau keterangan tambahan (opsional)"></textarea>
+                        <textarea class="form-control" name="catatan"
+                            id="catatan" rows="2"
+                            placeholder="Catatan atau keterangan tambahan (opsional)"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">
                     <i class="fas fa-times mr-2"></i>Batal
                 </button>
-                <button type="submit" class="btn btn-primary" onclick="saveDocument()">
+                <button type="submit" class="btn btn-primary"
+                    onclick="saveDocument()">
                     <i class="fas fa-save mr-2"></i>Simpan Dokumen
                 </button>
             </div>
@@ -454,10 +630,12 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">
                     <i class="fas fa-times mr-2"></i>Batal
                 </button>
-                <button type="button" class="btn btn-primary" onclick="updateDocument()">
+                <button type="button" class="btn btn-primary"
+                    onclick="updateDocument()">
                     <i class="fas fa-save mr-2"></i>Update Dokumen
                 </button>
             </div>
@@ -482,8 +660,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-primary" onclick="downloadCurrentPreview()">
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary"
+                    onclick="downloadCurrentPreview()">
                     <i class="fas fa-download mr-2"></i>Download
                 </button>
             </div>
@@ -497,9 +677,11 @@
         <div class="modal-content">
             <div class="modal-header bg-danger">
                 <h4 class="modal-title text-white">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>Alasan Penolakan
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Alasan
+                    Penolakan
                 </h4>
-                <button type="button" class="close text-white" data-bs-dismiss="modal">
+                <button type="button" class="close text-white"
+                    data-bs-dismiss="modal">
                     <span>&times;</span>
                 </button>
             </div>
@@ -513,20 +695,26 @@
                 <div class="card">
                     <div class="card-body">
                         <h6>Alasan Penolakan:</h6>
-                        <p>Format CV tidak sesuai dengan standar perusahaan. Mohon gunakan template yang telah disediakan dan pastikan informasi kontak lengkap tercantum.</p>
-                        
+                        <p>Format CV tidak sesuai dengan standar perusahaan.
+                            Mohon gunakan template yang telah disediakan dan
+                            pastikan informasi kontak lengkap tercantum.</p>
+
                         <h6 class="mt-3">Dokumen yang Diperlukan:</h6>
                         <ul>
                             <li>CV dengan format template perusahaan</li>
-                            <li>Informasi kontak lengkap (email, telepon, alamat)</li>
-                            <li>Riwayat pendidikan dan pekerjaan yang detail</li>
+                            <li>Informasi kontak lengkap (email, telepon,
+                                alamat)</li>
+                            <li>Riwayat pendidikan dan pekerjaan yang
+                                detail</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-primary" onclick="resubmitDocument(5, 'cv')">
+                <button type="button" class="btn btn-secondary"
+                    data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary"
+                    onclick="resubmitDocument(5, 'cv')">
                     <i class="fas fa-redo mr-2"></i>Ajukan Ulang
                 </button>
             </div>
@@ -542,7 +730,8 @@
                 <h4 class="modal-title text-white">
                     <i class="fas fa-check-circle mr-2"></i>Dokumen Wajib
                 </h4>
-                <button type="button" class="close text-white" data-bs-dismiss="modal">
+                <button type="button" class="close text-white"
+                    data-bs-dismiss="modal">
                     <span>&times;</span>
                 </button>
             </div>
@@ -596,11 +785,13 @@
                                 </td>
                                 <td>
                                     <span class="badge badge-danger">
-                                        <i class="fas fa-times mr-1"></i>Belum Upload
+                                        <i class="fas fa-times mr-1"></i>Belum
+                                        Upload
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" onclick="openAddDocumentModal('npwp')">
+                                    <button class="btn btn-sm btn-primary"
+                                        onclick="openAddDocumentModal('npwp')">
                                         <i class="fas fa-plus"></i> Upload
                                     </button>
                                 </td>
@@ -612,11 +803,14 @@
                                 </td>
                                 <td>
                                     <span class="badge badge-warning">
-                                        <i class="fas fa-exclamation mr-1"></i>Perlu Perbaikan
+                                        <i
+                                            class="fas fa-exclamation mr-1"></i>Perlu
+                                        Perbaikan
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" onclick="resubmitDocument(5, 'cv')">
+                                    <button class="btn btn-sm btn-warning"
+                                        onclick="resubmitDocument(5, 'cv')">
                                         <i class="fas fa-redo"></i> Perbaiki
                                     </button>
                                 </td>
@@ -628,11 +822,13 @@
                                 </td>
                                 <td>
                                     <span class="badge badge-danger">
-                                        <i class="fas fa-times mr-1"></i>Belum Upload
+                                        <i class="fas fa-times mr-1"></i>Belum
+                                        Upload
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" onclick="openAddDocumentModal('foto')">
+                                    <button class="btn btn-sm btn-primary"
+                                        onclick="openAddDocumentModal('foto')">
                                         <i class="fas fa-plus"></i> Upload
                                     </button>
                                 </td>
@@ -642,11 +838,14 @@
                 </div>
                 <div class="alert alert-info mt-3">
                     <h6><i class="fas fa-info-circle mr-2"></i>Informasi</h6>
-                    <p class="mb-0">Pastikan semua dokumen wajib telah diupload dan terverifikasi untuk menyelesaikan proses administrasi kepegawaian.</p>
+                    <p class="mb-0">Pastikan semua dokumen wajib telah diupload
+                        dan terverifikasi untuk menyelesaikan proses
+                        administrasi kepegawaian.</p>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>

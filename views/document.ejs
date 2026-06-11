@@ -1,166 +1,111 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <%- include('template/head'); %>   
+    <head>
+        <%- include('template/head'); %>
 
- <link rel="stylesheet" href="/asset/css/doc.css">
-  <!-- DataTables -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css">
-</head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
+        <link rel="stylesheet" href="/asset/css/doc.css">
+      <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div class="wrapper">
 
-  <!-- Navbar -->
-  <%- include('template/navbar'); %>
-  <!-- /.navbar -->
+            <!-- Navbar -->
+            <%- include('template/navbar'); %>
+            <!-- /.navbar -->
 
-  <!-- Main Sidebar Container -->
-  <%- include('template/sidebar'); %>
+            <!-- Main Sidebar Container -->
+            <%- include('template/sidebar'); %>
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <%- include('template/content-header'); %>
-    <!-- /.content-header -->
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <%- include('template/content-header'); %>
+                <!-- /.content-header -->
 
-    <!-- Main content -->
-       <!-- Main content -->
-        <section class="content">
-            <div class="container-fluid">
-                <!-- Document Completeness Overview -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="completeness-card">
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <h4><i class="fas fa-chart-pie mr-2"></i>Status Kelengkapan Dokumen</h4>
-                                    <p class="mb-0">Lengkapi dokumen wajib untuk menyelesaikan proses administrasi kepegawaian</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">
-                                    <i class="fas fa-plus mr-2"></i>
-                                    Tambah Berkas
-                                </h3>
-                            </div>
-                            <div class="card-body">
-                                <button type="button" class="btn btn-primary mr-2" onclick="openAddDocumentModal()">
-                                    <i class="fas fa-file-plus mr-2"></i>Tambah Dokumen Baru
-                                </button>
-                                <!-- <button type="button" class="btn btn-info mr-2" onclick="checkRequiredDocuments()">
-                                    <i class="fas fa-check-circle mr-2"></i>Cek Dokumen Wajib
-                                </button> -->
-                                <button type="button" class="btn btn-warning" onclick="viewPendingDocuments()">
-                                    <i class="fas fa-clock mr-2"></i>Dokumen Pending
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Document Status Cards -->
-                <div class="row">
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-success"><i class="fas fa-check"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Terverifikasi</span>
-                                <span class="info-box-number" id="verifiedCount">x</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-warning"><i class="fas fa-clock"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Pending Review</span>
-                                <span class="info-box-number" id="pendingCount">x</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-danger"><i class="fas fa-times"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Ditolak</span>
-                                <span class="info-box-number" id="rejectedCount">x</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-info"><i class="fas fa-file"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Dokumen</span>
-                                <span class="info-box-number" id="totalDocuments">x</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Document List Section -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">
-                                    <i class="fas fa-list mr-2"></i>
-                                    Daftar Dokumen Saya
-                                </h3>
-                                <div class="card-tools">
-                                    <div class="input-group input-group-sm" style="width: 250px;">
-                                        <input type="text" class="form-control" placeholder="Cari dokumen..." id="searchInput">
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-default">
-                                                <i class="fas fa-search"></i>
-                                            </button>
+                <!-- Main content -->
+                <!-- Main content -->
+                <section class="content">
+                    <div class="container-fluid">
+                        <!-- Document Completeness Overview -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="completeness-card">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <h4><i
+                                                    class="fas fa-chart-pie mr-2"></i>Status
+                                                Kelengkapan Dokumen</h4>
+                                            <p class="mb-0">Lengkapi dokumen
+                                                wajib untuk menyelesaikan proses
+                                                administrasi kepegawaian</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap" id="documentsTable">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Jenis Dokumen</th>
-                                            <th>Detail Dokumen</th>
-                                            <th>Tanggal Upload</th>
-                                            <th>Status</th>
-                                            <th>Catatan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-plus mr-2"></i>
+                                            Tambah Berkas
+                                        </h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <button type="button"
+                                            class="btn btn-primary mr-2"
+                                            onclick="openAddDocumentModal()">
+                                            <i
+                                                class="fas fa-file-plus mr-2"></i>Tambah
+                                            Dokumen Baru
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        
+                                <!-- Header Tabel (Hanya tampil di Desktop/Tablet md:up) -->
+                                <div class="hidden md:grid grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    <div class="col-span-3 lg:col-span-2">Dokumen</div>
+                                    <div class="col-span-5 lg:col-span-6">Detail Informasi</div>
+                                    <div class="col-span-2 lg:col-span-2 text-center">Aksi</div>
+                                </div>
+
+                                <!-- Tempat di mana baris dokumen akan dirender oleh JavaScript -->
+                                <div id="document-grid" class="divide-y divide-gray-100">
+                                    <!-- Konten diisi via JS -->
+                                </div>
+
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
+                <section 
+                    class="content">
+                    <div class="container-fluid">
+                       
+                    </div>
+
+                </section>
+                <!-- /.content -->
             </div>
-        </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
+            <!-- /.content-wrapper -->
+            <footer class="main-footer">
 
-  </footer>
+            </footer>
 
-</div>
-<%- include('modal/modalDoc.ejs'); %>
-<!-- ./wrapper -->
+        </div>
+        <%- include('modal/modalDoc.ejs'); %>
+        <%- include('modal/modalEditDoc.ejs'); %>
+        <!-- ./wrapper -->
 
-<%- include('template/footer'); %>
+        <%- include('template/footer'); %>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
-<script src="/asset/js/doc.js"></script>
-</body>
+
+        <script src="/asset/js/doc.js"></script>
+        <script src="/asset/js/doc2.js"></script>
+    </body>
 </html>

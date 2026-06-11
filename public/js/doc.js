@@ -1,79 +1,4 @@
 $(document).ready(function () {
-    // Initialize DataTable
-    $('#documentsTable').DataTable({
-        "ajax": {
-            url: "/api/document/doc/all",
-            dataSrc: function (json) {
-                Swal.close(); // tutup loading setelah data diterima
-                if (json.error) {
-                    Swal.fire('Error', json.message, 'error');
-                    return [];
-                }
-                return json.data.data;
-            },
-            error: function () {
-                Swal.close();
-                Swal.fire('Error', 'Gagal memuat data dari server', 'error');
-            }
-        },
-        "columns": [
-            { "data": null, "render": function (data, type, row, meta) { return meta.row + 1 } },
-            { "data": "jenisDokumen",
-                 "render":
-                  function (data, type, row, meta)
-                   { 
-                      return `<span class="badge bg-${row.badge}">${data}</span>` 
-                   } 
-                },
-            { "data": "detail", "render": function (data, type, row, meta) 
-                { return `<strong>${row.detail}</strong><br>
-                    <small class="text-muted">${row.subDetail}</small>`
-                }},
-            { "data": "Upload" },
-            { "data": "status", "render": function (data, type, row, meta) { return `<span class="badge bg-${row.badge}">${data}</span>` } },
-            { "data": "catatan" },
-            {
-                "data": "fileUrl", "render": function (data, type, row, meta) {
-                    return ` <div class="btn-group btn-group-sm">
-                                                    <button class="btn btn-info" onclick="previewDocument('${row.fileUrl}', '${row.jenisDokumen}-${row.detail}')" title="Preview">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-success" onclick="downloadDocument('${row.fileUrl}', '${row.jenisDokumen} - ${row.detail}')" title="Download">
-                                                        <i class="fas fa-download"></i>
-                                                    </button>
-                                                    <button class="btn btn-warning" onclick="editDocument('${row.id}')" title="Edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-danger" onclick="deleteDocument('${row.id}')" title="Hapus">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>` } },
-        ],
-        "responsive": true,
-        "lengthChange": false,
-        "autoWidth": false,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "paging": true,
-        "pageLength": 10,
-        "language": {
-            "search": "Cari:",
-            "lengthMenu": "Tampilkan _MENU_ data per halaman",
-            "zeroRecords": "Tidak ada data yang ditemukan",
-            "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
-            "infoEmpty": "Tidak ada data tersedia",
-            "infoFiltered": "(difilter dari _MAX_ total data)",
-            "paginate": {
-                "first": "Pertama",
-                "last": "Terakhir",
-                "next": "Selanjutnya",
-                "previous": "Sebelumnya"
-            }
-        }
-    });
-
-    // Modal file upload functionality
     const modalUploadArea = document.getElementById('modalUploadArea');
     const modalFileInput = document.getElementById('modalFileInput');
     let selectedFile = null;
@@ -122,41 +47,8 @@ $(document).ready(function () {
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
-
-    // Search functionality
-    $('#searchInput').on('keyup', function () {
-        const table = $('#documentsTable').DataTable();
-        console.log(this.value);
-        table.search(this.value).draw();
-    });
   
 });
-async function statistik(id) {
-    let data = await fetch(`/api/document/doc/all/`, {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(res => res.json());
-    document.getElementById('verifiedCount').innerHTML = data.data.record.verifiedCount;
-    document.getElementById('pendingCount').innerHTML = data.data.record.pendingCount;
-    document.getElementById('rejectedCount').innerHTML = data.data.record.rejectedCount;
-    document.getElementById('totalDocuments').innerHTML = data.data.record.totalDocuments;
-}
-statistik();
-async function deleteDocument(id) {
-    // table.ajax.reload();
-    await fetch(`/api/document/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    const table = $('#documentsTable').DataTable();
-    table.ajax.reload();
-    statistik();
-    showToast('success', id);
-}
 // Show document fields based on type
 function showDocumentFields() {
     const docType = document.getElementById('documentType').value;
@@ -186,6 +78,7 @@ function openAddDocumentModal(preselectedType = '') {
 
     // Preselect document type if provided
     if (preselectedType) {
+        console.log(preselectedType);
         document.getElementById('documentType').value = preselectedType;
         showDocumentFields();
     }
@@ -261,9 +154,9 @@ async function saveDocument() {
 
 
     // Collect form data
-    // const formData = new FormData();
-    // formData.append('document_type', docType);
-    // formData.append('file', selectedFile);
+    const formData = new FormData();
+    formData.append('document_type', docType);
+    formData.append('file', selectedFile);
     let dataFile ={}
 
     // Add specific fields based on document type
@@ -272,7 +165,7 @@ async function saveDocument() {
         const inputs = activeSection.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
             if (input.value) {
-                // formData.append(input.name, input.value);
+                formData.append(input.name, input.value);
                 dataFile[input.name] = input.value
             }
         });
@@ -290,7 +183,7 @@ async function saveDocument() {
         })
 
         let result = await response.json();
-        dataFile['fileUrl'] = result.data.url; 
+        dataFile['file'] = result.data.url; 
         dataFile['document_type'] = docType;
 
         await fetch('/api/document/' + docType, {
@@ -309,7 +202,6 @@ async function saveDocument() {
             $('#addDocumentModal').modal('hide');
             // const table = $('#documentsTable').DataTable();
             // table.ajax.reload();
-            // statistik();
         })
         .catch(error => {
             console.error('Error:', error);
@@ -340,13 +232,6 @@ async function saveDocument() {
     // setTimeout(() => {
     //     location.reload();
     // }, 1500);
-}
-
-// Edit document
-function editDocument(id, type) {
-    // Populate edit modal with existing data
-    // This would fetch data from server in real implementation
-    showToast('info', 'Fitur edit dokumen akan segera tersedia');
 }
 
 // Preview document
