@@ -77,7 +77,6 @@ function menuAkses() {
         $("#ul_laporan").append(n)),
         $("#ul_absen").append(present);
     let t = a[1].menu;
-    console.log(t),
     t.includes("admin") && ($("#navbar").append(l),
         t.includes("cuti") && $("#ul_cuti").append(u),
         t.includes("contact") && $("#ul_admin").append(i),
