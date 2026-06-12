@@ -12,28 +12,41 @@ module.exports = {
             let params = req.params.id;
             let body = req.body;
             let account = req.account;
-            console.log(account);
             body.status = "active";
-            body.user = account.nik;
-            console.log(body);
+            body.user = account.nik.toString();
+            let data = JSON.stringify(body);
             let config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: process.env.API_URL + "/api/gobi/",
                 headers: {
-                    'Authorization': 'Bearer ' + req.cookies.token,
-                },
-                data: body
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + req.cookies.token
+                }
             };
+            console.log(config);
 
-           let x = await axios.request(config)
+            let x = await axios.post(process.env.API_URL + "/api/gobi/v1/dokumen", data, config)
+
+            console.log(JSON.stringify(x.data, null, 2));
             return res.status(200).json({
                 error: false,
                 message: "success",
-                data: x,
+                data: x.data
             })
 
         } catch (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log("Error Data:", JSON.stringify(error.response.data));
+                res.status(error.response.status).json(error.response.data);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log("No response received.");
+                res.status(500).json({ message: "No response from server" });
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log("Error Message:", error.message);
+                res.status(500).json({ message: error.message });
+            }
             return res.status(400).json({
                 error: true,
                 message: error.message,
@@ -42,356 +55,40 @@ module.exports = {
         }
     },
     getDocAll: async (req, res) => {
-        let findchace = await req.cache.get(`SIMPEG:dokumen:${req.account.nik}`);
-        if (findchace) {
-            return res.status(200).json({
-                error: false,
-                message: "success",
-                data: JSON.parse(findchace),
-            })
-        }
+
         try {
-            let data = [];
-            let verifiedCount = 0;
-            let pendingCount = 0;
-            let rejectedCount = 0;
-            let totalDocuments = 0;
-            let dataIjasah = await Ijazah.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
+            // let config = {
+            //     method: 'GET',
+            //     url: process.env.API_URL + "/api/gobi/v1/dokumen/" + account.nik.toString(),
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': 'Bearer ' + req.cookies.token
+            //     }
+            // };
+            // console.log(config);
+
+            // let x = await axios(config)
+            const response = await axios({
+                method: 'GET',
+                url: 'https://api.spairum.my.id/api/gobi/v1/dokumen/' + req.account.nik.toString(),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + req.cookies.token
                 }
             });
-            console.log(dataIjasah);
-            for (let i of dataIjasah) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "Ijazah " + i.education_level,
-                    detail: i.major,
-                    subDetail: i.institution + " - " + i.graduation_date,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "primary",
-                    Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' '),
-                    id: i.id + "-" + i.nik+"-Ijazah"
-                }
-                data.push(result)
-                
-            }
-            let dataStr = await Str.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataStr) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "STR",
-                    detail: i.profession,
-                    subDetail: i.issuer + " - issued:" + i.issue_date,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                      badge: "info",
-                    Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' '),
-                    id: i.id + "-" + i.nik+"-Str"
-                }
-                data.push(result)
-            }
-            let dataKk = await Kk.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataKk) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "KK",
-                    
-                    detail: "Kartu Keluarga",
-                    subDetail: i.kk_head_name + " - issued:" + i.kk_issue_date,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "secondary",
-                     Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' ') ,
-                    id: i.id + "-" + i.nik+"-Kk"
-                }
-                data.push(result)
-            }
-            let dataKtp = await Ktp.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataKtp) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "KTP",
-                    detail: "Kartu Tanda Penduduk",
-                    subDetail: i.birth_place + " - issued:" + i.ktp_issue_date,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "success",
-                     Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' ') ,
-                    id: i.id + "-" + i.nik+"-Ktp"
-                }
-                data.push(result)
-            }
-            let dataNpwp = await Npwp.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataNpwp) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "NPWP",
-                    detail: "Nomor Pokok Wajib Pajak",
-                    subDetail: i.npwp_number,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "success",
-                     Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' ') ,
-                    id: i.id + "-" + i.nik+"-Npwp"
-                }
-                data.push(result)
-            }
-            let dataCv = await Cv.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataCv) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "CV",
-                    detail: "Curriculum Vitae",
-                    subDetail: i.cv_version,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "secondary",
-                     Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' ') ,
-                    id: i.id + "-" + i.nik+"-Cv"
-                }
-                data.push(result)
-            }
-            let dataSertifikat = await Sertifikat.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataSertifikat) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "Sertifikat",
-                    detail: i.training_name,
-                    subDetail: i.organizer + " - issued:" + i.training_date,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "warning",
-                     Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' ') ,
-                    id: i.id + "-" + i.nik+"-Sertifikat"
-                }
-                data.push(result)
-            }
-            let dataSkck = await Skck.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataSkck) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "SKCK",
-                    detail: "Surat Keterangan Catatan Kepolisian",
-                    subDetail: "issued:" + i.skck_issue_date,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "warning",
-                     Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' ') ,
-                    id: i.id + "-" + i.nik +"-Skck"
-                }
-                data.push(result)
-            }
-            let dataKontrak = await Kontrak.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataKontrak) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "Kontrak",
-                    detail: "Surat Kontrak " + i.contract_type,
-                    subDetail: "issued:" + i.contract_start + " - " + i.contract_end,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "success",
-                     Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' ') ,
-                    id: i.id + "-" + i.nik+"-Kontrak"
-                }
-                data.push(result)
-            }
-            let dataPangkat = await Pangkat.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataPangkat) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "Pangkat",
-                    detail: "Pangkat :" + i.jabatan,
-                    subDetail: "issued:" + i.document_issuer,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "success",
-                     Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' ') ,
-                    id: i.id + "-" + i.nik+"-Pangkat"
-                }
-                data.push(result)
-            }
-            let dataLainnya = await Lainnya.findAll({
-                where: {
-                    status: { [Op.ne]: "Deleted"},
-                    nik: req.account.nik
-                }
-            });
-            for (let i of dataLainnya) {
-                if (i.status == "Pending") {
-                    pendingCount += 1;
-                } else if (i.status == "Rejected") {
-                    rejectedCount +=1;
-                } else if (i.status == "Verified") {
-                    verifiedCount += 1;
-                }
-                totalDocuments += 1;
-                let result = {
-                    jenisDokumen: "Lainnya",
-                    detail: i.document_name,
-                    subDetail: "issued:" + i.document_date,
-                    catatan: i.catatan,
-                    status: i.status,
-                    fileUrl: i.fileUrl,
-                    badge: "light",
-                     Upload: new Date(i.createdAt).toLocaleString("en-GB", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(/ /g, ' ') ,
-                    id: i.id + "-" + i.nik+"-Lainnya"
-                }
-                data.push(result)
-            }
-            await req.cache.set(`SIMPEG:dokumen:${req.account.nik}`, JSON.stringify({
-                record: {
-                    verifiedCount,
-                    pendingCount,
-                    rejectedCount,
-                    totalDocuments
-                },
-                data
-            }));
-            await req.cache.expire(`SIMPEG:dokumen:${req.account.nik}`, 60 * 60);
+
+            // Ambil .data saja untuk di-stringify
+            const jsonString = JSON.stringify(response.data, null, 2);
+            console.log(jsonString);
+
             return res.status(200).json({
                 error: false,
                 message: "success",
-                
-                data: {
-                    record: {
-                        verifiedCount,
-                        pendingCount,
-                        rejectedCount,
-                        totalDocuments
-                    },
-                    data
-                },
+                record: response.data.length,
+                data: response.data,
             })
         } catch (error) {
+            console.log(error);
             return res.status(400).json({
                 error: true,
                 message: error.message,
@@ -400,219 +97,22 @@ module.exports = {
         }
     },
     deleteDoc: async (req, res) => {
-        let t = await sequelize.transaction();
         let param = req.params.id;
         try {
-            param = param.split("-");
-            let id = param[0];
-            let nik = param[1];
-            let jenis = param[2];
-            if (jenis == "Ijazah") {
-                await Ijazah.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_ijazah.create({
-                    fileId: id,
-                    status: "Deleted",
-                    keterangan: "File deleted oleh " + req.account.nama
-                }, { transaction: t });
-
-            }
-            if (jenis == "Str") {
-                await Str.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_str.create(
-                    {
-                        fileId: id,
-                        status: "Deleted",
-                        keterangan: "File deleted oleh " + req.account.nama
-                    }, { transaction: t }
-                )
-            }
-            if (jenis == "Kk") {
-                await Kk.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_kk.create(
-                    {
-                        fileId: id,
-                        status: "Deleted",
-                        keterangan: "File deleted oleh " + req.account.nama
-                    }, { transaction: t }
-                )
-            }
-            if (jenis == "Ktp") {
-                await Ktp.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_ktp.create(
-                    {
-                        fileId: id,
-                        status: "Deleted",
-                        keterangan: "File deleted oleh " + req.account.nama
-                    }, { transaction: t }
-                )
-            }
-            if (jenis == "Npwp") {
-                await Npwp.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_npwp.create(
-                    {
-                        fileId: id,
-                        status: "Deleted",
-                        keterangan: "File deleted oleh " + req.account.nama
-                    }, { transaction: t }
-                )
-            }
-            if (jenis == "Cv") {
-                await Cv.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_cv.create(
-                    {
-                        fileId: id,
-                        status: "Deleted",
-                        keterangan: "File deleted oleh " + req.account.nama
-                    }, { transaction: t }
-                )
-            }
-            if (jenis == "Sertifikat") {
-               await Sertifikat.update(
-                   {
-                       status: "Deleted"
-                   },{
-                   where: {
-                       id: id,
-                       nik: nik
-                   }
-               }, { transaction: t });
-               await Riwayat_sertifikat.create(
-                   {
-                       fileId: id,
-                       status: "Deleted",
-                       keterangan: "File deleted oleh " + req.account.nama
-                   }, { transaction: t }
-               )
-            }
-            if (jenis == "Skck") {
-                await Skck.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_skck.create(
-                    {
-                        fileId: id,
-                        status: "Deleted",
-                        keterangan: "File deleted oleh " + req.account.nama
-                    }, { transaction: t }
-                )
-            }
-            if (jenis == "Kontrak") {
-                await Kontrak.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_kontrak.create(
-                    {
-                        fileId: id,
-                        status: "Deleted",
-                        keterangan: "File deleted oleh " + req.account.nama
-                    }, { transaction: t }
-                )
-            }
-            if (jenis == "Pangkat") {
-                await Pangkat.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_pangkat.create(
-                    {
-                        fileId: id,
-                        status: "Deleted",
-                        keterangan: "File deleted oleh " + req.account.nama
-                    }, { transaction: t }
-                )
-            }
-            if (jenis == "Lainnya") {
-                await Lainnya.update(
-                    {
-                        status: "Deleted"
-                    },{
-                    where: {
-                        id: id,
-                        nik: nik
-                    }
-                }, { transaction: t });
-                await Riwayat_lainnya.create(
-                    {
-                        fileId: id,
-                        status: "Deleted",
-                        keterangan: "File deleted oleh " + req.account.nama
-                    }, { transaction: t }
-                )
-            }
-            t.commit();
-            await req.cache.del('SIMPEG:dokumen:' + nik);
+            const response = await axios({
+                method: 'DELETE',
+                url: 'https://api.spairum.my.id/api/gobi/v1/dokumen/' + param,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + req.cookies.token
+                }
+            });
             return res.status(200).json({
                 error: false,
                 message: "success",
-                data: id
+                data: param
             })
         } catch (error) {
-            await t.rollback();
             return res.status(400).json({
                 error: true,
                 message: error.message,
