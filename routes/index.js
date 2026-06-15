@@ -82,6 +82,7 @@ router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
 router.post('/api/document/:id', middleware.login, dokumen.uploadDoc);
 router.get('/api/document', middleware.login, dokumen.getDocAll);
+router.put('/api/document', middleware.login, dokumen.editDoc);
 router.delete('/api/document/:id', middleware.login, dokumen.deleteDoc);
 
 

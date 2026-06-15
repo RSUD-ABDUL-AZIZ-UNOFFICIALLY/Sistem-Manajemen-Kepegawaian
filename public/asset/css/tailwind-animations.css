@@ -1,0 +1,206 @@
+/* Tailwind Custom Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.animate-fade-out {
+    animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 0.3s ease-in-out forwards;
+}
+
+.animate-slide-out-right {
+    animation: slideOutRight 0.3s ease-in-out forwards;
+}
+
+/* Form Styling Improvements */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="month"],
+textarea,
+select {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+textarea:focus,
+select:focus {
+    @apply shadow-lg ring-2 ring-indigo-400;
+}
+
+/* Button Hover Effects */
+button {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+button:hover:not(:disabled) {
+    @apply transform scale-105 shadow-lg;
+}
+
+button:active:not(:disabled) {
+    @apply transform scale-95;
+}
+
+/* Badge Styles */
+.badge-success {
+    @apply bg-green-100 text-green-800 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+.badge-danger {
+    @apply bg-red-100 text-red-800 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+.badge-warning {
+    @apply bg-yellow-100 text-yellow-800 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+.badge-info {
+    @apply bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+/* File Upload Area */
+.file-upload-area {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+.file-upload-area.dragover {
+    @apply border-indigo-400 bg-indigo-50;
+}
+
+/* Modal Backdrop Animation */
+#addDocumentModal,
+#editDocumentModal,
+#previewModal,
+#rejectionReasonModal,
+#requiredDocumentsModal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#addDocumentModal:not(.hidden) {
+    @apply animate-fade-in;
+}
+
+/* Utility Classes */
+.text-danger {
+    @apply text-red-500;
+}
+
+.text-warning {
+    @apply text-yellow-500;
+}
+
+.text-success {
+    @apply text-green-500;
+}
+
+.text-info {
+    @apply text-blue-500;
+}
+
+/* Document Grid Improvements */
+#document-grid {
+    @apply space-y-0;
+}
+
+#document-grid > div {
+    @apply border-b border-gray-100 last:border-b-0 transition-colors duration-200;
+}
+
+#document-grid > div:hover {
+    @apply bg-indigo-50/40;
+}
+
+/* Form Section Visibility */
+.form-section.hidden {
+    @apply hidden;
+}
+
+.form-section:not(.hidden) {
+    @apply block animate-fade-in;
+}
+
+/* Responsive Grid Improvements */
+@media (max-width: 768px) {
+    #document-grid > div {
+        @apply py-4 px-3;
+    }
+}
+
+@media (min-width: 768px) {
+    #document-grid > div {
+        @apply py-4;
+    }
+}
+
+/* Loading Spinner */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Smooth Transitions for All Elements */
+* {
+    @apply transition-colors duration-200;
+}
+
+button, a, input, select, textarea {
+    @apply transition-all duration-200;
+}

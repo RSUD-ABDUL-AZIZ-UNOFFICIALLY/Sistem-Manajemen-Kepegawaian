@@ -62,21 +62,6 @@ window.closeAddDocumentModal = function () {
     document.getElementById('addDocumentModal').classList.add('hidden');
 };
 
-window.closeEditDocumentModal = function () {
-    document.getElementById('editDocumentModal').classList.add('hidden');
-};
-
-window.closePreviewModal = function () {
-    document.getElementById('previewModal').classList.add('hidden');
-};
-
-window.closeRejectionReasonModal = function () {
-    document.getElementById('rejectionReasonModal').classList.add('hidden');
-};
-
-window.closeRequiredDocumentsModal = function () {
-    document.getElementById('requiredDocumentsModal').classList.add('hidden');
-};
 
 // Show document fields based on type
 function showDocumentFields() {
@@ -129,7 +114,7 @@ function openAddDocumentModal(preselectedType = '') {
 
 // Check seumur hidup function
 function berlakuSeumurHidup(type) {
-    let inputId = type === 'STR' ? 'expiryDateSTR' : 'expiryDate';
+    let inputId = type === 'STR' ? 'expiryDateSTR' : 'expiryDateSTRE';
     const expiryInput = document.getElementById(inputId);
 
     if (expiryInput) {
@@ -246,8 +231,9 @@ async function saveDocument() {
         let docResult = await docResponse.json();
 
         Swal.close();
-        showToast('success', 'Dokumen berhasil disimpan dan sedang menunggu verifikasi!');
+        showToast('success', 'Dokumen berhasil disimpan');
         closeAddDocumentModal();
+        getDocuments();
 
         // Optional Reload:
         // const table = $('#documentsTable').DataTable();

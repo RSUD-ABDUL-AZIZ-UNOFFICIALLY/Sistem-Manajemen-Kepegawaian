@@ -2,8 +2,9 @@ const formatDate = (dateStr) => {
     if (!dateStr) return '-';
     if (dateStr.startsWith('9999')) return 'Seumur Hidup';
     const date = new Date(dateStr);
-    if (dateStr.length === 7) return dateStr;
+    // if (dateStr.length === 7) return dateStr;
     return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    // return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 };
 
 // Fungsi Render Detail sesuai Tipe
@@ -94,19 +95,23 @@ const editDocument = (id) => {
 
     document.getElementById('edit_id').value = doc._id;
     document.getElementById('edit_documentType').value = doc.document_type;
+    document.getElementById('edit_documentType').disabled = true;
+
 
     // 2. Tampilkan bagian form yang sesuai dengan tipe
     showFormSection(doc.document_type);
 
     // 3. Isi otomatis data lama ke dalam input form
     Object.keys(doc).forEach(key => {
+        console.log(key);
         const input = form.querySelector(`[name="${key}"]`);
         if (input) {
             // Formatting untuk date agar sesuai dengan value input type="date"
             let val = doc[key];
             if (input.type === 'date' && val) {
                 val = val.split('T')[0]; // Ambil YYYY-MM-DD
-                if (val.startsWith('9999')) val = ''; // Jika seumur hidup bisa dikosongkan/diatur logicnya
+                if (val.startsWith('9999')) val = '9999-12-31'; // Jika seumur hidup bisa dikosongkan/diatur logicnya
+                // if (val.startsWith('9999')) input.disabled = true;
             }
             if (input.type === 'month' && val) {
                 val = val.substring(0, 7); // Ambil YYYY-MM
@@ -133,37 +138,56 @@ const saveEdit = (event) => {
     const dataObj = Object.fromEntries(formData.entries());
 
     console.log('Data yang akan disimpan:', dataObj);
+    fetch('/api/document', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataObj),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Data yang dikirim ke server:', data);
+            getDocuments();
+
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 
     // --- DI SINI ANDA BISA MEMASUKKAN AJAX/FETCH UNTUK UPDATE KE SERVER API ---
-    alert(`Berhasil menyimpan perubahan untuk ID:\n${dataObj._id}`);
+    // alert(`Berhasil menyimpan perubahan untuk ID:\n${dataObj._id}`);
+
 
     closeEditModal();
     // renderDocuments(); // Panggil ulang ini jika state array documentsData berhasil di-update
 };
 
+
 // --- Logika Tampil/Sembunyikan Field Khusus ---
 const showFormSection = (type) => {
-    // Sembunyikan semua section dulu
-    // const sections = document.querySelectorAll('.form-section');
-    // sections.forEach(sec => sec.classList.add('hidden'));
-    
-    // // Tampilkan yang cocok
-    // const activeSection = document.getElementById(`${type}-fields`);
-    // if (activeSection) {
-    //     activeSection.classList.remove('hidden');
-    // }
     const docType = document.getElementById('edit_documentType').value;
 
     // Hide all form sections
     document.querySelectorAll('.form-section').forEach(section => {
+        section.classList.add('hidden');
         section.classList.remove('active');
+        const formControls = section.querySelectorAll('input, select, textarea');
+        formControls.forEach(control => {
+            control.disabled = true; // Nonaktifkan agar tidak divalidasi oleh browser
+        });
     });
 
     // Show selected section
     if (docType) {
         const section = document.getElementById(docType + '-fieldsEdit');
         if (section) {
+            section.classList.remove('hidden');
             section.classList.add('active');
+            const formControls = section.querySelectorAll('input, select, textarea');
+            formControls.forEach(control => {
+                control.disabled = false;
+            });
         }
     }
 };
@@ -266,6 +290,7 @@ async function getDocuments() {
     let data = await fetch('/api/document');
     data = await data.json();
     documentsData = data.data;
+    console.log(data);
     renderDocuments(data.data);
 }
 getDocuments();

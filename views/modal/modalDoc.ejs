@@ -99,7 +99,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Profesi <span class="text-red-500">*</span></label>
-                                <select class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="profession" required>
+                                <select class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="professionSTR" required>
                                     <option value="">-- Pilih Profesi --</option>
                                     <option value="Dokter">Dokter</option>
                                     <option value="Dokter Gigi">Dokter Gigi</option>
@@ -107,6 +107,7 @@
                                     <option value="Perawat Gigi">Perawat Gigi</option>
                                     <option value="Bidan">Bidan</option>
                                     <option value="Apoteker">Apoteker/ Asisten Apoteker</option>
+                                    <option value="Ahli Teknologi Laboratorium Medik">Ahli Teknologi Laboratorium Medik</option>
                                     <option value="Ahli Gizi">Ahli Gizi</option>
                                     <option value="Fisioterapis">Fisioterapis</option>
                                     <option value="Rekam Medis">Rekam Medis</option>
@@ -118,12 +119,12 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Terbit <span class="text-red-500">*</span></label>
-                                <input type="date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="issue_date" required>
+                                <input type="date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="issue_date_str" required>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Berakhir</label>
                                 <div class="flex">
-                                    <input type="date" class="w-full rounded-l-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="expiry_date" id="expiryDateSTR">
+                                    <input type="date" class="w-full rounded-l-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="expiry_date_str" id="expiryDateSTR">
                                     <button class="bg-gray-100 border border-l-0 border-gray-300 rounded-r-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition" onclick="berlakuSeumurHidup('STR')" type="button">Seumur Hidup</button>
                                 </div>
                             </div>
@@ -143,7 +144,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Profesi <span class="text-red-500">*</span></label>
-                                <select class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="profession" required>
+                                <select class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="professionSIP" required>
                                     <option value="">-- Pilih Profesi --</option>
                                     <option value="Dokter">Dokter</option>
                                     <option value="Dokter Gigi">Dokter Gigi</option>
@@ -162,11 +163,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Terbit <span class="text-red-500">*</span></label>
-                                <input type="date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="issue_date" required>
+                                <input type="date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="issue_date_sip" required>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Berakhir</label>
-                                <input type="date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="expiry_date">
+                                <input type="date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="expiry_date_sip">
                             </div>
                         </div>
                         <div>
@@ -417,6 +418,296 @@
                     </button>
                     <button type="button" onclick="closeAddDocumentModal()" class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto transition">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL EDIT DOKUMEN -->
+<div id="editModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity backdrop-blur-sm" onclick="closeEditModal()"></div>
+    
+    <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
+        <!-- Modal Panel -->
+        <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-3xl">
+            
+            <!-- Header Modal -->
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800" id="modal-title">Edit Detail Dokumen</h3>
+                <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <!-- Form Edit -->
+            <form id="editDocumentForm" onsubmit="saveEdit(event)">
+                <div class="px-6 py-5 max-h-[65vh] overflow-y-auto space-y-5">  
+                    <input type="hidden" id="edit_id" name="_id">
+                    <input type="hidden" id="edit_documentType" name="_id">
+                    <!-- Document Type Selection (Disabled for editing, just for context) -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Jenis Dokumen <span class="text-red-500">*</span></label>
+                        <select id="edit_documentType" name="document_type" onkeydown="return false;" tabindex="-1" class="w-full rounded-lg border-gray-300 border px-3 py-2 bg-gray-100 text-gray-500 focus:outline-none sm:text-sm cursor-not-allowed" readonly>
+                            <option value="kompetensi">Riwayat Pendidikan dan Kompetensi</option>
+                            <option value="str">Surat Tanda Registrasi (STR)</option>
+                            <option value="sip">Surat Izin Praktik (SIP)</option>
+                            <option value="sk">Surat Keputusan (SK)</option>
+                            <option value="sertifikat">Sertifikat Pelatihan</option>
+                            <option value="cv">Riwayat Pekerjaan (CV)</option>
+                            <option value="dokumen_uraian_tugas">Dokumen Uraian Tugas</option>
+                            <option value="dokumen_penilaian_kinerja">Dokumen Penilaian Kinerja</option>
+                            <option value="kk">Kartu Keluarga</option>
+                            <option value="ktp">KTP</option>
+                            <option value="npwp">NPWP</option>
+                            <option value="kontrak">Kontrak Kerja</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <!-- Dynamic Form Fields Based on Document Type -->
+                    
+                    <!-- Ijazah / Kompetensi Fields -->
+                    <div id="kompetensi-fieldsEdit" class="form-section hidden space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tingkat Pendidikan <span class="text-red-500">*</span></label>
+                                <select name="education_level" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="">-- Pilih Tingkat --</option>
+                                    <option value="SMA">SMA/SMK</option>
+                                    <option value="D1">Diploma I</option>
+                                    <option value="D2">Diploma II</option>
+                                    <option value="D3">Diploma III</option>
+                                    <option value="S1">Sarjana (S1)</option>
+                                    <option value="Profesi">Profesi</option>
+                                    <option value="S2">Magister (S2)</option>
+                                    <option value="S3">Doktor (S3)</option>
+                                    <option value="Spesialis">Spesialis</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Jurusan/Program Studi</label>
+                                <input type="text" name="major" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Contoh: Kedokteran">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Institusi <span class="text-red-500">*</span></label>
+                                <input type="text" name="institution" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Contoh: Universitas Tanjungpura">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tahun Lulus <span class="text-red-500">*</span></label>
+                                <input type="date" name="graduation_date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STR Fields -->
+                    <div id="str-fieldsEdit" class="form-section hidden space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor STR <span class="text-red-500">*</span></label>
+                                <input type="text" name="str_number" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Profesi <span class="text-red-500">*</span></label>
+                                <select class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="professionSTR" required>
+                                    <option value="">-- Pilih Profesi --</option>
+                                    <option value="Dokter">Dokter</option>
+                                    <option value="Dokter Gigi">Dokter Gigi</option>
+                                    <option value="Perawat">Perawat</option>
+                                    <option value="Perawat Gigi">Perawat Gigi</option>
+                                    <option value="Bidan">Bidan</option>
+                                    <option value="Apoteker">Apoteker/ Asisten Apoteker</option>
+                                    <option value="Ahli Gizi">Ahli Gizi</option>
+                                    <option value="Fisioterapis">Fisioterapis</option>
+                                    <option value="Rekam Medis">Rekam Medis</option>
+                                    <option value="Tenaga Kesehatan Masyarakat">Tenaga Kesehatan Masyarakat</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Terbit <span class="text-red-500">*</span></label>
+                                <input type="date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="issue_date_str" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Berakhir</label>
+                                <div class="flex">
+                                    <input type="date" class="w-full rounded-l-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"  id="expiryDateSTRE" name="expiry_date_str">
+                                    <button class="bg-gray-100 border border-l-0 border-gray-300 rounded-r-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition" onclick="berlakuSeumurHidup('STRE')" type="button">Seumur Hidup</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Penerbit</label>
+                            <input type="text" name="issuer" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+
+                    <!-- SIP Fields -->
+                    <div id="sip-fieldsEdit" class="form-section hidden space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor SIP <span class="text-red-500">*</span></label>
+                                <input type="text" name="sip_number" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Profesi <span class="text-red-500">*</span></label>
+                                <select class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="professionSIP" required>
+                                    <option value="">-- Pilih Profesi --</option>
+                                    <option value="Dokter">Dokter</option>
+                                    <option value="Dokter Gigi">Dokter Gigi</option>
+                                    <option value="Perawat">Perawat</option>
+                                    <option value="Perawat Gigi">Perawat Gigi</option>
+                                    <option value="Bidan">Bidan</option>
+                                    <option value="Apoteker">Apoteker/ Asisten Apoteker</option>
+                                    <option value="Ahli Gizi">Ahli Gizi</option>
+                                    <option value="Fisioterapis">Fisioterapis</option>
+                                    <option value="Rekam Medis">Rekam Medis</option>
+                                    <option value="Tenaga Kesehatan Masyarakat">Tenaga Kesehatan Masyarakat</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Terbit</label>
+                                <input type="date" name="issue_date_sip" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Berakhir</label>
+                                <input type="date" name="expiry_date_str" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SK Fields -->
+                    <div id="sk-fieldsEdit" class="form-section hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama / Ket. SK</label>
+                            <input type="text" name="other_description" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nomor SK</label>
+                            <textarea name="number_sk" rows="2" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Dokumen</label>
+                                <input type="date" name="document_date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Penerbit</label>
+                                <input type="text" name="document_issuer" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DPKS Fields -->
+                    <div id="dokumen_penilaian_kinerja-fieldsEdit" class="form-section hidden space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Dokumen</label>
+                                <input type="text" name="other_description" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Periode</label>
+                                <input type="month" name="document_date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DPKS Fields -->
+                    <div id="dokumen_uraian_tugas-fieldsEdit" class="form-section hidden space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Dokumen</label>
+                                <input type="text" name="other_description" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Periode</label>
+                                <input type="month" name="document_date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sertifikat Fields -->
+                    <div id="sertifikat-fieldsEdit" class="form-section hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Sertifikat</label>
+                            <input type="text" name="certificate_name" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pelatihan</label>
+                            <input type="date" name="training_date" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Kontrak Fields -->
+                    <div id="kontrak-fieldsEdit" class="form-section hidden space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Posisi / Jabatan</label>
+                                <input type="text" name="position" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Kontrak</label>
+                                <select name="contract_type" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="pkwt">PKWT (Kontrak)</option>
+                                    <option value="pppk">PPPK</option>
+                                    <option value="pppkpw">PPPKPW</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
+                                <input type="date" name="contract_start" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Berakhir</label>
+                                <input type="date" name="contract_end" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Kartu Keluarga (KK) Fields -->
+                    <div id="kk-fieldsEdit" class="form-section hidden space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor KK</label>
+                                <input type="text" name="kk_number" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Kepala Keluarga</label>
+                                <input type="text" name="kk_head_name" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                            <textarea name="kk_address" rows="2" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- General Note (Selalu tampil di bawah) -->
+                    <div class="border-t border-gray-100 pt-4 mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Catatan Tambahan</label>
+                        <textarea name="catatan" rows="2" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Catatan atau keterangan tambahan (opsional)"></textarea>
+                    </div>
+
+                </div>
+                
+                <!-- Footer Modal (Actions) -->
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 sm:flex sm:flex-row-reverse rounded-b-xl">
+                    <button type="submit" class="inline-flex w-full justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto">
+                        Simpan Perubahan
+                    </button>
+                    <button type="button" onclick="closeEditModal()" class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto">
                         Batal
                     </button>
                 </div>

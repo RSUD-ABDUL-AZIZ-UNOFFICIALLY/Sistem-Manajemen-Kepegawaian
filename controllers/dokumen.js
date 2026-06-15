@@ -57,17 +57,6 @@ module.exports = {
     getDocAll: async (req, res) => {
 
         try {
-            // let config = {
-            //     method: 'GET',
-            //     url: process.env.API_URL + "/api/gobi/v1/dokumen/" + account.nik.toString(),
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Authorization': 'Bearer ' + req.cookies.token
-            //     }
-            // };
-            // console.log(config);
-
-            // let x = await axios(config)
             const response = await axios({
                 method: 'GET',
                 url: 'https://api.spairum.my.id/api/gobi/v1/dokumen/' + req.account.nik.toString(),
@@ -76,11 +65,6 @@ module.exports = {
                     'Authorization': 'Bearer ' + req.cookies.token
                 }
             });
-
-            // Ambil .data saja untuk di-stringify
-            const jsonString = JSON.stringify(response.data, null, 2);
-            console.log(jsonString);
-
             return res.status(200).json({
                 error: false,
                 message: "success",
@@ -111,6 +95,35 @@ module.exports = {
                 error: false,
                 message: "success",
                 data: param
+            })
+        } catch (error) {
+            return res.status(400).json({
+                error: true,
+                message: error.message,
+                data: error
+            })
+        }
+    },
+    editDoc: async (req, res) => {
+        let body = req.body;
+        let account = req.account;
+        body.status = "active";
+        body.user = account.nik.toString();
+        let data = JSON.stringify(body);
+        try {
+            const response = await axios({
+                method: 'PUT',
+                url: 'https://api.spairum.my.id/api/gobi/v1/dokumen/' + body._id,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + req.cookies.token
+                },
+                data: body
+            });
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                data: response.data
             })
         } catch (error) {
             return res.status(400).json({
