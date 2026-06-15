@@ -24,8 +24,6 @@ module.exports = {
             console.log(config);
 
             let x = await axios.post(process.env.API_URL + "/api/gobi/v1/dokumen", data, config)
-
-            console.log(JSON.stringify(x.data, null, 2));
             return res.status(200).json({
                 error: false,
                 message: "success",
@@ -33,20 +31,7 @@ module.exports = {
             })
 
         } catch (error) {
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log("Error Data:", JSON.stringify(error.response.data));
-                res.status(error.response.status).json(error.response.data);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.log("No response received.");
-                res.status(500).json({ message: "No response from server" });
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log("Error Message:", error.message);
-                res.status(500).json({ message: error.message });
-            }
+            console.log(error);
             return res.status(400).json({
                 error: true,
                 message: error.message,
