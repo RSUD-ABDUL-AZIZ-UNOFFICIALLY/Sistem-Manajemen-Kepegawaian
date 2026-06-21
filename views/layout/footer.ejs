@@ -2,7 +2,7 @@
    // index.js (atau file JavaScript utama Anda)
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/asset/js/service-worker.js')
+    navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
         console.log('Service Worker berhasil terdaftar:', registration);
       })

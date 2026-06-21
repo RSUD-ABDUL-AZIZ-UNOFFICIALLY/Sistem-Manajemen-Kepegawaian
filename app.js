@@ -34,6 +34,7 @@ app.use(cookieParser())
 app.set('view engine', 'ejs');
 
 app.use(favicon(path.join(__dirname + '/public/', 'favicon.ico')));
+app.use("/service-worker.js", express.static(path.join(__dirname + '/public/js/service-worker.js')));
 app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/')));
 app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/')));
 app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));

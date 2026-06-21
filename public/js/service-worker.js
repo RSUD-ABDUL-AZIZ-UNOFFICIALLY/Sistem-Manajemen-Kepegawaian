@@ -1,11 +1,21 @@
 // service-worker.js
-const CACHE_NAME = 'simpeg-cache-v2.8.1';
-const DYNAMIC_CACHE = 'simpeg-dynamic-v2.8.1';
+const CACHE_NAME = 'simpeg-cache-v2.8.2';
+const DYNAMIC_CACHE = 'simpeg-dynamic-v2.8.2';
+console.log(CACHE_NAME, DYNAMIC_CACHE);
 
 // Daftar file statis yang harus ada di cache sejak awal (Pre-caching)
 const ASSETS_TO_CACHE = [
   '/',
+  '/absen',
+  '/Report',
+  '/monthly',
   '/daily',
+  '/presensi',
+  '/approvement',
+  '/review',
+  '/contact',
+  '/helpdesk',
+  '/profile',
   '/asset/js/template/sidebar.js',
   '/asset/img/Lambang_KotaSingkawang.webp',
   '/asset/favicon.ico',
@@ -57,6 +67,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 // self.addEventListener('fetch', (event) => {
+//   console.log('Fetch event:', event.request.url);
 //   event.respondWith(
 //     caches.match(event.request)
 //       .then((response) => {
@@ -66,18 +77,27 @@ self.addEventListener('activate', (event) => {
 // });
 // Event 3: FETCH - Mencegat request
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') {
+    return; // Biarkan browser menangani request ini secara default tanpa intervensi SW
+  }
   const requestUrl = new URL(event.request.url);
-
+  // Perbaikan: Bypass request non-HTTP/HTTPS (seperti chrome-extension, data URIs, dll.)
+  if (requestUrl.protocol !== 'http:' && requestUrl.protocol !== 'https:') {
+    return; // Biarkan browser menangani request ini secara default tanpa intervensi SW
+  }
   // Strategi A: Network First untuk API (Data dinamis)
   if (requestUrl.pathname.startsWith('/api/')) {
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
-          // Simpan response terbaru ke cache dinamis
-          return caches.open(DYNAMIC_CACHE).then((cache) => {
-            cache.put(event.request, networkResponse.clone());
-            return networkResponse;
-          });
+          // Hanya simpan ke cache jika respons sukses (status 200-299)
+          if (networkResponse.ok) {
+            return caches.open(DYNAMIC_CACHE).then((cache) => {
+              cache.put(event.request, networkResponse.clone());
+              return networkResponse;
+            });
+          }
+          return networkResponse;
         })
         .catch(() => {
           // Jika offline, ambil data terakhir dari cache dinamis
@@ -91,10 +111,13 @@ self.addEventListener('fetch', (event) => {
       caches.match(event.request).then((cachedResponse) => {
         // Kembalikan dari cache jika ada, jika tidak, fetch dari jaringan
         return cachedResponse || fetch(event.request).then((networkResponse) => {
-          return caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, networkResponse.clone());
-            return networkResponse;
-          });
+          if (networkResponse.ok) {
+            return caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, networkResponse.clone());
+              return networkResponse;
+            });
+          }
+          return networkResponse;
         });
       })
     );
