@@ -1,12 +1,13 @@
 let deferredPrompt;
-const installModal = new bootstrap.Modal(document.getElementById('installModal'));
+// const installModal = new bootstrap.Modal(document.getElementById('installModal'));
 
 window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
     deferredPrompt = event;
 
     // Menampilkan modal secara otomatis
-    installModal.show();
+    // installModal.show();
+    document.getElementById('installModal').classList.remove('hidden');
 
     const installButton = document.getElementById('installButton');
     installButton.addEventListener('click', () => {
@@ -24,7 +25,7 @@ function installApp() {
         }
         deferredPrompt = null;
         // Menyembunyikan modal setelah proses instalasi selesai
-        installModal.hide();
+        // installModal.hide();
     });
 }
 console.log("Halo");

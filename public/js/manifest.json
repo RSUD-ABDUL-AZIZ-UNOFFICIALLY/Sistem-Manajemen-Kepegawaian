@@ -19,8 +19,24 @@
         "type": "image/png"
       }
     ],
-    "start_url": "/",
+    "start_url": "/daily",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#D1AF97"
+    "theme_color": "#D1AF97",
+    "screenshots": [
+      {
+        "src": "/asset/img/simpeg.spairum.my.id_daily.png",
+        "sizes": "2560x1440",
+        "type": "image/png",
+        "form_factor": "wide",
+        "label": "Tampilan Dashboard Utama di Perangkat Laptop"
+      },
+      {
+        "src": "/asset/img/simpeg.spairum.my.id_daily(Samsung Galaxy S8+).png",
+        "sizes": "1440x2960",
+        "type": "image/png",
+        "form_factor": "narrow",
+        "label": "Tampilan Dashboard di Perangkat Seluler"
+      }
+    ]
   }
