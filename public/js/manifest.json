@@ -2,6 +2,7 @@
     "name": "Sistem Informasi Manajemen Kepegawaian RSUD dr. Abdul Aziz",
     "short_name": "SIMPEG RSUD dr. Abdul Aziz",
     "description": "Sistem Informasi Manajemen Kepegawaian Rumah Sakit Umum Daerah dr. Abdul Aziz",
+    "version": "2.8.3",
     "icons": [
       {
         "src": "/asset/img/android-chrome-192x192.png",
