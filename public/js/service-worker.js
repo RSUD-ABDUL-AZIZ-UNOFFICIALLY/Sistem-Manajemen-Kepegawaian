@@ -6,17 +6,7 @@ console.log(CACHE_NAME, DYNAMIC_CACHE);
 // Daftar file statis yang harus ada di cache sejak awal (Pre-caching)
 const ASSETS_TO_CACHE = [
   '/',
-  '/absen',
-  '/Report',
-  '/monthly',
-  '/daily',
-  '/presensi',
-  '/approvement',
-  '/review',
-  '/contact',
-  '/helpdesk',
-  '/profile',
-  '/asset/js/template/sidebar.js',
+  '/favicon.ico',
   '/asset/img/Lambang_KotaSingkawang.webp',
   '/asset/favicon.ico',
   '/asset/img/android-chrome-192x192.png',
@@ -75,6 +65,21 @@ self.addEventListener('activate', (event) => {
 //       })
 //   );
 // });
+
+// Helper untuk membersihkan redirected response guna menghindari error 'redirect mode not follow'
+function cleanResponse(response) {
+  if (!response || !response.redirected) {
+    return response;
+  }
+
+  // Bungkus kembali response untuk mereset status 'redirected' menjadi false
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers
+  });
+}
+
 // Event 3: FETCH - Mencegat request
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') {
@@ -90,18 +95,19 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
-          // Hanya simpan ke cache jika respons sukses (status 200-299)
-          if (networkResponse.ok) {
+          const cleanedResponse = cleanResponse(networkResponse);
+          if (cleanedResponse.ok) {
             return caches.open(DYNAMIC_CACHE).then((cache) => {
-              cache.put(event.request, networkResponse.clone());
-              return networkResponse;
+              cache.put(event.request, cleanedResponse.clone());
+              return cleanedResponse;
             });
           }
-          return networkResponse;
+          return cleanedResponse;
         })
         .catch(() => {
-          // Jika offline, ambil data terakhir dari cache dinamis
-          return caches.match(event.request);
+          return caches.match(event.request).then((cachedResponse) => {
+            return cleanResponse(cachedResponse);
+          });
         })
     );
   }
@@ -109,15 +115,20 @@ self.addEventListener('fetch', (event) => {
   else {
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
-        // Kembalikan dari cache jika ada, jika tidak, fetch dari jaringan
-        return cachedResponse || fetch(event.request).then((networkResponse) => {
-          if (networkResponse.ok) {
+        // Kembalikan dari cache jika ada (setelah dibersihkan), jika tidak, fetch dari jaringan
+        if (cachedResponse) {
+          return cleanResponse(cachedResponse);
+        }
+
+        return fetch(event.request).then((networkResponse) => {
+          const cleanedResponse = cleanResponse(networkResponse);
+          if (cleanedResponse.ok) {
             return caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse.clone());
-              return networkResponse;
+              cache.put(event.request, cleanedResponse.clone());
+              return cleanedResponse;
             });
           }
-          return networkResponse;
+          return cleanedResponse;
         });
       })
     );

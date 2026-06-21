@@ -3,7 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const favicon = require('serve-favicon');
-const cors = require('cors');
+const morgan = require('morgan');
+const useragent = require('express-useragent');
+// const cors = require('cors');
 const app = express();
 const path = require('path');
 const fs = require('fs');
@@ -11,17 +13,27 @@ const fs = require('fs');
 const package = JSON.parse(fs.readFileSync('package.json'));
 console.log(package.name + ' ' + package.version);
 const { createClient } = require('redis');
-app.use(cors());
+// app.use(cors());
 
+app.use(useragent.express());
 
 const http = require('http');
 const server = http.createServer(app);
-const morgan = require('morgan');
 console.log("mode = " + process.env.NODE_ENV);
 // Buat token custom untuk IP dari header `x-real-ip`
 morgan.token('real-ip', (req) => req.headers['x-real-ip'] || req.ip);
+// 2. Buat custom token bernama :device
+morgan.token('device', (req) => {
+    if (req.useragent) {
+        if (req.useragent.isMobile) return 'Mobile';
+        if (req.useragent.isTablet) return 'Tablet';
+        if (req.useragent.isDesktop) return 'Desktop';
+        if (req.useragent.isBot) return 'Bot';
+    }
+    return 'Unknown-Device';
+});
 // Format custom: IP + method + url + status + response-time
-const customFormat = ':real-ip :method :url :status :response-time ms';
+const customFormat = ':real-ip :device :method  :url :status :response-time ms';
 app.use(morgan(customFormat));
 // app.use(morgan(MORGAN_FORMAT));
 app.use(express.json());

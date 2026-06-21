@@ -86,8 +86,18 @@ function menuAkses() {
         t.includes("simrs") && $("#navbar").append(simrs),
         t.includes("rm") && $("#ul_simrs").append(rm),
         $("#navbar").append('<li class="nav-item" id="helpdesk" name="helpdesk">    <a href="/helpdesk" class="nav-link">        <i class="fa-solid fa-bug text-warning nav-icon"></i>        <p class="text">Helpdesk</p>    </a></li>'),
-        $("#navbar").append('<li class="nav-item">    <a href="/logout" class="nav-link">        <i class="fa-solid fa-right-from-bracket text-danger nav-icon"></i>        <p class="text">Logout</p>    </a></li>    ');
+        $("#navbar").append('<li class="nav-item">    <a  href="#" onclick="performLogout(event)" class="nav-link">        <i class="fa-solid fa-right-from-bracket text-danger nav-icon"></i>        <p class="text">Logout</p>    </a></li>    ');
     t.includes('adminAttendence') && $("#ul_absen").append(att);
 }
 
 profilepic(), cekElemnet();
+async function performLogout() {
+    // 1. Kirim sinyal ke Service Worker untuk wipe out dynamic cache
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+            action: 'clear-session-cache'
+        });
+    }
+    // 3. Redirect user ke halaman login
+    window.location.href = '/logout';
+}

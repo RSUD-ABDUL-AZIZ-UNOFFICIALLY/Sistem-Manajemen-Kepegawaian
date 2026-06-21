@@ -582,8 +582,6 @@ module.exports = {
         persentase = 100;
       }
       let tpp = hitungTpp(persentase)
-      console.log(WorkDays);
-      console.log("persentase", persentase);
       let pesan = "";
       try {
         let id = await Rekap.findOne({
@@ -591,7 +589,6 @@ module.exports = {
             ket: ket,
           },
         });
-        console.log(id);
         if (id == null) {
           let user = await User.findOne({
             where: {
@@ -1112,7 +1109,6 @@ module.exports = {
 
       WorkDays.dataValues.persentase = persentase;
       WorkDays.dataValues.tpp = tpp[0];
-      console.log(WorkDays);
 
       return res.status(200).json({
         error: false,
