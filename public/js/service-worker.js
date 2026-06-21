@@ -5,7 +5,6 @@ console.log(CACHE_NAME, DYNAMIC_CACHE);
 
 // Daftar file statis yang harus ada di cache sejak awal (Pre-caching)
 const ASSETS_TO_CACHE = [
-  '/',
   '/favicon.ico',
   '/asset/img/Lambang_KotaSingkawang.webp',
   '/asset/favicon.ico',
