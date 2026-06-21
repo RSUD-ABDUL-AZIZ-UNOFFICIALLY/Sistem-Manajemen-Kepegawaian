@@ -1,66 +1,123 @@
 <%- include('layout/header') -%>
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <div class="text-center mb-4">
-              <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Logo" height="50">
-              <h5 class="card-title mt-2">Sistem Informasi Manajemen Kepegawaian</h5>
-              <h5 class="card-title mt-2">RSUD dr. Abdul Aziz</h5>
+ <div class="container mx-auto px-4 mt-12">
+    <div class="flex justify-center">
+      <!-- Mengganti col-md-6 dengan max-w-md agar form responsif dan rapi -->
+      <div class="w-full max-w-md">
+        
+        <!-- Card Container -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <div class="p-6 sm:p-8">
+            
+            <!-- Header Section -->
+            <div class="text-center mb-8">
+              <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Logo" class="h-14 mx-auto object-contain" onerror="this.src='https://via.placeholder.com/50?text=Logo'">
+              <h5 class="text-lg font-bold text-gray-800 mt-4 leading-tight">Sistem Informasi Manajemen Kepegawaian</h5>
+              <h5 class="text-md font-medium text-gray-500 mt-1">RSUD dr. Abdul Aziz</h5>
             </div>
+
+            <!-- Form Section -->
             <form>
-              <div class="form-group">
-                <label for="phone" class="form-label">Nomor Whatsapp</label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="phone" name="phone" autocomplete="on" required />
-                  <button type="button" class="btn btn-outline-secondary" id="send-otp">
+              
+              <!-- Input: Nomor Whatsapp -->
+              <div class="mb-5">
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1.5">Nomor Whatsapp</label>
+                <div class="flex shadow-sm rounded-lg">
+                  <input 
+                    type="number" 
+                    id="phone" 
+                    name="phone" 
+                    autocomplete="on" 
+                    required 
+                    class="flex-1 block w-full min-w-0 px-4 py-2.5 border border-gray-300 rounded-none rounded-l-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm outline-none transition-colors"
+                    placeholder="Contoh: 08123456789"
+                  />
+                  <button 
+                    type="button" 
+                    id="send-otp"
+                    class="inline-flex items-center px-4 py-2.5 border border-l-0 border-gray-300 rounded-r-lg bg-gray-50 text-gray-700 text-sm font-medium hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
+                  >
                     Minta OTP
                   </button>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="otp">One-Time Password (OTP)</label>
-                <input type="number" class="form-control" id="otp" name="otp" required />
-                <div class="mt-3 text-justify">
-                  <p class="card-text text-muted"><small>One-Time Password (OTP) telah dikirim ke nomor Whatsapp Anda
-                      yang
-                      terdaftar.</small></p>
+
+              <!-- Input: OTP -->
+              <div class="mb-6">
+                <label for="otp" class="block text-sm font-medium text-gray-700 mb-1.5">One-Time Password (OTP)</label>
+                <input 
+                  type="number" 
+                  id="otp" 
+                  name="otp" 
+                  required 
+                  class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm outline-none transition-colors"
+                  placeholder="Masukkan OTP"
+                />
+                <div class="mt-2.5 text-justify">
+                  <p class="text-gray-500 text-xs leading-relaxed">
+                    One-Time Password (OTP) telah dikirim ke nomor Whatsapp Anda yang terdaftar.
+                  </p>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary float-end">Login</button>
+
+              <!-- Submit Button -->
+              <div class="flex justify-end mt-2">
+                <button 
+                  type="submit" 
+                  class="inline-flex justify-center items-center px-6 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                >
+                  Login
+                </button>
+              </div>
+
             </form>
           </div>
         </div>
+        
       </div>
     </div>
   </div>
   <!-- Modal -->
-  <div class="modal fade" id="installModal" tabindex="-1" aria-labelledby="installModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="installModalLabel">Instal Aplikasi</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Instal aplikasi ini untuk mendapatkan pengalaman yang lebih baik.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-          <button type="button" class="btn btn-primary" id="installButton">Instal</button>
-        </div>
+<!-- Modal Instalasi Aplikasi (Tailwind Refactored) -->
+  <div id="installModal" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4 transition-opacity backdrop-blur-sm" aria-labelledby="installModalLabel" aria-hidden="true">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+        <h5 class="text-lg font-bold text-gray-800" id="installModalLabel">Instal Aplikasi</h5>
+        <!-- Tombol Close (X) -->
+        <button type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none transition-colors" aria-label="Close" onclick="document.getElementById('installModal').classList.add('hidden')">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
+      
+      <!-- Modal Body -->
+      <div class="px-6 py-5">
+        <p class="text-gray-600 text-sm leading-relaxed">Instal aplikasi ini untuk mendapatkan pengalaman yang lebih baik.</p>
+      </div>
+      
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3">
+        <button type="button" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" onclick="document.getElementById('installModal').classList.add('hidden')">
+          Tutup
+        </button>
+        <button type="button" id="installButton" class="px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+          Instal
+        </button>
+      </div>
+
     </div>
   </div>
-  <script src="/asset/js/lib/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+  <!-- <script src="/asset/js/lib/jquery-3.6.0.min.js"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script> -->
   <!-- SweetAlert2 JS -->
    <script>
     let admin = '<%= admin %>';
    </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.8/sweetalert2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"></script>
   <script src="/asset/js/src/module/helper_3.min.js"></script>
-  <script src="/asset/js/template/login4.min.js"></script>
-  <script src="/asset/js/template/install.min.js"></script>
+  <script src="/asset/js/template/login5.min.js"></script>
+  <script src="/asset/js/template/install2.min.js"></script>
   <%- include('layout/footer') -%>
