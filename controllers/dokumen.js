@@ -2,7 +2,6 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const secretKey = process.env.JWT_SECRET_KEY;
-console.log(process.env.API_URL);
 const { sequelize, User, Ijazah, Riwayat_ijazah, Str, Riwayat_str, Kk, Riwayat_kk, Ktp, Riwayat_ktp, Npwp, Riwayat_npwp, Cv, Riwayat_cv, Sertifikat, Riwayat_sertifikat, Skck, Riwayat_skck, Kontrak, Riwayat_kontrak, Pangkat, Riwayat_pangkat, Lainnya, Riwayat_lainnya } = require("../models");
 const { Op } = require("sequelize");
 
