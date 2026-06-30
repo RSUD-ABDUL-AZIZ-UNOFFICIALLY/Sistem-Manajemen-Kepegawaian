@@ -1,7 +1,6 @@
 // service-worker.js
-const CACHE_NAME = 'simpeg-cache-v2.8.3';
-const DYNAMIC_CACHE = 'simpeg-dynamic-v2.8.3';
-console.log(CACHE_NAME, DYNAMIC_CACHE);
+const CACHE_NAME = 'simpeg-cache-v2.8.4';
+const DYNAMIC_CACHE = 'simpeg-dynamic-v2.8.4';
 
 // Daftar file statis yang harus ada di cache sejak awal (Pre-caching)
 const ASSETS_TO_CACHE = [
@@ -45,6 +44,11 @@ self.addEventListener('install', (event) => {
 });
 // Event 2: ACTIVATE - Membersihkan cache versi lama jika ada update
 self.addEventListener('activate', (event) => {
+  console.log('activate...');
+  const requestUrl = new URL(event.request.url);
+  const pagePath = requestUrl.pathname;
+
+  console.log(pagePath);
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(

@@ -93,11 +93,20 @@ function menuAkses() {
 profilepic(), cekElemnet();
 async function performLogout() {
     // 1. Kirim sinyal ke Service Worker untuk wipe out dynamic cache
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-            action: 'clear-session-cache'
-        });
-    }
+    clearAllCaches();
     // 3. Redirect user ke halaman login
     window.location.href = '/logout';
+}
+async function clearAllCaches() {
+    if ('caches' in window) {
+        try {
+            const cacheNames = await caches.keys();
+            await Promise.all(
+                cacheNames.map(cacheName => caches.delete(cacheName))
+            );
+            console.log('Semua cache Service Worker berhasil dihapus.');
+        } catch (error) {
+            console.error('Gagal menghapus cache:', error);
+        }
+    }
 }
