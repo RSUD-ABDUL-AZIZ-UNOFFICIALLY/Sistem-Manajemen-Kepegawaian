@@ -44,9 +44,9 @@ self.addEventListener('install', (event) => {
 });
 // Event 2: ACTIVATE - Membersihkan cache versi lama jika ada update
 self.addEventListener('activate', (event) => {
-  console.log('activate...');
-  const requestUrl = new URL(event.request.url);
-  const pagePath = requestUrl.pathname;
+  // console.log('activate...');
+  // const requestUrl = new URL(event.request.url);
+  // const pagePath = requestUrl.pathname;
 
   console.log(pagePath);
   event.waitUntil(
