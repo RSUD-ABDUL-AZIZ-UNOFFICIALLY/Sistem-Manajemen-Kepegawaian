@@ -1,6 +1,6 @@
 // service-worker.js
-const CACHE_NAME = 'simpeg-cache-v2.8.5';
-const DYNAMIC_CACHE = 'simpeg-dynamic-v2.8.5';
+const CACHE_NAME = 'simpeg-cache-v2.8.6';
+const DYNAMIC_CACHE = 'simpeg-dynamic-v2.8.6';
 
 // Daftar file statis yang harus ada di cache sejak awal (Pre-caching)
 const ASSETS_TO_CACHE = [
