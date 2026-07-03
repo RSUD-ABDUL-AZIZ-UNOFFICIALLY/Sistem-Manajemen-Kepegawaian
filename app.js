@@ -45,8 +45,30 @@ app.use(cookieParser())
 
 app.set('view engine', 'ejs');
 
+const isDev = process.env.NODE_ENV !== 'production';
+console.log('isDev = ' + isDev);
 app.use(favicon(path.join(__dirname + '/public/', 'favicon.ico')));
-app.use("/service-worker.js", express.static(path.join(__dirname + '/public/js/service-worker.js')));
+// app.use("/service-worker.js", express.static(path.join(__dirname + '/public/js/service-worker.js')));
+app.get('/service-worker.js', (req, res) => {
+    if (isDev) {
+        // Mode Development: Kirim kill-switch dan paksa no-cache
+        res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+            'Content-Type': 'application/javascript'
+        });
+
+        // Script ini memastikan SW apa pun yang masih "nyangkut" akan langsung mati
+        res.send(`
+      self.addEventListener('install', (e) => self.skipWaiting());
+      self.addEventListener('activate', (e) => {
+        e.waitUntil(self.registration.unregister().then(() => self.clients.claim()));
+      });
+    `);
+    } else {
+        // Mode Production: Kirim file sw.js yang sebenarnya
+        res.status(200).sendFile((path.join(__dirname, '/public/js/service-worker.js')));
+    }
+});
 app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/')));
 app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/')));
 app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));
