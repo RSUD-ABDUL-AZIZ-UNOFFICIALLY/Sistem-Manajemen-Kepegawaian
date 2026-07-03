@@ -41,7 +41,7 @@ function queryselec() {
     let e = document.querySelectorAll(".nav-link");
     let n = e.length;
     for (let l = 0; l < n; l++) e[l].href === a && (e[l].className = "nav-link active");
-    (a.includes("profile") || a.includes("account") || a.includes("document")) && $("#documen").addClass("menu-open"),
+    (a.includes("profile") || a.includes("account") || a.includes("document") || a.includes("salary")) && $("#documen").addClass("menu-open"),
         (a.includes("cuti") || a.includes("aprovecuti")) && $("#cuti").addClass("menu-open"),
         (a.includes("daily") || a.includes("approvement") || a.includes("monthly") || a.includes("Report")) && $("#laporan").addClass("menu-open"),
         (a.includes("helpdeskadmin") || a.includes("contact")) && $("#admin").addClass("menu-open"),

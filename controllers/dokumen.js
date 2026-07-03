@@ -1,4 +1,5 @@
 "use strict";
+require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const secretKey = process.env.JWT_SECRET_KEY;
@@ -21,7 +22,6 @@ module.exports = {
                 }
             };
             console.log(config);
-
             let x = await axios.post(process.env.API_URL + "/api/gobi/v1/dokumen", data, config)
             return res.status(200).json({
                 error: false,
@@ -116,6 +116,74 @@ module.exports = {
                 data: error
             })
         }
+    },
+    gaji: async (req, res) => {
+        let account = req.account;
+        let cache = await req.cache.get('SIMPEG:gaji:' + account.nik);
+        if (cache) {
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                account,
+                data: JSON.parse(cache)
+            })
+        }
+        if (account.status == 'PNS' || account.status == 'PPPK') {
+            let config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + req.cookies.token
+                }
+            };
+            try {
+                const getGaji = await axios({
+                    method: 'GET',
+                    url: process.env.API_URL + "/api/gobi/v1/find/gaji/asn?nip_pegawai=" + account.nip,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + req.cookies.token
+                    }
+                });
+                if (getGaji.data.data.length == 0) {
+                    return res.status(200).json({
+                        error: false,
+                        message: "success",
+                        account,
+                        data: null
+                    })
+                }
+                let data = [];
+                for (let x of getGaji.data.data) {
+                    let y = {
+                        periode: x.periode,
+                        gaji_pokok: x.gaji_pokok,
+                        jumlah_gaji_dan_tunjangan: x.jumlah_gaji_dan_tunjangan,
+                        jumlah_potongan: x.jumlah_potongan,
+                        jumlah_ditransfer: x.jumlah_ditransfer
+                    }
+                    data.push(y);
+                }
+                req.cache.set('SIMPEG:gaji:' + account.nik, JSON.stringify(data));
+                req.cache.expire('SIMPEG:gaji:' + account.nik, 604800);
+                return res.status(200).json({
+                    error: false,
+                    message: "success",
+                    data: data
+                })
+            } catch (error) {
+                console.log(error);
+                return res.status(400).json({
+                    error: true,
+                    message: error.message,
+                    data: error
+                })
+            }
+        }
+        return res.status(201).json({
+            error: false,
+            message: "success",
+            data: null
+        })
     }
 }
 // async function uploadIjazah(body, account) {

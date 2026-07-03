@@ -28,6 +28,7 @@ router.get('/helpdesk', middleware.login, controller.helpDesk);
 router.get('/profile', middleware.login, controller.profile);
 router.get('/account', middleware.login, controller.account);
 router.get('/document', middleware.login, controller.doc);
+router.get('/salary', middleware.login, controller.salary);
 
 router.get('/cuti', middleware.login, controller.cuti);
 router.get('/cuti/admin', middleware.login, controller.adminCuti);
@@ -84,6 +85,7 @@ router.post('/api/document/:id', middleware.login, dokumen.uploadDoc);
 router.get('/api/document', middleware.login, dokumen.getDocAll);
 router.put('/api/document', middleware.login, dokumen.editDoc);
 router.delete('/api/document/:id', middleware.login, dokumen.deleteDoc);
+router.get('/api/salary/gaji', middleware.login, dokumen.gaji);
 
 
 

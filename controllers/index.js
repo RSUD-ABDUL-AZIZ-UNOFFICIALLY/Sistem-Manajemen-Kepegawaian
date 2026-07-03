@@ -76,6 +76,16 @@ module.exports = {
     };
     res.render("document", data);
   },
+  salary: (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let data = {
+      title: "Dasboard Gaji | SIMPEG",
+      page: "Data gaji",
+      token: decoded
+    };
+    res.render("salary", data);
+  },
   daily: (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);

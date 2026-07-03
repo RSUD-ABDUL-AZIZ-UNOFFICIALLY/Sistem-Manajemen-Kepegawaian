@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <%- include('template/head'); %>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+
+    <!-- Navbar -->
+    <%- include('template/navbar'); %>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <%- include('template/sidebar'); %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+          <%- include('template/content-header'); %>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+    <section class="p-4 sm:p-6 w-full">
+    <div class="max-w-6xl mx-auto space-y-6">
+        
+        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+            <div class="bg-cyan-600 px-5 py-3 border-b border-cyan-700">
+                <h3 class="text-lg font-medium text-white">Riwayat Data Gaji</h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-sm font-medium text-slate-600">
+                            <th scope="col" class="px-6 py-4">Periode</th>
+                            <th scope="col" class="px-6 py-4">Gaji Pokok</th>
+                            <th scope="col" class="px-6 py-4">Total Gaji & Tunjangan</th>
+                            <th scope="col" class="px-6 py-4">Jumlah Potongan</th>
+                            <th scope="col" class="px-6 py-4">Jumlah Ditransfer</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body-gaji" class="divide-y divide-slate-200 text-sm">
+                        <tr id="loading-row-gaji">
+                            <td colspan="5" class="px-6 py-8 text-center text-slate-500">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <svg class="animate-spin h-5 w-5 text-cyan-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span>Memuat data gaji...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+            <div class="bg-teal-600 px-5 py-3 border-b border-teal-700">
+                <h3 class="text-lg font-medium text-white">Riwayat Data TPP</h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-sm font-medium text-slate-600">
+                            <th scope="col" class="px-6 py-4">Periode</th>
+                            <th scope="col" class="px-6 py-4">Jumlah TPP</th>
+                            <th scope="col" class="px-6 py-4">Jumlah Potongan</th>
+                            <th scope="col" class="px-6 py-4">Transfer</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body-tpp" class="divide-y divide-slate-200 text-sm">
+                        <tr id="loading-row-tpp">
+                            <td colspan="4" class="px-6 py-8 text-center text-slate-500">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <svg class="animate-spin h-5 w-5 text-teal-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span>Memuat data TPP...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+</section>
+        </div>
+        <!-- /.container-fluid -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+  </footer>
+
+  </div>
+  <!-- ./wrapper -->
+
+  <%- include('template/footer'); %>
+<script>
+        // Formatter untuk Rupiah
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(number);
+        };
+
+        // Fungsi utama untuk fetch dan render data
+        const fetchSalaryData = async () => {
+            const tbody = document.getElementById('table-body-gaji');
+            
+            try {
+                const response = await fetch('/api/salary/gaji');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Hapus loading state
+                tbody.innerHTML = '';
+
+                // Handle jika data kosong
+                if (!data || data.data.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center text-slate-500">
+                                Tidak ada data yang ditemukan.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                // Render baris data
+                const rowsHtml = data.data.map(item => `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-slate-900">${item.periode}</td>
+                        <td class="px-6 py-4 text-slate-700">${formatRupiah(item.gaji_pokok)}</td>
+                        <td class="px-6 py-4 text-slate-700">${formatRupiah(item.jumlah_gaji_dan_tunjangan)}</td>
+                        <td class="px-6 py-4 text-red-600">${formatRupiah(item.jumlah_potongan)}</td>
+                        <td class="px-6 py-4 font-semibold text-emerald-600">${formatRupiah(item.jumlah_ditransfer)}</td>
+                    </tr>
+                `).join('');
+
+                tbody.innerHTML = rowsHtml;
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-red-500">
+                            Tidak ada data yang ditemukan.
+                        </td>
+                    </tr>
+                `;
+            }
+        };
+        document.addEventListener('DOMContentLoaded', fetchSalaryData);
+    </script>
+</body>
+
+</html>
