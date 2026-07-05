@@ -86,6 +86,7 @@ router.get('/api/document', middleware.login, dokumen.getDocAll);
 router.put('/api/document', middleware.login, dokumen.editDoc);
 router.delete('/api/document/:id', middleware.login, dokumen.deleteDoc);
 router.get('/api/salary/gaji', middleware.login, dokumen.gaji);
+router.get('/api/salary/tpp', middleware.login, dokumen.tpp);
 
 
 

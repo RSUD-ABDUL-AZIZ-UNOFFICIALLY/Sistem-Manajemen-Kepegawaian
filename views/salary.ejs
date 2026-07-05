@@ -68,9 +68,13 @@
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200 text-sm font-medium text-slate-600">
                             <th scope="col" class="px-6 py-4">Periode</th>
-                            <th scope="col" class="px-6 py-4">Jumlah TPP</th>
+                            <th scope="col" class="px-6 py-4">TPP Kondisi Kerja</th>
+                            <th scope="col" class="px-6 py-4">TPP Kelangkaan Profesi</th>
+                            <th scope="col" class="px-6 py-4">Iuran Jaminan Kesehatan</th>
+                            <th scope="col" class="px-6 py-4">Potongan IWP</th>
+                            <th scope="col" class="px-6 py-4">Potongan PPh 21</th>
                             <th scope="col" class="px-6 py-4">Jumlah Potongan</th>
-                            <th scope="col" class="px-6 py-4">Transfer</th>
+                            <th scope="col" class="px-6 py-4">Jumlah Ditransfer</th>
                         </tr>
                     </thead>
                     <tbody id="table-body-tpp" class="divide-y divide-slate-200 text-sm">
@@ -166,7 +170,63 @@
                 `;
             }
         };
-        document.addEventListener('DOMContentLoaded', fetchSalaryData);
+        const fetchTppData = async () => {
+            const tbody = document.getElementById('table-body-tpp');
+            
+            try {
+                const response = await fetch('/api/salary/tpp');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Hapus loading state
+                tbody.innerHTML = '';
+
+                // Handle jika data kosong
+                if (!data || data.data.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center text-slate-500">
+                                Tidak ada data yang ditemukan.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                // Render baris data
+                const rowsHtml = data.data.map(item => `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-slate-900">${item.periode}</td>
+                        <td class="px-6 py-4 text-slate-700">${formatRupiah(item["TPP Kondisi kerja"])}</td>
+                        <td class="px-6 py-4 text-slate-700">${formatRupiah(item["TPP Kelangkaan Profesi"])}</td>
+                        <td class="px-6 py-4 text-slate-700">${formatRupiah(item["Iuran Jaminan Kesehatan"])}</td>
+                        <td class="px-6 py-4 text-red-600">${formatRupiah(item["Potongan IWP"])}</td>
+                        <td class="px-6 py-4 text-red-600">${formatRupiah(item["Potongan PPh 21"])}</td>
+                        <td class="px-6 py-4 text-red-600">${formatRupiah(item["Jumlah Potongan"])}</td>
+                        <td class="px-6 py-4 font-semibold text-emerald-600">${formatRupiah(item["Jumlah Ditransfer"])}</td>
+    
+                    </tr>
+                `).join('');
+
+                tbody.innerHTML = rowsHtml;
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-red-500">
+                            Tidak ada data yang ditemukan.
+                        </td>
+                    </tr>
+                `;
+            }
+        };
+        fetchTppData();
+        fetchSalaryData();
     </script>
 </body>
 

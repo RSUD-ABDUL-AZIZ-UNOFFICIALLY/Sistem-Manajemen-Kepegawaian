@@ -184,7 +184,80 @@ module.exports = {
             message: "success",
             data: null
         })
+    },
+    tpp: async (req, res) => {
+        let account = req.account;
+        let cache = await req.cache.get('SIMPEG:tpp:' + account.nik);
+        if (cache) {
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                account,
+                data: JSON.parse(cache)
+            })
+        }
+        if (account.status == 'PNS' || account.status == 'PPPK') {
+            let config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + req.cookies.token
+                }
+            };
+            try {
+                const getGaji = await axios({
+                    method: 'GET',
+                    url: process.env.API_URL + "/api/gobi/v1/find/gaji/tpp?NIP Pegawai=" + account.nip,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + req.cookies.token
+                    }
+                });
+                if (getGaji.data.data.length == 0) {
+                    return res.status(200).json({
+                        error: false,
+                        message: "success",
+                        account,
+                        data: null
+                    })
+                }
+                let data = [];
+                for (let x of getGaji.data.data) {
+                    let y = {
+                        periode: x.periode,
+                        "TPP Kondisi kerja": x["TPP Kondisi kerja"],
+                        "TPP Kelangkaan Profesi": x["TPP Kelangkaan Profesi"],
+                        "Iuran Jaminan Kesehatan": x["Iuran Jaminan Kesehatan"],
+                        "Potongan IWP": x["Potongan IWP"],
+                        "Potongan PPh 21": x["Potongan PPh 21"],
+                        "Jumlah Potongan": x["Jumlah Potongan"],
+                        "Jumlah Ditransfer": x["Jumlah Ditransfer"]
+
+                    }
+                    data.push(y);
+                }
+                req.cache.set('SIMPEG:tpp:' + account.nik, JSON.stringify(data));
+                req.cache.expire('SIMPEG:tpp:' + account.nik, 604800);
+                return res.status(200).json({
+                    error: false,
+                    message: "success",
+                    data: data
+                })
+            } catch (error) {
+                console.log(error);
+                return res.status(400).json({
+                    error: true,
+                    message: error.message,
+                    data: error
+                })
+            }
+        }
+        return res.status(201).json({
+            error: false,
+            message: "success",
+            data: null
+        })
     }
+
 }
 // async function uploadIjazah(body, account) {
 //      let t = await sequelize.transaction();
