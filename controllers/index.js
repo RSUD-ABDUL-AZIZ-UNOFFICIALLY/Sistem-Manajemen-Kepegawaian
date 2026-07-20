@@ -80,8 +80,8 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let data = {
-      title: "Dasboard Gaji | SIMPEG",
-      page: "Data gaji",
+      title: "Dasboard Penghasilan | SIMPEG",
+      page: "Data Penghasilan",
       token: decoded
     };
     res.render("salary", data);
