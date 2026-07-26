@@ -10,12 +10,19 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <img src="/asset/img/cowok.png" id="imgUser" class="img-circle elevation-2" alt="User Image" />
+        <div
+            class="flex items-center gap-3 mt-4 mb-4 pb-4 border-b border-gray-200">
+            <div class="shrink-0">
+                <img
+                    src="/asset/img/cowok.png"
+                    id="imgUser"
+                    class="w-10 h-10 rounded-full shadow-md object-cover"
+                    alt="User Image" />
             </div>
-            <div class="info">
-                <a href="/profile" class="d-block">
+            <div class="min-w-0 flex-1">
+                <a
+                    href="/profile"
+                    class="block truncate text-sm font-medium text-gray-800 hover:text-blue-600 transition-colors">
                     <%= token.nama %>
                 </a>
             </div>
@@ -23,7 +30,9 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="navbar" name="navbar">
+            <ul class="nav nav-pills nav-sidebar flex-column"
+                data-widget="treeview" role="menu" data-accordion="false"
+                id="navbar" name="navbar">
                 <!-- Add icons to the links using the .nav-icon class
                   with font-awesome or any other icon font library -->
                 <li class="nav-item" id="laporan" name="laporan">
@@ -34,7 +43,8 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview"id="ul_laporan" name="ul_laporan" >
+                    <ul class="nav nav-treeview" id="ul_laporan"
+                        name="ul_laporan">
                         <li class="nav-item">
                             <a href="/daily" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
@@ -49,7 +59,8 @@
                         </li>
                         <li class="nav-item">
                             <a href="/Report" class="nav-link">
-                                <i class="far fa-solid fa-arrow-trend-up nav-icon"></i>
+                                <i
+                                    class="far fa-solid fa-arrow-trend-up nav-icon"></i>
                                 <p>Rekapitulasi Laporan</p>
                             </a>
                         </li>
@@ -66,7 +77,8 @@
                     <ul class="nav nav-treeview" id="ul_absen" name="ul_absen">
                         <li class="nav-item">
                             <a href="/absen" class="nav-link">
-                                <i class="fa-solid fa-person-walking-arrow-right nav-icon"></i>
+                                <i
+                                    class="fa-solid fa-person-walking-arrow-right nav-icon"></i>
                                 <p>Absen</p>
                             </a>
                         </li>

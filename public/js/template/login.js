@@ -106,6 +106,16 @@ document.addEventListener('DOMContentLoaded', function () {
             phone: phone,
           }),
         });
+        fetch('/api/send-otp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          },
+          body: new URLSearchParams({
+            phone: phone,
+          })
+        });
 
         // Asumsi variabel 'admin' dideklarasikan di scope global pada file sebelumnya
         const adminNumber = typeof admin !== 'undefined' ? admin : '';
