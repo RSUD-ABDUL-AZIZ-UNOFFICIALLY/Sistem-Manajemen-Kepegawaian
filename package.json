@@ -1,6 +1,6 @@
 {
   "name": "lpkp",
-  "version": "2.9.5",
+  "version": "2.10.0",
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev": "node --watch . app.js",
     "start:prod": "NODE_ENV=poroduction node -r dotenv/config app.js dotenv_config_path=.env.prod",
     "build": "git pull && npm i",
-    "tail": "npx @tailwindcss/cli -i ./public/css/build.css -o ./public/css/index1.min.css --watch"
+    "tail": "npx @tailwindcss/cli -i ./public/css/build.css -o ./public/css/index.css --watch"
   },
   "keywords": [],
   "author": "",

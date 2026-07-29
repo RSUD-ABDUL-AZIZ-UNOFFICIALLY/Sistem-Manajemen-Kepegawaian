@@ -1,6 +1,6 @@
 // service-worker.js
-const CACHE_NAME = 'simpeg-cache-v2.9.6';
-const DYNAMIC_CACHE = 'simpeg-dynamic-v2.9.6';
+const CACHE_NAME = 'simpeg-cache-v2.10.0';
+const DYNAMIC_CACHE = 'simpeg-dynamic-v2.10.0';
 
 // Daftar file statis yang harus ada di cache sejak awal (Pre-caching)
 const ASSETS_TO_CACHE = [
@@ -12,7 +12,7 @@ const ASSETS_TO_CACHE = [
   '/asset/img/android-chrome-512x512.png',
   '/asset/img/portrait.png',
   '/asset/img/landscape.png',
-  '/asset/css/index2.min.css',
+  '/asset/css/index.css',
   '/asset/js/manifest.json'
 ];
 

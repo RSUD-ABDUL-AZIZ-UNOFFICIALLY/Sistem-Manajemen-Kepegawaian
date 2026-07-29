@@ -309,7 +309,7 @@ module.exports = {
           [Op.startsWith]: queryparams.date,
         },
       },
-      order: [["tgl", "ASC"]],
+      order: [["tgl", "DESC"]],
     });
     return res.status(200).json({
       error: false,
