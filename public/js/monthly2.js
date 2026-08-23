@@ -21,7 +21,9 @@ async function fetchData(url, method = 'GET', body = null) {
 }
 
 // DOM Elements
+const month = new Date().getMonth() + 1;
 const inputTanggal = document.getElementById('InputTanggal');
+inputTanggal.value = `${new Date().getFullYear()}-${month < 10 ? '0' + month : month}`;
 const tbBody = document.getElementById('tableBody');
 const cardList = document.getElementById('mobileCardList');
 const loadingIndicator = document.getElementById('loadingIndicator');
