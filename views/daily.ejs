@@ -95,6 +95,15 @@
   </div>
   <!-- ./wrapper -->
   <%- include('modal/modalTemplate'); %> <%- include('template/footer'); %>
+  <script>
+    let Tanggal = document.getElementById("Tanggal");
+    let InputActivities = document.getElementById("InputActivities");
+    // limit backdate to 31 days
+    Tanggal.max = new Date().toISOString().split("T")[0];
+    Tanggal.min = new Date(new Date().setDate(new Date().getDate() - 31))
+      .toISOString()
+      .split("T")[0];
+  </script>
       <script src="/asset/js/src/daily1.min.js"></script>
       <script src="/asset/js/src/template.min.js"></script>
 </body>
