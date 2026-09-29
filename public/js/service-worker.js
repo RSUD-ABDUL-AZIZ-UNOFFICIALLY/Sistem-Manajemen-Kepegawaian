@@ -83,57 +83,57 @@ function cleanResponse(response) {
   });
 }
 
-// Event 3: FETCH - Mencegat request
-self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') {
-    return; // Biarkan browser menangani request ini secara default tanpa intervensi SW
-  }
-  const requestUrl = new URL(event.request.url);
-  // Perbaikan: Bypass request non-HTTP/HTTPS (seperti chrome-extension, data URIs, dll.)
-  if (requestUrl.protocol !== 'http:' && requestUrl.protocol !== 'https:') {
-    return; // Biarkan browser menangani request ini secara default tanpa intervensi SW
-  }
-  // Strategi A: Network First untuk API (Data dinamis)
-  if (requestUrl.pathname.startsWith('/api/')) {
-    event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          const cleanedResponse = cleanResponse(networkResponse);
-          if (cleanedResponse.ok) {
-            return caches.open(DYNAMIC_CACHE).then((cache) => {
-              cache.put(event.request, cleanedResponse.clone());
-              return cleanedResponse;
-            });
-          }
-          return cleanedResponse;
-        })
-        .catch(() => {
-          return caches.match(event.request).then((cachedResponse) => {
-            return cleanResponse(cachedResponse);
-          });
-        })
-    );
-  }
-  // Strategi B: Cache First untuk Aset Statis (HTML, JS, CSS)
-  else {
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        // Kembalikan dari cache jika ada (setelah dibersihkan), jika tidak, fetch dari jaringan
-        if (cachedResponse) {
-          return cleanResponse(cachedResponse);
-        }
+// // Event 3: FETCH - Mencegat request
+// self.addEventListener('fetch', (event) => {
+//   if (event.request.method !== 'GET') {
+//     return; // Biarkan browser menangani request ini secara default tanpa intervensi SW
+//   }
+//   const requestUrl = new URL(event.request.url);
+//   // Perbaikan: Bypass request non-HTTP/HTTPS (seperti chrome-extension, data URIs, dll.)
+//   if (requestUrl.protocol !== 'http:' && requestUrl.protocol !== 'https:') {
+//     return; // Biarkan browser menangani request ini secara default tanpa intervensi SW
+//   }
+//   // Strategi A: Network First untuk API (Data dinamis)
+//   if (requestUrl.pathname.startsWith('/api/')) {
+//     event.respondWith(
+//       fetch(event.request)
+//         .then((networkResponse) => {
+//           const cleanedResponse = cleanResponse(networkResponse);
+//           if (cleanedResponse.ok) {
+//             return caches.open(DYNAMIC_CACHE).then((cache) => {
+//               cache.put(event.request, cleanedResponse.clone());
+//               return cleanedResponse;
+//             });
+//           }
+//           return cleanedResponse;
+//         })
+//         .catch(() => {
+//           return caches.match(event.request).then((cachedResponse) => {
+//             return cleanResponse(cachedResponse);
+//           });
+//         })
+//     );
+//   }
+//   // Strategi B: Cache First untuk Aset Statis (HTML, JS, CSS)
+//   else {
+//     event.respondWith(
+//       caches.match(event.request).then((cachedResponse) => {
+//         // Kembalikan dari cache jika ada (setelah dibersihkan), jika tidak, fetch dari jaringan
+//         if (cachedResponse) {
+//           return cleanResponse(cachedResponse);
+//         }
 
-        return fetch(event.request).then((networkResponse) => {
-          const cleanedResponse = cleanResponse(networkResponse);
-          if (cleanedResponse.ok) {
-            return caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, cleanedResponse.clone());
-              return cleanedResponse;
-            });
-          }
-          return cleanedResponse;
-        });
-      })
-    );
-  }
-});
+//         return fetch(event.request).then((networkResponse) => {
+//           const cleanedResponse = cleanResponse(networkResponse);
+//           if (cleanedResponse.ok) {
+//             return caches.open(CACHE_NAME).then((cache) => {
+//               cache.put(event.request, cleanedResponse.clone());
+//               return cleanedResponse;
+//             });
+//           }
+//           return cleanedResponse;
+//         });
+//       })
+//     );
+//   }
+// });
