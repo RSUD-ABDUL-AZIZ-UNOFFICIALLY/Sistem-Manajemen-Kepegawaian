@@ -67,6 +67,7 @@ async function submit(status, tanggal, kirim) {
             if (kirim == "kirim") {
                 try {
                     await kirimEmailLaporan(users[index].nama, users[index].email, bulan(tanggal), users[index].JnsKel, users[index].wa)
+
                     console.log('kirim email')
                 } catch (error) {
                     console.log("error kirim email")
@@ -115,7 +116,7 @@ async function kirimEmailLaporan(nama, email, month, JnsKel, wa) {
         },
         data: data,
     };
-    let pesan = `*Yth. ${nama}*,\n\nMohon bantuannya untuk segera mengirim *LPKP bulan ${month}* di SIMPEG RSUD dr. Abdul Aziz.\nPaling lambat tanggal *${tanggal} jam 20.30 WIB*.\nKalau belum terkirim sampai batas waktu tersebut, *TPP bisa dipotong sampai 60%.*\nTerima kasih 🙏`;
+    let pesan = `*Yth. ${nama}*  Pegawai RSUD dr. Abdul Aziz Singkawang,\n\n Mohon segera mengirimkan *LPKP bulan ${month}* di SIMPEG RSUD dr. Abdul Aziz.\n, paling lambat tanggal 2 pukul *23.59 WIB.*.\nAtas perhatian dan kerja samanya, diucapkan terima kasih.🙏`;
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     let dataWa = JSON.stringify({
