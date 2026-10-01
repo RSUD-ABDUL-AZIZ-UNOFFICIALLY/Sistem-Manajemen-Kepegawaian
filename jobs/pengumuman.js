@@ -116,7 +116,7 @@ async function kirimEmailLaporan(nama, email, month, JnsKel, wa) {
         },
         data: data,
     };
-    let pesan = `*Yth. ${nama}*  Pegawai RSUD dr. Abdul Aziz Singkawang,\n\n Mohon segera mengirimkan *LPKP bulan ${month}* di SIMPEG RSUD dr. Abdul Aziz.\n, paling lambat tanggal 2 pukul *23.59 WIB.*.\nAtas perhatian dan kerja samanya, diucapkan terima kasih.🙏`;
+    let pesan = `*Yth. ${nama}*  Pegawai RSUD dr. Abdul Aziz Singkawang,\n Mohon segera mengirimkan *LPKP bulan ${month}* di SIMPEG RSUD dr. Abdul Aziz. \nPaling lambat tanggal 2 pukul *23.59 WIB*\nAtas perhatian dan kerja samanya, diucapkan terima kasih.🙏`;
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     let dataWa = JSON.stringify({
