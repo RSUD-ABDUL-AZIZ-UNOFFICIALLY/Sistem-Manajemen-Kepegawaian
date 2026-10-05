@@ -45,6 +45,7 @@ router.get('/logout', middleware.logout);
 router.get('/helpDeskAdmin', middleware.login, controller.helpDeskAdmin);
 router.get('/kepegawaian', middleware.login, controller.pegawaiAdmin);
 router.get('/kepegawaian/:id', middleware.login, controller.dataAdmin);
+router.get('/document/pegawaian/:id', middleware.login, controller.dataDokument);
 
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/mobile-otp', api.mobileOtp);
@@ -83,6 +84,7 @@ router.delete('/api/template', middleware.login, ajax.deleteTemplate);
 
 router.post('/api/document/:id', middleware.login, dokumen.uploadDoc);
 router.get('/api/document', middleware.login, dokumen.getDocAll);
+router.get('/api/find/document/:id', middleware.login, dokumen.findDocAll);
 router.put('/api/document', middleware.login, dokumen.editDoc);
 router.delete('/api/document/:id', middleware.login, dokumen.deleteDoc);
 router.get('/api/salary/gaji', middleware.login, dokumen.gaji);
@@ -111,6 +113,7 @@ router.get('/api/pegawai/count', middleware.login, ajax.getPegawaiCount);
 router.get('/api/pegawai/countDep', middleware.login, ajax.getDepCount);
 router.get('/api/pegawai/gologan/:id', middleware.login, ajax.getGologan);
 router.put('/api/pegawai/data', middleware.checkHakAkses('kepegawaian'), ajax.updateDataPegawai);
+router.post('/api/pegawai/tokenDoc', middleware.checkHakAkses('kepegawaian'), middleware.tokenGen);
 
 
 router.get('/api/report', middleware.login, report.person);

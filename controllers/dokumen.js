@@ -64,6 +64,33 @@ module.exports = {
             })
         }
     },
+    findDocAll: async (req, res) => {
+        let path = req.params.id;
+        let akun = jwt.verify(path, secretKey);
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'https://api.spairum.my.id/api/gobi/v1/dokumen/' + akun.nik.toString(),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + req.cookies.token
+                }
+            });
+            return res.status(200).json({
+                error: false,
+                message: "success",
+                record: response.data.length,
+                data: response.data,
+            })
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({
+                error: true,
+                message: error.message,
+                data: error
+            })
+        }
+    },
     deleteDoc: async (req, res) => {
         let param = req.params.id;
         try {

@@ -332,6 +332,21 @@ module.exports = {
     }
     res.render("admin/asn", data);
   },
+  dataDokument: async (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let path = req.params.id;
+    let akun = jwt.verify(path, secretKey);
+    console.log(akun);
+    let data = {
+      title: `Admin document | SIMPEG`,
+      page: `Document Pegawai}`,
+      token: decoded,
+      akun
+    };
+    res.render("admin/document", data);
+
+  },
   getContact: async (req, res) => {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);

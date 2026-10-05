@@ -211,6 +211,16 @@ module.exports = {
             }
         }
     },
+    tokenGen: (req, res) => {
+        let newToken = jwt.sign({
+            nik: req.body.nik,
+            nama: req.body.nama
+        }, secretKey, { expiresIn: 60 * 60 });
+        return res.json({
+            token: newToken
+        })
+
+    }
     // response: (req, res, data) => {
     //     console.log(data);
     //     if (req.status == 500) {

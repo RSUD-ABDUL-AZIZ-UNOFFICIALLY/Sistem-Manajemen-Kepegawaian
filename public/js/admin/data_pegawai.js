@@ -70,6 +70,46 @@ fetch('/api/pegawai/gologan/' + page)
                             });
                     }
                 },
+                {
+                    title: "Lihat Document",
+                    field: "action",
+                    width: '7px',
+                    formatter: function (cell, formatterParams, onRendered) {
+                        // Create an edit button
+                        //   return `<button class="btn btn-primary btn-sm" onclick="editRecord('${cell.getRow().getData().nik},${cell.getRow()}')">Edit</button>`;
+                        return `<button class="btn btn-blue">Lihat</button>`;
+                    },
+                    cellClick: function (e, cell) {
+                        let row = cell.getRow();
+                        let button = e.target;
+                        console.log(row.getData().nama);
+
+                        fetch('/api/pegawai/tokenDoc', {
+                            method: "post",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                nik: row.getData().nik,
+                                nama: row.getData().nama
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data);
+                                return window.location.href = '/document/pegawaian/' + data.token;
+                            })
+                            .catch(error => {
+                                console.error("Error:", error);
+                                Swal.fire({
+                                    title: 'Ops!',
+                                    text: 'Gagal di buka ' + row.getData().nama,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            });
+                    }
+                },
             ],
             pagination: "local",
             pageNavigation: "local",
