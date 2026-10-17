@@ -12,7 +12,7 @@ const ASSETS_TO_CACHE = [
   '/asset/img/android-chrome-512x512.png',
   '/asset/img/portrait.png',
   '/asset/img/landscape.png',
-  '/asset/css/index3css',
+  '/asset/css/index3.css',
   '/asset/js/manifest.json'
 ];
 
