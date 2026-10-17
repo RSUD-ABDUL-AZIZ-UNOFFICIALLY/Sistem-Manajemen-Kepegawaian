@@ -26,11 +26,6 @@
     });
   }
 
-  if (otpInput) {
-    otpInput.addEventListener('input', () => {
-      otpInput.value = otpInput.value.replace(/\D/g, '').slice(0, 6);
-    });
-  }
 
   const showInstallDialog = () => {
     if (!installModal) return;
