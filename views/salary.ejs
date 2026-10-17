@@ -1,111 +1,130 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="id" data-theme="light">
 <head>
-  <%- include('template/head'); %>
+    <%- include('template/head'); %>
+    <meta name="description" content="Riwayat Data Gaji dan TPP Kepegawaian RSUD dr. Abdul Aziz Singkawang">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
-
-    <!-- Navbar -->
-    <%- include('template/navbar'); %>
-      <!-- /.navbar -->
-
-      <!-- Main Sidebar Container -->
-      <%- include('template/sidebar'); %>
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('template/content-header'); %>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-    <section class="p-4 sm:p-6 w-full">
-    <div class="max-w-6xl mx-auto space-y-6">
+<body class="bg-base-200 text-base-content font-sans antialiased">
+    <!-- Wrapper Utama Drawer DaisyUI -->
+    <div class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
         
-        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-            <div class="bg-cyan-600 px-5 py-3 border-b border-cyan-700">
-                <h3 class="text-lg font-medium text-white">Riwayat Data Gaji</h3>
-            </div>
+        <!-- Konten Utama -->
+        <div class="drawer-content flex flex-col min-h-screen">
             
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-slate-200 text-sm font-medium text-slate-600">
-                            <th scope="col" class="px-6 py-4">Periode</th>
-                            <th scope="col" class="px-6 py-4">Gaji Pokok</th>
-                            <th scope="col" class="px-6 py-4">Total Gaji & Tunjangan</th>
-                            <th scope="col" class="px-6 py-4">Jumlah Potongan</th>
-                            <th scope="col" class="px-6 py-4">Jumlah Ditransfer</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body-gaji" class="divide-y divide-slate-200 text-sm">
-                        <tr id="loading-row-gaji">
-                            <td colspan="5" class="px-6 py-8 text-center text-slate-500">
-                                <div class="flex items-center justify-center space-x-2">
-                                    <svg class="animate-spin h-5 w-5 text-cyan-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    <span>Memuat data gaji...</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <!-- Navbar -->
+            <%- include('template/navbar'); %>
+
+            <!-- Content Header -->
+            <header class="w-full p-4 md:p-6 pb-2">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight">Riwayat Penghasilan</h1>
+                    </div>
+                    <div class="breadcrumbs text-sm">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li class="font-semibold">Gaji & TPP</li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 p-4 md:p-6">
+                <div class="container mx-auto max-w-7xl space-y-6">
+                    
+                    <!-- Card Riwayat Data Gaji -->
+                    <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
+                        <div class="card-body p-0">
+                            <div class="bg-primary px-6 py-4 border-b border-primary-content/10">
+                                <h2 class="card-title text-primary-content text-lg">
+                                    <i class="fas fa-money-check-alt mr-2"></i> Riwayat Data Gaji
+                                </h2>
+                            </div>
+                            
+                            <div class="overflow-x-auto w-full">
+                                <table class="table table-zebra w-full text-left">
+                                    <thead>
+                                        <tr class="bg-base-200/60 text-sm font-semibold text-base-content/80">
+                                            <th>Periode</th>
+                                            <th>Gaji Pokok</th>
+                                            <th>Total Gaji & Tunjangan</th>
+                                            <th>Jumlah Potongan</th>
+                                            <th>Jumlah Ditransfer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-body-gaji" class="text-sm">
+                                        <tr id="loading-row-gaji">
+                                            <td colspan="5" class="py-8 text-center text-base-content/60">
+                                                <div class="flex items-center justify-center gap-2">
+                                                    <span class="loading loading-spinner text-primary loading-md"></span>
+                                                    <span>Memuat data gaji...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Riwayat Data TPP -->
+                    <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
+                        <div class="card-body p-0">
+                            <div class="bg-secondary px-6 py-4 border-b border-secondary-content/10">
+                                <h2 class="card-title text-secondary-content text-lg">
+                                    <i class="fas fa-hand-holding-usd mr-2"></i> Riwayat Data TPP
+                                </h2>
+                            </div>
+                            
+                            <div class="overflow-x-auto w-full">
+                                <table class="table table-zebra w-full text-left">
+                                    <thead>
+                                        <tr class="bg-base-200/60 text-sm font-semibold text-base-content/80">
+                                            <th>Periode</th>
+                                            <th>TPP Kondisi Kerja</th>
+                                            <th>TPP Kelangkaan Profesi</th>
+                                            <th>Potongan IWP</th>
+                                            <th>Potongan PPh 21</th>
+                                            <th>Jumlah Ditransfer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-body-tpp" class="text-sm">
+                                        <tr id="loading-row-tpp">
+                                            <td colspan="6" class="py-8 text-center text-base-content/60">
+                                                <div class="flex items-center justify-center gap-2">
+                                                    <span class="loading loading-spinner text-secondary loading-md"></span>
+                                                    <span>Memuat data TPP...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+                <aside>
+                    <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+                </aside>
+            </footer>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-            <div class="bg-teal-600 px-5 py-3 border-b border-teal-700">
-                <h3 class="text-lg font-medium text-white">Riwayat Data TPP</h3>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-slate-200 text-sm font-medium text-slate-600">
-                            <th scope="col" class="px-6 py-4">Periode</th>
-                            <th scope="col" class="px-6 py-4">TPP Kondisi Kerja</th>
-                            <th scope="col" class="px-6 py-4">TPP Kelangkaan Profesi</th>
-                            <th scope="col" class="px-6 py-4">Potongan IWP</th>
-                            <th scope="col" class="px-6 py-4">Potongan PPh 21</th>
-                            <th scope="col" class="px-6 py-4">Jumlah Ditransfer</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body-tpp" class="divide-y divide-slate-200 text-sm">
-                        <tr id="loading-row-tpp">
-                            <td colspan="4" class="px-6 py-8 text-center text-slate-500">
-                                <div class="flex items-center justify-center space-x-2">
-                                    <svg class="animate-spin h-5 w-5 text-teal-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    <span>Memuat data TPP...</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
+        <!-- Sidebar Utama -->
+        <%- include('template/sidebar'); %>
     </div>
-</section>
-        </div>
-        <!-- /.container-fluid -->
-  </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
-  </footer>
 
-  </div>
-  <!-- ./wrapper -->
+    <!-- Scripts -->
+    <%- include('template/footer'); %>
 
-  <%- include('template/footer'); %>
-<script>
+    <script>
         // Formatter untuk Rupiah
         const formatRupiah = (number) => {
             return new Intl.NumberFormat('id-ID', {
@@ -116,7 +135,7 @@
             }).format(number);
         };
 
-        // Fungsi utama untuk fetch dan render data
+        // Fetch dan render data Gaji
         const fetchSalaryData = async () => {
             const tbody = document.getElementById('table-body-gaji');
             
@@ -128,15 +147,12 @@
                 }
                 
                 const data = await response.json();
-                
-                // Hapus loading state
                 tbody.innerHTML = '';
 
-                // Handle jika data kosong
-                if (!data || data.data.length === 0) {
+                if (!data || !data.data || data.data.length === 0) {
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-slate-500">
+                            <td colspan="5" class="py-8 text-center text-base-content/60">
                                 Tidak ada data yang ditemukan.
                             </td>
                         </tr>
@@ -144,30 +160,31 @@
                     return;
                 }
 
-                // Render baris data
                 const rowsHtml = data.data.map(item => `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-4 font-medium text-slate-900">${item.periode}</td>
-                        <td class="px-6 py-4 text-slate-700">${formatRupiah(item.gaji_pokok)}</td>
-                        <td class="px-6 py-4 text-slate-700">${formatRupiah(item.jumlah_gaji_dan_tunjangan)}</td>
-                        <td class="px-6 py-4 text-red-600">${formatRupiah(item.jumlah_potongan)}</td>
-                        <td class="px-6 py-4 font-semibold text-emerald-600">${formatRupiah(item.jumlah_ditransfer)}</td>
+                    <tr class="hover">
+                        <td class="font-medium">${item.periode}</td>
+                        <td>${formatRupiah(item.gaji_pokok)}</td>
+                        <td>${formatRupiah(item.jumlah_gaji_dan_tunjangan)}</td>
+                        <td class="text-error font-medium">${formatRupiah(item.jumlah_potongan)}</td>
+                        <td class="text-success font-semibold">${formatRupiah(item.jumlah_ditransfer)}</td>
                     </tr>
                 `).join('');
 
                 tbody.innerHTML = rowsHtml;
 
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching salary data:', error);
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-red-500">
-                            Tidak ada data yang ditemukan.
+                        <td colspan="5" class="py-8 text-center text-error">
+                            Gagal memuat data gaji. Silakan coba lagi nanti.
                         </td>
                     </tr>
                 `;
             }
         };
+
+        // Fetch dan render data TPP
         const fetchTppData = async () => {
             const tbody = document.getElementById('table-body-tpp');
             
@@ -179,15 +196,12 @@
                 }
                 
                 const data = await response.json();
-                
-                // Hapus loading state
                 tbody.innerHTML = '';
 
-                // Handle jika data kosong
-                if (!data || data.data.length === 0) {
+                if (!data || !data.data || data.data.length === 0) {
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-slate-500">
+                            <td colspan="6" class="py-8 text-center text-base-content/60">
                                 Tidak ada data yang ditemukan.
                             </td>
                         </tr>
@@ -195,38 +209,35 @@
                     return;
                 }
 
-                // Render baris data
                 const rowsHtml = data.data.map(item => `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-4 font-medium text-slate-900">${item.periode}</td>
-                        <td class="px-6 py-4 text-slate-700">${formatRupiah(item["TPP Kondisi kerja"])}</td>
-                        <td class="px-6 py-4 text-slate-700">${formatRupiah(item["TPP Kelangkaan Profesi"])}</td>
-                        <td class="px-6 py-4 text-red-600">${formatRupiah(item["Potongan IWP"])}</td>
-                        <td class="px-6 py-4 text-red-600">${formatRupiah(item["Potongan PPh 21"])}</td>
-                        <td class="px-6 py-4 font-semibold text-emerald-600">${formatRupiah(item["Jumlah Ditransfer"])}</td>
-    
+                    <tr class="hover">
+                        <td class="font-medium">${item.periode}</td>
+                        <td>${formatRupiah(item["TPP Kondisi kerja"])}</td>
+                        <td>${formatRupiah(item["TPP Kelangkaan Profesi"])}</td>
+                        <td class="text-error font-medium">${formatRupiah(item["Potongan IWP"])}</td>
+                        <td class="text-error font-medium">${formatRupiah(item["Potongan PPh 21"])}</td>
+                        <td class="text-success font-semibold">${formatRupiah(item["Jumlah Ditransfer"])}</td>
                     </tr>
                 `).join('');
 
                 tbody.innerHTML = rowsHtml;
 
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching TPP data:', error);
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-red-500">
-                            Tidak ada data yang ditemukan.
+                        <td colspan="6" class="py-8 text-center text-error">
+                            Gagal memuat data TPP. Silakan coba lagi nanti.
                         </td>
                     </tr>
                 `;
             }
         };
+
         document.addEventListener("DOMContentLoaded", function() {
-    // Kode Anda di sini
-        fetchTppData();
-        fetchSalaryData();
-});
+            fetchTppData();
+            fetchSalaryData();
+        });
     </script>
 </body>
-
 </html>

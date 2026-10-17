@@ -1,420 +1,347 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 
-  <head>
-    <%- include('template/head'); %>
+<head>
+  <%- include('template/head'); %>
+  <meta name="description" content="Profil & Biodata Pengguna RSUD dr. Abdul Aziz Singkawang">
+</head>
 
-  </head>
-
-  <body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-
+<body class="bg-base-200 text-base-content font-sans antialiased">
+  <!-- Wrapper Utama Drawer DaisyUI -->
+  <div class="drawer lg:drawer-open">
+    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+    
+    <!-- Konten Utama -->
+    <div class="drawer-content flex flex-col min-h-screen">
+      
       <!-- Navbar -->
       <%- include('template/navbar'); %>
-      <!-- /.navbar -->
 
-      <!-- Main Sidebar Container -->
-      <%- include('template/sidebar'); %>
-
-      <!-- Content Wrapper. Contains page content -->
-      <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <%- include('template/content-header'); %>
-        <!-- /.content-header -->
-
-        <!-- Main content -->
-        <section class="content">
-          <div class="container-fluid">
-            <!-- Horizontal Form -->
-            <div class="card card-info">
-              <div class="card-header">
-                <h3 class="card-title">Profil saya</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form id="profil" class="form-horizontal">
-                <div class="card-body">
-                  <div class="form-group row">
-                    <label for="inputEmail3"
-                      class="col-sm-2 col-form-label">NIK</label>
-                    <div class="col-sm-10">
-                      <input type="number" class="form-control" id="nik"
-                        name="nik" value='<%= user.nik %>'
-                        disabled />
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="inputEmail3"
-                      class="col-sm-2 col-form-label">NIP</label>
-                    <div class="col-sm-10">
-                      <input type="number" class="form-control" id="nip"
-                        name="nip"
-                        placeholder="Nomor Identitas Pegawai"
-                        value='<%= user.nip %>' />
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="inputEmail3"
-                      class="col-sm-2 col-form-label">Nama lengkap</label>
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="nama"
-                        name="nama"
-                        placeholder="Nama lengkap dengan gelar"
-                        value='<%= user.nama %>' />
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="departemen" class="col-sm-2 col-form-label">Unit
-                      Kerja</label>
-                    <div class="col-sm-10">
-                      <select class="form-control select2" id="departemen">
-                        <option selected="selected" value='<%= user.dep%>'>
-                          <%= user.departemen.bidang%>
-                        </option>
-                        <% for(let i=0; i<departemen.length; i++) { %>
-                          <option value='<%= departemen[i].id %>'>
-                            <%= departemen[i].bidang %>
-                          </option>
-                          <% } %>
-
-                        </select>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="jab" class="col-sm-2 col-form-label">Tanggal
-                        lahir</label>
-                      <div class="col-sm-10">
-                        <input type="date" class="form-control" id="tgl_lahir"
-                          name="tgl_lahir"
-                          placeholder="Tanggal lahir"
-                          value='<%= user.tgl_lahir %>' />
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="jab"
-                        class="col-sm-2 col-form-label">Jabatan</label>
-                      <div class="col-sm-10">
-                        <input type="text" class="form-control" id="jab"
-                          name="jab" placeholder="Jabatan"
-                          value='<%= user.jab %>' />
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="inputEmail3"
-                        class="col-sm-2 col-form-label">Atasan langsung</label>
-                      <div class="col-sm-10">
-                        <select class="form-control select2" id="atasan">
-                          <option selected="selected" value=<%=bos%>><%= bos%>
-                          </option>
-                          <% for(let i=0; i<atasan.length; i++) { %>
-                            <option value='<%= atasan[i].nik %>'>
-                              <%= atasan[i].nama %> - <%= atasan[i].jab %>
-                            </option>
-                            <% } %>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer">
-                      <button type="submit" class="btn btn-primary float-right">
-                        Simpan
-                      </button>
-                    </div>
-                    <!-- /.card-footer -->
-                  </form>
-                </div>
-                <!-- /.card -->
-              </div><!-- /.container-fluid -->
-            </section>
-            <!-- /.content -->
-            <!-- Main content -->
-            <section class="content">
-              <div class="container-fluid">
-                <!-- Horizontal Form -->
-                <div class="card card-info">
-                  <div class="card-header">
-                    <h3 class="card-title">Biodata saya</h3>
-                  </div>
-                  <!-- /.card-header -->
-                  <!-- form start -->
-                  <form id="biodata" class="form-horizontal">
-                    <div class="card-body">
-                      <div class="form-group row">
-                        <label for="alamat"
-                          class="col-sm-2 col-form-label">Alamat</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="alamat"
-                            name="alamat" required />
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="pangkat"
-                          class="col-sm-2 col-form-label">Pangkat</label>
-                        <div class="col-sm-10">
-                          <select class="form-control  select2-danger"
-                            data-dropdown-css-class="select2-danger"
-                            id="pangkat" name="pangkat">
-                            <option value disabled selected="selected">Pilih
-                              Golongan pangkat</option>
-                            <option value='IVe'>IVe</option>
-                            <option value='IVd'>IVd</option>
-                            <option value='IVc'>IVc</option>
-                            <option value='IVb'>IVb</option>
-                            <option value='IVa'>IVa</option>
-                            <option value='IIId'>IIId</option>
-                            <option value='IIIc'>IIIc</option>
-                            <option value='IIIb'>IIIb</option>
-                            <option value='IIIa'>IIIa</option>
-                            <option value='IId'>IId</option>
-                            <option value='IIc'>IIc</option>
-                            <option value='IIb'>IIb</option>
-                            <option value='IIa'>IIa</option>
-                            <option value='XI'>XI</option>
-                            <option value='X'>X</option>
-                            <option value='IX'>IX</option>
-                            <option value='VIII'>VIII</option>
-                            <option value='VII'>VII</option>
-                            <option value='VI'>VI</option>
-                            <option value='V'>V</option>
-                            <option value='IV'>IV</option>
-                            <option value='-'>Non ASN</option>
-                            <option value='PPPK'>PPPK PARUH WAKTU</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="tmt_pangkat"
-                          class="col-sm-2 col-form-label">TMT Pangkat/Gol.
-                          R</label>
-                        <div class="col-sm-10">
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i
-                                  class="far fa-calendar-alt"></i></span>
-                            </div>
-                            <input type="date" class="form-control"
-                              data-inputmask-alias="date"
-                              data-inputmask-inputformat="dd/mm/yyyy" data-mask
-                              id="tmt_pangkat" name="tmt_pangkat">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="marital"
-                          class="col-sm-2 col-form-label">Status
-                          Pernikahan</label>
-                        <div class="col-sm-10">
-                          <select class="form-control " id="marital" required>
-                            <option value disabled selected="selected">Pilih
-                              status</option>
-                            <option value='Belum kawin'> belum kawin</option>
-                            <option value='kawin'>kawin</option>
-                            <option value='Cerai hidup'>Cerai hidup</option>
-                            <option value='Cerai mati'>Cerai mati</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="marital"
-                          class="col-sm-2 col-form-label">Jumlah Anak</label>
-                        <div class="col-sm-10">
-                          <select class="form-control " id="jumlah_anak" required>
-                            <option value disabled selected="selected">Jumlah tanggungan Anak</option>
-                            <option value='0'> 0</option>
-                            <option value='1'>1</option>
-                            <option value='2'>2</option>
-                            <option value='3'>3</option>
-                            <option value='4'>4</option>
-                            <option value='5'>5</option>
-                            <option value='6'>6</option>
-                            <option value='7'>7</option>
-                          </select>
-                           <p class="text-muted">
-                            Jika sudah menikah anak, merupakan tanggungan suami istri tanggungan anak 0.
-                          </p>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="golongan_darah"
-                          class="col-sm-2 col-form-label">Golongan Darah</label>
-                        <div class="col-sm-10">
-                          <select class="form-control  select2-danger"
-                            data-dropdown-css-class="select2-danger"
-                            id="golongan_darah">
-                            <option value disabled selected="selected">Pilih
-                              Golongan Darah</option>
-                            <option value='A'>A</option>
-                            <option value='B'>B</option>
-                            <option value='AB'>AB </option>
-                            <option value='O'>O</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="jns_kerja"
-                          class="col-sm-2 col-form-label">Status Kerja</label>
-                        <div class="col-sm-10">
-                          <select class="form-control  " style="width:100%;"
-                            id="jns_kerja" required>
-                            <option value disabled selected="selected">Pilih
-                              status</option>
-                            <option value='5 Hari kerja'>5 Hari kerja</option>
-                            <option value='6 Hari kerja'>6 Hari kerja</option>
-                            <option value='6 Hari kerja shifting'>6 Hari kerja
-                              shifting</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="tmt_kerja"
-                          class="col-sm-2 col-form-label">TMT Kerja</label>
-                        <div class="col-sm-10">
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i
-                                  class="far fa-calendar-alt"></i></span>
-                            </div>
-                            <input type="date" class="form-control"
-                              data-inputmask-alias="date"
-                              data-inputmask-inputformat="dd/mm/yyyy"
-                              data-mask id="tmt_kerja" name="tmt_kerja">
-                          </div>
-                        </div>
-                      </div>
-                      <!-- /.card-body -->
-                      <div class="card-footer">
-                        <button type="submit"
-                          class="btn btn-primary float-right">
-                          Simpan
-                        </button>
-                      </div>
-                      <!-- /.card-footer -->
-                    </form>
-                  </div>
-                  <!-- /.card -->
-                </div><!-- /.container-fluid -->
-              </section>
-              <!-- /.content -->
-              <!-- Main content -->
-              <section class="content">
-                <div class="container-fluid">
-                  <!-- Horizontal Form -->
-                  <div class="card card-info">
-                    <div class="card-header">
-                      <h3 class="card-title">Foto Profile</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <form id="profilePicForm" enctype="multipart/form-data">
-                      <div class="card-body">
-                        <div class="row justify-content-center">
-                          <div class="col-md-6">
-                            <div class="m-3">
-                              <div class="center-image" style="height: 200px;">
-                                <img
-                                  src="https://api.spairum.my.id/api/cdn/image/1722657433888-image-150.webp"
-                                  class="card-img preview-image" id="preview"
-                                  alt="Preview Foto">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                          <label for="inputEmail3"
-                            class="col-sm-2 col-form-label">Pilih Foto
-                            Profil</label>
-                          <div class="col-sm-10">
-                            <input type="file" class="form-control"
-                              id="profilePic" accept="image/*" required>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- /.card-body -->
-                      <div class="card-footer">
-                        <button type="submit"
-                          class="btn btn-primary float-right">
-                          Simpan
-                        </button>
-                      </div>
-                      <!-- /.card-footer -->
-                    </form>
-                  </div>
-                  <!-- /.card -->
-                </div><!-- /.container-fluid -->
-              </section>
-              <section class="content">
-                <div class="container-fluid">
-                  <!-- Horizontal Form -->
-                  <div class="card card-info">
-                    <div class="card-header">
-                      <h3 class="card-title">Perangkat & sesion</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body" id="userActivity">
-                     
-                    </div>
-
-                    <!-- /.card-body -->
-                    <div class="card-footer">
-                      <button type="submit" class="btn btn-primary float-right">
-                        Simpan
-                      </button>
-                    </div>
-                    <!-- /.card-footer -->
-                  </div>
-                  <!-- /.card -->
-                </div><!-- /.container-fluid -->
-              </section>
-              <!-- /.content -->
-            </div>
-            <!-- /.content-wrapper -->
-      
-
+      <!-- Content Header -->
+      <header class="w-full p-4 md:p-6 pb-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">Pengaturan Profil</h1>
           </div>
-          <!-- ./wrapper -->
-
-          <%- include('template/footer'); %>
-          <script src="/asset/js/src/profile.min.js"></script>
-          <script src="/asset/js/src/biodata-2.min.js"></script>
-          <script>
-
-  async function fetchData() {
-    try {
-      const response = await fetch('/api/lastActivity');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      console.log(data);
-      for (let item of data.data) {
-        const activity = document.createElement('div');
-        activity.innerHTML = `
-        <div class="info-box bg-info">
-          <span class="info-box-icon"><i class="fa-solid fa-user-secret"></i></span>
-
-          <div class="info-box-content">
-            <span class="info-box-text">Perangkat ${item.user_agent}</span>
-            <span class="progress-description">Login pada ${item.createdAt}</span>
-            <span class="progress-description">Aktivitas terakhir ${item.updateAt}</span>
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li class="font-semibold">Profil Saya</li>
+            </ul>
           </div>
-           <span class="info-box-icon"><i class="fa-solid fa-square-xmark"></i></span>
-          <!-- /.info-box-content -->
         </div>
-        <!-- /.info-box -->
-      `;
-        document.getElementById('userActivity').appendChild(activity);
+      </header>
+
+      <!-- Main content -->
+      <main class="flex-1 p-4 md:p-6">
+        <div class="container mx-auto max-w-4xl space-y-6">
+          
+          <!-- 1. Card Profil Saya -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body">
+              <h2 class="card-title text-primary border-b border-base-200 pb-3 mb-4">
+                <i class="fas fa-user mr-2"></i> Profil Saya
+              </h2>
+              
+              <form id="profil" class="space-y-4">
+                
+                <!-- NIK -->
+                <div class="form-control w-full">
+                  <label class="label" for="nik"><span class="label-text font-semibold">NIK</span></label>
+                  <input type="number" id="nik" name="nik" value="<%= user.nik %>" class="input input-bordered w-full bg-base-200/50 cursor-not-allowed" disabled />
+                </div>
+
+                <!-- NIP -->
+                <div class="form-control w-full">
+                  <label class="label" for="nip"><span class="label-text font-semibold">NIP</span></label>
+                  <input type="number" id="nip" name="nip" placeholder="Nomor Identitas Pegawai" value="<%= user.nip %>" class="input input-bordered w-full hover:border-primary focus:border-primary transition-colors" />
+                </div>
+
+                <!-- Nama Lengkap -->
+                <div class="form-control w-full">
+                  <label class="label" for="nama"><span class="label-text font-semibold">Nama Lengkap</span></label>
+                  <input type="text" id="nama" name="nama" placeholder="Nama lengkap dengan gelar" value="<%= user.nama %>" class="input input-bordered w-full hover:border-primary focus:border-primary transition-colors" />
+                </div>
+
+                <!-- Unit Kerja -->
+                <div class="form-control w-full">
+                  <label class="label" for="departemen"><span class="label-text font-semibold">Unit Kerja</span></label>
+                  <select id="departemen" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors">
+                    <option selected value="<%= user.dep %>"><%= user.departemen.bidang %></option>
+                    <% for(let i=0; i<departemen.length; i++) { %>
+                      <option value="<%= departemen[i].id %>"><%= departemen[i].bidang %></option>
+                    <% } %>
+                  </select>
+                </div>
+
+                <!-- Tanggal Lahir -->
+                <div class="form-control w-full">
+                  <label class="label" for="tgl_lahir"><span class="label-text font-semibold">Tanggal Lahir</span></label>
+                  <input type="date" id="tgl_lahir" name="tgl_lahir" value="<%= user.tgl_lahir %>" class="input input-bordered w-full hover:border-primary focus:border-primary transition-colors" />
+                </div>
+
+                <!-- Jabatan -->
+                <div class="form-control w-full">
+                  <label class="label" for="jab"><span class="label-text font-semibold">Jabatan</span></label>
+                  <input type="text" id="jab" name="jab" placeholder="Jabatan" value="<%= user.jab %>" class="input input-bordered w-full hover:border-primary focus:border-primary transition-colors" />
+                </div>
+
+                <!-- Atasan Langsung -->
+                <div class="form-control w-full">
+                  <label class="label" for="atasan"><span class="label-text font-semibold">Atasan Langsung</span></label>
+                  <select id="atasan" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors">
+                    <option selected value="<%= bos %>"><%= bos %></option>
+                    <% for(let i=0; i<atasan.length; i++) { %>
+                      <option value="<%= atasan[i].nik %>"><%= atasan[i].nama %> - <%= atasan[i].jab %></option>
+                    <% } %>
+                  </select>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="flex justify-end pt-4 border-t border-base-200">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save mr-1"></i> Simpan
+                  </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+          <!-- 2. Card Biodata Saya -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body">
+              <h2 class="card-title text-primary border-b border-base-200 pb-3 mb-4">
+                <i class="fas id-card mr-2"></i> Biodata Saya
+              </h2>
+              
+              <form id="biodata" class="space-y-4">
+                
+                <!-- Alamat -->
+                <div class="form-control w-full">
+                  <label class="label" for="alamat"><span class="label-text font-semibold">Alamat</span></label>
+                  <input type="text" id="alamat" name="alamat" class="input input-bordered w-full hover:border-primary focus:border-primary transition-colors" required />
+                </div>
+
+                <!-- Pangkat -->
+                <div class="form-control w-full">
+                  <label class="label" for="pangkat"><span class="label-text font-semibold">Pangkat</span></label>
+                  <select id="pangkat" name="pangkat" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors">
+                    <option value="" disabled selected>Pilih Golongan Pangkat</option>
+                    <option value="IVe">IVe</option>
+                    <option value="IVd">IVd</option>
+                    <option value="IVc">IVc</option>
+                    <option value="IVb">IVb</option>
+                    <option value="IVa">IVa</option>
+                    <option value="IIId">IIId</option>
+                    <option value="IIIc">IIIc</option>
+                    <option value="IIIb">IIIb</option>
+                    <option value="IIIa">IIIa</option>
+                    <option value="IId">IId</option>
+                    <option value="IIc">IIc</option>
+                    <option value="IIb">IIb</option>
+                    <option value="IIa">IIa</option>
+                    <option value="XI">XI</option>
+                    <option value="X">X</option>
+                    <option value="IX">IX</option>
+                    <option value="VIII">VIII</option>
+                    <option value="VII">VII</option>
+                    <option value="VI">VI</option>
+                    <option value="V">V</option>
+                    <option value="IV">IV</option>
+                    <option value="-">Non ASN</option>
+                    <option value="PPPK">PPPK PARUH WAKTU</option>
+                  </select>
+                </div>
+
+                <!-- TMT Pangkat -->
+                <div class="form-control w-full">
+                  <label class="label" for="tmt_pangkat"><span class="label-text font-semibold">TMT Pangkat/Gol. Ruang</span></label>
+                  <div class="join w-full">
+                    <span class="btn btn-active join-item pointer-events-none"><i class="far fa-calendar-alt"></i></span>
+                    <input type="date" id="tmt_pangkat" name="tmt_pangkat" class="input input-bordered join-item w-full hover:border-primary focus:border-primary transition-colors" />
+                  </div>
+                </div>
+
+                <!-- Status Pernikahan -->
+                <div class="form-control w-full">
+                  <label class="label" for="marital"><span class="label-text font-semibold">Status Pernikahan</span></label>
+                  <select id="marital" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors" required>
+                    <option value="" disabled selected>Pilih Status</option>
+                    <option value="Belum kawin">Belum Kawin</option>
+                    <option value="kawin">Kawin</option>
+                    <option value="Cerai hidup">Cerai Hidup</option>
+                    <option value="Cerai mati">Cerai Mati</option>
+                  </select>
+                </div>
+
+                <!-- Jumlah Anak -->
+                <div class="form-control w-full">
+                  <label class="label" for="jumlah_anak"><span class="label-text font-semibold">Jumlah Anak</span></label>
+                  <select id="jumlah_anak" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors" required>
+                    <option value="" disabled selected>Jumlah tanggungan anak</option>
+                    <% for(let i=0; i<=7; i++) { %>
+                      <option value="<%= i %>"><%= i %></option>
+                    <% } %>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-base-content/60">Jika sudah menikah, anak merupakan tanggungan suami/istri (tanggungan anak 0).</span>
+                  </label>
+                </div>
+
+                <!-- Golongan Darah -->
+                <div class="form-control w-full">
+                  <label class="label" for="golongan_darah"><span class="label-text font-semibold">Golongan Darah</span></label>
+                  <select id="golongan_darah" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors">
+                    <option value="" disabled selected>Pilih Golongan Darah</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="AB">AB</option>
+                    <option value="O">O</option>
+                  </select>
+                </div>
+
+                <!-- Status Kerja -->
+                <div class="form-control w-full">
+                  <label class="label" for="jns_kerja"><span class="label-text font-semibold">Status Kerja</span></label>
+                  <select id="jns_kerja" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors" required>
+                    <option value="" disabled selected>Pilih status</option>
+                    <option value="5 Hari kerja">5 Hari Kerja</option>
+                    <option value="6 Hari kerja">6 Hari Kerja</option>
+                    <option value="6 Hari kerja shifting">6 Hari Kerja Shifting</option>
+                  </select>
+                </div>
+
+                <!-- TMT Kerja -->
+                <div class="form-control w-full">
+                  <label class="label" for="tmt_kerja"><span class="label-text font-semibold">TMT Kerja</span></label>
+                  <div class="join w-full">
+                    <span class="btn btn-active join-item pointer-events-none"><i class="far fa-calendar-alt"></i></span>
+                    <input type="date" id="tmt_kerja" name="tmt_kerja" class="input input-bordered join-item w-full hover:border-primary focus:border-primary transition-colors" />
+                  </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="flex justify-end pt-4 border-t border-base-200">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save mr-1"></i> Simpan
+                  </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+          <!-- 3. Card Foto Profil -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body">
+              <h2 class="card-title text-primary border-b border-base-200 pb-3 mb-4">
+                <i class="fas fa-camera mr-2"></i> Foto Profil
+              </h2>
+              
+              <form id="profilePicForm" enctype="multipart/form-data" class="space-y-4">
+                <div class="flex flex-col items-center justify-center my-2">
+                  <div class="avatar">
+                    <div class="w-36 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden shadow-md">
+                      <img src="https://api.spairum.my.id/api/cdn/image/1722657433888-image-150.webp" id="preview" alt="Preview Foto" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-control w-full">
+                  <label class="label" for="profilePic"><span class="label-text font-semibold">Pilih Foto Profil Baru</span></label>
+                  <input type="file" id="profilePic" accept="image/*" class="file-input file-input-bordered w-full hover:border-primary focus:border-primary transition-colors" required />
+                </div>
+
+                <!-- Action Footer -->
+                <div class="flex justify-end pt-4 border-t border-base-200">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save mr-1"></i> Simpan
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- 4. Card Perangkat & Sesi -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body">
+              <h2 class="card-title text-primary border-b border-base-200 pb-3 mb-4">
+                <i class="fas fa-laptop-code mr-2"></i> Perangkat & Sesi Aktif
+              </h2>
+              
+              <div id="userActivity" class="space-y-3">
+                <!-- Konten dinamis dari script diisi di sini -->
+              </div>
+
+              <div class="flex justify-end pt-4 border-t border-base-200">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save mr-1"></i> Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+        <aside>
+          <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+        </aside>
+      </footer>
+    </div>
+
+    <!-- Sidebar Utama -->
+    <%- include('template/sidebar'); %>
+  </div>
+
+  <!-- Scripts -->
+  <%- include('template/footer'); %>
+  <script src="/asset/js/src/profile.min.js"></script>
+  <script src="/asset/js/src/biodata-2.min.js"></script>
+  <script>
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/lastActivity');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        
+        const container = document.getElementById('userActivity');
+        container.innerHTML = ''; // Kosongkan container sebelum render
+
+        for (let item of data.data) {
+          const activity = document.createElement('div');
+          // Menggunakan komponen alert/card DaisyUI untuk menggantikan info-box AdminLTE
+          activity.innerHTML = `
+            <div class="flex items-center justify-between p-4 bg-base-200/60 rounded-xl border border-base-300 gap-4 transition-all hover:bg-base-200">
+              <div class="flex items-center gap-3">
+                <div class="p-3 bg-primary/10 text-primary rounded-xl">
+                  <i class="fa-solid fa-user-secret text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-base-content">Perangkat ${item.user_agent}</h4>
+                  <p class="text-xs text-base-content/70 mt-0.5">Login: ${item.createdAt}</p>
+                  <p class="text-xs text-base-content/60">Aktivitas terakhir: ${item.updateAt}</p>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm text-error hover:bg-error/1ıl">
+                <i class="fa-solid fa-square-xmark text-lg"></i>
+              </button>
+            </div>
+          `;
+          container.appendChild(activity);
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
       }
-      // Process the data as needed
-    } catch (error) {
-      console.error('Fetch error:', error);
     }
-  }
 
-  fetchData();
+    fetchData();
+  </script>
+</body>
 
-
-          </script>
-        </body>
-
-      </html>
+</html>

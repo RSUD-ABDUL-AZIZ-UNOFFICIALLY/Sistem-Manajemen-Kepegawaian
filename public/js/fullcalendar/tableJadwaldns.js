@@ -4,98 +4,104 @@ let month = dateNow.getMonth();
 let typeJdlDns = [];
 let jnsDNS = [];
 let departemen = "";
-$("#periode").val(year + "-" + ("0" + (month + 1)).slice(-2));
-$("#departemen").append("<option value=''>Pilih Departemen</option>");
+
+const periodeInput = document.getElementById("periode");
+const departemenSelect = document.getElementById("departemen");
+
+// Inisialisasi Nilai Default
+periodeInput.value = `${year}-${String(month + 1).padStart(2, '0')}`;
+departemenSelect.innerHTML = `<option value=''>Pilih Bidang / Departemen</option>`;
+
+// Fetch Data Departemen
 fetch("/api/presensi/departemen")
     .then(response => response.json())
     .then(data => {
-        data.data.forEach(v => {
-            $("#departemen").append(`<option value='${v.dep}'>${v.departemen.bidang}</option>`);
-        });
+        if (data && data.data) {
+            data.data.forEach(v => {
+                departemenSelect.insertAdjacentHTML("beforeend", `<option value='${v.dep}'>${v.departemen.bidang}</option>`);
+            });
+        }
     })
     .catch(error => console.error('Error fetching departemen data:', error));
-$("#periode").on("change", function () {
-    let periode = $(this).val();
+
+// Event Listeners
+periodeInput.addEventListener("change", function () {
+    let periode = this.value;
     getTabel(periode);
 });
-$("#departemen").on("change", function () {
-    departemen = $(this).val();
-    getTabel($("#periode").val());
 
+departemenSelect.addEventListener("change", function () {
+    departemen = this.value;
+    getTabel(periodeInput.value);
 });
 
 async function getAnggota(dep) {
-   await $.ajax({
-        url: "/api/presensi/jnsdns?dep=" + dep,
-        method: "GET",
-        success: function (data) {
-           jnsDNS = data.data.map(item => item.type);
-            jnsDNS.push("jamKerja");
-        },
-        error: function (error) {
-            console.log(error)
-            return Swal.fire({
-                icon: "error",
-                title: "Gagal",
-                text: error.responseJSON.message
-            })
-        }
-    })
-    return await $.ajax({
-        url: "/api/presensi/anggota?dep=" + dep + "&periode=" + $("#periode").val(),
-        method: "GET",
-        success: function (data) {
-            return data.data;
-        },
-        error: function (error) {
-            console.log(error)
-            return Swal.fire({
-                icon: "error",
-                title: "Gagal",
-                text: error.responseJSON.message
-            })
-        }
-    })
-}
-async function updateJamkerja(nik) {
-    return await $.ajax({
-        url: "/api/presensi/anggota?dep=" + departemen + "&periode=" + $("#periode").val() + "&nik=" + nik,
-        method: "GET",
-        success: function (data) {
-            return data.data;
-        },
-        error: function (error) {
-            console.log(error)
-            return Swal.fire({
-                icon: "error",
-                title: "Gagal",
-                text: error.responseJSON.message
-            })
-        }
-    })
+    try {
+        // Ambil Jenis DNS
+        const resJns = await fetch(`/api/presensi/jnsdns?dep=${dep}`);
+        if (!resJns.ok) throw await resJns.json();
+        const dataJns = await resJns.json();
 
-}
-async function getTabel(periode) {
-    let id_departemen = $("#departemen").val();
-    if (id_departemen == '') {
+        jnsDNS = dataJns.data.map(item => item.type);
+        jnsDNS.push("jamKerja");
+
+        // Ambil Data Anggota
+        const resAnggota = await fetch(`/api/presensi/anggota?dep=${dep}&periode=${periodeInput.value}`);
+        if (!resAnggota.ok) throw await resAnggota.json();
+        return await resAnggota.json();
+
+    } catch (error) {
+        console.error(error);
         Swal.fire({
             icon: "error",
-            title: "Oops.",
-            text: "Mohon pilih Bidang terlebih dahulu",
+            title: "Gagal",
+            text: error.message || "Terjadi kesalahan saat mengambil data anggota"
+        });
+        return null;
+    }
+}
+
+async function updateJamkerja(nik) {
+    try {
+        const res = await fetch(`/api/presensi/anggota?dep=${departemen}&periode=${periodeInput.value}&nik=${nik}`);
+        if (!res.ok) throw await res.json();
+        return await res.json();
+    } catch (error) {
+        console.error(error);
+        Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message || "Gagal memperbarui jam kerja"
+        });
+        return null;
+    }
+}
+
+async function getTabel(periode) {
+    let id_departemen = departemenSelect.value;
+
+    if (id_departemen === '') {
+        Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "Mohon pilih Bidang / Departemen terlebih dahulu",
         });
         return false;
     }
-    let anggota = await getAnggota(id_departemen);
-    anggota= anggota.data
+
+    let responseData = await getAnggota(id_departemen);
+    if (!responseData || !responseData.data) return;
+
+    let anggota = responseData.data;
+
     let dataTable = anggota.map(a => {
-        let data = { nama: a.nama,nik: a.nik };
-        let countDNS = {}; 
+        let data = { nama: a.nama, nik: a.nik };
+        let countDNS = {};
         let jamKerja = 0;
 
         a.jadwal?.forEach((j, idx) => {
             let type = j.dnsType?.type || "";
-            // console.log(j.dnsType.hours);
-            jamKerja += j.dnsType.hours
+            if (j.dnsType && j.dnsType.hours) jamKerja += j.dnsType.hours;
             data[(idx + 1).toString()] = type;
 
             if (type) {
@@ -107,18 +113,18 @@ async function getTabel(periode) {
         jnsDNS.forEach(jns => {
             data["Total " + jns] = countDNS[jns] || 0;
         });
-        data["Total jamKerja"] = jamKerja
+        data["Total jamKerja"] = jamKerja;
 
         return data;
     });
-    // console.log(dataTable);
+
     let date = new Date(periode);
-    let year = date.getFullYear();
-    let month = date.getMonth();
-    let jumlahHari = new Date(year, month + 1, 0).getDate();
+    let selectedYear = date.getFullYear();
+    let selectedMonth = date.getMonth();
+    let jumlahHari = new Date(selectedYear, selectedMonth + 1, 0).getDate();
 
     let namaHari = ["MIN", "SEN", "SEL", "RAB", "KAM", "JUM", "SAB"];
-    let columns = [{ title: "Nama", field: "nama", width: '25px', frozen: true }];
+    let columns = [{ title: "Nama", field: "nama", width: 200, frozen: true }];
 
     // Tambahkan baris total per jenis jnsDNS
     jnsDNS.forEach(jns => {
@@ -132,44 +138,53 @@ async function getTabel(periode) {
     });
 
     for (let i = 1; i <= jumlahHari; i++) {
-        let currentDate = new Date(year, month, i);
+        let currentDate = new Date(selectedYear, selectedMonth, i);
         let hari = namaHari[currentDate.getDay()];
         columns.push({
-            title: `${hari}, ${i}`, field: `${i}`, editor: "list", editorParams: {
+            title: `${hari}, ${i}`,
+            field: `${i}`,
+            editor: "list",
+            editorParams: {
                 values: jnsDNS,
                 elementAttributes: {
                     readonly: true,
                     tabindex: "-1",
                     inputmode: "none",
                 }
-               
             },
             cellEdited: async function (cell) {
                 let row = cell.getRow();
                 let data = row.getData();
                 let value = cell.getValue();
                 let day = cell.getField();
-                if (day < 10) day = "0" + day;
-                updrateJadwal(data.nik, `${periode}-${day}`, `${value}-${id_departemen}`);
+
+                if (parseInt(day) < 10) day = "0" + day;
+
+                // Pastikan fungsi ini tersedia secara global di script Anda
+                if (typeof updrateJadwal === "function") {
+                    updrateJadwal(data.nik, `${periode}-${day}`, `${value}-${id_departemen}`);
+                }
+
                 // Hitung ulang total di baris
-                let jamkerja = await updateJamkerja(data.nik)
-                console.log(jamkerja.data.totalJam);
+                let jamkerjaRes = await updateJamkerja(data.nik);
                 let newTotals = {};
                 jnsDNS.forEach(jns => { newTotals[`Total ${jns}`] = 0; });
+
                 for (let i = 1; i <= jumlahHari; i++) {
                     let val = data[i.toString()];
                     if (val && jnsDNS.includes(val)) {
                         newTotals[`Total ${val}`]++;
                     }
                 }
-                newTotals["Total jamKerja"] = jamkerja.data.totalJam
+                if (jamkerjaRes && jamkerjaRes.data) {
+                    newTotals["Total jamKerja"] = jamkerjaRes.data.totalJam;
+                }
                 row.update(newTotals);
 
-                // === Update baris total bawah per jenis ===
+                // Update baris total bawah per jenis
                 jnsDNS.forEach(jns => {
                     let totalRow = table.getRows().find(r => r.getData().nama === `Total ${jns}`);
                     if (totalRow) {
-                        let totalData = totalRow.getData();
                         let updatedTotals = {};
                         for (let i = 1; i <= jumlahHari; i++) {
                             let col = i.toString();
@@ -181,31 +196,33 @@ async function getTabel(periode) {
                         totalRow.update(updatedTotals);
                     }
                 });
-                
-            }, minWidth: 80,
+
+            },
+            minWidth: 80,
             responsive: 2
         });
-        // columns.push({ title: `${hari}, ${i}`, field: `nik`, width: '15px' });
     }
-    jnsDNS.forEach(jns => {
-        columns.push({ title: `${jns}`, field: `Total ${jns}`, width: '15px' });
-    });
 
+    jnsDNS.forEach(jns => {
+        columns.push({ title: `${jns}`, field: `Total ${jns}`, minWidth: 80 });
+    });
 
     let table = new Tabulator("#tableJadwaldns", {
         data: dataTable,
         columns: columns,
         layout: "fitDataStretch",
-        height: "500px", // ini penting untuk mengaktifkan scroll
+        height: "500px",
         rowFormatter: function (row) {
             let data = row.getData();
-            if (data.nama.startsWith("Total ")) {
-                row.getElement().style.backgroundColor = "#f0f8ff";
+            // Memberikan highlight pada baris Total agar mudah dibedakan
+            if (data.nama && data.nama.startsWith("Total ")) {
+                row.getElement().style.backgroundColor = "#e0f2fe"; // Tailwind sky-100
                 row.getElement().style.fontWeight = "bold";
             }
         }
     });
+
     document.getElementById("download-xlsx").addEventListener("click", function () {
-        table.download("xlsx", "data_Absen.xlsx", { sheetName: "" });
+        table.download("xlsx", "Data_Jadwal_Absen.xlsx", { sheetName: "Jadwal" });
     });
 }

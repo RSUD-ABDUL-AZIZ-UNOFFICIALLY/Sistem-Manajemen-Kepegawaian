@@ -1,22 +1,32 @@
-<!-- Modal -->
-<div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="templateModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="templateModalLabel">Activity</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<!-- Modal DaisyUI (Menggunakan tag <dialog>) -->
+<dialog id="templateModal" class="modal">
+    <div class="modal-box bg-base-200">
+        <!-- Tombol silang di sudut kanan atas -->
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        
+        <h3 class="font-bold text-lg border-b border-base-300 pb-2 mb-4" id="templateModalLabel">
+            Activity
+        </h3>
+        
+        <!-- Modal Body (List Template) -->
+        <div class="py-2" id="body">
+            <ul id="list-group" class="space-y-2">
+                <!-- Data akan di-render di sini oleh JavaScript -->
+            </ul>
         </div>
-        <div class="modal-body">
-                <div class="card-body" id="body">
-                    <ol class="list-group list-group-numbered" id="list-group"></ol>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-      </div>
+        
+        <!-- Modal Footer -->
+        <div class="modal-action mt-6 border-t border-base-300 pt-4">
+            <form method="dialog">
+                <button class="btn btn-outline">Close</button>
+            </form>
+        </div>
     </div>
-  </div>
+    
+    <!-- Backdrop: Memungkinkan klik di luar modal untuk menutup -->
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

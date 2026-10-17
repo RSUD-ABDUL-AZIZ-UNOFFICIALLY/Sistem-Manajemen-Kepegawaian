@@ -1,140 +1,83 @@
-<!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <div class="brand-link">
-        <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Singkawang Logo"
-            class="brand-image img-circle elevation-3" style="opacity: 0.8" />
-        <span class="brand-text font-weight-light">RSUD dr. Abdul Aziz</span>
-    </div>
+<!-- Area Drawer Side (Sidebar) -->
+<div class="drawer-side z-50">
+    <label for="main-drawer" aria-label="close sidebar" class="drawer-overlay"></label> 
+    
+    <aside class="w-72 min-h-full bg-base-100 text-base-content flex flex-col shadow-xl">
+        <!-- Brand Logo -->
+        <div class="p-4 flex items-center gap-3 border-b border-base-200">
+            <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Singkawang Logo"
+                class="w-10 h-10 rounded-full shadow-sm object-cover opacity-90" />
+            <span class="font-semibold text-lg tracking-tight">RSUD dr. Abdul Aziz</span>
+        </div>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        <div
-            class="flex items-center gap-3 mt-4 mb-4 pb-4 border-b border-gray-200">
-            <div class="shrink-0">
-                <img
-                    src="/asset/img/cowok.png"
-                    id="imgUser"
-                    class="w-10 h-10 rounded-full shadow-md object-cover"
-                    alt="User Image" />
+        <!-- Sidebar user panel -->
+        <div class="p-4 flex items-center gap-4 border-b border-base-200">
+            <div class="avatar">
+                <div class="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-md">
+                    <img src="/asset/img/cowok.png" id="imgUser" alt="User Image" class="object-cover" />
+                </div>
             </div>
-            <div class="min-w-0 flex-1">
-                <a
-                    href="/profile"
-                    class="block truncate text-sm font-medium text-gray-800 hover:text-blue-600 transition-colors">
+            <div class="flex-1 min-w-0">
+                <a href="/profile" class="block truncate text-sm font-semibold text-base-content hover:text-primary transition-colors">
                     <%= token.nama %>
                 </a>
+                <span class="text-xs text-base-content/60">Pegawai</span>
             </div>
         </div>
 
         <!-- Sidebar Menu -->
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column"
-                data-widget="treeview" role="menu" data-accordion="false"
-                id="navbar" name="navbar">
-                <!-- Add icons to the links using the .nav-icon class
-                  with font-awesome or any other icon font library -->
-                <li class="nav-item" id="laporan" name="laporan">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            LAPORAN KINERJA KARYAWAN
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview" id="ul_laporan"
-                        name="ul_laporan">
-                        <li class="nav-item">
-                            <a href="/daily" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Laporan Harian</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/monthly" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Laporan Bulanan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/Report" class="nav-link">
-                                <i
-                                    class="far fa-solid fa-arrow-trend-up nav-icon"></i>
-                                <p>Rekapitulasi Laporan</p>
-                            </a>
-                        </li>
+        <ul class="menu flex-nowrap p-4 w-full gap-1 overflow-y-auto" id="navbar" name="navbar">
+            
+            <li id="laporan" name="laporan">
+                <details>
+                    <summary class="font-medium">
+                        <i class="fas fa-tachometer-alt w-5 text-center"></i> KINERJA KARYAWAN
+                    </summary>
+                    <ul id="ul_laporan" name="ul_laporan" class="before:w-[1px]">
+                        <li><a href="/daily" class="menu-link"><i class="far fa-circle w-4 text-xs"></i> Laporan Harian</a></li>
+                        <li><a href="/monthly" class="menu-link"><i class="far fa-circle w-4 text-xs"></i> Laporan Bulanan</a></li>
+                        <li><a href="/Report" class="menu-link"><i class="fas fa-arrow-trend-up w-4 text-xs"></i> Rekapitulasi</a></li>
                     </ul>
-                </li>
-                <li class="nav-item" id="absen" name="absen">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa-solid fa-person-circle-check"></i>
-                        <p>
-                            ABSENSI KARYAWAN
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview" id="ul_absen" name="ul_absen">
-                        <li class="nav-item">
-                            <a href="/absen" class="nav-link">
-                                <i
-                                    class="fa-solid fa-person-walking-arrow-right nav-icon"></i>
-                                <p>Absen</p>
-                            </a>
-                        </li>
+                </details>
+            </li>
+
+            <li id="absen" name="absen">
+                <details>
+                    <summary class="font-medium">
+                        <i class="fa-solid fa-person-circle-check w-5 text-center"></i> ABSENSI KARYAWAN
+                    </summary>
+                    <ul id="ul_absen" name="ul_absen" class="before:w-[1px]">
+                        <li><a href="/absen" class="menu-link"><i class="fa-solid fa-person-walking-arrow-right w-4 text-xs"></i> Absen</a></li>
                     </ul>
-                </li>
-                <li class="nav-item" id="documen" name="documen">
-                    <a href="#" class="nav-link">
-                        <i class=" nav-icon fa-regular fas fa-folder"></i>
-                        <p>DOKUMEN PEGAWAI</p>
-                        <i class="right fas fa-angle-left"></i>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="/profile" class="nav-link">
-                                <i class="far fa-solid fa-dna nav-icon"></i>
-                                <p>Biodata</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/document" class="nav-link">
-                                <i class="far fa-solid fa-file nav-icon"></i>
-                                <p>Dokument</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/account" class="nav-link">
-                                <i class="far fa-solid fa-key nav-icon"></i>
-                                <p>Akun</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/salary" class="nav-link">
-                                <i class="far fa-solid fa-wallet nav-icon"></i>
-                                <p>Penghasilan</p>
-                            </a>
-                        </li>
+                </details>
+            </li>
+
+            <li id="documen" name="documen">
+                <details>
+                    <summary class="font-medium">
+                        <i class="fas fa-folder w-5 text-center"></i> DOKUMEN PEGAWAI
+                    </summary>
+                    <ul class="before:w-[1px]">
+                        <li><a href="/profile" class="menu-link"><i class="fas fa-dna w-4 text-xs"></i> Biodata</a></li>
+                        <li><a href="/document" class="menu-link"><i class="fas fa-file w-4 text-xs"></i> Dokumen</a></li>
+                        <li><a href="/account" class="menu-link"><i class="fas fa-key w-4 text-xs"></i> Akun</a></li>
+                        <li><a href="/salary" class="menu-link"><i class="fas fa-wallet w-4 text-xs"></i> Penghasilan</a></li>
                     </ul>
-                </li>
-                <li class="nav-item" id="cuti" name="cuti">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa-regular fas fa-calendar-alt"></i>
-                        <p>CUTI</p>
-                        <i class="right fas fa-angle-left"></i>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="/cuti" class="nav-link">
-                                <i class="far fa-solid fa-bed nav-icon"></i>
-                                <p>Permohonan Cuti</p>
-                            </a>
-                        </li>
+                </details>
+            </li>
+
+            <li id="cuti" name="cuti">
+                <details>
+                    <summary class="font-medium">
+                        <i class="fas fa-calendar-alt w-5 text-center"></i> CUTI
+                    </summary>
+                    <ul id="ul_cuti" class="before:w-[1px]">
+                        <li><a href="/cuti" class="menu-link"><i class="fas fa-bed w-4 text-xs"></i> Permohonan Cuti</a></li>
                     </ul>
-                </li>
-            </ul>
-        </nav>
+                </details>
+            </li>
+
+        </ul>
         <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
-</aside>
+    </aside>
+</div>

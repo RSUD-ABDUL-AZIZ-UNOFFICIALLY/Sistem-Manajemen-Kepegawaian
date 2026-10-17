@@ -1,0 +1,56 @@
+<!-- =======================  Tailwind modal ======================= -->
+<div
+  id="templateModal"
+  class="fixed inset-0 z-[1055] flex items-center justify-center hidden  p-4 ">
+  <!-- overlay -->
+  <div
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm"
+    tabindex="-1"
+    aria-hidden="true"></div>
+
+  <!-- modal panel -->
+  <div
+    role="dialog"
+    aria-modal="true"
+    class="relative max-w-2xl w-full bg-white rounded-xl shadow-2xl overflow-hidden">
+    
+    <!-- header -->
+    <div class="flex items-center justify-between p-4 border-b">
+      <h5 class="text-lg font-semibold" id="templateModalLabel">Activity</h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600"
+        aria-label="Close modal"
+        onclick="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2">
+          <path stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- body -->
+    <div class="p-4">
+      <div class="card-body" id="body">
+        <ol id="list-group"
+          class="list-decimal list-inside space-y-2 text-sm text-gray-700 mb-4">
+          <!-- list items will be injected here -->
+        </ol>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <div class="flex justify-end p-4 border-t space-x-2">
+      <button
+        type="button"
+        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded"
+        onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>

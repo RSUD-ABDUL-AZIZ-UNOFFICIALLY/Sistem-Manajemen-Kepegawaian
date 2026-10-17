@@ -1,53 +1,88 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 
 <head>
   <%- include('../template/head'); %>
+  <meta name="description" content="Riwayat Pengaduan Admin Helpdesk RSUD dr. Abdul Aziz Singkawang">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
-    <!-- Navbar -->
-    <%- include('../template/navbar'); %>
-      <!-- /.navbar -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+  <!-- Wrapper Utama Drawer DaisyUI -->
+  <div class="drawer lg:drawer-open">
+    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+    
+    <!-- Konten Utama -->
+    <div class="drawer-content flex flex-col min-h-screen">
+      
+      <!-- Navbar -->
+      <%- include('../template/navbar'); %>
 
-      <!-- Main Sidebar Container -->
-      <%- include('../template/sidebar'); %>
+      <!-- Content Header -->
+      <header class="w-full p-4 md:p-6 pb-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">Riwayat Pengaduan (Admin)</h1>
+          </div>
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li class="font-semibold">Helpdesk Admin</li>
+            </ul>
+          </div>
+        </div>
+      </header>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('../template/content-header'); %>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="p-6">
-              <div class="w-full">
-                <div class="bg-white border border-gray-200 rounded-lg shadow-md">
-                  <div class="bg-blue-600 text-white px-6 py-4 border-b border-gray-200 rounded-t-lg">
-                    <h3 class="text-xl font-semibold">Riwayat Pengaduan</h3>
-                  </div>
-                  <!-- /.card-header -->
-                    <div class="p-6">
-                      <input type="month" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="riwayatDate" name="start" min="2023-03" />
-                      <br>
-                  <div class="mt-4" id="list-tiket">
-                  </div>
-                  
-                    <!-- /.card-body -->
+      <!-- Main content -->
+      <main class="flex-1 p-4 md:p-6">
+        <div class="container mx-auto max-w-7xl space-y-6">
+          
+          <!-- Card Utama -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body p-5 md:p-6 space-y-4">
+              
+              <!-- Card Header / Filter Bulan -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-base-200">
+                <h2 class="card-title text-base md:text-lg font-bold text-base-content">
+                  <i class="fas fa-list-check text-primary mr-2"></i> Daftar Tiket Pengaduan
+                </h2>
+                <div class="flex items-center gap-2">
+                  <label for="riwayatDate" class="text-sm font-semibold text-base-content/70">Filter Bulan:</label>
+                  <input 
+                    type="month" 
+                    id="riwayatDate" 
+                    name="start" 
+                    min="2023-03" 
+                    class="input input-bordered input-sm w-full sm:w-auto hover:border-primary focus:border-primary transition-colors" 
+                  />
                 </div>
               </div>
-              <!-- /.container-fluid -->
-            </section>
-            
-            <!-- /.content -->
+
+              <!-- List Tiket Container (Rendered via JS) -->
+              <div id="list-tiket" class="space-y-3 min-h-32">
+                <!-- Tiket akan dimuat secara dinamis oleh helpdesk.js -->
+              </div>
+
+            </div>
+          </div>
+
         </div>
-        <!-- /.content-wrapper -->
-        <footer class="main-footer"></footer>
+      </main>
+      
+      <!-- Footer -->
+      <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+        <aside>
+          <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+        </aside>
+      </footer>
+    </div>
+
+    <!-- Sidebar Utama -->
+    <%- include('../template/sidebar'); %>
   </div>
-  <!-- ./wrapper -->
+
+  <!-- Footer Scripts -->
   <%- include('../template/footer'); %>
-      <script src="/asset/js/admin/helpdesk.js"></script>
+  <script src="/asset/js/admin/helpdesk.js"></script>
 </body>
 
 </html>

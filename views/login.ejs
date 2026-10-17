@@ -1,123 +1,217 @@
-<%- include('layout/header') -%>
- <div class="container mx-auto px-4 mt-12">
-    <div class="flex justify-center">
-      <!-- Mengganti col-md-6 dengan max-w-md agar form responsif dan rapi -->
-      <div class="w-full max-w-md">
-        
-        <!-- Card Container -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-          <div class="p-6 sm:p-8">
-            
-            <!-- Header Section -->
-            <div class="text-center mb-8">
-              <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Logo" class="h-14 mx-auto object-contain" onerror="this.src='https://via.placeholder.com/50?text=Logo'">
-              <h5 class="text-lg font-bold text-gray-800 mt-4 leading-tight">Sistem Informasi Manajemen Kepegawaian</h5>
-              <h5 class="text-md font-medium text-gray-500 mt-1">RSUD dr. Abdul Aziz</h5>
-            </div>
+<!doctype html>
+<html lang="id-ID" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Sistem Informasi Manajemen Kepegawaian RSUD dr. Abdul Aziz Singkawang">
+  <meta name="author" content="Fakhry Hizballah">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SIMPEG RSUD dr. Abdul Aziz">
+  <meta name="theme-color" content="#0b1d35">
+  <meta property="og:image" content="/asset/img/icon.png">
 
-            <!-- Form Section -->
-            <form>
-              
-              <!-- Input: Nomor Whatsapp -->
-              <div class="mb-5">
-                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1.5">Nomor Whatsapp</label>
-                <div class="flex shadow-sm rounded-lg">
-                  <input 
-                    type="number" 
-                    id="phone" 
-                    name="phone" 
-                    autocomplete="on" 
-                    required 
-                    class="flex-1 block w-full min-w-0 px-4 py-2.5 border border-gray-300 rounded-none rounded-l-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm outline-none transition-colors"
-                    placeholder="Contoh: 08123456789"
-                  />
-                  <button 
-                    type="button" 
-                    id="send-otp"
-                    class="inline-flex items-center px-4 py-2.5 border border-l-0 border-gray-300 rounded-r-lg bg-gray-50 text-gray-700 text-sm font-medium hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
-                  >
-                    Minta OTP
-                  </button>
-                </div>
-              </div>
+  <link rel="apple-touch-icon" href="/asset/img/android-chrome-512x512.png">
+  <link rel="apple-touch-startup-image" href="/asset/img/portrait.png" media="orientation: portrait">
+  <link rel="apple-touch-startup-image" href="/asset/img/landscape.png" media="orientation: landscape">
+  <link rel="manifest" href="/asset/js/manifest.json">
+  <link rel="icon" type="image/x-icon" href="/asset/favicon.ico">
 
-              <!-- Input: OTP -->
-              <div class="mb-6">
-                <label for="otp" class="block text-sm font-medium text-gray-700 mb-1.5">One-Time Password (OTP)</label>
-                <input 
-                  type="number" 
-                  id="otp" 
-                  name="otp" 
-                  required 
-                  class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm outline-none transition-colors"
-                  placeholder="Masukkan OTP"
-                />
-                <div class="mt-2.5 text-justify">
-                  <p class="text-gray-500 text-xs leading-relaxed">
-                    One-Time Password (OTP) telah dikirim ke nomor Whatsapp Anda yang terdaftar.
-                  </p>
-                </div>
-              </div>
+  <!-- Pertahankan DaisyUI/Tailwind untuk kompatibilitas dengan aset halaman yang sudah ada. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.css">
+  <link rel="stylesheet" href="/asset/css/index.css">
+  <link rel="stylesheet" href="/asset/css/login.css">
 
-              <!-- Submit Button -->
-              <div class="flex justify-end mt-2">
-                <button 
-                  type="submit" 
-                  class="inline-flex justify-center items-center px-6 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                >
-                  Login
-                </button>
-              </div>
+  <title><%= title %></title>
+</head>
+<body class="simpeg-login-page">
+  <div class="login-atmosphere" aria-hidden="true">
+    <span class="ambient-orb ambient-orb--one"></span>
+    <span class="ambient-orb ambient-orb--two"></span>
+    <span class="ambient-grid"></span>
+  </div>
 
-            </form>
-          </div>
+  <main class="login-layout">
+    <!-- Panel visual hanya ditampilkan pada layar desktop. -->
+    <aside class="login-intro" aria-label="Informasi SIMPEG RSUD dr. Abdul Aziz">
+      <a class="brand brand--intro" href="/" aria-label="SIMPEG RSUD dr. Abdul Aziz - beranda">
+        <span class="brand-logo brand-logo--large">
+          <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Lambang Kota Singkawang"
+               onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+          <span class="brand-logo-fallback" hidden>AA</span>
+        </span>
+        <span class="brand-copy">
+          <strong>SIMPEG</strong>
+          <small>RSUD dr. Abdul Aziz</small>
+        </span>
+      </a>
+
+      <div class="intro-copy">
+        <span class="eyebrow"><span class="eyebrow-dot"></span> SISTEM INFORMASI KEPEGAWAIAN</span>
+        <h1>Selamat datang.<br><span>Mulai hari Anda</span> dengan lebih mudah.</h1>
+        <p>Kelola akses ke informasi kepegawaian rumah sakit dengan satu pintu masuk yang aman, praktis, dan terintegrasi.</p>
+      </div>
+
+      <div class="visual-stage" aria-hidden="true">
+        <div class="visual-ring visual-ring--outer"></div>
+        <div class="visual-ring visual-ring--inner"></div>
+        <div class="visual-orbit visual-orbit--one"><span class="orbit-dot"></span></div>
+        <div class="visual-orbit visual-orbit--two"><span class="orbit-dot orbit-dot--mint"></span></div>
+        <div class="visual-emblem">
+          <div class="emblem-glow"></div>
+          <i class="fa-solid fa-shield-heart"></i>
+          <span class="emblem-check"><i class="fa-solid fa-check"></i></span>
         </div>
-        
-      </div>
-    </div>
-  </div>
-  <!-- Modal -->
-<!-- Modal Instalasi Aplikasi (Tailwind Refactored) -->
-  <div id="installModal" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4 transition-opacity backdrop-blur-sm" aria-labelledby="installModalLabel" aria-hidden="true">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
-      
-      <!-- Modal Header -->
-      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-        <h5 class="text-lg font-bold text-gray-800" id="installModalLabel">Instal Aplikasi</h5>
-        <!-- Tombol Close (X) -->
-        <button type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none transition-colors" aria-label="Close" onclick="document.getElementById('installModal').classList.add('hidden')">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      
-      <!-- Modal Body -->
-      <div class="px-6 py-5">
-        <p class="text-gray-600 text-sm leading-relaxed">Instal aplikasi ini untuk mendapatkan pengalaman yang lebih baik.</p>
-      </div>
-      
-      <!-- Modal Footer -->
-      <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3">
-        <button type="button" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" onclick="document.getElementById('installModal').classList.add('hidden')">
-          Tutup
-        </button>
-        <button type="button" id="installButton" class="px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-          Instal
-        </button>
+        <div class="floating-chip floating-chip--left">
+          <span class="chip-icon chip-icon--mint"><i class="fa-solid fa-user-shield"></i></span>
+          <span><strong>Akses terlindungi</strong><small>Verifikasi OTP</small></span>
+        </div>
+        <div class="floating-chip floating-chip--right">
+          <span class="chip-icon chip-icon--blue"><i class="fa-solid fa-hospital-user"></i></span>
+          <span><strong>Untuk pegawai</strong><small>RSUD dr. Abdul Aziz</small></span>
+        </div>
+        <div class="visual-spark visual-spark--one">✦</div>
+        <div class="visual-spark visual-spark--two">✧</div>
       </div>
 
-    </div>
-  </div>
+      <div class="intro-bottom">
+        <span class="intro-bottom-icon"><i class="fa-solid fa-lock"></i></span>
+        <span><strong>Privasi dan keamanan diutamakan</strong><small>Gunakan nomor WhatsApp yang terdaftar.</small></span>
+      </div>
+    </aside>
 
-  <!-- <script src="/asset/js/lib/jquery-3.6.0.min.js"></script> -->
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script> -->
-  <!-- SweetAlert2 JS -->
-   <script>
+    <section class="login-main" aria-labelledby="login-heading">
+      <div class="login-card">
+        <div class="mobile-brand-wrap">
+          <a class="brand brand--mobile" href="/" aria-label="SIMPEG RSUD dr. Abdul Aziz - beranda">
+            <span class="brand-logo">
+              <img src="/asset/img/Lambang_KotaSingkawang.webp" alt="Lambang Kota Singkawang"
+                   onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+              <span class="brand-logo-fallback" hidden>AA</span>
+            </span>
+            <span class="brand-copy">
+              <strong>SIMPEG</strong>
+              <small>RSUD dr. Abdul Aziz</small>
+            </span>
+          </a>
+        </div>
+
+        <div class="login-heading-block">
+          <div class="heading-icon"><i class="fa-solid fa-fingerprint" aria-hidden="true"></i></div>
+          <span class="section-kicker">PORTAL PEGAWAI</span>
+          <h2 id="login-heading">Masuk ke akun Anda</h2>
+          <p>Verifikasi identitas Anda menggunakan kode OTP WhatsApp.</p>
+        </div>
+
+        <form id="loginForm" class="login-form" method="post">
+          <div class="field-group">
+            <label for="phone">Nomor WhatsApp terdaftar</label>
+            <div class="phone-row">
+              <div class="input-shell phone-input-shell">
+                <span class="input-icon input-icon--whatsapp" aria-hidden="true"><i class="fa-brands fa-whatsapp"></i></span>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  autocomplete="tel"
+                  inputmode="tel"
+                  required
+                  maxlength="16"
+                  placeholder="08xxxxxxxxxx"
+                  aria-describedby="phone-help"
+                >
+              </div>
+              <button type="button" id="send-otp" class="btn-send-otp">
+                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                <span>Minta OTP</span>
+              </button>
+            </div>
+            <p class="field-hint" id="phone-help">Pastikan nomor ini aktif dan sudah terdaftar di SIMPEG.</p>
+          </div>
+
+          <div class="field-group field-group--otp">
+            <div class="label-row">
+              <label for="otp">Kode verifikasi OTP</label>
+              <span class="secure-label"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> 6 digit</span>
+            </div>
+            <div class="input-shell otp-input-shell">
+              <span class="input-icon" aria-hidden="true"><i class="fa-solid fa-key"></i></span>
+              <input
+                type="text"
+                id="otp"
+                name="otp"
+                autocomplete="one-time-code"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                minlength="6"
+                maxlength="6"
+                required
+                placeholder="Masukkan 6 digit kode"
+                aria-describedby="otp-help"
+              >
+              <span class="otp-lock" aria-hidden="true"><i class="fa-solid fa-lock"></i></span>
+            </div>
+            <p class="field-hint" id="otp-help">Kode sekali pakai akan digunakan untuk memverifikasi login Anda.</p>
+          </div>
+
+          <button type="submit" class="btn-login">
+            <span>Masuk ke SIMPEG</span>
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+
+          <div class="privacy-note">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            <span>Jangan bagikan kode OTP kepada siapa pun, termasuk pihak yang mengaku sebagai petugas.</span>
+          </div>
+        </form>
+
+        <div class="login-footer">
+          <span class="online-indicator"><span></span> Portal akses pegawai</span>
+          <span class="footer-separator">•</span>
+          <button type="button" class="install-link" id="openInstallModal" aria-haspopup="dialog">
+            <i class="fa-solid fa-download" aria-hidden="true"></i> Instal aplikasi
+          </button>
+        </div>
+      </div>
+      <p class="copyright">© <span id="currentYear"></span> RSUD dr. Abdul Aziz Singkawang</p>
+    </section>
+  </main>
+
+  <!-- Dialog instalasi PWA: install2.min.js tetap dapat menggunakan ID yang sama. -->
+  <dialog id="installModal" class="install-dialog" aria-labelledby="installModalLabel">
+    <div class="install-dialog-content">
+      <div class="install-dialog-icon"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></div>
+      <button type="button" class="install-close" id="closeInstallModal" aria-label="Tutup dialog instalasi">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+      <h3 id="installModalLabel">Akses SIMPEG lebih praktis</h3>
+      <p>Tambahkan SIMPEG ke layar utama perangkat untuk membukanya seperti aplikasi dan mengaksesnya dengan lebih mudah.</p>
+      <div class="install-dialog-actions">
+        <button type="button" class="install-cancel" id="cancelInstall">Nanti saja</button>
+        <button type="button" id="installButton" class="install-confirm"><i class="fa-solid fa-download" aria-hidden="true"></i> Instal aplikasi</button>
+      </div>
+    </div>
+    <form method="dialog" class="install-backdrop"><button aria-label="Tutup dialog"></button></form>
+  </dialog>
+
+  <script>
     let admin = '<%= admin %>';
-   </script>
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"></script>
   <script src="/asset/js/src/module/helper_3.min.js"></script>
   <script src="/asset/js/template/loginbypass.min.js"></script>
   <script src="/asset/js/template/install2.min.js"></script>
-  <%- include('layout/footer') -%>
+  <script src="/asset/js/template/login-ui.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ action: 'clear-session-cache' });
+    }
+  </script>
+</body>
+</html>

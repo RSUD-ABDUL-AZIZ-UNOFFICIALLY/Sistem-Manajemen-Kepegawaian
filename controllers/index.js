@@ -21,6 +21,9 @@ module.exports = {
     });
     let departemen = await Departemen.findAll({});
     let atasan = await User.findAll({
+      where: {
+        dep: { [Op.notIn]: [47, 57] },
+      },
       order: [
         ["nama", "ASC"],
       ],
@@ -97,6 +100,18 @@ module.exports = {
       datenow: datenow,
     };
     res.render("daily", data);
+  },
+  test: (req, res) => {
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, secretKey);
+    let datenow = new Date().toISOString().slice(0, 10);
+    let data = {
+      title: "Dasboard | SIMPEG",
+      page: "Daily Progress",
+      token: decoded,
+      datenow: datenow,
+    };
+    res.render("test", data);
   },
   monthly: (req, res) => {
     let token = req.cookies.token;

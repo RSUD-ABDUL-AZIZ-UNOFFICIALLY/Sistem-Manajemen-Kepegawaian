@@ -1,436 +1,334 @@
+let hariKerja = "";
 
-let hariKerja = '';
 $.ajax({
-    url: '/api/getBiodata',
-    method: 'GET',
-    success: function (response) {
-        hariKerja = response.data.jns_kerja;
+    url: "/api/getBiodata",
+    method: "GET",
+    success: function (a) {
+        hariKerja = a.data.jns_kerja;
     },
-    error: function (error) {
-        console.log(error);
+    error: function (a) {
+        console.log(a);
         Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Lengkapi biodata anda terlebih dahulu',
+            icon: "error",
+            title: "Oops...",
+            text: "Lengkapi biodata anda terlebih dahulu",
             toast: true,
             confirmButtonText: "OK",
-            // showCancelButton: true,
             confirmButtonColor: "#3085d6",
-            allowOutsideClick: false, // Tidak memungkinkan untuk mengklik luar jendela SweetAlert
-            allowEscapeKey: false,   // Tidak memungkinkan untuk menutup dengan tombol "Esc"
-            allowEnterKey: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = '/profile';
-            }
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: true
+        }).then(a => {
+            if (a.isConfirmed) window.location.href = "/profile";
         });
     }
 });
 
-let totalCuti = 0;
-let maxCuti = 0;
-let dataCuti = [];
-let mulaicuti = moment().format('YYYY-MM-DD');
-let akhircuti = moment().format('YYYY-MM-DD');
+let totalCuti = 0,
+    maxCuti = 0,
+    dataCuti = [],
+    mulaicuti = moment().format("YYYY-MM-DD"),
+    akhircuti = moment().format("YYYY-MM-DD");
+
+async function sisaCuti(a) {
+    return $.ajax({
+        url: "/api/cuti/sisa?type_cuti=" + a,
+        method: "GET",
+        success: function (a) { return a.data; },
+        error: function (a) { }
+    });
+}
 
 $.ajax({
-    url: '/api/cuti/jns',
-    method: 'GET',
-    success: function (response) {
-        dataCuti = response.data;
-        // change select option jnscuti type_cuti
-        response.data.forEach(element => {
-            $('#jnsCuti').append(`<option value="${element.id}">${element.type_cuti}</option>`);
+    url: "/api/cuti/jns",
+    method: "GET",
+    success: function (a) {
+        dataCuti = a.data;
+        a.data.forEach(a => {
+            $("#jnsCuti").append(`<option value="${a.id}">${a.type_cuti}</option>`);
         });
     },
-    error: function (error) {
-    }
+    error: function (a) { }
 });
-async function sisaCuti(id_cuti) {
-    return $.ajax({
-        url: '/api/cuti/sisa?type_cuti=' + id_cuti,
-        method: 'GET',
-        success: function (response) {
-            return response.data;
-        },
-        error: function (error) {
-        }
-    })
-}
-$('#jnsCuti').change(async function () {
-    // enable reservation
-    $('#reservation').prop('disabled', false);
-    let id = $(this).val();
-    let jnsCuti = dataCuti.find(x => x.id == id);
-    let x = await sisaCuti(jnsCuti.id);
-    $('#Keterangan_cuti').text(jnsCuti.type_cuti + ' maksimal ' + jnsCuti.max + ' hari secara berturut-turut dan maksimal ' + jnsCuti.total + ' hari dalam setahun. Sisa cuti anda ' + x.data.sisa_cuti + ' hari');
-    $('#reservation').val('');
-    $('#totalReservation').val('1');
-    // $('#totalReservation').val('');
-    let mindate
-    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan" || jnsCuti.type_cuti == "Cuti Alasan Penting") {
-        // mindate = moment().clone().startOf('week')
-        mindate = moment().subtract(1, 'weeks').startOf('day')
-        $('#lampiran').empty();
-        $('#lampiran').append(`<label for="InputActivities">Lampiran Surat ${jnsCuti.type_cuti}</label>
-                        <input type="hidden" class="form-control" id="suratLampiran" name="suratLampiran">
-                        <div class="input-group mb-3">
-                          <input type="file" class="form-control" id="inputSuratCuti" name="inputSuratCuti" accept="image/png, image/jpeg, application/pdf">
-                          <label class="input-group-text" for="inputSuratCuti" id="UploadSuratCuti">Upload</label>
-                        </div>`);
 
+$("#jnsCuti").change(async function () {
+    $("#reservation").prop("disabled", false);
+    let a, t = $(this).val(),
+        e = dataCuti.find(a => a.id == t),
+        i = await sisaCuti(e.id);
+
+    $("#Keterangan_cuti").text(e.type_cuti + " maksimal " + e.max + " hari secara berturut-turut dan maksimal " + e.total + " hari dalam setahun. Sisa cuti anda " + i.data.sisa_cuti + " hari");
+    $("#reservation").val("");
+    $("#totalReservation").val("1");
+
+    if ("Cuti Sakit" == e.type_cuti || "Cuti Melahirkan" == e.type_cuti || "Cuti Alasan Penting" == e.type_cuti) {
+        a = moment().subtract(1, "weeks").startOf("day");
+        $("#lampiran").empty();
+        $("#lampiran").append(`
+            <label class="label" for="inputSuratCuti">
+                <span class="label-text font-semibold">Lampiran Surat ${e.type_cuti}</span>
+            </label>
+            <input type="hidden" id="suratLampiran" name="suratLampiran">
+            <input type="file" class="file-input file-input-bordered w-full hover:border-primary focus:border-primary transition-colors" id="inputSuratCuti" name="inputSuratCuti" accept="image/png, image/jpeg, application/pdf">
+        `);
     } else {
-        mindate = moment().subtract(1, 'days').startOf('day')
-        $('#lampiran').empty();
+        a = moment().subtract(1, "days").startOf("day");
+        $("#lampiran").empty();
     }
-    $('#reservation').daterangepicker({
-        // opens: 'left',
-        minDate: mindate,
-        // minDate: moment('2026-01-01', 'YYYY-MM-DD'),
-        maxDate: moment('2026-12-31', 'YYYY-MM-DD'),
+
+    $("#reservation").daterangepicker({
+        minDate: a,
+        maxDate: moment("2026-12-31", "YYYY-MM-DD"),
         singleDatePicker: false,
         autoApply: false,
         autoUpdateInput: true,
         locale: {
-            format: 'DD/MM/YYYY',
-            daysOfWeek: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
-            monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+            format: "DD/MM/YYYY",
+            daysOfWeek: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+            monthNames: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
             firstDay: 1,
-            applyLabel: 'Pilih',
-            cancelLabel: 'Batal',
-            customRangeLabel: 'Pilih Tanggal'
+            applyLabel: "Pilih",
+            cancelLabel: "Batal",
+            customRangeLabel: "Pilih Tanggal"
         }
-    }, function (start, end) {
-        // Tanggal awal
-        mulaicuti = start.format('YYYY-MM-DD');
-        const tanggalAwal = moment(start, 'YYYY-MM-DD');
-        // Tanggal akhir
-        akhircuti = end.format('YYYY-MM-DD');
-        const tanggalAkhir = moment(end, 'YYYY-MM-DD');
+    }, function (a, t) {
+        mulaicuti = a.format("YYYY-MM-DD");
+        const i = moment(a, "YYYY-MM-DD");
+        akhircuti = t.format("YYYY-MM-DD");
+        const n = moment(t, "YYYY-MM-DD").diff(i, "days") + 1;
 
-        // Menghitung perbedaan hari
-        const selisihHari = tanggalAkhir.diff(tanggalAwal, 'days') + 1;
-        if (selisihHari > jnsCuti.max) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: `Cuti tidak boleh lebih dari ${jnsCuti.max} hari`,
-            })
-            $('#reservation').val('');
-            $('#totalReservation').val('');
-            return false;
-        }
-        if (hariKerja == "5 Hari kerja") {
-            $('#totalReservation').prop('disabled', false);
-        }
-        $('#totalReservation').val(selisihHari);
+        if (n > e.max) return Swal.fire({ icon: "error", title: "Oops...", text: `Cuti tidak boleh lebih dari ${e.max} hari` }), $("#reservation").val(""), $("#totalReservation").val(""), !1;
+
+        if ("5 Hari kerja" == hariKerja) $("#totalReservation").prop("disabled", false);
+        $("#totalReservation").val(n);
     });
-
 });
+
 let token = getCookie("token");
-// on button submit 
-$('#Cuti').submit(function (event) {
-    event.preventDefault();
-    $('#btnSubmit').prop('disabled', true);
-    let datafrom = {
-        type_cuti: $('#jnsCuti').val(),
+
+function postCuti(a) {
+    $.ajax({
+        url: "/api/cuti",
+        method: "POST",
+        data: a,
+        success: function (a) {
+            Swal.fire({ icon: "success", title: "Berhasil", text: "Cuti berhasil disimpan", showConfirmButton: false, timer: 2000 });
+            $("#jnsCuti").val("");
+            $("#reservation").val("");
+            $("#totalReservation").val("");
+            $("#reservation").prop("disabled", false);
+            $("#totalReservation").prop("disabled", false);
+            $("#alasanCuti").val("");
+            $("#alamat").val("");
+            $("#lampiran").empty();
+            getRiwayatCuti($("#tahun").val());
+            $("#btnSubmit").prop("disabled", false);
+        },
+        error: function (a) {
+            console.log(a);
+            Swal.fire({ icon: a.responseJSON.icon, title: a.responseJSON.message, text: a.responseJSON.data, showConfirmButton: false, timer: 2000 });
+            $("#btnSubmit").prop("disabled", false);
+        }
+    });
+}
+
+async function getRiwayatCuti(a) {
+    return await $.ajax({
+        url: "/api/cuti/riwayat?tahun=" + a,
+        method: "GET",
+        success: function (a) {
+            parsingDataCuti(a.data);
+            return a.data;
+        },
+        error: function (a) { console.log(a); }
+    });
+}
+
+function parsingDataCuti(a) {
+    $("tbody > tr").remove();
+
+    if (!a || a.length === 0) {
+        $("tbody").append(`
+            <tr>
+                <td colspan="11" class="py-8 text-center text-base-content/60">
+                    Tidak ada riwayat cuti yang ditemukan.
+                </td>
+            </tr>
+        `);
+        return;
+    }
+
+    for (let t of a) {
+        let e, i, n = a.indexOf(t) + 1;
+        e = null == t.mulai || "0000-00-00" == t.mulai ? "-" : new Date(t.mulai).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+        i = null == t.samapi || "0000-00-00" == t.samapi ? "-" : new Date(t.samapi).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+
+        let r = new Date(t.approval.approve_date).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
+            o = new Date(t.approval.approve_date).toLocaleTimeString("id-ID");
+
+        null === t.approval.approve_date ? t.approval.approve_date = "-" : t.approval.approve_date = r + " " + o;
+        null === t.approval.atasan && (t.approval.atasan = { nama: "-" });
+
+        // Badge Status DaisyUI
+        let badgeClass = "badge-ghost";
+        if (t.approval.status === "Disetujui") badgeClass = "badge-success";
+        else if (t.approval.status === "Ditolak") badgeClass = "badge-error";
+        else if (t.approval.status === "Menunggu") badgeClass = "badge-warning";
+
+        let u = $("<tr>").addClass("hover");
+        u.append($("<td>" + n + "</td>").addClass("font-medium"));
+        u.append($("<td>" + e + " - " + i + "</td>"));
+        u.append($("<td><span class='badge badge-sm badge-outline badge-primary'>" + t.jenis_cuti.type_cuti + "</span></td>"));
+        u.append($("<td>" + t.jumlah + " hari</td>"));
+        u.append($("<td>" + t.keterangan + "</td>"));
+        u.append($("<td><span class='badge badge-sm " + badgeClass + "'>" + t.approval.status + "</span></td>"));
+        u.append($("<td>" + t.approval.approve_date + "</td>"));
+        u.append($("<td>" + t.approval.atasan.nama + "</td>"));
+        u.append($("<td>" + (t.approval.keterangan || "-") + "</td>").addClass("text-base-content/70"));
+
+        let actionTd = $("<td>").addClass("space-x-1 space-y-1");
+
+        let l = $("<button>");
+        l.addClass("btn btn-error btn-xs gap-1"),
+            l.attr("onclick", "deleteCuti(" + t.id + ")"),
+            l.html("<i class='fas fa-trash'></i> Batalkan");
+
+        let p = $("<button>");
+        p.addClass("btn btn-primary btn-xs gap-1"),
+            p.attr("onclick", "cetakSuratCuti(" + t.id + ")"),
+            p.html("<i class='fa-solid fa-envelope-open-text'></i> Cetak");
+
+        if ("Menunggu" == t.approval.status) {
+            actionTd.append(p, l);
+        } else if (["Disetujui", "Ditolak", "Perubahan"].includes(t.approval.status)) {
+            actionTd.append(p);
+        }
+        u.append(actionTd);
+
+        let lampiranTd = $("<td>");
+        if (null != t.lampiran) {
+            let lampBtn = $("<button>");
+            lampBtn.addClass("btn btn-info btn-xs gap-1 text-white"),
+                lampBtn.attr("onclick", "downloadLampiran('" + t.lampiran.file + "')"),
+                lampBtn.html("<i class='fa-solid fa-download'></i> File");
+            lampiranTd.append(lampBtn);
+        } else {
+            lampiranTd.text("-");
+        }
+        u.append(lampiranTd);
+
+        $("tbody").append(u);
+    }
+}
+
+$("#Cuti").submit(function (a) {
+    a.preventDefault();
+    $("#btnSubmit").prop("disabled", true);
+
+    let t = {
+        type_cuti: $("#jnsCuti").val(),
         mulai: mulaicuti,
         samapi: akhircuti,
-        jumlah: $('#totalReservation').val(),
-        keterangan: $('#alasanCuti').val(),
+        jumlah: $("#totalReservation").val(),
+        keterangan: $("#alasanCuti").val(),
         maxCuti: maxCuti,
-        alamat: $('#alamat').val()
-    };
-    let id = $('#jnsCuti').val();
-    let jnsCuti = dataCuti.find(x => x.id == id);
+        alamat: $("#alamat").val()
+    },
+        e = $("#jnsCuti").val(),
+        i = dataCuti.find(a => a.id == e);
 
-    // let jnsCuti = dataCuti.find(x => x.id == id);
-    if (jnsCuti.type_cuti == "Cuti Sakit" || jnsCuti.type_cuti == "Cuti Melahirkan" || jnsCuti.type_cuti == "Cuti Alasan Penting") {
-        if ($('#inputSuratCuti').prop('files')[0] == undefined) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Lampiran surat harus diisi',
-            })
-            return false;
-        }
-        let file = $('#inputSuratCuti').prop('files')[0];
-        if (file.type !== 'application/pdf' && file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/jpg') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'File Tidak Valid.',
-                text: 'File harus berupa PDF, JPG, PNG',
-            })
-            return false;
-        }
-        if (file.size > 3000000) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'File Terlalu Besar.',
-                text: 'File harus kurang dari 3 MB',
-            })
-            return false;
-        }
-        if (file.type == 'application/pdf') {
-            var form = new FormData();
-            form.append("file", file, 'surat-cuti.pdf');
-            var settings = {
-                url: "https://api.spairum.my.id/api/cdn/upload/file",
-                method: "POST",
-                timeout: 0,
-                headers: {
-                    Authorization: "Bearer " + token,
-                },
-                processData: false,
-                mimeType: "multipart/form-data",
-                contentType: false,
-                data: form
-            };
+    if (i && ["Cuti Sakit", "Cuti Melahirkan", "Cuti Alasan Penting"].includes(i.type_cuti)) {
+        let fileInput = $("#inputSuratCuti").prop("files")[0];
+        if (!fileInput) return Swal.fire({ icon: "error", title: "Oops...", text: "Lampiran surat harus diisi" }), $("#btnSubmit").prop("disabled", false), false;
 
-            $.ajax(settings).done(function (response) {
-                response = JSON.parse(response);
-                console.log(response.data.url);
-                datafrom.lampiran = response.data.url;
-                postCuti(datafrom)
-                inputSuratCuti.value = null;
-                return;
-            });
-        }
-        if (file.type == 'image/jpeg' || file.type == 'image/png' || file.type == 'image/jpg') {
-            let fileType = file.type.split('/')[1];
-            let form = new FormData();
-            form.append("image", file, 'surat-cuti.' + fileType);
+        if (!["application/pdf", "image/jpeg", "image/png", "image/jpg"].includes(fileInput.type))
+            return Swal.fire({ icon: "warning", title: "File Tidak Valid.", text: "File harus berupa PDF, JPG, PNG" }), $("#btnSubmit").prop("disabled", false), false;
 
-            let settings = {
-                url: "https://api.spairum.my.id/api/cdn/upload/img",
-                method: "POST",
-                timeout: 0,
-                headers: {
-                    Authorization: "Bearer " + token,
-                },
-                processData: false,
-                mimeType: "multipart/form-data",
-                contentType: false,
-                data: form
-            };
+        if (fileInput.size > 3e6)
+            return Swal.fire({ icon: "warning", title: "File Terlalu Besar.", text: "File harus kurang dari 3 MB" }), $("#btnSubmit").prop("disabled", false), false;
 
-            $.ajax(settings).done(function (response) {
-                response = JSON.parse(response);
-                console.log(response.data.url);
-                datafrom.lampiran = response.data.url;
-                postCuti(datafrom)
-                inputSuratCuti.value = null;
-                return;
-            });
+        let n = new FormData();
+        let uploadUrl = "https://api.spairum.my.id/api/cdn/upload/file";
+
+        if ("application/pdf" == fileInput.type) {
+            n.append("file", fileInput, "surat-cuti.pdf");
+        } else {
+            let fileType = fileInput.type.split("/")[1];
+            n.append("image", fileInput, "surat-cuti." + fileType);
+            uploadUrl = "https://api.spairum.my.id/api/cdn/upload/img";
         }
+
+        $.ajax({
+            url: uploadUrl,
+            method: "POST",
+            timeout: 0,
+            headers: { Authorization: "Bearer " + token },
+            processData: false,
+            contentType: false,
+            data: n,
+            success: function (response) {
+                let res = typeof response === 'string' ? JSON.parse(response) : response;
+                t.lampiran = res.data.url;
+                postCuti(t);
+                $("#inputSuratCuti").val(null);
+            },
+            error: function () {
+                Swal.fire("Gagal", "Gagal mengunggah lampiran surat", "error");
+                $("#btnSubmit").prop("disabled", false);
+            }
+        });
     } else {
-        // console.log(datafrom);
-        postCuti(datafrom)
+        postCuti(t);
     }
-
-
 });
-
-function postCuti(datafrom) {
-    $.ajax({
-        url: '/api/cuti',
-        method: 'POST',
-        data: datafrom,
-        success: function (response) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Succeed',
-                text: 'Cuti berhasil disimpan',
-                showConfirmButton: false,
-                timer: 2000
-            })
-            $('#jnsCuti').val('');
-            $('#reservation').val('');
-            $('#totalReservation').val('');
-            $('#reservation').prop('disabled', false);
-            $('#totalReservation').prop('disabled', false);
-            $('#alasanCuti').val('');
-            $('#alamat').val('');
-            let tahun = $('#tahun').val();
-            getRiwayatCuti(tahun);
-            $('#btnSubmit').prop('disabled', false);
-        },
-        error: function (error) {
-            console.log(error);
-            Swal.fire({
-                icon: error.responseJSON.icon,
-                title: error.responseJSON.message,
-                text: error.responseJSON.data,
-                showConfirmButton: false,
-                timer: 2000
-            });
-            $('#btnSubmit').prop('disabled', false);
-        }
-    });
-}
 
 $(document).ready(function () {
-    let tahun = $('#tahun').val();
-    getRiwayatCuti(tahun);
+    getRiwayatCuti($("#tahun").val());
 });
-$('#tahun').change(function () {
-    let tahun = $(this).val();
-    let rows = $("tbody > tr");
-    rows.remove();
-    getRiwayatCuti(tahun);
+
+$("#tahun").change(function () {
+    let a = $(this).val(); $("tbody > tr").remove();
+    getRiwayatCuti(a);
 });
-async function getRiwayatCuti(tahun) {
-    let data = await $.ajax({
-        url: '/api/cuti/riwayat?tahun=' + tahun,
-        method: 'GET',
-        success: function (response) {
-            parsingDataCuti(response.data);
-            return response.data;
-        },
-        error: function (error) {
-            console.log(error);
+
+window.downloadLampiran = a => {
+    window.open(a.trim(), "_blank");
+};
+
+window.cetakSuratCuti = a => {
+    $.ajax({
+        url: "/api/cuti/suratCuti",
+        method: "POST",
+        data: { id: a },
+        success: function (res) {
+            window.open("/api/cuti/suratCuti?token=" + res.data, "_blank");
         }
     });
-    return data;
-}
-function parsingDataCuti(data) {
+};
 
-    let rows = $("tbody > tr");
-    rows.remove();
-    for (let i of data) {
-        // console.log(i.mulai);
-        let nomor = data.indexOf(i) + 1;
-        // let tmulai = i.mulai.split("-");
-        // let tanggalmulai = tmulai[2] + "/" + tmulai[1] + "/" + tmulai[0];
-        let tanggalmulai;
-        let tanggalsampai;
-        if (i.mulai == null || i.mulai == '0000-00-00') {
-            tanggalmulai = "-";
-        } else {
-            tanggalmulai = new Date(i.mulai).toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-
-        // let tsampai = i.samapi.split("-");
-        // let tanggalsampai = tsampai[2] + "/" + tsampai[1] + "/" + tsampai[0];
-        if (i.samapi == null || i.samapi == '0000-00-00') {
-            tanggalsampai = "-";
-
-        } else {
-            tanggalsampai = new Date(i.samapi).toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-
-        let tglApproval = new Date(i.approval.approve_date).toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
-        let waktuApproval = new Date(i.approval.approve_date).toLocaleTimeString('id-ID');
-
-        if (i.approval.approve_date === null) {
-            i.approval.approve_date = '-'
-        } else {
-            i.approval.approve_date = tglApproval + " " + waktuApproval;
-        }
-        if (i.approval.atasan === null) {
-            i.approval.atasan = { nama: '-' };
-        }
-
-        let row = $("<tr>");
-        row.append($("<td>" + nomor + "</td>"));
-        row.append($("<td>" + tanggalmulai + " - " + tanggalsampai + "</td>"));
-        row.append($("<td>" + i.jenis_cuti.type_cuti + "</td>"));
-        row.append($("<td>" + i.jumlah + "</td>"));
-        row.append($("<td>" + i.keterangan + "</td>"));
-        row.append($("<td>" + i.approval.status + "</td>"));
-        row.append($("<td>" + i.approval.approve_date + "</td>"));
-        row.append($("<td>" + i.approval.atasan.nama + "</td>"));
-        row.append($("<td>" + i.approval.keterangan + "</td>"));
-        // tabah tombol edit dan delete
-        let btnDelete = $("<button>");
-        btnDelete.addClass("btn btn-danger btn-sm");
-        btnDelete.attr("onclick", "deleteCuti(" + i.id + ")");
-        btnDelete.html("<i class='fas fa-trash'></i> Batalkan");
-        let btnCetak = $("<button>");
-        btnCetak.addClass("btn btn-primary btn-sm");
-        btnCetak.attr("onclick", "cetakSuratCuti(" + i.id + ")");
-        btnCetak.html("<i class='fa-solid fa-envelope-open-text'></i> Cetak Surat Cuti");
-        if (i.approval.status == "Menunggu") {
-            row.append($("<td>").append(btnCetak, btnDelete));
-        } else if (i.approval.status == "Disetujui" || i.approval.status == "Ditolak" || i.approval.status == "Perubahan") {
-            row.append($("<td>").append(btnCetak));
-        } $("tbody").append(row);
-        if (i.lampiran != null) {
-            let btnLampiran = $("<button>");
-            btnLampiran.addClass("btn btn-primary btn-sm");
-            btnLampiran.attr("onclick", "downloadLampiran(' " + i.lampiran.file + " ')");
-            btnLampiran.html("<i class='fa-solid fa-download'></i> Download Lampiran");
-            row.append($("<td>").append(btnLampiran));
-
-        }
-    }
-}
-downloadLampiran = (file) => {
-    window.open(file, '_blank');
-}
-cetakSuratCuti = (id) => {
-    let data = $.ajax({
-        url: '/api/cuti/suratCuti',
-        method: 'POST',
-        data: { id: id },
-        success: function (response) {
-            window.open('/api/cuti/suratCuti?token=' + response.data, '_blank');
-            // return response;
-        },
-    });
-
-
-}
-
-deleteCuti = (id) => {
+window.deleteCuti = a => {
     Swal.fire({
-        title: 'Apakah anda yakin?',
+        title: "Apakah anda yakin?",
         text: "Data cuti akan dihapus",
-        icon: 'warning',
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Ya, hapus data!'
-    }).then((result) => {
-        if (result.isConfirmed) {
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Ya, hapus data!"
+    }).then(t => {
+        if (t.isConfirmed) {
             $.ajax({
-                url: '/api/cuti?id=' + id,
-                method: 'DELETE',
-                success: function (response) {
-                    console.log(response);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Succeed',
-                        text: 'Data berhasil dihapus',
-                        showConfirmButton: false,
-                        timer: 2000
-                    })
-                    let tahun = $('#tahun').val();
-                    getRiwayatCuti(tahun);
+                url: "/api/cuti?id=" + a,
+                method: "DELETE",
+                success: function (res) {
+                    Swal.fire({ icon: "success", title: "Berhasil", text: "Data berhasil dihapus", showConfirmButton: false, timer: 2000 });
+                    getRiwayatCuti($("#tahun").val());
                 },
-                error: function (error) {
-                    Swal.fire({
-                        icon: error.responseJSON.icon,
-                        title: error.responseJSON.message,
-                        text: error.responseJSON.data,
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
+                error: function (err) {
+                    let errData = err.responseJSON || { icon: 'error', message: 'Gagal', data: 'Terjadi kesalahan' };
+                    Swal.fire({ icon: errData.icon, title: errData.message, text: errData.data, showConfirmButton: false, timer: 2000 });
                 }
             });
         }
-    })
-
-}
+    });
+};

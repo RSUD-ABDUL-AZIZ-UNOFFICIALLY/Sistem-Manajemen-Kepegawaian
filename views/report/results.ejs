@@ -1,134 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="id" data-theme="light">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %></title>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="/asset/css/report1.css" />
+    
+    <!-- Tailwind CSS & DaisyUI via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Konfigurasi Custom Tailwind untuk Animasi & Print -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            animation: {
+              'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+            },
+            keyframes: {
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(15px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      /* Pengaturan khusus saat dicetak (Ctrl+P) */
+      @media print {
+        body { background-color: white !important; }
+        .print-no-shadow { box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
+        .print-hide { display: none !important; }
+        .table :where(th, td) { border: 1px solid #000 !important; color: #000 !important; }
+        .page-break-avoid { page-break-inside: avoid; }
+      }
+    </style>
+
+    <!-- Script Library QR Code -->
     <script type="text/javascript" src="/asset/js/lib/qrcode.min.js"></script>
-    <script
-      type="text/javascript"
-      src="/asset/js/lib/qr-code-styling.js"
-    ></script>
+    <script type="text/javascript" src="/asset/js/lib/qr-code-styling.js"></script>
   </head>
 
-  <body>
-    <div class="page">
-      <div class="text-center fw-bold">LAPORAN PRODUKTIVITAS KINERJA PEGAWAI</div>
-      <br />
-      <table class="header">
-        <tr>
-          <th>NAMA</th>
-          <td><span>: </span><span> <%= user.nama %> </span></td>
-        </tr>
-        <tr>
-          <th>NIP</th>
-          <td><span>: </span><span> <%= user.nip %> </span></td>
-        </tr>
-        <tr>
-          <th>JABATAN</th>
-          <td><span>: </span><span> <%= user.jab %> </span></td>
-        </tr>
-        <tr>
-          <th>UNIT KERJA</th>
-          <td><span>: </span><span> <%= user.departemen.bidang %> </span></td>
-        </tr>
-        <tr>
-          <th>PERIODE</th>
-          <td><span>: </span> <span> <%= periode %> </span></td>
-        </tr>
-      </table>
-
-      <table>
-        <thead>
-          <tr>
-            <th>NO</th>
-            <th>HARI / TANGGAL</th>
-            <th>RINCIAN AKTIVITAS KERJA/TUGAS</th>
-            <th>VOLUME KEGIATAN</th>
-            <th>SATUAN KEGIATAN</th>
-            <th>WAKTU PENYELESAIAN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% progress.forEach(item=> { %>
-          <tr>
-            <td><%= item.no %></td>
-            <td><%= item.tanggal %></td>
-            <td><%= item.rak %></td>
-            <td><%= item.volume %></td>
-            <td><%= item.satuan %></td>
-            <td class="text-end">
-              <span style="float: left"> <%= item.waktu %> </span> Menit
-            </td>
-          </tr>
-          <% }); %>
-        </tbody>
-        <tfoot>
-          <tr>
-            <th colspan="5">Capaian Kinerja</th>
-            <td><span> <%= capaian %> </span></td>
-          </tr>
-          <tr>
-            <th colspan="5">Kategori</th>
-            <td><span> <%= kategori %> </span></td>
-          </tr>
-          <tr>
-            <th colspan="5">Besaran TPP dari Produktivitas Kerja</th>
-            <td><span> <%= tpp %> </span></td>
-          </tr>
-        </tfoot>
-      </table>
-      <br />
-      <table class="foots">
-        <tr>
-          <th>
-            <br />
-            Mengetahui
-            <br />
-            Atasan Langsung,
-          </th>
-          <th>
-            <div class="date">Singkawang, <span> <%= lastDate %> </span></div>
-            <br />
-            Yang Membuat Laporan,
-          </th>
-        </tr>
-        <tr>
-          <td>
-            <div class="signature">
-              <br />
-              <div id="qrcodeAtasan"></div>
-              <div class="name fw-bold" id="nameAtasan"><span> <%= atasan.nama %> </span></div>
-              <div class="nip" id="nipAtasan">
-                <span>NIP. </span>
-                <%= atasan.nip %>
-              </div>
-            </div>
-          </td>
-          <td>
-            <div class="signature">
-              <br />
-              <div
-                id="qrcodeUser"
-                style="text-align: center; margin: 0 auto"
-              ></div>
-              <br />
-              <div class="name fw-bold"><%= user.nama %></div>
-              <div class="nip">
-                <span>NIP. </span>
-                <%= user.nip %>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </table>
+  <body class="bg-base-200 min-h-screen p-4 sm:p-8 print:p-0 print:bg-white text-base-content antialiased">
+    
+    <!-- Tombol Print (Sembunyi saat dicetak) -->
+    <div class="max-w-5xl mx-auto mb-4 flex justify-end print-hide">
+      <button onclick="window.print()" class="btn btn-primary btn-sm sm:btn-md shadow-lg hover:scale-105 transition-transform">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Cetak Laporan
+      </button>
     </div>
-    <!-- Jquery -->
+
+    <!-- Container Utama Laporan -->
+    <div class="print-no-shadow max-w-5xl mx-auto bg-base-100 shadow-xl rounded-2xl p-6 sm:p-10 opacity-0 animate-fade-in-up print:rounded-none">
+      
+      <!-- Judul Laporan -->
+      <h1 class="text-xl sm:text-2xl font-bold text-center mb-8 uppercase tracking-wide">
+        Laporan Produktivitas Kinerja Pegawai
+      </h1>
+
+      <!-- Informasi Pegawai (Grid Layout Responsif) -->
+      <div class="grid grid-cols-[100px_10px_auto] sm:grid-cols-[140px_10px_auto] gap-y-2 mb-8 text-sm sm:text-base">
+        <div class="font-semibold">NAMA</div><div>:</div><div><%= user.nama %></div>
+        <div class="font-semibold">NIP</div><div>:</div><div><%= user.nip %></div>
+        <div class="font-semibold">JABATAN</div><div>:</div><div><%= user.jab %></div>
+        <div class="font-semibold">UNIT KERJA</div><div>:</div><div><%= user.departemen.bidang %></div>
+        <div class="font-semibold">PERIODE</div><div>:</div><div><%= periode %></div>
+      </div>
+
+      <!-- Tabel Aktivitas (Responsif horizontal scroll di mobile) -->
+      <div class="overflow-x-auto mb-10 border-base-300 border sm:rounded-lg print:border-none print:overflow-visible">
+        <table class="table table-zebra table-sm sm:table-md w-full print:table-sm">
+          <thead class="bg-base-200 text-base-content text-xs sm:text-sm uppercase print:bg-gray-100">
+            <tr>
+              <th class="w-12 text-center">NO</th>
+              <th class="whitespace-nowrap">HARI / TANGGAL</th>
+              <th>RINCIAN AKTIVITAS KERJA/TUGAS</th>
+              <th class="text-center">VOLUME</th>
+              <th class="text-center">SATUAN</th>
+              <th class="text-right">WAKTU (Menit)</th>
+            </tr>
+          </thead>
+          <tbody class="text-xs sm:text-sm">
+            <% progress.forEach(item => { %>
+            <tr class="hover transition-colors">
+              <td class="text-center"><%= item.no %></td>
+              <td class="whitespace-nowrap"><%= item.tanggal %></td>
+              <td><%= item.rak %></td>
+              <td class="text-center"><%= item.volume %></td>
+              <td class="text-center"><%= item.satuan %></td>
+              <td class="text-right font-medium"><%= item.waktu %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+          <!-- Footer Tabel (Total Capaian) -->
+          <tbody class="bg-base-200/50 text-base-content text-xs sm:text-sm font-bold print:bg-gray-100 border-t-2 border-base-300 print:border-t-[1px] print:border-black">
+            <tr>
+              <td colspan="5" class="text-right uppercase">Capaian Kinerja</td>
+              <td class="text-right"><%= capaian %></td>
+            </tr>
+            <tr>
+              <td colspan="5" class="text-right uppercase">Kategori</td>
+              <td class="text-right"><%= kategori %></td>
+            </tr>
+            <tr>
+              <td colspan="5" class="text-right uppercase">Besaran TPP dari Produktivitas Kerja</td>
+              <td class="text-right"><%= tpp %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Bagian Tanda Tangan -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-10 text-center text-sm sm:text-base page-break-avoid mt-8">
+        
+        <!-- Atasan -->
+        <div class="flex flex-col items-center justify-between h-48 sm:h-56">
+          <div class="flex flex-col">
+            <span class="text-transparent hidden sm:block">.</span> <!-- Spacer -->
+            <span>Mengetahui,</span>
+            <span>Atasan Langsung,</span>
+          </div>
+          <!-- Area QR Code -->
+          <div id="qrcodeAtasan" class="my-3 flex justify-center items-center h-24 w-24"></div>
+          <div>
+            <div class="font-bold underline" id="nameAtasan"><%= atasan.nama %></div>
+            <div id="nipAtasan">NIP. <%= atasan.nip %></div>
+          </div>
+        </div>
+
+        <!-- User/Pegawai -->
+        <div class="flex flex-col items-center justify-between h-48 sm:h-56 mt-6 sm:mt-0">
+          <div class="flex flex-col">
+            <span>Singkawang, <%= lastDate %></span>
+            <span>Yang Membuat Laporan,</span>
+          </div>
+          <!-- Area QR Code -->
+          <div id="qrcodeUser" class="my-3 flex justify-center items-center h-24 w-24"></div>
+          <div>
+            <div class="font-bold underline"><%= user.nama %></div>
+            <div>NIP. <%= user.nip %></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Jquery & Script Bawaan -->
     <script src="/asset/js/lib/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="/asset/js/report/resulte.js"></script>
   </body>

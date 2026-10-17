@@ -1,118 +1,140 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
-  <%- include('template/head'); %>
+    <%- include('template/head'); %>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
 
-  <!-- Navbar -->
-  <%- include('template/navbar'); %>
-  <!-- /.navbar -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+    <!-- Wrapper Utama Drawer DaisyUI -->
+    <div class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+        
+        <!-- Konten Utama -->
+        <div class="drawer-content flex flex-col min-h-screen">
+            
+            <!-- Navbar -->
+            <%- include('template/navbar'); %>
 
-  <!-- Main Sidebar Container -->
-  <%- include('template/sidebar'); %>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <%- include('template/content-header'); %>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-primary"><%= userpage %></h3>
-            <br>
-            <h3 class="card-title"><%= periode %></h3>
-          </div>
-          <!-- /.card-header -->
-          <!-- form start -->
-          
-            <div class="card-body">
-              <div class="card-body table-responsive p-1">
-                <table class="table table-bordered table-head-fixed text-nowrap">
-                  <thead>
-                    <tr>
-                      <th style="width: 10px">#</th>
-                      <th>Date</th>
-                      <th>Details Of Work Activities/Duty</th>
-                      <th>Volume</th>
-                      <th>Unit</th>
-                      <th>Completion Time</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% for(var i=0; i<lpkp.length; i++) {%>
-                      <!-- <li><%= lpkp[i].nik %></li> -->
-                      <tr>
-                        <td><%= i+1 %></td>
-                        <td><%= lpkp[i].tgl %></td>
-                        <td><%= lpkp[i].rak %></td>
-                        <td><%= lpkp[i].volume %></td>
-                        <td><%= lpkp[i].satuan %></td>
-                        <td><%= lpkp[i].waktu %></td>
-                      </tr>
-                   <% } %>
-                  </tbody>
-                </table>
-              </div>
-              <hr />
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-sm-6">
-                    Monthly Performance Achievements
-                  </div>
-                  <div class="col-sm-5" >
-                    Minute<span id="capaian" class="float-left"><%= score.total %> </span> 
-                  </div>
+            <!-- Content Header -->
+            <header class="w-full p-4 md:p-6 pb-2">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-base-content"><%= userpage %></h1>
+                        <p class="text-sm font-medium text-primary mt-1">Periode: <%= periode %></p>
+                    </div>
+                    <div class="breadcrumbs text-sm">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/approvement">Persetujuan</a></li>
+                            <li class="font-semibold">Review</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    Category
-                  </div>
-                  <div class="col-sm-5">
-                    <span id="kategori" class="float-left"><%= score.kategori %></span> 
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    Employee Income Benefits
-                  </div>
-                  <div class="col-sm-5">
-                    <span id="tpp" class="float-left"><%= score.capaian %></span> 
-               
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-body -->     
-            </div>
-            <!-- /.card-body -->
-  
-            <div class="card-footer">
-              <button type="button" class="btn btn-success float-right" onclick="submit()">
-                <i class="fa-solid fa-signature"></i> Approved
-              </button>
-            </div>
+            </header>
+
+            <!-- Main content -->
+            <main class="flex-1 p-4 md:p-6 space-y-6">
+                
+                <!-- Table Section -->
+                <section class="card bg-base-100 shadow-sm border border-base-200">
+                    <div class="card-body p-0">
+                        <div class="p-5 border-b border-base-200">
+                            <h2 class="card-title text-lg flex items-center gap-2">
+                                <i class="fas fa-list text-primary"></i> Detail Rincian Kegiatan
+                            </h2>
+                        </div>
+                        
+                        <div class="overflow-x-auto w-full">
+                            <table class="table table-zebra w-full whitespace-nowrap">
+                                <thead class="bg-base-200/50 text-base-content text-sm">
+                                    <tr>
+                                        <th class="w-12 text-center">#</th>
+                                        <th>Tanggal</th>
+                                        <th class="min-w-[250px] whitespace-normal">Rincian Kegiatan (RAK)</th>
+                                        <th class="text-center">Volume</th>
+                                        <th class="text-center">Satuan</th>
+                                        <th class="text-center">Waktu (Menit)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if(lpkp && lpkp.length > 0) { %>
+                                        <% for(var i=0; i<lpkp.length; i++) { %>
+                                        <tr class="hover:bg-base-200/50 transition-colors">
+                                            <td class="text-center font-medium"><%= i+1 %></td>
+                                            <td class="text-sm"><%= lpkp[i].tgl %></td>
+                                            <td class="whitespace-normal text-sm font-medium leading-relaxed"><%= lpkp[i].rak %></td>
+                                            <td class="text-center"><%= lpkp[i].volume %></td>
+                                            <td class="text-center"><span class="badge badge-ghost badge-sm"><%= lpkp[i].satuan %></span></td>
+                                            <td class="text-center font-bold"><%= lpkp[i].waktu %></td>
+                                        </tr>
+                                        <% } %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="6" class="text-center py-8 text-base-content/60 font-medium">Tidak ada rincian kegiatan.</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Summary & Action Section -->
+                <section class="card bg-base-100 shadow-sm border border-base-200">
+                    <div class="card-body">
+                        <h2 class="card-title text-lg border-b border-base-200 pb-3 mb-4">
+                            <i class="fas fa-chart-pie text-primary"></i> Ringkasan Evaluasi Kinerja
+                        </h2>
+                        
+                        <!-- Menggunakan komponen Stats DaisyUI -->
+                        <div class="stats stats-vertical lg:stats-horizontal shadow-sm border border-base-200 w-full mb-2 bg-base-50">
+                            <div class="stat place-items-center">
+                                <div class="stat-title whitespace-normal text-center">Pencapaian Bulanan</div>
+                                <div class="stat-value text-primary"><%= score.total %></div>
+                                <div class="stat-desc font-bold text-base-content/70">Menit</div>
+                            </div>
+                            
+                            <div class="stat place-items-center">
+                                <div class="stat-title">Kategori</div>
+                                <div class="stat-value text-secondary"><%= score.kategori %></div>
+                            </div>
+                            
+                            <div class="stat place-items-center">
+                                <div class="stat-title whitespace-normal text-center">Produktivitas TPP</div>
+                                <div class="stat-value text-accent"><%= score.capaian %></div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer / Action Button -->
+                        <div class="flex justify-end mt-6 border-t border-base-200 pt-5">
+                            <button type="button" class="btn btn-success text-white shadow-sm px-8" onclick="submit()">
+                                <i class="fa-solid fa-signature mr-1"></i> Setujui Laporan (Approve)
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+            
+            <!-- Footer -->
+            <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+                <aside>
+                    <p>Copyright © <%= new Date().getFullYear() %> - RSUD dr. Abdul Aziz</p>
+                </aside>
+            </footer>
         </div>
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
 
-  </footer>
+        <!-- Sidebar Utama -->
+        <%- include('template/sidebar'); %>
+    </div>
 
-</div>
-<!-- ./wrapper -->
-<script>
-  let nik = "<%= user.nik %>";
-  let periode = "<%= date %>";
-</script>
-<%- include('template/footer'); %>
-<script src="/asset/js/review.js"></script>
+    <!-- Deklarasi Variabel Global untuk script review.js -->
+    <script>
+        let nik = "<%= user.nik %>";
+        let periode = "<%= date %>";
+    </script>
+    
+    <%- include('template/footer'); %>
+    <script src="/asset/js/review.js"></script>
 </body>
 </html>

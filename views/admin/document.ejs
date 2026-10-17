@@ -1,88 +1,92 @@
 <!DOCTYPE html>
-<html lang="id">
-    <head>
-        <%- include('../template/head'); %>
+<html lang="id" data-theme="light">
 
-        <link rel="stylesheet" href="/asset/css/doc.css">
-        <link rel="stylesheet" href="/asset/css/tailwind-animations.css">
-      <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    </head>
-    <body class="hold-transition sidebar-mini layout-fixed">
-        
-                   
-        <div class="wrapper">
-            
-            <!-- Main Sidebar Container -->
-              <!-- Navbar -->
-                    <%- include('../template/navbar'); %>
-                    <!-- /.navbar -->
-            <%- include('../template/sidebar'); %>
+<head>
+  <%- include('../template/head'); %>
+  <meta name="description" content="Status Kelengkapan Dokumen Pegawai RSUD dr. Abdul Aziz Singkawang">
+  <link rel="stylesheet" href="/asset/css/doc.css">
+  <link rel="stylesheet" href="/asset/css/tailwind-animations.css">
+</head>
 
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
-                <%- include('../template/content-header'); %>
-                <!-- /.content-header -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+  <!-- Wrapper Utama Drawer DaisyUI -->
+  <div class="drawer lg:drawer-open">
+    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+    
+    <!-- Konten Utama -->
+    <div class="drawer-content flex flex-col min-h-screen">
+      
+      <!-- Navbar -->
+      <%- include('../template/navbar'); %>
 
-                <!-- Main content -->
-                <!-- Main content -->
-                <section class="content">
-                    <div class="container-fluid">
-                        <!-- Document Completeness Overview -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="completeness-card">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-8">
-                                            <h4><i
-                                                    class="fas fa-chart-pie mr-2"></i>Status
-                                                Kelengkapan Dokumen</h4>
-                                            <p class="mb-0" id="namaPegawai"><%= akun.nama %></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+      <!-- Content Header -->
+      <header class="w-full p-4 md:p-6 pb-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">Dokumen Pegawai</h1>
+          </div>
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/kepegawaian/pns">Data Pegawai</a></li>
+              <li class="font-semibold">Kelengkapan Dokumen</li>
+            </ul>
+          </div>
+        </div>
+      </header>
 
-                        <!-- Quick Actions -->
-                        <div class="row">
-                             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        
-                                <!-- Header Tabel (Hanya tampil di Desktop/Tablet md:up) -->
-                                <div class="hidden md:grid grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                    <div class="col-span-3 lg:col-span-2">Dokumen</div>
-                                    <div class="col-span-5 lg:col-span-6">Detail Informasi</div>
-                                    <div class="col-span-2 lg:col-span-2 text-center">Aksi</div>
-                                </div>
-
-                                <!-- Tempat di mana baris dokumen akan dirender oleh JavaScript -->
-                                <div id="document-grid" class="divide-y divide-gray-100">
-                                    <!-- Konten diisi via JS -->
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section 
-                    class="content">
-                    <div class="container-fluid">
-                       
-                    </div>
-
-                </section>
-                <!-- /.content -->
+      <!-- Main content -->
+      <main class="flex-1 p-4 md:p-6 space-y-6">
+        <div class="container mx-auto max-w-7xl space-y-6">
+          
+          <!-- Card Overview Status Kelengkapan Dokumen -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body p-5 md:p-6 flex flex-row items-center gap-4">
+              <div class="p-3 bg-primary/10 text-primary rounded-2xl flex-shrink-0">
+                <i class="fas fa-chart-pie text-2xl md:text-3xl"></i>
+              </div>
+              <div>
+                <h2 class="card-title text-base md:text-lg font-bold text-base-content">Status Kelengkapan Dokumen</h2>
+                <p class="text-sm font-semibold text-primary mt-0.5" id="namaPegawai"><%= akun.nama %></p>
+              </div>
             </div>
-            <!-- /.content-wrapper -->
-            <footer class="main-footer">
+          </div>
 
-            </footer>
+          <!-- Container Grid / Tabel Dokumen -->
+          <div class="bg-base-100 rounded-2xl border border-base-200 shadow-xl overflow-hidden">
+            
+            <!-- Header Tabel (Hanya tampil di Tablet & Desktop / md:up) -->
+            <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-3.5 bg-base-200/60 border-b border-base-300 text-xs font-bold text-base-content/70 uppercase tracking-wider">
+              <div class="col-span-3 lg:col-span-2">Dokumen</div>
+              <div class="col-span-5 lg:col-span-6">Detail Informasi</div>
+              <div class="col-span-4 lg:col-span-4 text-center">Aksi</div>
+            </div>
+
+            <!-- Container Render Baris Dokumen via JavaScript -->
+            <div id="document-grid" class="divide-y divide-base-200">
+              <!-- Konten akan dirender dinamis oleh doc2.js -->
+            </div>
+
+          </div>
 
         </div>
-    
-        <!-- ./wrapper -->
+      </main>
 
-        <%- include('../template/footer'); %>
-        <script src="/asset/js/admin/doc2.js"></script>
-    </body>
+      <!-- Footer -->
+      <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+        <aside>
+          <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+        </aside>
+      </footer>
+    </div>
+
+    <!-- Sidebar Utama -->
+    <%- include('../template/sidebar'); %>
+  </div>
+
+  <!-- Footer Scripts -->
+  <%- include('../template/footer'); %>
+  <script src="/asset/js/admin/doc2.js"></script>
+</body>
+
 </html>

@@ -1,128 +1,113 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
- 
-  <%- include('template/head'); %>
-  <!-- Memuat font Inter -->
+    <%- include('template/head'); %>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <style>
-        .loader {
-            border: 3px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 3px solid #3b82f6;
-            width: 20px;
-            height: 20px;
-            -webkit-animation: spin 1s linear infinite;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        html { scroll-behavior: smooth; }
-        
-        /* Modal Animation */
-        .modal-enter { opacity: 0; transform: scale(0.95); }
-        .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms, transform 200ms; }
-    </style>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
 
-  <!-- Navbar -->
-  <%- include('template/navbar'); %>
-  <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
-  <%- include('template/sidebar'); %>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <%- include('template/content-header'); %>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <section class="content">
-      
-      <main class="max-w-7xl mx-auto space-y-6">
+<body class="bg-base-200 text-base-content font-sans antialiased">
+    <!-- Wrapper Utama Drawer DaisyUI -->
+    <div class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
         
-        <!-- Header & Filter Section -->
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div>
-                <div class="flex items-center gap-3 mb-1">
-                    <h1 class="text-2xl font-bold text-slate-900">Laporan Kinerja</h1>
-                    <!-- Badge Status dari API -->
-                    <span id="status" class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-200 text-slate-600 transition-colors">
-                        Memuat...
-                    </span>
+        <!-- Konten Utama -->
+        <div class="drawer-content flex flex-col min-h-screen">
+            
+            <!-- Navbar -->
+            <%- include('template/navbar'); %>
+
+            <!-- Content Header -->
+            <header class="w-full p-4 md:p-6 pb-2">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-base-content flex items-center gap-3">
+                            Laporan Kinerja
+                            <span id="status" class="badge badge-neutral text-xs font-semibold py-3 px-3 transition-colors">Memuat...</span>
+                        </h1>
+                        <p class="text-sm text-base-content/70 mt-1">Kelola rincian aktivitas dan capaian kinerja bulanan.</p>
+                    </div>
+                    
+                    <!-- Filter Tanggal -->
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <label for="InputTanggal" class="text-sm font-medium text-base-content/70 whitespace-nowrap">Periode:</label>
+                        <input type="month" id="InputTanggal" class="input input-bordered w-full md:w-auto bg-base-100 hover:border-primary focus:border-primary transition-colors" value="2026-08">
+                    </div>
                 </div>
-                <p class="text-sm text-slate-500">Kelola rincian aktivitas dan capaian kinerja bulanan.</p>
-            </div>
+            </header>
+
+            <!-- Main content -->
+            <main class="flex-1 p-4 md:p-6 space-y-6">
+                
+                <!-- Data Table Section -->
+                <section class="card bg-base-100 shadow-sm border border-base-200">
+                    <div class="card-body p-0">
+                        <div class="p-5 border-b border-base-200 flex justify-between items-center">
+                            <h2 class="text-lg font-semibold text-base-content">Daftar Aktivitas</h2>
+                            <!-- Loader DaisyUI -->
+                            <div id="loadingIndicator" class="hidden items-center gap-2 text-primary text-sm font-medium">
+                                <span class="loading loading-spinner loading-sm"></span> Loading...
+                            </div>
+                        </div>
+                        
+                        <!-- Desktop Table -->
+                        <div class="hidden md:block overflow-x-auto w-full">
+                            <table class="table table-zebra w-full">
+                                <thead class="bg-base-200/50 text-base-content">
+                                    <tr>
+                                        <th class="w-16 text-center">No</th>
+                                        <th>Tanggal</th>
+                                        <th>Rincian Kegiatan (RAK)</th>
+                                        <th class="text-center">Volume</th>
+                                        <th class="text-center">Satuan</th>
+                                        <th class="text-center">Waktu (Menit)</th>
+                                        <th class="text-center w-32">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody" class="transition-opacity duration-300">
+                                    <!-- Data disuntikkan via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Mobile Card List -->
+                        <div id="mobileCardList" class="md:hidden divide-y divide-base-200 transition-opacity duration-300">
+                            <!-- Data disuntikkan via JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Summary Section -->
+                <section class="card bg-base-100 shadow-sm border border-base-200">
+                    <div class="card-body">
+                        <h2 class="card-title text-lg border-b border-base-200 pb-3 mb-4">
+                            <i class="fas fa-chart-pie text-primary"></i> Ringkasan Produktivitas
+                        </h2>
+                        
+                        <!-- Tempat data dinamis dari API disuntikkan -->
+                        <div id="summary" class="transition-all duration-300">
+                            <div class="text-center py-8 text-base-content/50 text-sm">Menghitung kalkulasi rekap...</div>
+                        </div>
+                    </div>
+                </section>
+                
+            </main>
             
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <label for="InputTanggal" class="text-sm font-medium text-slate-600 whitespace-nowrap">Periode:</label>
-                <input type="month" id="InputTanggal" 
-                    class="w-full md:w-auto px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50"
-                    value="2026-08">
-            </div>
-        </header>
+            <!-- Footer -->
+            <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+                <aside>
+                    <p>Copyright © <%= new Date().getFullYear() %> - RSUD dr. Abdul Aziz</p>
+                </aside>
+            </footer>
+        </div>
 
-        <!-- Data Table Section -->
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden relative">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-white z-10">
-                <h2 class="text-lg font-semibold text-slate-800">Daftar Aktivitas</h2>
-                <div id="loadingIndicator" class="hidden items-center gap-2 text-brand-600 text-sm font-medium">
-                    <div class="loader"></div> Loading...
-                </div>
-            </div>
-            
-            <div class="hidden md:block overflow-x-auto relative min-h-[200px]">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-600 text-sm border-b border-slate-200">
-                            <th class="px-6 py-4 font-semibold w-16 text-center">No</th>
-                            <th class="px-6 py-4 font-semibold whitespace-nowrap">Tanggal</th>
-                            <th class="px-6 py-4 font-semibold">Rincian Kegiatan (RAK)</th>
-                            <th class="px-6 py-4 font-semibold text-center">Volume</th>
-                            <th class="px-6 py-4 font-semibold text-center">Satuan</th>
-                            <th class="px-6 py-4 font-semibold text-center whitespace-nowrap">Waktu (Menit)</th>
-                            <th class="px-6 py-4 font-semibold text-center w-32">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody" class="divide-y divide-slate-100 transition-opacity">
-                        <!-- Data disuntikkan via JS -->
-                    </tbody>
-                </table>
-            </div>
+        <!-- Sidebar Utama -->
+        <%- include('template/sidebar'); %>
+    </div>
 
-            <div id="mobileCardList" class="md:hidden divide-y divide-slate-100 transition-opacity">
-                <!-- Data disuntikkan via JS -->
-            </div>
-        </section>
+    <!-- Modal Edit Activity -->
+    <%- include('modal/modalMonthly2'); %> 
 
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
-            <h2 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                Ringkasan Produktivitas
-            </h2>
-            
-            <!-- Tempat data dinamis dari API disuntikkan -->
-            <div id="summary" class="space-y-4">
-                <div class="text-center py-8 text-slate-400 text-sm">Menghitung kalkulasi rekap...</div>
-            </div>
-        </section>
-        <%- include('modal/modalMonthly2'); %>
-    </main>
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
-
-  </footer>
-
-</div>
-<!-- ./wrapper -->
-
-<%- include('template/footer'); %>
-<script src="/asset/js/monthly2.js"></script>
+    <%- include('template/footer'); %>
+    <script src="/asset/js/monthly2.js"></script>
 </body>
 </html>

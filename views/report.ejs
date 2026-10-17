@@ -1,118 +1,166 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="id" data-theme="light">
 <head>
-  <%- include('template/head'); %>
+    <%- include('template/head'); %>
+    
+    <!-- Tambahan CSS untuk Animasi On Load -->
+    <style>
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Animasi untuk baris tabel */
+        .row-animate {
+            animation: fadeInUp 0.4s ease-out forwards;
+            opacity: 0;
+        }
+    </style>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
-    <!-- Navbar -->
-    <%- include('template/navbar'); %>
-      <!-- /.navbar -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+    <!-- Wrapper Utama Drawer DaisyUI -->
+    <div class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+        
+        <!-- Konten Utama -->
+        <div class="drawer-content flex flex-col min-h-screen">
+            
+            <!-- Navbar -->
+            <%- include('template/navbar'); %>
 
-      <!-- Main Sidebar Container -->
-      <%- include('template/sidebar'); %>
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('template/content-header'); %>
-            <!-- /.content-header -->
+            <!-- Content Header (Animasi Pertama) -->
+            <header class="w-full p-4 md:p-6 pb-2 animate-fade-in-up">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-base-content">
+                            Rekapitulasi Laporan
+                        </h1>
+                        <p class="text-sm text-base-content/70 mt-1">Laporan Produktivitas Kinerja Karyawan berdasarkan unit kerja.</p>
+                    </div>
+                    <div class="breadcrumbs text-sm">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li class="font-semibold">Rekap Laporan</li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
 
             <!-- Main content -->
-            <section class="content">
-              <div class="container-fluid">
-                <div class="card">
-                  <div class="card-header">
-                    <h3 class="card-title">Laporan Produktivitas Kinerja Karyawan</h3>
-                    <br />
-                    <hr />
-                    <div class="container">
-                      <div class="row g-2 justify-content-center">
-                        <div class="col-md-3">
-                          <div class="form-group">
-                            <input type="month" class="form-control" id="InputTanggal" name="start" min="2023-03"
-                              value="<%= date %>" />
-                          </div>
-                        </div>
-                        <div class="col-md-5">
-                          <select class="form-control select2" id="departemen">
-                            <option selected="selected" value='<%= user.dep%>'>
-                              <%= user.departemen.bidang%>
-                            </option>
-                            <% for(let i=0; i<departemen.length; i++) { %>
-                              <option value='<%= departemen[i].id %>'>
-                                <%= departemen[i].bidang %>
-                              </option>
-                              <% } %>
+            <main class="flex-1 p-4 md:p-6 space-y-6">
+                
+                <!-- Filter Section (Animasi Kedua) -->
+                <section class="card bg-base-100 shadow-sm border border-base-200 animate-fade-in-up delay-100">
+                    <div class="card-body p-5">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-end">
+                            
+                            <!-- Input Bulan -->
+                            <div class="form-control md:col-span-3">
+                                <label class="label pt-0"><span class="label-text font-medium text-base-content/80">Periode Bulan</span></label>
+                                <input type="month" id="InputTanggal" name="start" min="2023-03" value="<%= date %>" 
+                                    class="input input-bordered w-full hover:border-primary focus:border-primary transition-colors duration-300" />
+                            </div>
+                            
+                            <!-- Select Departemen -->
+                            <div class="form-control md:col-span-5">
+                                <label class="label pt-0"><span class="label-text font-medium text-base-content/80">Unit / Departemen</span></label>
+                                <select class="select select-bordered w-full select2 transition-colors duration-300" id="departemen">
+                                    <option selected="selected" value='<%= user.dep%>'><%= user.departemen.bidang%></option>
+                                    <% for(let i=0; i<departemen.length; i++) { %>
+                                        <option value='<%= departemen[i].id %>'><%= departemen[i].bidang %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            
+                            <!-- Filter Status Kepegawaian (Checkboxes) -->
+                            <div class="md:col-span-4 bg-base-200/50 p-3 rounded-xl border border-base-200 h-full flex flex-col justify-center hover:shadow-md transition-all duration-300">
+                                <span class="text-xs font-bold text-base-content/60 uppercase tracking-wider mb-3">Filter Status</span>
+                                <div class="flex flex-wrap gap-4">
+                                    <label class="cursor-pointer flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                        <input type="checkbox" id="satusPNS" class="checkbox checkbox-primary checkbox-sm rounded-md" checked />
+                                        <span class="label-text font-medium">PNS</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                        <input type="checkbox" id="satusPPPK" class="checkbox checkbox-primary checkbox-sm rounded-md" />
+                                        <span class="label-text font-medium">PPPK</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                        <input type="checkbox" id="satusPPPKPW" class="checkbox checkbox-primary checkbox-sm rounded-md" />
+                                        <span class="label-text font-medium">PPPKPW</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                        <input type="checkbox" id="satusNonASN" class="checkbox checkbox-primary checkbox-sm rounded-md" />
+                                        <span class="label-text font-medium">Non ASN</span>
+                                    </label>
+                                </div>
+                            </div>
 
-                          </select>
                         </div>
-                        <div class="col-md-4">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="satusPNS" checked>
-                            <label class="form-check-label" for="satusPNS">
-                              PNS
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="satusPPPK">
-                            <label class="form-check-label" for="satusPPPK">
-                              PPPK
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="satusPPPKPW">
-                            <label class="form-check-label" for="satusPPPKPW">
-                              PPPKPW
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="satusNonASN">
-                            <label class="form-check-label" for="satusNonASN">
-                              Non ASN
-                            </label>
-                          </div>
-                        </div>
-                      </div>
                     </div>
-                  </div>
-                  <div class="card-body table-responsive">
-                    <table class="table table-bordered table-head-fixed text-nowrap" id="tbReport">
-                      <thead>
-                        <tr>
-                          <th style="width: 10px">#</th>
-                          <th>NAMA</th>
-                          <th>NIP</th>
-                          <th>JABATAN</th>
-                          <th>CAPAIAN KINERJA (MENIT)</th>
-                          <th>KATEGORI</th>
-                          <th>BESARAN TPP DARI PRODUKTIVITAS KERJA</th>
-                          <th>STATUS</th>
-                        </tr>
-                      </thead>
-                      <tbody></tbody>
-                    </table>
-                  </div>
-                </div>
-              </div><!-- /.container-fluid -->
-            </section>
-            <!-- /.content -->
+                </section>
+
+               <!-- Data Table Section (Animasi Ketiga) -->
+                <section class="card bg-base-100 shadow-sm border border-base-200 animate-fade-in-up delay-200 overflow-hidden">
+                    
+                    <!-- TAMPILAN DESKTOP: TABEL (Sembunyi di Mobile) -->
+                    <div class="card-body p-0 hidden md:block">
+                        <div class="overflow-x-auto w-full">
+                            <table class="table table-zebra w-full whitespace-nowrap" id="tbReport">
+                                <thead class="bg-base-200/80 text-base-content text-sm">
+                                    <tr>
+                                        <th class="w-12 text-center rounded-tl-xl">#</th>
+                                        <th>NAMA</th>
+                                        <th>NIP</th>
+                                        <th>JABATAN</th>
+                                        <th class="text-center">CAPAIAN KINERJA (MENIT)</th>
+                                        <th class="text-center">KATEGORI</th>
+                                        <th class="text-right">BESARAN TPP (PRODUKTIVITAS)</th>
+                                        <th class="text-center rounded-tr-xl">STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data tabel disuntikkan via JS rekap.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAMPILAN MOBILE: CARD (Sembunyi di Desktop) -->
+                    <div class="card-body p-4 block md:hidden bg-base-200/30">
+                        <div id="mobileReport" class="flex flex-col gap-4">
+                            <!-- Data card disuntikkan via JS rekap.js -->
+                        </div>
+                    </div>
+
+                </section>
+
+            </main>
+            
+            <!-- Footer -->
+            <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+                <aside>
+                    <p>Copyright © <%= new Date().getFullYear() %> - RSUD dr. Abdul Aziz</p>
+                </aside>
+            </footer>
         </div>
-  </div>
 
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
+        <!-- Sidebar Utama -->
+        <%- include('template/sidebar'); %>
+    </div>
 
-  </footer>
-
-
-  </div>
-  <!-- ./wrapper -->
-
-  <%- include('template/footer'); %>
+    <!-- Modals & Scripts -->
+    <%- include('template/footer'); %>
     <script src="/asset/js/rekap.js"></script>
 </body>
-
 </html>

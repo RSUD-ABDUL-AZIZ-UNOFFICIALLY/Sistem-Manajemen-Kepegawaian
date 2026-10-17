@@ -1,74 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id" data-theme="light">
 <head>
-  <%- include('template/head'); %>
+    <%- include('template/head'); %>
+    
+    <!-- Tambahan CSS untuk Animasi On Load -->
+    <style>
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Animasi untuk baris tabel dan card */
+        .row-animate {
+            animation: fadeInUp 0.4s ease-out forwards;
+            opacity: 0;
+        }
+    </style>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
+<body class="bg-base-200 text-base-content font-sans antialiased">
+    <!-- Wrapper Utama Drawer DaisyUI -->
+    <div class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+        
+        <!-- Konten Utama -->
+        <div class="drawer-content flex flex-col min-h-screen">
+            
+            <!-- Navbar -->
+            <%- include('template/navbar'); %>
 
-    <!-- Navbar -->
-    <%- include('template/navbar'); %>
-      <!-- /.navbar -->
-
-      <!-- Main Sidebar Container -->
-      <%- include('template/sidebar'); %>
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('template/content-header'); %>
-            <!-- /.content-header -->
+            <!-- Content Header (Animasi Pertama) -->
+            <header class="w-full p-4 md:p-6 pb-2 animate-fade-in-up">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-base-content">
+                            Persetujuan Laporan
+                        </h1>
+                        <p class="text-sm text-base-content/70 mt-1">Daftar persetujuan laporan kinerja bulanan bawahan.</p>
+                    </div>
+                    <div class="breadcrumbs text-sm">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li class="font-semibold">Persetujuan</li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
 
             <!-- Main content -->
-            <section class="content">
-              <div class="container-fluid">
-                <div class="card card-primary">
-                  <div class="card-header">
-                    <h3 class="card-title">Persetujuan Periode</h3>
-                    <h3 class="">
-                      <div class="form-group">
-                        <input type="month" class="form-control" id="InputTanggal" name="start" min="2023-03"
-                          value="<%= date %>" />
-                      </div>
-                    </h3>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body table-responsive p-1">
-                    <table class="table table-bordered table-head-fixed text-nowrap">
-                      <thead>
-                        <tr>
-                          <th>No</th>
-                          <th>Nama</th>
-                          <th>capaian</th>
-                          <th>kategori</th>
-                          <th>Status</th>
-                          <th>Persetujuan</th>
-                        </tr>
-                      </thead>
-                      <tbody>
+            <main class="flex-1 p-4 md:p-6 space-y-6">
+                
+                <!-- Section Tabel Persetujuan (Animasi Kedua) -->
+                <section class="card bg-base-100 shadow-sm border border-base-200 animate-fade-in-up delay-100 overflow-hidden">
+                    
+                    <!-- Card Header dengan Filter Bulan -->
+                    <div class="card-body p-5 border-b border-base-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h2 class="card-title text-lg flex items-center gap-2">
+                            <i class="fas fa-tasks text-primary"></i> Daftar Kinerja Bawahan
+                        </h2>
+                        <div class="form-control w-full sm:w-auto">
+                            <label class="input-group input-group-sm md:input-group-md flex items-center">
+                                <span class="bg-base-200 px-4 text-sm font-semibold border border-base-300 border-r-0 rounded-l-lg h-10 flex items-center">Periode</span>
+                                <input type="month" id="InputTanggal" name="start" min="2023-03" value="<%= date %>" 
+                                    class="input input-bordered input-sm md:input-md rounded-l-none h-10 hover:border-primary focus:border-primary transition-colors" />
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- TAMPILAN DESKTOP: TABEL (Sembunyi di Mobile) -->
+                    <div class="card-body p-0 hidden md:block">
+                        <div class="overflow-x-auto w-full">
+                            <table class="table table-zebra w-full whitespace-nowrap" id="tbAprovement">
+                                <thead class="bg-base-200/80 text-base-content text-sm">
+                                    <tr>
+                                        <th class="w-12 text-center rounded-tl-xl">No</th>
+                                        <th>Nama Pegawai</th>
+                                        <th class="text-center">Capaian (Menit)</th>
+                                        <th class="text-center">Kategori</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center rounded-tr-xl">Aksi Persetujuan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data tabel disuntikkan via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer"></div>
-              </div><!-- /.container-fluid -->
-            </section>
-            <!-- /.content -->
+                    <!-- TAMPILAN MOBILE: CARD (Sembunyi di Desktop) -->
+                    <div class="card-body p-4 block md:hidden bg-base-200/30">
+                        <div id="mobileAprovement" class="flex flex-col gap-4">
+                            <!-- Data card disuntikkan via JS -->
+                        </div>
+                    </div>
+
+                </section>
+
+            </main>
+            
+            <!-- Footer -->
+            <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+                <aside>
+                    <p>Copyright © <%= new Date().getFullYear() %> - RSUD dr. Abdul Aziz</p>
+                </aside>
+            </footer>
         </div>
-        <!-- /.content-wrapper -->
-        <footer class="main-footer">
 
-        </footer>
+        <!-- Sidebar Utama -->
+        <%- include('template/sidebar'); %>
+    </div>
 
-  </div>
-  <!-- ./wrapper -->
-
-  <%- include('template/footer'); %>
+    <%- include('template/footer'); %>
     <script src="/asset/js/aprovement.js"></script>
 </body>
-
 </html>

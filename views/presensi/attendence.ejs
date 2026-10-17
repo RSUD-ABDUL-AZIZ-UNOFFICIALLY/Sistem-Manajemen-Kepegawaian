@@ -1,184 +1,179 @@
-<!DOCTYPE html>
-<html lang="id">
 
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
 <head>
     <%- include('../template/head'); %>
-        <!-- fullCalendar -->
-        <link rel="stylesheet" href="/asset/css/presensi/absen.css">
-        <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.0.1/dist/face-api.min.js"></script>
+    <!-- fullCalendar CSS -->
+    <link rel="stylesheet" href="/asset/css/presensi/absen.css">
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.0.1/dist/face-api.min.js"></script>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        <!-- Navbar -->
-        <%- include('../template/navbar'); %>
-            <!-- /.navbar -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+    <!-- Wrapper Utama Drawer DaisyUI -->
+    <div class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+        
+        <!-- Konten Utama -->
+        <div class="drawer-content flex flex-col min-h-screen">
+            
+            <!-- Navbar -->
+            <%- include('../template/navbar'); %>
 
-            <!-- Main Sidebar Container -->
-            <%- include('../template/sidebar'); %>
+            <!-- Content Header -->
+            <header class="w-full p-4 md:p-6 pb-2">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-base-content">Input Presensi Manual</h1>
+                        <p class="text-sm text-base-content/70 mt-1">Kelola dan input data kehadiran backdate atau koreksi presensi pegawai.</p>
+                    </div>
+                    <div class="breadcrumbs text-sm">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li class="font-semibold">Presensi Manual</li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
 
-                <!-- Content Wrapper. Contains page content -->
-                <div class="content-wrapper">
-                    <!-- Content Header (Page header) -->
-                    <%- include('../template/content-header'); %>
-                        <!-- /.content-header -->
+            <!-- Main content -->
+            <main class="flex-1 p-4 md:p-6 space-y-6">
+                
+                <!-- Section: Form Presensi -->
+                <section class="card bg-base-100 shadow-sm border border-base-200 max-w-4xl mx-auto w-full">
+                    <div class="card-body p-6 md:p-8">
+                        <h2 class="card-title text-xl text-primary border-b border-base-200 pb-3 mb-6 flex items-center gap-2">
+                            <i class="fas fa-user-edit"></i> Form Koreksi / Input Presensi
+                        </h2>
 
-                        <!-- Main content -->
-                        <section class="content">
-                            <div class="container-fluid">
-                                <div class="card card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Presensi</h3>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body">
-                                        <form id="formPresensi" class="space-y-5">
-                                        <!-- Untuk edit, aktifkan input ini -->
-                                        <!-- <input type="hidden" name="id" value="123"> -->
+                        <form id="formPresensi" class="space-y-4">
+                            <!-- Untuk edit, aktifkan input ini -->
+                            <!-- <input type="hidden" name="id" value="123"> -->
 
-                                        <div>
-                                            <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
-                                            <input
-                                            type="text"
-                                            id="nama"
-                                            name="nama",
-                                            placeholder="Tulis nama / nik / nip / no WA"
-                                            required
-                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label for="nik" class="block text-sm font-medium text-gray-700">NIK</label>
-                                            <input
-                                            type="text"
-                                            id="nik"
-                                            name="nik",
-                                            disabled
-                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                                            <input
-                                            disabled
-                                            type="text"
-                                            id="username"
-                                            name="username",
-                                            required
-                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal</label>
-                                            <input
-                                            disabled
-                                            type="date"
-                                            id="tanggal"
-                                            name="tanggal"
-                                            required
-                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label for="jamMasuk" class="block text-sm font-medium text-gray-700">Jam Masuk</label>
-                                            <input
-                                            disabled
-                                            type="time"
-                                            id="jamMasuk"
-                                            name="jamMasuk"
-                                            step="1"
-                                            required
-                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label for="locatonIn" class="block text-sm font-medium text-gray-700">Lokasi Cek IN</label>
-                                            <select
-                                            id="locatonIn"
-                                            name="locatonIn"
-                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            >
-                                            <!-- <option value="Hadir">Hadir</option>
-                                            <option value="Sakit">Sakit</option>
-                                            <option value="Izin">Izin</option>
-                                            <option value="Libur">Libur</option> -->
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label for="jamKeluar" class="block text-sm font-medium text-gray-700">Jam Keluar</label>
-                                            <input
-                                            disabled
-                                            type="time"
-                                            id="jamKeluar"
-                                            name="jamKeluar"
-                                            step="1"
-                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label for="locatonOut" class="block text-sm font-medium text-gray-700">Lokasi Cek OUT</label>
-                                            <select
-                                            id="locatonOut"
-                                            name="locatonOut"
-                                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                            <!-- <option value="Hadir">Hadir</option>
-                                            <option value="Sakit">Sakit</option>
-                                            <option value="Izin">Izin</option>
-                                            <option value="Libur">Libur</option> -->
-                                            </select>
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
-                                        >
-                                            Simpan
-                                        </button>
-                                        </form>
-                                    </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Nama -->
+                                <div class="form-control w-full md:col-span-2">
+                                    <label class="label pt-0 pb-1" for="nama">
+                                        <span class="label-text font-medium text-base-content/80">Nama / Karyawan</span>
+                                    </label>
+                                    <input type="text" id="nama" name="nama" placeholder="Tulis nama / nik / nip / no WA" required
+                                        class="input input-bordered w-full hover:border-primary focus:border-primary transition-colors" />
                                 </div>
-                                <div class="card card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Presensi</h3>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label>Periode</label>
-                                                    <input type="month" class="form-control" id="periode" name="periode">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                             <!-- Container Daftar Kehadiran -->
-                                            <div id="listKehadiran" class="space-y-4"></div>
-                                        </div>
-                                    </div>
+
+                                <!-- NIK -->
+                                <div class="form-control w-full">
+                                    <label class="label pt-0 pb-1" for="nik">
+                                        <span class="label-text font-medium text-base-content/80">NIK</span>
+                                    </label>
+                                    <input type="text" id="nik" name="nik" disabled
+                                        class="input input-bordered w-full bg-base-200/50 cursor-not-allowed" />
+                                </div>
+
+                                <!-- Username -->
+                                <div class="form-control w-full">
+                                    <label class="label pt-0 pb-1" for="username">
+                                        <span class="label-text font-medium text-base-content/80">Username</span>
+                                    </label>
+                                    <input type="text" id="username" name="username" disabled required
+                                        class="input input-bordered w-full bg-base-200/50 cursor-not-allowed" />
+                                </div>
+
+                                <!-- Tanggal -->
+                                <div class="form-control w-full">
+                                    <label class="label pt-0 pb-1" for="tanggal">
+                                        <span class="label-text font-medium text-base-content/80">Tanggal</span>
+                                    </label>
+                                    <input type="date" id="tanggal" name="tanggal" disabled required
+                                        class="input input-bordered w-full bg-base-200/50 cursor-not-allowed" />
+                                </div>
+
+                                <!-- Jam Masuk -->
+                                <div class="form-control w-full">
+                                    <label class="label pt-0 pb-1" for="jamMasuk">
+                                        <span class="label-text font-medium text-base-content/80">Jam Masuk</span>
+                                    </label>
+                                    <input type="time" id="jamMasuk" name="jamMasuk" step="1" disabled required
+                                        class="input input-bordered w-full bg-base-200/50 cursor-not-allowed" />
+                                </div>
+
+                                <!-- Lokasi Masuk -->
+                                <div class="form-control w-full">
+                                    <label class="label pt-0 pb-1" for="locatonIn">
+                                        <span class="label-text font-medium text-base-content/80">Lokasi Cek IN</span>
+                                    </label>
+                                    <select id="locatonIn" name="locatonIn" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors">
+                                        <!-- Opsi diisi via JS -->
+                                    </select>
+                                </div>
+
+                                <!-- Jam Keluar -->
+                                <div class="form-control w-full">
+                                    <label class="label pt-0 pb-1" for="jamKeluar">
+                                        <span class="label-text font-medium text-base-content/80">Jam Keluar</span>
+                                    </label>
+                                    <input type="time" id="jamKeluar" name="jamKeluar" step="1" disabled
+                                        class="input input-bordered w-full bg-base-200/50 cursor-not-allowed" />
+                                </div>
+
+                                <!-- Lokasi Keluar -->
+                                <div class="form-control w-full md:col-span-2">
+                                    <label class="label pt-0 pb-1" for="locatonOut">
+                                        <span class="label-text font-medium text-base-content/80">Lokasi Cek OUT</span>
+                                    </label>
+                                    <select id="locatonOut" name="locatonOut" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors">
+                                        <!-- Opsi diisi via JS -->
+                                    </select>
                                 </div>
                             </div>
+
+                            <!-- Tombol Simpan -->
+                            <div class="pt-4">
+                                <button type="submit" class="btn btn-primary w-full shadow-sm text-base">
+                                    <i class="fas fa-save mr-1"></i> Simpan Perubahan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Section: Riwayat Presensi Berdasarkan Periode -->
+                <section class="card bg-base-100 shadow-sm border border-base-200 max-w-4xl mx-auto w-full">
+                    <div class="card-body p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-base-200 pb-4 mb-6 gap-4">
+                            <h2 class="card-title text-xl text-primary">
+                                <i class="fas fa-calendar-alt"></i> Riwayat Presensi Pegawai
+                            </h2>
+                            <div class="form-control w-full sm:w-auto">
+                                <input type="month" class="input input-bordered hover:border-primary focus:border-primary" id="periode" name="periode">
+                            </div>
+                        </div>
+
+                        <!-- Container Daftar Kehadiran -->
+                        <div id="listKehadiran" class="space-y-4">
+                            <!-- Data dimuat secara dinamis via script -->
                         </div>
                     </div>
-                    <!-- /.container-fluid -->
-                    </section>
+                </section>
 
-    <!-- /.content -->
+            </main>
+            
+            <!-- Footer -->
+            <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+                <aside>
+                    <p>Copyright © <%= new Date().getFullYear() %> - RSUD dr. Abdul Aziz</p>
+                </aside>
+            </footer>
+        </div>
+
+        <!-- Sidebar Utama -->
+        <%- include('../template/sidebar'); %>
     </div>
-    <!-- /.content-wrapper -->
-    <footer class="main-footer"></footer>
-    </div>
-    <!-- ./wrapper -->
-         <%- include('../modal/modalFaceReaction'); %>
-        <%- include('../template/footer'); %>
-            <!-- fullCalendar -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-            <script src="/asset/js/fullcalendar/backdate.js"></script>
-            <script src="/asset/js/fullcalendar/periodeBackdate.js"></script>
+
+    <!-- Footer Scripts -->
+    <%- include('../template/footer'); %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    
+    <script src="/asset/js/fullcalendar/backdate.js"></script>
+    <script src="/asset/js/fullcalendar/periodeBackdate.js"></script>
 </body>
-
 </html>

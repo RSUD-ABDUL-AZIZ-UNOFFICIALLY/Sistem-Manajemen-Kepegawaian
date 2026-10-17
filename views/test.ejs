@@ -1,40 +1,69 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light"> <!-- Anda bisa ganti/tambah theme DaisyUI di sini -->
 <head>
   <%- include('template/head'); %>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
+<body class="bg-base-200 text-base-content font-sans antialiased">
 
-  <!-- Navbar -->
-  <%- include('template/navbar'); %>
-  <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
-  <%- include('template/sidebar'); %>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <%- include('template/content-header'); %>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
+  <!-- Wrapper Utama Drawer DaisyUI -->
+  <div class="drawer lg:drawer-open">
+    <!-- Toggle Checkbox untuk Mobile (Sangat Penting) -->
+    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+    
+    <!-- Konten Utama (Navbar + Header + Main Content + Footer) -->
+    <div class="drawer-content flex flex-col min-h-screen">
       
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+      <!-- Navbar (Asumsi Anda memisahkan navbar ke file template/navbar) -->
+      <!-- Jika navbar digabung di sidebar.ejs, pindahkan tag <nav> nya ke file terpisah -->
+      <%- include('template/navbar'); %> 
+
+      <!-- Content Header -->
+      <header class="w-full p-4 md:p-6 pb-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold text-base-content tracking-tight"><%= page %></h1>
+          </div>
+          
+          <!-- Breadcrumbs menggunakan DaisyUI -->
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <!-- Contoh jika breadcrumb diaktifkan: -->
+              <!-- <li><a href="/">Home</a></li> -->
+              <!-- <li class="font-semibold">Berkas Saya</li> -->
+            </ul>
+          </div>
+        </div>
+      </header>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <main class="flex-1 p-4 md:p-6">
+        <div class="container mx-auto max-w-7xl">
+          
+          <!-- ISI KONTEN HALAMAN ANDA AKAN MUNCUL DI SINI -->
+
+        </div>
+      </main>
+      <!-- /.content -->
+
+      <!-- Footer DaisyUI -->
+      <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto shadow-inner">
+        <aside>
+          <p>Copyright © <%= new Date().getFullYear() %> - RSUD dr. Abdul Aziz</p>
+        </aside>
+      </footer>
+
+    </div>
+    <!-- /.drawer-content -->
+
+    <!-- Main Sidebar Container -->
+    <!-- PERHATIAN: Pastikan isi dari template/sidebar HANYA dimulai dari <div class="drawer-side">...</div> -->
+    <%- include('template/sidebar'); %>
+
   </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
+  <!-- /.drawer -->
 
-  </footer>
-
-</div>
-<!-- ./wrapper -->
-
-<%- include('template/footer'); %>
+  <!-- Include Script JS (termasuk sidebar.js yang baru di-refaktor) -->
+  <%- include('template/footer'); %>
 </body>
 </html>

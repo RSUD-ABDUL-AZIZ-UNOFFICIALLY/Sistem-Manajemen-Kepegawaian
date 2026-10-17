@@ -1,148 +1,191 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 
 <head>
   <%- include('template/head'); %>
-   <meta name="description" content="Pengajuan Cuti Pegawai RSUD dr. Abdul Aziz Singkawang">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+  <meta name="description" content="Pengajuan Cuti Pegawai RSUD dr. Abdul Aziz Singkawang">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
-    <!-- Navbar -->
-    <%- include('template/navbar'); %>
-      <!-- /.navbar -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+  <!-- Wrapper Utama Drawer DaisyUI -->
+  <div class="drawer lg:drawer-open">
+    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+    
+    <!-- Konten Utama -->
+    <div class="drawer-content flex flex-col min-h-screen">
+      
+      <!-- Navbar -->
+      <%- include('template/navbar'); %>
 
-      <!-- Main Sidebar Container -->
-      <%- include('template/sidebar'); %>
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('template/content-header'); %>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="content">
-              <div class="container-fluid">
-                <div class="card card-primary">
-                  <div class="card-header">
-                    <h3 class="card-title">Formuli Pengajuan Cuti</h3>
-                  </div>
-                  <!-- /.card-header -->
-                  <!-- form start -->
-                  <form id="Cuti" class="form-horizontal">
-                    <div class="card-body">
-                      <div class="form-group">
-                        <label for="Unit">Jenis Cuti</label>
-                        <select class="custom-select form-control " id="jnsCuti">
-                          <option> Pilih Jenis Cuti</option>
-                        </select>
-                      </div>
-                      <!-- /.form group -->
-                      <!-- Date range -->
-                      <div class="form-group">
-                        <label>Pilih Tanggal pengahuan cuti</label>
-
-                        <div class="input-group">
-                          <div class="row">
-                            <div class="col-8">
-                              <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                  <span class="input-group-text"> <i class="far fa-calendar-alt"></i></span>
-                                </div>
-                                <input type="text" class="form-control float-right" id="reservation" name="reservation" required disabled>
-
-                              </div>
-                            </div>
-                            <div class="col-4">
-                              <div class="input-group mb-3">
-                                <input type="number" id="totalReservation" class="form-control float-right" required
-                                  disabled>
-                                <div class="input-group-append">
-                                  <span class="input-group-text">Hari</span>
-                                </div>
-                              </div>
-                            </div>
-
-                          </div>
-                        </div>
-                        <!-- /.input group -->
-                      </div>
-                      <!-- /.form group -->
-                      <div class="form-group">
-                        <label for="InputActivities">Alasan Cuti</label>
-                        <textarea class="form-control" rows="3" id="alasanCuti" placeholder="contoh: 'Pulang Kampung' "
-                          required autocomplete="on"></textarea>
-                      </div>
-                      <div class="form-group">
-                        <label for="InputActivities">Alamat Selama Cuti</label>
-                        <textarea class="form-control" rows="3" id="alamat"
-                          placeholder="contoh: 'Jl. Dr. Sutomo No.28, Pasiran, Kec. Singkawang Bar., Kota Singkawang' " required
-                          autocomplete="on"></textarea>
-                      </div>
-                      <div class="form-group" id="lampiran">
-                      </div>
-                    </div>
-                    <!-- /.card-body -->
-                    <div class="container-fluid">
-                      <!-- Content here -->
-                      <p><small id="Keterangan_cuti"></small></p>
-                    </div>
-                    <div class="card-footer">
-                      <button type="submit" id="btnSubmit" class="btn btn-primary">Ajukan</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <!-- /.container-fluid -->
-            </section>
-            <section>
-              <div class="container-fluid">
-                <div class="card">
-                  <h5 class="card-header">Riwayat Cuti Tahun : <input type="number" id="tahun" min="2024" max="2026" step="1"
-                      value="2026" />
-                  </h5>
-                  <div class="card-body">
-                    <div class="card-body table-responsive p-0">
-                      <figure>
-                        <figcaption></figcaption>
-                        <table class="table table-bordered table-head-fixed text-nowrap">
-                          <thead>
-                            <tr>
-                              <th style="width: 10px">#</th>
-                              <th>Tanggal Cuti</th>
-                              <th>Tipe Cuti</th>
-                              <th>jumlah</th>
-                              <th>Alasan Cuti</th>
-                              <th>Status</th>
-                              <th>Tanggal persetujuan</th>
-                              <th>Nama atasan</th>
-                              <th>Keterangan</th>
-                              <th>Tindakan</th>
-                              <th>Lampiran</th>
-                            </tr>
-                          </thead>
-                          <tbody></tbody>
-                        </table>
-                      </figure>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-            <!-- /.content -->
+      <!-- Content Header -->
+      <header class="w-full p-4 md:p-6 pb-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">Pengajuan Cuti</h1>
+          </div>
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li class="font-semibold">Formulir Cuti</li>
+            </ul>
+          </div>
         </div>
-        <!-- /.content-wrapper -->
-        <footer class="main-footer"></footer>
+      </header>
+
+      <!-- Main content -->
+      <main class="flex-1 p-4 md:p-6 space-y-6">
+        <div class="container mx-auto max-w-5xl space-y-6">
+          
+          <!-- Card Formulir Pengajuan Cuti -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body p-5 md:p-6">
+              <h2 class="card-title text-primary border-b border-base-200 pb-3 mb-4">
+                <i class="fas fa-file-signature mr-2"></i> Formulir Pengajuan Cuti
+              </h2>
+              
+              <!-- Form Start -->
+              <form id="Cuti" class="space-y-4">
+                
+                <!-- Jenis Cuti -->
+                <div class="form-control w-full">
+                  <label class="label" for="jnsCuti">
+                    <span class="label-text font-semibold">Jenis Cuti</span>
+                  </label>
+                  <select id="jnsCuti" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors" >
+                    <option value="" disabled selected>Pilih Jenis Cuti</option>
+                  </select>
+                </div>
+
+                <!-- Rentang Tanggal & Durasi -->
+                <div class="form-control w-full">
+                  <label class="label">
+                    <span class="label-text font-semibold">Pilih Tanggal Pengajuan Cuti</span>
+                  </label>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                    <!-- Input Date Range -->
+                    <div class="md:col-span-8">
+                      <div class="join w-full">
+                        <span class="btn btn-active join-item pointer-events-none">
+                          <i class="far fa-calendar-alt"></i>
+                        </span>
+                        <input type="text" id="reservation" name="reservation" class="input input-bordered join-item w-full hover:border-primary focus:border-primary transition-colors" placeholder="DD/MM/YYYY - DD/MM/YYYY" required disabled />
+                      </div>
+                    </div>
+                    
+                    <!-- Input Total Hari -->
+                    <div class="md:col-span-4">
+                      <div class="join w-full">
+                        <input type="number" id="totalReservation" class="input input-bordered join-item w-full text-center font-bold hover:border-primary focus:border-primary transition-colors" placeholder="0" required disabled />
+                        <span class="btn btn-active join-item pointer-events-none">Hari</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Alasan Cuti -->
+                <div class="form-control w-full">
+                  <label class="label" for="alasanCuti">
+                    <span class="label-text font-semibold">Alasan Cuti</span>
+                  </label>
+                  <textarea id="alasanCuti" class="textarea textarea-bordered h-24 w-full hover:border-primary focus:border-primary transition-colors" placeholder="Contoh: 'Pulang Kampung'" required autocomplete="on"></textarea>
+                </div>
+
+                <!-- Alamat Selama Cuti -->
+                <div class="form-control w-full">
+                  <label class="label" for="alamat">
+                    <span class="label-text font-semibold">Alamat Selama Cuti</span>
+                  </label>
+                  <textarea id="alamat" class="textarea textarea-bordered h-24 w-full hover:border-primary focus:border-primary transition-colors" placeholder="Contoh: 'Jl. Dr. Sutomo No.28, Pasiran, Singkawang Barat'" required autocomplete="on"></textarea>
+                </div>
+
+                <!-- Container Dynamic Lampiran File -->
+                <div id="lampiran" class="form-control w-full space-y-2"></div>
+
+                <!-- Note / Keterangan Cuti -->
+                <div class="bg-base-200/60 p-3 rounded-lg border border-base-300">
+                  <p class="text-xs text-base-content/80 flex items-start gap-2">
+                    <i class="fas fa-info-circle text-info mt-0.5"></i>
+                    <span id="Keterangan_cuti">Pilih jenis cuti terlebih dahulu untuk melihat ketentuan maksimal hari.</span>
+                  </p>
+                </div>
+
+                <!-- Action Submit -->
+                <div class="flex justify-end pt-4 border-t border-base-200">
+                  <button type="submit" id="btnSubmit" class="btn btn-primary w-full sm:w-auto">
+                    <i class="fas fa-paper-plane mr-1"></i> Ajukan Cuti
+                  </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+          <!-- Card Riwayat Cuti -->
+          <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
+            <div class="card-body p-5 md:p-6 space-y-4">
+              
+              <!-- Header / Filter Tahun -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-base-200">
+                <h2 class="card-title text-base md:text-lg font-bold text-base-content">
+                  <i class="fas fa-history text-primary mr-2"></i> Riwayat Pengajuan Cuti
+                </h2>
+                <div class="flex items-center gap-2">
+                  <label for="tahun" class="text-sm font-semibold text-base-content/70">Tahun:</label>
+                  <input type="number" id="tahun" min="2024" max="2099" step="1" value="2026" class="input input-bordered input-sm w-28 text-center font-semibold hover:border-primary focus:border-primary transition-colors" />
+                </div>
+              </div>
+
+              <!-- Tabel Riwayat Cuti -->
+              <div class="overflow-x-auto w-full">
+                <table class="table table-zebra w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-base-200/60 text-xs font-bold text-base-content/70 uppercase tracking-wider">
+                      <th style="width: 10px">#</th>
+                      <th>Tanggal Cuti</th>
+                      <th>Tipe Cuti</th>
+                      <th>Jumlah</th>
+                      <th>Alasan Cuti</th>
+                      <th>Status</th>
+                      <th>Tanggal Persetujuan</th>
+                      <th>Nama Atasan</th>
+                      <th>Keterangan</th>
+                      <th>Tindakan</th>
+                      <th>Lampiran</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-sm">
+                    <!-- Baris data diisi dinamis via JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+        <aside>
+          <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+        </aside>
+      </footer>
+    </div>
+
+    <!-- Sidebar Utama -->
+    <%- include('template/sidebar'); %>
   </div>
-  <!-- ./wrapper -->
+
+  <!-- Footer Scripts -->
   <%- include('template/footer'); %>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="/asset/js/src/cuti1v6.min.js"></script>
-    <!-- <script src="/asset/js/cuti.js"></script> -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <!-- <script src="/asset/js/src/cuti1v6.min.js"></script> -->
+  <script src="/asset/js/cuti.js"></script>
 </body>
 
 </html>

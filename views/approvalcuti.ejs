@@ -1,73 +1,108 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 
 <head>
   <%- include('template/head'); %>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+  <meta name="description" content="Persetujuan Cuti Pegawai RSUD dr. Abdul Aziz Singkawang">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
-    <!-- Navbar -->
-    <%- include('template/navbar'); %>
-      <!-- /.navbar -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+  <!-- Wrapper Utama Drawer DaisyUI -->
+  <div class="drawer lg:drawer-open">
+    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+    
+    <!-- Konten Utama -->
+    <div class="drawer-content flex flex-col min-h-screen">
+      
+      <!-- Navbar -->
+      <%- include('template/navbar'); %>
 
-      <!-- Main Sidebar Container -->
-      <%- include('template/sidebar'); %>
+      <!-- Content Header -->
+      <header class="w-full p-4 md:p-6 pb-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">Persetujuan Cuti</h1>
+          </div>
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li class="font-semibold">Persetujuan Cuti</li>
+            </ul>
+          </div>
+        </div>
+      </header>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('template/content-header'); %>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section>
-              <div class="container-fluid">
-                <div class="card">
-                  <h5 class="card-header">Persetujuan Tahun : <input type="number" id="tahun" min="2023" max="2099"
-                      step="1" value="2026" />
-                  </h5>
-                  <div class="card-body">
-                    <div class="card-body table-responsive p-0">
-                      <figure>
-                        <figcaption>Daftar anggota yang mengajukan cuti</figcaption>
-                        <table id="tabelCuti" class="table table-bordered table-striped ">
-                          <thead>
-                            <tr class="">
-                              <th>#</th>
-                              <th>Nama</th>
-                              <th>Tanggal Cuti</th>
-                              <th>Tipe Cuti</th>
-                              <th>jumlah</th>
-                              <th>Alasan Cuti</th>
-                              <th>Alamat Selama Cuti</th>
-                              <th>Status</th>
-                              <th>Tanggal persetujuan</th>
-                              <th>Pratinjau</th>
-                              <th>Keterangan</th>
-                            </tr>
-                          </thead>
-                          <tbody></tbody>
-                        </table>
-                      </figure>
-                    </div>
-                  </div>
+      <!-- Main content -->
+      <main class="flex-1 p-4 md:p-6">
+        <div class="container mx-auto max-w-7xl space-y-6">
+          
+          <!-- Card Utama -->
+          <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
+            <div class="card-body p-5 md:p-6 space-y-4">
+              
+              <!-- Header / Filter Tahun -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-base-200">
+                <h2 class="card-title text-base md:text-lg font-bold text-base-content">
+                  <i class="fas fa-clipboard-check text-primary mr-2"></i> Daftar Anggota yang Mengajukan Cuti
+                </h2>
+                <div class="flex items-center gap-2">
+                  <label for="tahun" class="text-sm font-semibold text-base-content/70">Persetujuan Tahun:</label>
+                  <input type="number" id="tahun" min="2023" max="2099" step="1" value="2026" class="input input-bordered input-sm w-28 text-center font-semibold hover:border-primary focus:border-primary transition-colors" />
                 </div>
               </div>
-            </section>
-            <!-- /.content -->
+              
+              <!-- Table Container -->
+              <div class="overflow-x-auto w-full">
+                <table class="table table-zebra w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-base-200/60 text-xs font-bold text-base-content/70 uppercase tracking-wider">
+                      <th>#</th>
+                      <th>Nama</th>
+                      <th>Tanggal Cuti</th>
+                      <th>Tipe Cuti</th>
+                      <th>Jumlah</th>
+                      <th>Alasan Cuti</th>
+                      <th>Alamat Selama Cuti</th>
+                      <th>Status</th>
+                      <th>Tanggal Persetujuan</th>
+                      <th>Pratinjau</th>
+                      <th>Keterangan</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-sm">
+                    <!-- Baris data diisi secara dinamis via JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+
         </div>
-        <!-- /.content-wrapper -->
-        <footer class="main-footer"></footer>
+      </main>
+      
+      <!-- Footer -->
+      <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+        <aside>
+          <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+        </aside>
+      </footer>
+    </div>
+
+    <!-- Sidebar Utama -->
+    <%- include('template/sidebar'); %>
   </div>
-  <!-- ./wrapper -->
+
+  <!-- Modal Template DaisyUI Native (Menggantikan modal Bootstrap jika diperlukan, atau kompatibel dengan modalTemplate Anda) -->
   <%- include('modal/modalTemplate'); %>
+  
+  <!-- Footer Scripts -->
   <%- include('template/footer'); %>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="/asset/js/src/aprovementcuti_1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <script src="/asset/js/aprovementcuti.js"></script>
 </body>
 
 </html>

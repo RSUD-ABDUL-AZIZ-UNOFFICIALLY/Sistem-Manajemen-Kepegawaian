@@ -1,199 +1,182 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 
-  <head>
-    <%- include('../template/head'); %>
-  </head>
+<head>
+  <%- include('../template/head'); %>
+  <meta name="description" content="Dashboard Sebaran Pegawai RSUD dr. Abdul Aziz Singkawang">
+</head>
 
-  <body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
+<body class="bg-base-200 text-base-content font-sans antialiased">
+  <!-- Wrapper Utama Drawer DaisyUI -->
+  <div class="drawer lg:drawer-open">
+    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+    
+    <!-- Konten Utama -->
+    <div class="drawer-content flex flex-col min-h-screen">
+      
       <!-- Navbar -->
       <%- include('../template/navbar'); %>
-      <!-- /.navbar -->
 
-      <!-- Main Sidebar Container -->
-      <%- include('../template/sidebar'); %>
+      <!-- Content Header -->
+      <header class="w-full p-4 md:p-6 pb-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">Dashboard Kepegawaian</h1>
+            <p class="text-xs md:text-sm text-base-content/70 mt-1">Ringkasan statistik & statistik sebaran pegawai RSUD dr. Abdul Aziz.</p>
+          </div>
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li class="font-semibold">Sebaran Pegawai</li>
+            </ul>
+          </div>
+        </div>
+      </header>
 
-      <!-- Content Wrapper. Contains page content -->
-      <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <%- include('../template/content-header'); %>
-        <!-- /.content-header -->
-
-        <!-- Main content -->
-        <section class="content">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-lg-4 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                  <div class="inner">
-                    <h3 id="data_PNS">0</h3>
-
-                    <p>PNS</p>
-                  </div>
-                  <div class="icon">
-                    <i class="ion fa-regular fa-address-card"></i>
-                  </div>
-                  <a href="/kepegawaian/pns" class="small-box-footer">More info <i
-                      class="fas fa-arrow-circle-right"></i></a>
+      <!-- Main content -->
+      <main class="flex-1 p-4 md:p-6 space-y-6">
+        <div class="container mx-auto max-w-7xl space-y-6">
+          
+          <!-- Stat Cards Grid (PNS, PPPK, PPPKPW, Non ASN) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- PNS Card -->
+            <div class="card bg-base-100 shadow-xl border border-base-200 transition-all hover:shadow-md">
+              <div class="card-body p-5 flex flex-row items-center justify-between">
+                <div>
+                  <span class="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Pegawai PNS</span>
+                  <h3 id="data_PNS" class="text-3xl font-extrabold text-info mt-1">0</h3>
+                </div>
+                <div class="p-3 bg-info/10 text-info rounded-2xl">
+                  <i class="fa-regular fa-address-card text-3xl"></i>
                 </div>
               </div>
-              <!-- ./col -->
-              <div class="col-lg-4 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                  <div class="inner">
-                    <h3 id="data_PPPK">0</h3>
+              <a href="/kepegawaian/pns" class="px-5 py-2.5 bg-base-200/50 hover:bg-info hover:text-white transition-colors border-t border-base-200 text-xs font-semibold flex items-center justify-between">
+                <span>Lihat Detail</span>
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
 
-                    <p>PPPK</p>
-                  </div>
-                  <div class="icon">
-                    <i class="ion fa-regular fa-id-card"></i>
-                  </div>
-                  <a href="/kepegawaian/pppk" class="small-box-footer">More info <i
-                      class="fas fa-arrow-circle-right"></i></a>
+            <!-- PPPK Card -->
+            <div class="card bg-base-100 shadow-xl border border-base-200 transition-all hover:shadow-md">
+              <div class="card-body p-5 flex flex-row items-center justify-between">
+                <div>
+                  <span class="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Pegawai PPPK</span>
+                  <h3 id="data_PPPK" class="text-3xl font-extrabold text-success mt-1">0</h3>
+                </div>
+                <div class="p-3 bg-success/10 text-success rounded-2xl">
+                  <i class="fa-regular fa-id-card text-3xl"></i>
                 </div>
               </div>
-              <!-- ./col -->
-              <div class="col-lg-4 col-6">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                  <div class="inner">
-                    <h3 id="data_PPPKPW">0</h3>
+              <a href="/kepegawaian/pppk" class="px-5 py-2.5 bg-base-200/50 hover:bg-success hover:text-white transition-colors border-t border-base-200 text-xs font-semibold flex items-center justify-between">
+                <span>Lihat Detail</span>
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
 
-                    <p>PPPKPW</p>
-                  </div>
-                  <div class="icon">
-                    <i class="ion fa-regular fa-id-card"></i>
-                  </div>
-                  <a href="/kepegawaian/pppkpw" class="small-box-footer">More info <i
-                      class="fas fa-arrow-circle-right"></i></a>
+            <!-- PPPK PW Card -->
+            <div class="card bg-base-100 shadow-xl border border-base-200 transition-all hover:shadow-md">
+              <div class="card-body p-5 flex flex-row items-center justify-between">
+                <div>
+                  <span class="text-xs font-semibold text-base-content/60 uppercase tracking-wider">PPPK Paruh Waktu</span>
+                  <h3 id="data_PPPKPW" class="text-3xl font-extrabold text-error mt-1">0</h3>
+                </div>
+                <div class="p-3 bg-error/10 text-error rounded-2xl">
+                  <i class="fa-regular fa-id-card text-3xl"></i>
                 </div>
               </div>
-              <!-- ./col -->
-              <div class="col-lg-4 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
-                  <div class="inner">
-                    <h3 id="data_NASN">0</h3>
+              <a href="/kepegawaian/pppkpw" class="px-5 py-2.5 bg-base-200/50 hover:bg-error hover:text-white transition-colors border-t border-base-200 text-xs font-semibold flex items-center justify-between">
+                <span>Lihat Detail</span>
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
 
-                    <p>Non ASN</p>
-                  </div>
-                  <div class="icon">
-                    <i class="icon fa-regular fa-id-badge"></i>
-                  </div>
-                  <a href="/kepegawaian/non%20asn" class="small-box-footer">More info <i
-                      class="fas fa-arrow-circle-right"></i></a>
+            <!-- Non ASN Card -->
+            <div class="card bg-base-100 shadow-xl border border-base-200 transition-all hover:shadow-md">
+              <div class="card-body p-5 flex flex-row items-center justify-between">
+                <div>
+                  <span class="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Pegawai Non ASN</span>
+                  <h3 id="data_NASN" class="text-3xl font-extrabold text-warning mt-1">0</h3>
+                </div>
+                <div class="p-3 bg-warning/10 text-warning rounded-2xl">
+                  <i class="fa-regular fa-id-badge text-3xl"></i>
                 </div>
               </div>
-              <!-- ./col -->
+              <a href="/kepegawaian/non%20asn" class="px-5 py-2.5 bg-base-200/50 hover:bg-warning hover:text-white transition-colors border-t border-base-200 text-xs font-semibold flex items-center justify-between">
+                <span>Lihat Detail</span>
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+
+          </div>
+
+          <!-- Section Grafik Sebaran Pegawai (Bagian 1) -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body p-5 md:p-6">
+              <h2 class="card-title text-base md:text-lg font-bold text-base-content border-b border-base-200 pb-3 mb-4">
+                <i class="fas fa-chart-bar text-primary mr-2"></i> Grafik Sebaran Pegawai (Kelompok 1)
+              </h2>
+              <div class="w-full overflow-hidden">
+                <canvas id="barChart_pegawai_firstFourth" style="min-height: 250px; height: 250px; width: 100%;"></canvas>
+              </div>
             </div>
           </div>
-          <!-- /.container-fluid -->
-        </section>
-        <section class="container">
-          <div class="card card-success">
-            <div class="card-header">
-              <h3 class="card-title">Grafik Sebaran Pegawai</h3>
 
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool"
-                  data-card-widget="collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
+          <!-- Section Grafik Sebaran Pegawai (Bagian 2) -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body p-5 md:p-6">
+              <h2 class="card-title text-base md:text-lg font-bold text-base-content border-b border-base-200 pb-3 mb-4">
+                <i class="fas fa-chart-bar text-primary mr-2"></i> Grafik Sebaran Pegawai (Kelompok 2)
+              </h2>
+              <div class="w-full overflow-hidden">
+                <canvas id="barChart_pegawai_secondFourth" style="min-height: 250px; height: 250px; width: 100%;"></canvas>
               </div>
             </div>
-            <div class="card-body">
-              <div class="chart">
-                <canvas id="barChart_pegawai_firstFourth"
-                  style="min-height: 250px; height: 250px;"></canvas>
-              </div>
-            </div>
-            <!-- /.card-body -->
           </div>
-          <!-- /.card -->
-        </section>
-        <section class="container">
-          <div class="card card-success">
-            <div class="card-header">
-              <h3 class="card-title">Grafik Sebaran Pegawai</h3>
 
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool"
-                  data-card-widget="collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
+          <!-- Section Grafik Sebaran Pegawai (Bagian 3) -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body p-5 md:p-6">
+              <h2 class="card-title text-base md:text-lg font-bold text-base-content border-b border-base-200 pb-3 mb-4">
+                <i class="fas fa-chart-bar text-primary mr-2"></i> Grafik Sebaran Pegawai (Kelompok 3)
+              </h2>
+              <div class="w-full overflow-hidden">
+                <canvas id="barChart_pegawai_thirdFourth" style="min-height: 250px; height: 250px; width: 100%;"></canvas>
               </div>
             </div>
-            <div class="card-body">
-              <div class="chart">
-                <canvas id="barChart_pegawai_secondFourth"
-                  style="min-height: 250px; height: 250px;"></canvas>
-              </div>
-            </div>
-            <!-- /.card-body -->
           </div>
-          <!-- /.card -->
-        </section>
-        <section class="container">
-          <div class="card card-success">
-            <div class="card-header">
-              <h3 class="card-title">Grafik Sebaran Pegawai</h3>
 
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool"
-                  data-card-widget="collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
+          <!-- Section Grafik Sebaran Pegawai (Bagian 4) -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body p-5 md:p-6">
+              <h2 class="card-title text-base md:text-lg font-bold text-base-content border-b border-base-200 pb-3 mb-4">
+                <i class="fas fa-chart-bar text-primary mr-2"></i> Grafik Sebaran Pegawai (Kelompok 4)
+              </h2>
+              <div class="w-full overflow-hidden">
+                <canvas id="barChart_pegawai_fourthFourth" style="min-height: 250px; height: 250px; width: 100%;"></canvas>
               </div>
             </div>
-            <div class="card-body">
-              <div class="chart">
-                <canvas id="barChart_pegawai_thirdFourth"
-                  style="min-height: 250px; height: 250px;"></canvas>
-              </div>
-            </div>
-            <!-- /.card-body -->
           </div>
-          <!-- /.card -->
-        </section>
-        <section class="container">
-          <div class="card card-success">
-            <div class="card-header">
-              <h3 class="card-title">Grafik Sebaran Pegawai</h3>
 
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool"
-                  data-card-widget="collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="chart">
-                <canvas id="barChart_pegawai_fourthFourth"
-                  style="min-height: 250px; height: 250px;"></canvas>
-              </div>
-            </div>
-            <!-- /.card-body -->
-          </div>
-          <!-- /.card -->
-        </section>
+        </div>
+      </main>
 
-        <!-- /.content -->
-      </div>
-      <!-- /.content-wrapper -->
-      <footer class="main-footer"></footer>
+      <!-- Footer -->
+      <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+        <aside>
+          <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+        </aside>
+      </footer>
     </div>
-    <!-- ./wrapper -->
-    <%- include('../template/footer'); %>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
-    <script src="/asset/js/admin/pegawai.js"></script>
-    <scrip>
 
-    </scrip>
-  </body>
+    <!-- Sidebar Utama -->
+    <%- include('../template/sidebar'); %>
+  </div>
+
+  <!-- Footer Scripts -->
+  <%- include('../template/footer'); %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+  <script src="/asset/js/admin/pegawai.js"></script>
+</body>
 
 </html>

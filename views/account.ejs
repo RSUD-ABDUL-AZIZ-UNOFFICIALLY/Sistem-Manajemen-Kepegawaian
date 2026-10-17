@@ -1,97 +1,107 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="id" data-theme="light">
 <head>
-  <%- include('template/head'); %>
+    <%- include('template/head'); %>
+    <meta name="description" content="Manajemen Akun SIMRS dan Passkey Kepegawaian RSUD dr. Abdul Aziz Singkawang">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
+<body class="bg-base-200 text-base-content font-sans antialiased">
+    <!-- Wrapper Utama Drawer DaisyUI -->
+    <div class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+        
+        <!-- Konten Utama -->
+        <div class="drawer-content flex flex-col min-h-screen">
+            
+            <!-- Navbar -->
+            <%- include('template/navbar'); %>
 
-    <!-- Navbar -->
-    <%- include('template/navbar'); %>
-      <!-- /.navbar -->
-
-      <!-- Main Sidebar Container -->
-      <%- include('template/sidebar'); %>
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('template/content-header'); %>
-            <!-- /.content-header -->
+            <!-- Content Header -->
+            <header class="w-full p-4 md:p-6 pb-2">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight">Akun SIMRS & Passkey</h1>
+                    </div>
+                    <div class="breadcrumbs text-sm">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li class="font-semibold">Pengaturan Akun</li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
 
             <!-- Main content -->
-            <section class="content">
-              <div class="container-fluid">
-                <!-- Horizontal Form -->
-                <div class="card card-info">
-                  <div class="card-header">
-                    <h3 class="card-title">Akun pengguna SIMRS</h3>
-                  </div>
-                  <!-- /.card-header -->
-                  <!-- form start -->
-                  <form id="simrs" enctype="multipart/form-data">
-                    <div class="card-body">
-                      <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">User</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="simrs_User" name="simrs_User" disabled />
+            <main class="flex-1 p-4 md:p-6">
+                <!-- Membatasi lebar kontainer maksimal 4 agar rapi dan tidak terlalu lebar -->
+                <div class="container mx-auto max-w-4xl space-y-6">
+                    
+                    <!-- Card Akun Pengguna SIMRS -->
+                    <div class="card bg-base-100 shadow-xl border border-base-200">
+                        <div class="card-body">
+                            <h2 class="card-title text-primary border-b border-base-200 pb-3 mb-4">
+                                <i class="fas fa-user-shield mr-2"></i> Akun Pengguna SIMRS
+                            </h2>
+                            
+                            <!-- Form Start -->
+                            <form id="simrs" enctype="multipart/form-data" class="space-y-4">
+                                
+                                <!-- User -->
+                                <div class="form-control w-full">
+                                    <label class="label" for="simrs_User">
+                                        <span class="label-text font-semibold">User</span>
+                                    </label>
+                                    <input type="text" id="simrs_User" name="simrs_User" class="input input-bordered w-full bg-base-200/50 cursor-not-allowed" disabled />
+                                </div>
+                                
+                                <!-- Password -->
+                                <div class="form-control w-full">
+                                    <label class="label" for="simrs_Password">
+                                        <span class="label-text font-semibold">Password</span>
+                                    </label>
+                                    <input type="text" id="simrs_Password" name="simrs_Password" class="input input-bordered w-full bg-base-200/50 cursor-not-allowed" disabled />
+                                </div>
+                                
+                                <p id="simrs_accoun" class="text-sm text-base-content/70 mt-2"></p>
+                                
+                            </form>
+                            <!-- Form End -->
                         </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="simrs_Password" name="simrs_Password" disabled />
+                    </div>
+
+                    <!-- Card Aktivasi Passkey -->
+                    <div class="card bg-base-100 shadow-xl border border-base-200">
+                        <div class="card-body">
+                            <h2 class="card-title text-primary border-b border-base-200 pb-3 mb-4">
+                                <i class="fas fa-key mr-2"></i> Aktivasi Passkey
+                            </h2>
+                            
+                            <div id="boddy_passkey" class="space-y-4">
+                                <p class="text-success font-medium text-sm" id="passkey_accoun"></p>
+                                <div id="main_auth"></div>
+                            </div>
                         </div>
-                      </div>
-                      <p id="simrs_accoun">
-                      </p>
                     </div>
+
                 </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                </div>
-                <!-- /.card-footer -->
-                </form>
-              </div>
-              <!-- /.card -->
-            </section>
-            <section class="content">
-              <div class="container-fluid">
-                <!-- Horizontal Form -->
-                <div class="card card-info">
-                  <div class="card-header">
-                    <h3 class="card-title">AKTIVASI PASSKEY</h3>
-                  </div>
-                  <!-- /.card-header -->
-                  <!-- form start -->
-                    <div class="card-body" id="boddy_passkey">
-                      <p class="text-success" id="passkey_accoun"></p>
-                      <div id="main_auth"></div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                </div>
-                <!-- /.card-footer -->
-              </div>
-              <!-- /.card -->
-            </section>
+            </main>
+            
+            <!-- Footer -->
+            <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+                <aside>
+                    <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+                </aside>
+            </footer>
         </div>
-        <!-- /.container-fluid -->
-  </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
-  </footer>
 
-  </div>
-  <!-- ./wrapper -->
+        <!-- Sidebar Utama -->
+        <%- include('template/sidebar'); %>
+    </div>
 
-  <%- include('template/footer'); %>
+    <!-- Scripts -->
+    <%- include('template/footer'); %>
     <script src="/asset/js/simrs.js"></script>
     <script type="text/javascript" src="/asset/js/lib/qrcode.min.js"></script>
     <script src="/asset/js/passkey.js"></script>
 </body>
-
 </html>

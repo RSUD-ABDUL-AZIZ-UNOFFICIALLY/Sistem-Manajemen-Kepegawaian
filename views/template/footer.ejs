@@ -1,27 +1,30 @@
-<!-- Jquery -->
+<!-- Jquery (Dibutuhkan untuk plugin Select2) -->
 <script src="/asset/js/lib/jquery-3.6.0.min.js"></script>
-<!-- tambahkan tautan script Bootstrap -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+
 <!-- SweetAlert2 JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.8/sweetalert2.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.7.3/browser/overlayscrollbars.browser.es6.min.js"></script>
+
+<!-- Modul Kustom Anda -->
 <script src="/asset/js/src/module/helper_3.min.js"></script>
-<!-- <script src="/asset/js/template/admin.min.js"></script> -->
-<!-- <script src="/asset/js/template/admin.js"></script> -->
 <script src="/asset/js/template/coding.min.js"></script>
-<script src="/asset/js/template/sidebar4.min.js"></script>
+
+<!-- Script Sidebar yang sudah di-refaktor menggunakan Vanilla JS -->
+<script src="/asset/js/template/sidebar.js"></script>
+
 <!-- Select2 -->
 <script src="/asset/js/select2.full.js"></script>
-<script>
-  //Initialize Select2 Elements
-    $('.select2').select2()
-</script>
-<!-- MDB -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>
+
+
+<!-- Analytics/Tracking -->
 <script src="https://count.spairum.my.id/repo/js/pages.min.js"></script>
+
+<!-- Service Worker Registration -->
 <script>
-"serviceWorker"in navigator&&window.addEventListener("load",(()=>{navigator.serviceWorker.register("/service-worker.js").then((e=>{console.log("Service Worker berhasil terdaftar:",e.scope)})).catch((e=>{console.log("Pendaftaran Service Worker gagal:",e)}))}));
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/service-worker.js")
+                .then(e => { console.log("Service Worker berhasil terdaftar:", e.scope); })
+                .catch(e => { console.log("Pendaftaran Service Worker gagal:", e); });
+        });
+    }
 </script>

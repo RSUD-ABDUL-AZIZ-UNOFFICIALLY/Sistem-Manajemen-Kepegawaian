@@ -1,349 +1,349 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="id" data-theme="light">
 <head>
-  <title>
-    Surat Cuti
-  </title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/asset/css/report/cutiRepot2.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Surat Cuti</title>
+  
+  <!-- Tailwind CSS & DaisyUI via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Konfigurasi Animasi & Print Styling -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(15px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @media print {
+      body { background-color: white !important; }
+      .print-no-shadow { box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
+      .print-hide { display: none !important; }
+      .table-print :where(th, td) { border: 1px solid #000 !important; color: #000 !important; }
+      .page-break-avoid { page-break-inside: avoid; }
+    }
+  </style>
+
   <script type="text/javascript" src="/asset/js/lib/qrcode.min.js"></script>
   <script type="text/javascript" src="/asset/js/lib/qr-code-styling.js"></script>
 </head>
 
-<body>
-  <div class="container">
+<body class="bg-base-200 min-h-screen p-4 sm:p-8 print:p-0 print:bg-white text-base-content antialiased">
 
-    <div class="content">
-      <div class="row">
-        <div class="col-4"></div>
-        <div class="col-4"></div>
-        <div class="col-4">
-          <pre class="title-surat">
-    Singkawang, <%= dataCuti.createdAt %>
-    Kepada
-Yth. Direktur RSUD dr. Abdul Aziz
-    di
-        Singkawang
-</pre>
-        </div>
+  <!-- Tombol Cetak (Floating / Sembunyi saat diprint) -->
+  <div class="max-w-4xl mx-auto mb-4 flex justify-end print-hide">
+    <button onclick="window.print()" class="btn btn-primary btn-sm sm:btn-md shadow-lg hover:scale-105 transition-transform">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+      </svg>
+      Cetak Surat Cuti
+    </button>
+  </div>
+
+  <!-- Container Utama -->
+  <div class="print-no-shadow max-w-4xl mx-auto bg-base-100 shadow-xl rounded-2xl p-6 sm:p-10 opacity-0 animate-fade-in-up print:rounded-none">
+
+    <!-- Header Surat / Tanggal & Tujuan -->
+    <div class="flex justify-end mb-6 text-sm sm:text-base">
+      <div class="text-right">
+        <p>Singkawang, <%= dataCuti.createdAt %></p>
+        <p class="mt-2 font-medium">Kepada</p>
+        <p>Yth. Direktur RSUD dr. Abdul Aziz</p>
+        <p>di</p>
+        <p class="pl-4">Singkawang</p>
+      </div>
+    </div>
+
+    <!-- Judul Formulir -->
+    <h1 class="text-base sm:text-lg font-bold text-center mb-6 uppercase tracking-wide border-b-2 border-base-300 pb-2">
+      Formulir Permintaan dan Pemberian Cuti
+    </h1>
+
+    <!-- Tabel-tabel Formulir -->
+    <div class="space-y-4 text-xs sm:text-sm">
+
+      <!-- I. DATA PEGAWAI -->
+      <div class="overflow-x-auto border border-base-300 rounded-lg print:border-black">
+        <table class="table table-xs sm:table-sm w-full table-print">
+          <tbody>
+            <tr class="bg-base-200 print:bg-gray-100 font-bold">
+              <td colspan="4">I. DATA PEGAWAI</td>
+            </tr>
+            <tr>
+              <td class="w-1/6 font-semibold">Nama</td>
+              <td class="w-2/6"><%= dataCuti.user.nama %></td>
+              <td class="w-1/6 font-semibold">NIP</td>
+              <td class="w-2/6"><%= dataCuti.user.nip %></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Jabatan</td>
+              <td><%= dataCuti.user.jab %></td>
+              <td class="font-semibold">Masa Kerja</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Unit Kerja</td>
+              <td colspan="3"><%= dataCuti.user.departemen.bidang %></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <p class="text-center title">FORMULIR PERMINTAAN DAN PEMBERIAN CUTI</p>
-      <table class="table table-bordered border-black">
-        <tbody>
-          <tr>
-            <th scope="col" colspan="4">I. DATA PEGAWAI</th>
-          </tr>
-          <tr>
-            <th scope="col" style="width: 15%;">Nama</th>
-            <td>
-              <%= dataCuti.user.nama %>
-            </td>
-            <th scope="col" style="width: 15%;">NIP</th>
-            <td>
-              <%= dataCuti.user.nip %>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col" style="width: 15%;">Jabatan</th>
-            <td>
-              <%= dataCuti.user.jab %>
-            </td>
-            <th scope="col" style="width: 15%;">Masa Kerja</th>
-            <td>-</td>
-          </tr>
-          <tr>
-            <th scope="col" style="width: 15%;">Unit Kerja</th>
-            <td colspan="4">
-              <%= dataCuti.user.departemen.bidang %>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="table table-bordered border-black">
-        <tbody>
-          <tr>
-            <th scope="col" colspan="4">II. JENIS CUTI YANG DIAMBIL</th>
-          </tr>
-          <tr>
-            <th scope="col">Cuti Tahunan</th>
-            <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Tahunan" ) { %>
-              <td>√
-              </td>
-              <% } else { %>
-                <td>-</td>
-                <% } %>
-                  <th scope="col">Cuti Besar</th>
-                  <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Besar" ) { %>
-                    <td>√
-                    </td>
-                    <% } else { %>
-                      <td>-</td>
-                      <% } %>
-          </tr>
-          <tr>
-            <th scope="col">Cuti Sakit</th>
-            <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Sakit" ) { %>
-              <td>√
-              </td>
-              <% } else { %>
-                <td>-</td>
-                <% } %>
-                  <th scope="col">Cuti Melahirkan</th>
-                  <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Melahirkan" ) { %>
-                    <td>√
-                    </td>
-                    <% } else { %>
-                      <td>-</td>
-                      <% } %>
-          </tr>
-          <tr>
-            <th scope="col">Cuti Karena Alasan Penting</th>
-            <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Alasan Penting" ) { %>
-              <td>√
-              </td>
-              <% } else { %>
-                <td>-</td>
-                <% } %>
-                  <th scope="col">Cuti di Luar Tanggungan Negara</th>
-                  <% if (dataCuti.jenis_cuti.type_cuti=="Cuti Besar" ) { %>
-                    <td>√
-                    </td>
-                    <% } else { %>
-                      <td>-</td>
-                      <% } %>
-          </tr>
-        </tbody>
-      </table>
-      <table class="table table-bordered border-black">
-        <tbody>
-          <tr>
-            <th scope="col" colspan="4">III. ALASAN CUTI
-          </tr>
-          <tr>
-            <td>
-              <%= dataCuti.keterangan %>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="table table-bordered border-black">
-        <tbody>
-          <tr>
-            <th scope="col" colspan="6">IV. LAMANYA CUTI</th>
-          </tr>
-          <tr>
-            <th scope="col">Selama</th>
-            <td>
-              <%= dataCuti.jumlah %>
-            </td>
-            <th scope="col">Mulai Tanggal</th>
-            <td>
-              <%= dataCuti.mulai %>
-            </td>
-            <td>s/d</td>
-            <td>
-              <%= dataCuti.samapi %>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="table table-bordered border-black">
-        <tbody>
-          <tr>
-            <th scope="col" colspan="5">V. CATATAN CUTI</th>
-          </tr>
-          <tr>
-            <th scope="col" colspan="3">1. CUTI TAHUNAN</th>
-            <th scope="col">2. CUTI BESAR</th>
-            <td>
-              <%=CutiBesar %>
-            </td>
-          </tr>
-          <tr>
-            <td>Tahun</td>
-            <td>Sisa</td>
-            <td>keterangan</td>
-            <th scope="col">3. CUTI SAKIT</th>
-            <td>
-              <%=CutiSakit %>
-            </td>
-          </tr>
-          <tr>
-            <td>N-2</td>
-            <td>0</td>
-            <td>-</td>
-            <th scope="col">4. CUTI MELAHIRKAN</th>
-            <td>
-              <%=CutiMelahirkan %>
-            </td>
-          </tr>
-          <tr>
-            <td>N-1</td>
-            <td>0</td>
-            <td>-</td>
-            <th scope="col">5. CUTI KARENA ALASAN PENTING</th>
-            <td>
-              <%=CutiPenting %>
-            </td>
-          </tr>
-          <tr>
-            <td>N</td>
-            <td>
-              <%=Sisa_N %>
-            </td>
-            <td>Sisa Sebelumnya</td>
-            <th scope="col">6. CUTI DILUAR TANGGUNGAN NEGARA</th>
-            <td>0</td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="table table-bordered border-black">
-        <tbody>
-          <tr>
-            <th scope="col" colspan="3">VI. ALAMAT SELAMA MENJALANKAN CUTI</th>
-          </tr>
-          <tr>
-            <td>
-            </td>
-            <th scope="col" style="width: 10%;">Telp</th>
-            <td>
-              <%= dataCuti.user.wa %>
-            </td>
-          </tr>
-          <tr>
-            <td rowspan="1" class="text-center mt-auto">
-              <%= alamatCuti %>
-            </td>
-            <td colspan="2" class="text-center">
-              <p>Hormat Saya<br>
-              <div id="qrcodeUser"></div> <br>(<%= dataCuti.user.nama %>) <br>NIP. <%= dataCuti.user.nip %>
-                  </p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="table table-bordered border-black">
-        <tbody>
-          <tr>
-            <th scope="col" colspan="4">VII. PERTIMBANGAN ATASAN LANGSUNG</th>
+      <!-- II. JENIS CUTI YANG DIAMBIL -->
+      <div class="overflow-x-auto border border-base-300 rounded-lg print:border-black">
+        <table class="table table-xs sm:table-sm w-full table-print">
+          <tbody>
+            <tr class="bg-base-200 print:bg-gray-100 font-bold">
+              <td colspan="4">II. JENIS CUTI YANG DIAMBIL</td>
             </tr>
             <tr>
-              <th scope="col">
-                DISETUJUI
-              </th>
-              <th scope="col">
-                PERUBAHAN
-              </th>
-              <th scope="col">
-                DITANGGUHKAN
-              </th>
-              <th scope="col" class="text-center">
-                TIDAK DISETUJUI
-                </th>
+              <td class="w-2/6">1. Cuti Tahunan</td>
+              <td class="w-1/12 text-center font-bold"><%= dataCuti.jenis_cuti.type_cuti === "Cuti Tahunan" ? "√" : "-" %></td>
+              <td class="w-2/6">2. Cuti Besar</td>
+              <td class="w-1/12 text-center font-bold"><%= dataCuti.jenis_cuti.type_cuti === "Cuti Besar" ? "√" : "-" %></td>
             </tr>
             <tr>
-              <td class="text-center">
-                <!-- DISETUJUI -->
-                <% if (status==='DISETUJUI' ) { %>
-                  <%= dataCuti.approval.jabatan %> <br>
-                    <div id="qrcodeAtasan"></div> <br>
-                    <p style="text-decoration: underline;" class="mb-0">
-                      <%= dataCuti.approval.atasan.nama %>
-                    </p>NIP.<%= dataCuti.approval.atasan.nip %>
-                      </p>
-                      <% } else { %>
-                        <!-- Code to be executed if the condition is false -->
-                        <% } %>
-                          </td>
-                          <td class="text-center">
-                            <!-- PERUBAHAN -->
-                            <% if (status==='PERUBAHAN' ) { %>
-                              <%= dataCuti.approval.jabatan %> <br>
-                                <div id="qrcodeAtasan"></div> <br>
-                                <p style="text-decoration: underline;" class="mb-0">
-                                  <%= dataCuti.approval.atasan.nama %>
-                                </p>NIP.<%= dataCuti.approval.atasan.nip %>
-                                  </p>
-                                  <% } else { %>
-                                    <!-- Code to be executed if the condition is false -->
-                                    <% } %>
-                          </td>
-                          <td class="text-center">
-                            <!-- DITANGGUHKAN -->
-                          </td>
-                          <td class="text-center">
-                            <!-- TIDAK DISETUJUI -->
-                            <% if (status==='DITOLAK' ) { %>
-                              <%= dataCuti.approval.jabatan %> <br>
-                                <div id="qrcodeAtasan"></div> <br>
-                                <p style="text-decoration: underline;" class="mb-0">
-                                  <%= dataCuti.approval.atasan.nama %>
-                                </p>NIP.<%= dataCuti.approval.atasan.nip %>
-                                  </p>
-                                  <% } else { %>
-                                    <% } %>
-                          </td>
-                          </tr>
-                          </tbody>
-                          </table>
-                          <table class="table table-bordered border-black">
-                            <tbody>
-                              <tr>
-                                <th scope="col" colspan="4">VIII. KEPUTUSAN PEJABAT YANG BERWNANG MEMBERIKAN CUTI</th>
-                              </tr>
-                              <tr>
-                                <th scope="col">
-                                  DISETUJUI
-                                </th>
-                                <th scope="col">
-                                  PERUBAHAN
-                                </th>
-                                <th scope="col">
-                                  DITANGGUHKAN
-                                </th>
-                                <th scope="col" class="text-center">
-                                  TIDAK DISETUJUI
-                                </th>
-                              </tr>
-                              <tr>
-                                <td class="text-center">
-                                  <% if (status==='DISETUJUI' ) { %>
-                                    Direktur <br>
-                                    <div id="QRDirector"></div> <br>
-                                    <p style="text-decoration: underline;" class="mb-0">
-                                      dr. ALEXANDER, Sp.PD.
-                                    </p>NIP.197112192005021003
-                                    </p>
-                                    <% } else { %>
-                                      <!-- Code to be executed if the condition is false -->
-                                      <% } %>
-                                </td>
-                                <td class="text-center">
-                                  <p>
-                      
-                                  </p>
-                                </td>
-                                <td class="text-center">
-                                  <p>
-                      
-                                  </p>
-                                </td>
-                                <td class="text-center">
-                                  <p>
-              </p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <td>3. Cuti Sakit</td>
+              <td class="text-center font-bold"><%= dataCuti.jenis_cuti.type_cuti === "Cuti Sakit" ? "√" : "-" %></td>
+              <td>4. Cuti Melahirkan</td>
+              <td class="text-center font-bold"><%= dataCuti.jenis_cuti.type_cuti === "Cuti Melahirkan" ? "√" : "-" %></td>
+            </tr>
+            <tr>
+              <td>5. Cuti Karena Alasan Penting</td>
+              <td class="text-center font-bold"><%= dataCuti.jenis_cuti.type_cuti === "Cuti Alasan Penting" ? "√" : "-" %></td>
+              <td>6. Cuti di Luar Tanggungan Negara</td>
+              <td class="text-center font-bold"><%= dataCuti.jenis_cuti.type_cuti === "Cuti Diluar Tanggungan Negara" ? "√" : "-" %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- III. ALASAN CUTI -->
+      <div class="overflow-x-auto border border-base-300 rounded-lg print:border-black">
+        <table class="table table-xs sm:table-sm w-full table-print">
+          <tbody>
+            <tr class="bg-base-200 print:bg-gray-100 font-bold">
+              <td>III. ALASAN CUTI</td>
+            </tr>
+            <tr>
+              <td class="h-16 align-top py-3"><%= dataCuti.keterangan %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- IV. LAMANYA CUTI -->
+      <div class="overflow-x-auto border border-base-300 rounded-lg print:border-black">
+        <table class="table table-xs sm:table-sm w-full table-print">
+          <tbody>
+            <tr class="bg-base-200 print:bg-gray-100 font-bold">
+              <td colspan="6">IV. LAMANYA CUTI</td>
+            </tr>
+            <tr>
+              <td class="w-16 font-semibold">Selama</td>
+              <td class="font-medium"><%= dataCuti.jumlah %></td>
+              <td class="w-28 font-semibold">Mulai Tanggal</td>
+              <td><%= dataCuti.mulai %></td>
+              <td class="w-10 text-center">s/d</td>
+              <td><%= dataCuti.sampai %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- V. CATATAN CUTI -->
+      <div class="overflow-x-auto border border-base-300 rounded-lg print:border-black">
+        <table class="table table-xs sm:table-sm w-full table-print text-center">
+          <tbody>
+            <tr class="bg-base-200 print:bg-gray-100 font-bold text-left">
+              <td colspan="5">V. CATATAN CUTI</td>
+            </tr>
+            <tr class="font-bold">
+              <td colspan="3" class="text-left">1. CUTI TAHUNAN</td>
+              <td>2. CUTI BESAR</td>
+              <td><%= CutiBesar %></td>
+            </tr>
+            <tr class="font-semibold bg-base-100">
+              <td>Tahun</td>
+              <td>Sisa</td>
+              <td>Keterangan</td>
+              <td>3. CUTI SAKIT</td>
+              <td><%= CutiSakit %></td>
+            </tr>
+            <tr>
+              <td>N-2</td>
+              <td>0</td>
+              <td>-</td>
+              <td>4. CUTI MELAHIRKAN</td>
+              <td><%= CutiMelahirkan %></td>
+            </tr>
+            <tr>
+              <td>N-1</td>
+              <td>0</td>
+              <td>-</td>
+              <td>5. CUTI KARENA ALASAN PENTING</td>
+              <td><%= CutiPenting %></td>
+            </tr>
+            <tr>
+              <td>N</td>
+              <td><%= Sisa_N %></td>
+              <td>Sisa Sebelumnya</td>
+              <td>6. CUTI DILUAR TANGGUNGAN NEGARA</td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- VI. ALAMAT SELAMA MENJALANKAN CUTI -->
+      <div class="overflow-x-auto border border-base-300 rounded-lg print:border-black">
+        <table class="table table-xs sm:table-sm w-full table-print">
+          <tbody>
+            <tr class="bg-base-200 print:bg-gray-100 font-bold">
+              <td colspan="3">VI. ALAMAT SELAMA MENJALANKAN CUTI</td>
+            </tr>
+            <tr>
+              <td rowspan="2" class="align-top w-3/5">
+                <span class="block font-semibold mb-1">Alamat:</span>
+                <%= alamatCuti %>
+              </td>
+              <td class="font-semibold w-16">Telp / WA</td>
+              <td><%= dataCuti.user.wa %></td>
+            </tr>
+            <tr>
+              <td colspan="2" class="text-center pt-4 page-break-avoid">
+                <p class="font-medium">Hormat Saya,</p>
+                <div id="qrcodeUser" class="my-2 flex justify-center items-center h-20 w-20 mx-auto"></div>
+                <p class="font-bold underline mt-1"><%= dataCuti.user.nama %></p>
+                <p>NIP. <%= dataCuti.user.nip %></p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- VII. PERTIMBANGAN ATASAN LANGSUNG -->
+      <div class="overflow-x-auto border border-base-300 rounded-lg print:border-black page-break-avoid">
+        <table class="table table-xs sm:table-sm w-full table-print text-center">
+          <tbody>
+            <tr class="bg-base-200 print:bg-gray-100 font-bold text-left">
+              <td colspan="4">VII. PERTIMBANGAN ATASAN LANGSUNG</td>
+            </tr>
+            <tr class="font-semibold bg-base-100">
+              <td class="w-1/4">DISETUJUI</td>
+              <td class="w-1/4">PERUBAHAN</td>
+              <td class="w-1/4">DITANGGUHKAN</td>
+              <td class="w-1/4">TIDAK DISETUJUI</td>
+            </tr>
+            <tr class="align-top h-36">
+              <td>
+                <% if (status === 'DISETUJUI') { %>
+                  <p class="mb-1"><%= dataCuti.approval.jabatan %></p>
+                  <div id="qrcodeAtasan" class="my-2 flex justify-center items-center h-20 w-20 mx-auto"></div>
+                  <p class="font-bold underline mt-1"><%= dataCuti.approval.atasan.nama %></p>
+                  <p>NIP. <%= dataCuti.approval.atasan.nip %></p>
+                <% } %>
+              </td>
+              <td>
+                <% if (status === 'PERUBAHAN') { %>
+                  <p class="mb-1"><%= dataCuti.approval.jabatan %></p>
+                  <div id="qrcodeAtasan" class="my-2 flex justify-center items-center h-20 w-20 mx-auto"></div>
+                  <p class="font-bold underline mt-1"><%= dataCuti.approval.atasan.nama %></p>
+                  <p>NIP. <%= dataCuti.approval.atasan.nip %></p>
+                <% } %>
+              </td>
+              <td>
+                <% if (status === 'DITANGGUHKAN') { %>
+                  <p class="mb-1"><%= dataCuti.approval.jabatan %></p>
+                  <div id="qrcodeAtasan" class="my-2 flex justify-center items-center h-20 w-20 mx-auto"></div>
+                  <p class="font-bold underline mt-1"><%= dataCuti.approval.atasan.nama %></p>
+                  <p>NIP. <%= dataCuti.approval.atasan.nip %></p>
+                <% } %>
+              </td>
+              <td>
+                <% if (status === 'DITOLAK') { %>
+                  <p class="mb-1"><%= dataCuti.approval.jabatan %></p>
+                  <div id="qrcodeAtasan" class="my-2 flex justify-center items-center h-20 w-20 mx-auto"></div>
+                  <p class="font-bold underline mt-1"><%= dataCuti.approval.atasan.nama %></p>
+                  <p>NIP. <%= dataCuti.approval.atasan.nip %></p>
+                <% } %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- VIII. KEPUTUSAN PEJABAT YANG BERWENANG -->
+      <div class="overflow-x-auto border border-base-300 rounded-lg print:border-black page-break-avoid">
+        <table class="table table-xs sm:table-sm w-full table-print text-center">
+          <tbody>
+            <tr class="bg-base-200 print:bg-gray-100 font-bold text-left">
+              <td colspan="4">VIII. KEPUTUSAN PEJABAT YANG BERWENANG MEMBERIKAN CUTI</td>
+            </tr>
+            <tr class="font-semibold bg-base-100">
+              <td class="w-1/4">DISETUJUI</td>
+              <td class="w-1/4">PERUBAHAN</td>
+              <td class="w-1/4">DITANGGUHKAN</td>
+              <td class="w-1/4">TIDAK DISETUJUI</td>
+            </tr>
+            <tr class="align-top h-36">
+              <td>
+                <% if (status === 'DISETUJUI') { %>
+                  <p class="mb-1">Direktur</p>
+                  <div id="QRDirector" class="my-2 flex justify-center items-center h-20 w-20 mx-auto"></div>
+                  <p class="font-bold underline mt-1">dr. ALEXANDER, Sp.PD.</p>
+                  <p>NIP. 197112192005021003</p>
+                <% } %>
+              </td>
+              <td>
+                <% if (status === 'PERUBAHAN') { %>
+                  <p class="mb-1">Direktur</p>
+                  <div id="QRDirector" class="my-2 flex justify-center items-center h-20 w-20 mx-auto"></div>
+                  <p class="font-bold underline mt-1">dr. ALEXANDER, Sp.PD.</p>
+                  <p>NIP. 197112192005021003</p>
+                <% } %>
+              </td>
+              <td>
+                <% if (status === 'DITANGGUHKAN') { %>
+                  <p class="mb-1">Direktur</p>
+                  <div id="QRDirector" class="my-2 flex justify-center items-center h-20 w-20 mx-auto"></div>
+                  <p class="font-bold underline mt-1">dr. ALEXANDER, Sp.PD.</p>
+                  <p>NIP. 197112192005021003</p>
+                <% } %>
+              </td>
+              <td>
+                <% if (status === 'DITOLAK') { %>
+                  <p class="mb-1">Direktur</p>
+                  <div id="QRDirector" class="my-2 flex justify-center items-center h-20 w-20 mx-auto"></div>
+                  <p class="font-bold underline mt-1">dr. ALEXANDER, Sp.PD.</p>
+                  <p>NIP. 197112192005021003</p>
+                <% } %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
     </div>
-    <!-- Jquery -->
-    <script src="/asset/js/lib/jquery-3.6.0.min.js"></script>
-    <script src="/asset/js/src/module/helper_3.min.js"></script>
-    <script type="text/javascript" src="/asset/js/report/cutiRepot2.js"></script>
+  </div>
 
+  <!-- Jquery & Custom Helper Scripts -->
+  <script src="/asset/js/lib/jquery-3.6.0.min.js"></script>
+  <script src="/asset/js/src/module/helper_3.min.js"></script>
+  <script type="text/javascript" src="/asset/js/report/cutiRepot2.js"></script>
 </body>
-
 </html>

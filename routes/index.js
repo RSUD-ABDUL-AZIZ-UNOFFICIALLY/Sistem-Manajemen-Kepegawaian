@@ -14,6 +14,7 @@ const dokumen = require('../controllers/dokumen');
 
 
 router.get('/',middleware.checkLogin, controller.login);
+router.get('/test', middleware.login, controller.test);
 router.get('/daily', middleware.login, controller.daily);
 router.get('/monthly', middleware.login, controller.monthly);
 router.get('/approvement', middleware.login, controller.approvement);

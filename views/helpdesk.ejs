@@ -1,138 +1,180 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 
 <head>
   <%- include('template/head'); %>
-  <menu name="description" content="Pengajuan Bnatuan TI Pegawai RSUD dr. Abdul Aziz Singkawang">
+  <meta name="description" content="Pengajuan Bantuan TI Pegawai RSUD dr. Abdul Aziz Singkawang">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
-    <!-- Navbar -->
-    <%- include('template/navbar'); %>
-      <!-- /.navbar -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+  <!-- Wrapper Utama Drawer DaisyUI -->
+  <div class="drawer lg:drawer-open">
+    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+    
+    <!-- Konten Utama -->
+    <div class="drawer-content flex flex-col min-h-screen">
+      
+      <!-- Navbar -->
+      <%- include('template/navbar'); %>
 
-      <!-- Main Sidebar Container -->
-      <%- include('template/sidebar'); %>
+      <!-- Content Header -->
+      <header class="w-full p-4 md:p-6 pb-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">Dukungan & Bantuan TI</h1>
+          </div>
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li class="font-semibold">Helpdesk TI</li>
+            </ul>
+          </div>
+        </div>
+      </header>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('template/content-header'); %>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="p-4 md:p-6 bg-gray-50 min-h-screen">
-              <div class="max-w-6xl mx-auto space-y-6">
-                <!-- Form Section: Dukungan TI -->
-                <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                  <div class="bg-blue-400 text-white px-4 md:px-6 py-4">
-                    <h3 class="text-lg md:text-xl font-bold">Dukungan TI</h3>
-                  </div>
-                  
-                  <form id="lapor" class="p-4 md:p-6 space-y-5">
-                    <!-- Kendala Textarea -->
-                    <div>
-                      <label for="kendala" class="block text-sm font-semibold text-gray-700 mb-2">Rincian kendala atau masalah yang dihadapi</label>
-                      <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent bg-white text-gray-900 resize-vertical min-h-24" id="kendala" rows="3" placeholder="Contoh: 'Printer x macet'" required autocomplete="on"></textarea>
-                    </div>
-
-                    <!-- Departemen Select -->
-                    <div>
-                      <label for="departemen" class="block text-sm font-semibold text-gray-700 mb-2">Unit Kerja Saya</label>
-                      <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent bg-white text-gray-900" id="departemen">
-                        <option selected="selected" value='<%= user.dep%>'>
-                          <%= user.departemen.bidang%>
-                        </option>
-                        <% for(let i=0; i<departemen.length; i++) { %>
-                          <option value='<%= departemen[i].id %>'>
-                            <%= departemen[i].bidang %>
-                          </option>
-                          <% } %>
-                      </select>
-                    </div>
-
-                    <!-- Grup Tiket Select -->
-                    <div>
-                      <label for="grubtiket" class="block text-sm font-semibold text-gray-700 mb-2">Ditujukan Kepada</label>
-                      <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent bg-white text-gray-900" id="grubtiket" required>
-                        <option selected="selected" value="">Pilih tujuan</option>
-                        <% for(let i=0; i<addgrubtiket.length; i++) { %>
-                          <option value='<%= addgrubtiket[i].id %>'>
-                            <%= addgrubtiket[i].nama_grup %> - <%= addgrubtiket[i].nama_pj %>
-                          </option>
-                          <% } %>
-                      </select>
-                    </div>
-
-                    <!-- Topic Select -->
-                    <div>
-                      <label for="topic" class="block text-sm font-semibold text-gray-700 mb-2">Topik</label>
-                      <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent bg-white text-gray-900" id="topic">
-                        <option value="-">-</option>
-                        <option value="Printer">Printer</option>
-                        <option value="Komputer">Komputer</option>
-                        <option value="Internet">Internet</option>
-                        <option value="SIMRS">SIMRS</option>
-                        <option value="Aplikasi Lainnya">Aplikasi Lainnya</option>
-                        <option value="Lainnya">Lainnya</option>
-                      </select>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="flex justify-start">
-                      <button id="submit" type="submit" class="bg-blue-400 hover:bg-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 md:py-2 px-8 rounded-lg transition-colors duration-200">
-                        Kirim
-                      </button>
-                    </div>
-                  </form>
+      <!-- Main content -->
+      <main class="flex-1 p-4 md:p-6 space-y-6">
+        <div class="container mx-auto max-w-5xl space-y-6">
+          
+          <!-- Card Formulir Dukungan TI -->
+          <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body p-5 md:p-6">
+              <h2 class="card-title text-primary border-b border-base-200 pb-3 mb-4">
+                <i class="fas fa-headset mr-2"></i> Formulir Pengaduan Dukungan TI
+              </h2>
+              
+              <form id="lapor" class="space-y-4">
+                
+                <!-- Rincian Kendala -->
+                <div class="form-control w-full">
+                  <label class="label" for="kendala">
+                    <span class="label-text font-semibold">Rincian Kendala atau Masalah yang Dihadapi</span>
+                  </label>
+                  <textarea id="kendala" rows="3" class="textarea textarea-bordered h-28 w-full hover:border-primary focus:border-primary transition-colors" placeholder="Contoh: 'Printer RSUD-1 macet / tidak bisa mencetak'" required autocomplete="on"></textarea>
                 </div>
 
-                <!-- History Section: Riwayat Pengaduan -->
-                <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                  <div class="bg-green-400 text-white px-4 md:px-6 py-4">
-                    <h3 class="text-lg md:text-xl font-bold">Riwayat Pengaduan</h3>
-                  </div>
-                  
-                  <div class="p-4 md:p-6">
-                    <!-- Month Filter -->
-                    <div class="mb-6">
-                      <label for="riwayatDate" class="block text-sm font-semibold text-gray-700 mb-2">Filter Bulan</label>
-                      <input type="month" class="w-full md:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-transparent" id="riwayatDate" name="start" min="2023-03" />
-                    </div>
+                <!-- Unit Kerja -->
+                <div class="form-control w-full">
+                  <label class="label" for="departemen">
+                    <span class="label-text font-semibold">Unit Kerja Saya</span>
+                  </label>
+                  <select id="departemen" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors">
+                    <option selected value="<%= user.dep %>">
+                      <%= user.departemen.bidang %>
+                    </option>
+                    <% for(let i=0; i<departemen.length; i++) { %>
+                      <option value="<%= departemen[i].id %>">
+                        <%= departemen[i].bidang %>
+                      </option>
+                    <% } %>
+                  </select>
+                </div>
 
-                    <!-- Desktop Table View -->
-                    <div class="hidden md:block overflow-x-auto">
-                      <table class="w-full border-collapse">
-                        <thead>
-                          <tr class="bg-green-400 text-white">
-                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold w-12">#</th>
-                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold">Tanggal</th>
-                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold">No Tiket</th>
-                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold">Kendala</th>
-                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold">Topik</th>
-                            <th class="border border-gray-300 px-4 py-3 text-left text-sm font-semibold w-40">Aksi</th>
-                          </tr>
-                        </thead>
-                        <tbody id="table-desktop"></tbody>
-                      </table>
-                    </div>
+                <!-- Ditujukan Kepada (Grup Tiket) -->
+                <div class="form-control w-full">
+                  <label class="label" for="grubtiket">
+                    <span class="label-text font-semibold">Ditujukan Kepada</span>
+                  </label>
+                  <select id="grubtiket" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors" required>
+                    <option value="" disabled selected>Pilih Tujuan Support</option>
+                    <% for(let i=0; i<addgrubtiket.length; i++) { %>
+                      <option value="<%= addgrubtiket[i].id %>">
+                        <%= addgrubtiket[i].nama_grup %> - <%= addgrubtiket[i].nama_pj %>
+                      </option>
+                    <% } %>
+                  </select>
+                </div>
 
-                    <!-- Mobile Card View -->
-                    <div class="md:hidden space-y-3" id="cards-mobile"></div>
-                  </div>
+                <!-- Topik -->
+                <div class="form-control w-full">
+                  <label class="label" for="topic">
+                    <span class="label-text font-semibold">Topik Permasalahan</span>
+                  </label>
+                  <select id="topic" class="select select-bordered w-full hover:border-primary focus:border-primary transition-colors">
+                    <option value="-">- Pilih Topik -</option>
+                    <option value="Printer">Printer</option>
+                    <option value="Komputer">Komputer</option>
+                    <option value="Internet">Internet / Jaringan</option>
+                    <option value="SIMRS">SIMRS</option>
+                    <option value="Aplikasi Lainnya">Aplikasi Lainnya</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-start pt-4 border-t border-base-200">
+                  <button id="submit" type="submit" class="btn btn-primary w-full sm:w-auto gap-2">
+                    <i class="fas fa-paper-plane"></i> Kirim Laporan
+                  </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+          <!-- Card Riwayat Pengaduan -->
+          <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
+            <div class="card-body p-5 md:p-6 space-y-4">
+              
+              <!-- Header / Filter Bulan -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-base-200">
+                <h2 class="card-title text-base md:text-lg font-bold text-base-content">
+                  <i class="fas fa-history text-success mr-2"></i> Riwayat Pengaduan Saya
+                </h2>
+                <div class="flex items-center gap-2">
+                  <label for="riwayatDate" class="text-sm font-semibold text-base-content/70">Filter Bulan:</label>
+                  <input type="month" id="riwayatDate" name="start" min="2023-03" class="input input-bordered input-sm w-full sm:w-auto hover:border-primary focus:border-primary transition-colors" />
                 </div>
               </div>
-            </section>
-            <!-- /.content -->
+
+              <!-- Desktop Table View (md:up) -->
+              <div class="hidden md:block overflow-x-auto w-full">
+                <table class="table table-zebra w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-base-200/60 text-xs font-bold text-base-content/70 uppercase tracking-wider">
+                      <th style="width: 10px">#</th>
+                      <th>Tanggal</th>
+                      <th>No Tiket</th>
+                      <th>Kendala</th>
+                      <th>Topik</th>
+                      <th class="text-center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-desktop" class="text-sm">
+                    <!-- Ditampilkan via helpdesk.js -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Mobile Card View (sm:down) -->
+              <div id="cards-mobile" class="md:hidden space-y-3">
+                <!-- Ditampilkan via helpdesk.js -->
+              </div>
+
+            </div>
+          </div>
+
         </div>
-        <!-- /.content-wrapper -->
-        <footer class="main-footer"></footer>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+        <aside>
+          <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+        </aside>
+      </footer>
+    </div>
+
+    <!-- Sidebar Utama -->
+    <%- include('template/sidebar'); %>
   </div>
-  <!-- ./wrapper -->
+
+  <!-- Modal Status Helpdesk -->
   <%- include('modal/modalStatusHelp'); %>
+  
+  <!-- Footer Scripts -->
   <%- include('template/footer'); %>
-      <script src="/asset/js/helpdesk.js"></script>
+  <script src="/asset/js/helpdesk.js"></script>
 </body>
 
 </html>

@@ -1,78 +1,123 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 
 <head>
   <%- include('../template/head'); %>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+  <meta name="description" content="Manajemen Pengajuan Cuti Pegawai RSUD dr. Abdul Aziz Singkawang">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-  <div class="wrapper">
-    <!-- Navbar -->
-    <%- include('../template/navbar'); %>
-      <!-- /.navbar -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+  <!-- Wrapper Utama Drawer DaisyUI -->
+  <div class="drawer lg:drawer-open">
+    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+    
+    <!-- Konten Utama -->
+    <div class="drawer-content flex flex-col min-h-screen">
+      
+      <!-- Navbar -->
+      <%- include('../template/navbar'); %>
 
-      <!-- Main Sidebar Container -->
-      <%- include('../template/sidebar'); %>
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <%- include('../template/content-header'); %>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section>
-              <div class="container-fluid">
-                <div class="card">
-                  <h5 class="card-header">Periode Cuti Tahun : <input id="periodeTahun" type="number" min="2023"
-                      max="2099" step="1" value="2023" />
-                  </h5>
-                  <div class="card-body">
-                    <div class="card-body table-responsive p-0">
-                      <figure>
-                        <figcaption>Daftar pegawai mengajukan cuti</figcaption>
-                        <table id="tableCuti" class="table display table-striped table-bordered">
-                          <thead>
-                            <tr>
-                              <th style="width: 10px">#</th>
-                              <th>Tgl Pengajuan</th>
-                              <th>Nama pegawai</th>
-                              <th>Depertemen Pegawai</th>
-                              <th>Tipe cuti</th>
-                              <th>Tanggal cuti</th>
-                              <th>Jumlah cuti</th>
-                              <th>Sisa Cuti</th>
-                              <th>Alasan cuti</th>
-                              <th>Tanggal Disetujui</th>
-                              <th>Disetujui oleh</th>
-                              <th>Depertemen Atasan</th>
-                              <th>Catatan Atasan</th>
-                            </tr>
-                          </thead>
-                          <tbody></tbody>
-                        </table>
-                      </figure>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-            <!-- /.content -->
+      <!-- Content Header -->
+      <header class="w-full p-4 md:p-6 pb-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">Manajemen Cuti Pegawai</h1>
+          </div>
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li class="font-semibold">Daftar Cuti</li>
+            </ul>
+          </div>
         </div>
-        <!-- /.content-wrapper -->
-        <footer class="main-footer"></footer>
+      </header>
+
+      <!-- Main content -->
+  <main class="flex-1 p-4 md:p-6">
+    <div class="container mx-auto max-w-7xl space-y-6">
+      
+      <!-- Card Utama -->
+      <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
+        <div class="card-body p-5 md:p-6 space-y-4">
+          
+          <!-- Card Header / Filter & Pencarian -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-base-200">
+            <h2 class="card-title text-base md:text-lg font-bold text-base-content">
+              <i class="fas fa-calendar-alt text-primary mr-2"></i> Daftar Pegawai Mengajukan Cuti
+            </h2>
+            
+            <!-- Group Input Pencarian & Tahun -->
+            <div class="flex flex-wrap items-center gap-3">
+              <!-- Input Pencarian Berdasarkan Nama / Departemen -->
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-base-content/50">
+                  <i class="fas fa-search text-xs"></i>
+                </span>
+                <input id="searchUserDep" type="text" placeholder="Cari nama / departemen..." class="input input-bordered input-sm pl-8 w-56 md:w-64 hover:border-primary focus:border-primary transition-colors text-xs" />
+              </div>
+
+              <!-- Filter Tahun -->
+              <div class="flex items-center gap-2">
+                <label for="periodeTahun" class="text-sm font-semibold text-base-content/70">Periode:</label>
+                <input id="periodeTahun" type="number" min="2023" max="2099" step="1" value="2023" class="input input-bordered input-sm w-24 hover:border-primary focus:border-primary transition-colors text-center font-semibold" />
+              </div>
+            </div>
+          </div>
+          
+          <!-- Table Container -->
+          <div class="overflow-x-auto w-full">
+            <table id="tableCuti" class="table table-zebra w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-base-200/60 text-xs font-bold text-base-content/70 uppercase tracking-wider">
+                  <th style="width: 10px">#</th>
+                  <th>Tgl Pengajuan</th>
+                  <th>Nama Pegawai</th>
+                  <th>Departemen Pegawai</th>
+                  <th>Tipe Cuti</th>
+                  <th>Tanggal Cuti</th>
+                  <th>Jumlah Cuti</th>
+                  <th>Sisa Cuti</th>
+                  <th>Alasan Cuti</th>
+                  <th>Tanggal Disetujui</th>
+                  <th>Disetujui Oleh</th>
+                  <th>Departemen Atasan</th>
+                  <th>Catatan Atasan</th>
+                </tr>
+              </thead>
+              <tbody class="text-sm">
+                <!-- DataTables akan merender baris di sini secara dinamis -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+      <!-- Footer -->
+      <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+        <aside>
+          <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul Aziz</p>
+        </aside>
+      </footer>
+    </div>
+
+    <!-- Sidebar Utama -->
+    <%- include('../template/sidebar'); %>
   </div>
-  <!-- ./wrapper -->
-  <%- include('../modal/modalTemplate'); %>
-    <%- include('../template/footer'); %>
-      <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-      <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-      <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-      <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-      <script src="/asset/js/src/admin/admincuti_1.min.js"></script>
+
+  <!-- Modals & Scripts -->
+  <%- include('../template/footer'); %>
+  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <script src="/asset/js/admin/admincuti.js"></script>
 </body>
 
 </html>

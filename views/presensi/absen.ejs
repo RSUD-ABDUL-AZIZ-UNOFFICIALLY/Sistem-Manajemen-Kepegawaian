@@ -1,185 +1,177 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="id" data-theme="light">
 <head>
     <%- include('../template/head'); %>
-        <!-- fullCalendar -->
-        <link rel="stylesheet" href="/asset/css/presensi/absen.css">
-        <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.0.1/dist/face-api.min.js"></script>
-        <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
+    <!-- fullCalendar / Absen CSS -->
+    <link rel="stylesheet" href="/asset/css/presensi/absen.css">
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.0.1/dist/face-api.min.js"></script>
+    <style>
+        /* Membalik tampilan video/kamera untuk face recognition */
         video, canvas {
-              transform: scaleX(-1); /* Membalik tampilan secara horizontal */
-      -webkit-transform: scaleX(-1); /* Untuk browser dengan prefix */
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
             max-width: 100%;
             width: 640px;
             height: auto;
-            
         }
     </style>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        <!-- Navbar -->
-        <%- include('../template/navbar'); %>
-            <!-- /.navbar -->
+<body class="bg-base-200 text-base-content font-sans antialiased">
+    <!-- Wrapper Utama Drawer DaisyUI -->
+    <div class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+        
+        <!-- Konten Utama -->
+        <div class="drawer-content flex flex-col min-h-screen">
+            
+            <!-- Navbar -->
+            <%- include('../template/navbar'); %>
 
-            <!-- Main Sidebar Container -->
-            <%- include('../template/sidebar'); %>
+            <!-- Content Header -->
+            <header class="w-full p-4 md:p-6 pb-2">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-base-content">Presensi Harian</h1>
+                        <p class="text-sm text-base-content/70 mt-1">Lakukan absen masuk dan pulang dengan verifikasi lokasi & wajah.</p>
+                    </div>
+                    <div class="breadcrumbs text-sm">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li class="font-semibold">Presensi</li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
 
-                <!-- Content Wrapper. Contains page content -->
-                <div class="content-wrapper">
-                    <!-- Content Header (Page header) -->
-                    <%- include('../template/content-header'); %>
-                        <!-- /.content-header -->
+            <!-- Main content -->
+            <main class="flex-1 p-4 md:p-6 space-y-6">
+                
+                <!-- Section Utama: Panel Absen & Status -->
+                <section class="card bg-base-100 shadow-sm border border-base-200">
+                    <div class="card-body p-5 md:p-8">
+                        
+                        <!-- Header Tanggal & Jam Live -->
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-base-200 pb-4 mb-6">
+                            <h2 class="card-title text-xl text-primary">
+                                <i class="fas fa-fingerprint"></i> Panel Absensi Mandiri
+                            </h2>
+                            <div class="text-left sm:text-right mt-2 sm:mt-0">
+                                <span id="date" class="block font-semibold text-base-content/80 text-sm">--/--/----</span>
+                                <span id="time" class="font-mono font-bold text-lg text-primary">--:--:--</span>
+                            </div>
+                        </div>
 
-                        <!-- Main content -->
-                        <section class="content">
-                            <div class="container-fluid">
-                                <div class="card card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Presensi</h3>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body">
-
-                                        <div class="text-right">
-                                            <span id="date"></span>
-                                        </div>
-                                        <div class="text-right">
-                                            <span id="time"></span>
-                                        </div>
-                                        <div class="row d-md-flex justify-content-md-center justify-content-sm-end">
-                                            <div class="col-12 col-md-6">
-                                                <div class="info-status">
-                                                    <span class="d-block"><i
-                                                            class="fa-solid fa-location-dot mx-2"></i><span
-                                                            id="posisi"></span></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="info-status">
-                                                    <div class="lokasi">
-                                                        <span class="d-block"><i class="fa-solid fa-wifi mx-2"></i>
-                                                            <span id="wifi">-</span></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="info-status">
-                                                    <div class="lokasi">
-                                                        <span class="d-block"><i id="bateraiicon"
-                                                                class="fa-solid fa-battery-empty mx-2"></i>
-                                                            <span id="baterai">--</span> <i id="bateraichager"
-                                                                class="fa "></i></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="info-status">
-                                                    <div class="lokasi">
-                                                        <span class="d-block"><i
-                                                                class="fa-solid fa-house-medical-circle-check"></i>
-                                                            <span id="jns_shift">--</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- <p id="status"></p>
-                                    <a id="map-link" target="_blank"></a> -->
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card mx-5">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <button onclick="check('in')"  id="checkin" class="check-in">
-                                                            <div class="d-none d-md-block">
-                                                                <div class="icon">
-                                                                    <i class="fa-solid
-                                                                        fa-person-walking-dashed-line-arrow-right">
-                                                                    </i>
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <span class="check-text">ABSEN MASUK</span>
-                                                                <br>
-                                                                <span class="time-label" id="Timecheckin">07:35:07
-                                                                </span>
-                                                            </div>
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <button onclick="check('out')" id="checkout" class="check-out">
-                                                            <div class="d-none d-md-block">
-                                                                <div class="icon">
-                                                                    <i class="fa-solid fa-person-walking-luggage"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <span class="check-text">ABSEN PULANG</span>
-                                                                <br>
-                                                                <span class="time-label" id="Timecheckout">07:35:07
-                                                                </span>
-                                                            </div>
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
+                        <!-- Grid Status Device / Lokasi / Shift -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                            <div class="bg-base-200/50 p-4 rounded-xl border border-base-200 flex items-center gap-3">
+                                <i class="fa-solid fa-location-dot text-primary text-xl"></i>
+                                <div class="min-w-0">
+                                    <p class="text-xs text-base-content/60 font-medium">Posisi GPS</p>
+                                    <p class="text-sm font-semibold truncate" id="posisi">Mendeteksi...</p>
                                 </div>
-                                <div class="card card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Presensi</h3>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label>Periode</label>
-                                                    <input type="month" class="form-control" id="periode" name="periode">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-12">
-                                                   <div class="card-body" id="absensi-list">
-                                                </div> 
-                                            </div>
-                                        </div>
-                                    </div>
+                            </div>
+                            
+                            <div class="bg-base-200/50 p-4 rounded-xl border border-base-200 flex items-center gap-3">
+                                <i class="fa-solid fa-wifi text-info text-xl"></i>
+                                <div class="min-w-0">
+                                    <p class="text-xs text-base-content/60 font-medium">Jaringan WiFi</p>
+                                    <p class="text-sm font-semibold truncate" id="wifi">-</p>
                                 </div>
                             </div>
 
-                </div>
-    </div>
-    <!-- /.container-fluid -->
-    </section>
+                            <div class="bg-base-200/50 p-4 rounded-xl border border-base-200 flex items-center gap-3">
+                                <i id="bateraiicon" class="fa-solid fa-battery-empty text-success text-xl"></i>
+                                <div class="min-w-0">
+                                    <p class="text-xs text-base-content/60 font-medium">Baterai Perangkat</p>
+                                    <p class="text-sm font-semibold"><span id="baterai">--</span> <i id="bateraichager" class="fa"></i></p>
+                                </div>
+                            </div>
 
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-    <footer class="main-footer"></footer>
-    </div>
-    <!-- ./wrapper -->
-         <%- include('../modal/modalFaceReaction'); %>
-        <%- include('../template/footer'); %>
-            <!-- fullCalendar -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-            <!-- <script src="/asset/js/fullcalendar/absen.js"></script> -->
-            <script src="/asset/js/src/presensi/absen_6.min.js"></script>
-            <script src="/asset/js/fullcalendar/riwayat.js"></script>
-            <!-- <script src="/asset/js/fullcalendar/jadwal.js"></script> -->
-            <script src="/asset/js/src/presensi/jadwal_8.min.js"></script>
+                            <div class="bg-base-200/50 p-4 rounded-xl border border-base-200 flex items-center gap-3">
+                                <i class="fa-solid fa-house-medical-circle-check text-warning text-xl"></i>
+                                <div class="min-w-0">
+                                    <p class="text-xs text-base-content/60 font-medium">Shift Dinas</p>
+                                    <p class="text-sm font-semibold" id="jns_shift">--</p>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Tombol Aksi Absen Masuk & Pulang -->
+                        <div class="max-w-3xl mx-auto w-full">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                
+                                <!-- Tombol Check-In -->
+                                <button onclick="check('in')" id="checkin" class="btn btn-success text-white h-auto py-5 px-6 flex flex-col items-center justify-center gap-2 shadow-md hover:scale-[1.01] transition-all">
+                                    <div class="icon text-2xl hidden md:block">
+                                        <i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i>
+                                    </div>
+                                    <div class="text-center">
+                                        <span class="text-base font-bold tracking-wider block">ABSEN MASUK</span>
+                                        <span class="text-xs font-mono opacity-90" id="Timecheckin">--:--:--</span>
+                                    </div>
+                                </button>
+
+                                <!-- Tombol Check-Out -->
+                                <button onclick="check('out')" id="checkout" class="btn btn-error text-white h-auto py-5 px-6 flex flex-col items-center justify-center gap-2 shadow-md hover:scale-[1.01] transition-all">
+                                    <div class="icon text-2xl hidden md:block">
+                                        <i class="fa-solid fa-person-walking-luggage"></i>
+                                    </div>
+                                    <div class="text-center">
+                                        <span class="text-base font-bold tracking-wider block">ABSEN PULANG</span>
+                                        <span class="text-xs font-mono opacity-90" id="Timecheckout">--:--:--</span>
+                                    </div>
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Section: Riwayat Presensi Bulanan -->
+                <section class="card bg-base-100 shadow-sm border border-base-200">
+                    <div class="card-body p-5 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-base-200 pb-4 mb-4 gap-4">
+                            <h2 class="card-title text-xl text-primary">
+                                <i class="fas fa-history"></i> Riwayat Presensi Bulanan
+                            </h2>
+                            <div class="form-control w-full sm:w-auto">
+                                <input type="month" class="input input-bordered input-sm sm:input-md hover:border-primary focus:border-primary" id="periode" name="periode">
+                            </div>
+                        </div>
+                        
+                        <!-- Container List Riwayat -->
+                        <div id="absensi-list" class="space-y-3">
+                            <!-- Data dimuat via script riwayat.js -->
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+            
+            <!-- Footer -->
+            <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+                <aside>
+                    <p>Copyright © <%= new Date().getFullYear() %> - RSUD dr. Abdul Aziz</p>
+                </aside>
+            </footer>
+        </div>
+
+        <!-- Sidebar Utama -->
+        <%- include('../template/sidebar'); %>
+    </div>
+
+    <!-- Modals & Scripts -->
+    <%- include('../modal/modalFaceReaction'); %>
+    <%- include('../template/footer'); %>
+    
+    <!-- Dependencies & Custom Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    
+    <script src="/asset/js/src/presensi/absen_6.min.js"></script>
+    <script src="/asset/js/fullcalendar/riwayat.js"></script>
+    <script src="/asset/js/src/presensi/jadwal_8.min.js"></script>
 </body>
-
 </html>
