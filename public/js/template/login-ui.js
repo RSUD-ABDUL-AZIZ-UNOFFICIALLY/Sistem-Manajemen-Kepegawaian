@@ -3,7 +3,6 @@
   'use strict';
 
   const phoneInput = document.getElementById('phone');
-  const otpInput = document.getElementById('otp');
   const yearOutput = document.getElementById('currentYear');
   const installModal = document.getElementById('installModal');
   const openInstallModal = document.getElementById('openInstallModal');
