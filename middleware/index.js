@@ -220,6 +220,11 @@ module.exports = {
             token: newToken
         })
 
+    },
+    noCache: (req, res, next) => {
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        next();
+
     }
     // response: (req, res, data) => {
     //     console.log(data);

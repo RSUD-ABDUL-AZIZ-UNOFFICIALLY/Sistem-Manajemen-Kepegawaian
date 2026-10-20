@@ -18,14 +18,12 @@
   <link rel="manifest" href="/asset/js/manifest.json">
   <link rel="icon" type="image/x-icon" href="/asset/favicon.ico">
 
-  <!-- Pertahankan DaisyUI/Tailwind untuk kompatibilitas dengan aset halaman yang sudah ada. -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/asset/css/index.css">
+  <link rel="stylesheet" href="/asset/css/login.css">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.css">
-  <link rel="stylesheet" href="/asset/css/index.css">
-  <link rel="stylesheet" href="/asset/css/login.css">
+
 
   <title><%= title %></title>
 </head>
@@ -192,7 +190,7 @@
       <p>Tambahkan SIMPEG ke layar utama perangkat untuk membukanya seperti aplikasi dan mengaksesnya dengan lebih mudah.</p>
       <div class="install-dialog-actions">
         <button type="button" class="install-cancel" id="cancelInstall">Nanti saja</button>
-        <button type="button" id="installButton" class="install-confirm"><i class="fa-solid fa-download" aria-hidden="true"></i> Instal aplikasi</button>
+        <button type="button" class="install-confirm" id="installButton" ><i class="fa-solid fa-download" aria-hidden="true"></i> Instal aplikasi</button>
       </div>
     </div>
     <form method="dialog" class="install-backdrop"><button aria-label="Tutup dialog"></button></form>
@@ -204,10 +202,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"></script>
   <script src="/asset/js/src/module/helper_3.min.js"></script>
   <script src="/asset/js/template/loginbypass.min.js"></script>
-  <script src="/asset/js/template/install2.min.js"></script>
   <script src="/asset/js/template/login-ui.js"></script>
+  <script src="/asset/js/template/install2.min.js"></script>
 
   <script>
+      window.history.pushState(null, null, window.location.href);
+    window.history.back();
+    window.history.forward();
+
+    // Menjebak browser saat user mencoba menekan back
+    window.onpopstate = function () {
+        window.history.go(1);
+    };
+    
+    // Mencegah masalah cache pada browser tertentu
+    window.onunload = function () { null };
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
             navigator.serviceWorker.register("/service-worker.js")

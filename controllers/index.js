@@ -72,7 +72,7 @@ module.exports = {
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
     let data = {
-      title: "document   Pegawai | SIMPEG",
+      title: "document Pegawai | SIMPEG",
       page: "Document Pegawai",
       token: decoded,
       csrf: token

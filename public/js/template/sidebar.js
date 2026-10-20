@@ -10,19 +10,6 @@ async function profilepic() {
             if (data && data.data && data.data.url) {
                 sessionStorage.setItem("img", data.data.url);
                 document.getElementById("imgUser").src = data.data.url + "?w=500&h=500";
-
-                let fetchImg = await fetch(data.data.url + "?w=500&h=500");
-                let blob = await fetchImg.blob();
-
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onloadend = function () {
-                        sessionStorage.setItem("imgProfile", reader.result); // simpan base64
-                        console.log("✅ Gambar tersimpan di localStorage");
-                        resolve();
-                    };
-                    reader.readAsDataURL(blob);
-                });
             }
         } catch (err) {
             console.error("Fetch error:", err);
@@ -99,7 +86,6 @@ function menuAkses() {
     if (a[0].bos == 1) {
         if (ulCuti) ulCuti.insertAdjacentHTML("beforeend", '<li><a href="/aprovecuti" class="menu-link"><i class="fas fa-bed w-4 text-xs"></i> Persetujuan Cuti</a></li>');
         if (ulLaporan) ulLaporan.insertAdjacentHTML("beforeend", '<li><a href="/approvement" class="menu-link"><i class="fas fa-file-contract w-4 text-xs"></i> Persetujuan Laporan</a></li>');
-        if (ulAbsen) ulAbsen.insertAdjacentHTML("beforeend", '<li><a href="/presensi" class="menu-link"><i class="fa-solid fa-person-chalkboard w-4 text-xs"></i> Jadwal Absen</a></li>');
     }
 
     let t = a[1].menu;

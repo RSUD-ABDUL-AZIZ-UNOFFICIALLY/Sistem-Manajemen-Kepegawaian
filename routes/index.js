@@ -13,7 +13,7 @@ const presensi = require('../controllers/presensi');
 const dokumen = require('../controllers/dokumen');
 
 
-router.get('/',middleware.checkLogin, controller.login);
+router.get('/', middleware.checkLogin, middleware.noCache, controller.login);
 router.get('/test', middleware.login, controller.test);
 router.get('/daily', middleware.login, controller.daily);
 router.get('/monthly', middleware.login, controller.monthly);
