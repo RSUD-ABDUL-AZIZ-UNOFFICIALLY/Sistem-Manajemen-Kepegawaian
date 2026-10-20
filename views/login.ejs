@@ -208,8 +208,12 @@
   <script src="/asset/js/template/login-ui.js"></script>
 
   <script>
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({ action: 'clear-session-cache' });
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/service-worker.js")
+                .then(e => { console.log("Service Worker berhasil terdaftar:", e.scope); })
+                .catch(e => { console.log("Pendaftaran Service Worker gagal:", e); });
+        });
     }
   </script>
 </body>
