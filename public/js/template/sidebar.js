@@ -15,9 +15,10 @@ async function profilepic() {
             console.error("Fetch error:", err);
         }
     } else {
+        console.log(`${a}?w=500&h=500`);
         let dataURL = sessionStorage.getItem("imgProfile");
         if (!dataURL) {
-            document.getElementById("imgUser").src = a + "?w=500&h=500";
+            document.getElementById("imgUser").src = `${a}?w=500&h=500`;
         } else {
             document.getElementById("imgUser").src = dataURL;
         }
