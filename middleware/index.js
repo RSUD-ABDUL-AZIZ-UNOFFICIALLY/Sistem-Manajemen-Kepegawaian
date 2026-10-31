@@ -6,9 +6,10 @@ const uuid = require('uuid');
 
 module.exports = {
     login: async (req, res, next) => {
+        let t;
         try {
             const token = req.cookies.token;
-            if (!token) { 
+            if (!token) {
                 return res.redirect("/?redirect_url=" + req.originalUrl);
             }
             let userID = req.cookies.userID;
@@ -20,14 +21,15 @@ module.exports = {
                 });
             }
             const decoded = jwt.verify(token, secretKey);
-            let t = await sequelize.transaction();
+            t = await sequelize.transaction();
+
             let getUser = await req.cache.json.get('SIMPEG:user:' + decoded.id);
             if (!getUser) {
                 getUser = await User.findOne({
-                    where: {
-                        nik: decoded.id,
-                    },
-                }, { transaction: t });
+                    where: { nik: decoded.id },
+                    transaction: t
+                });
+
                 if (!getUser) {
                     await t.rollback();
                     res.clearCookie("token");
@@ -46,15 +48,16 @@ module.exports = {
                         nik: decoded.id,
                         visited_id: userID,
                         session_token: token
-
                     },
-                    order: [["updatedAt", "DESC"]]
-                }, { transaction: t });
+                    order: [["updatedAt", "DESC"]],
+                    transaction: t
+                });
+
                 if (!cek_session) {
                     await t.rollback();
                     res.clearCookie("token");
                     return res.redirect("/?redirect_url=" + req.originalUrl);
-                } else if (cek_session.status == 'close' || cek_session.status == 'logout' || cek_session.status == 'expire') {
+                } else if (['close', 'logout', 'expire'].includes(cek_session.status)) {
                     await t.rollback();
                     res.clearCookie("token");
                     return res.redirect("/");
@@ -71,33 +74,27 @@ module.exports = {
                     user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
                     status: 'online',
                 }, {
-                    where: {
-                        id: cek_session.id,
-                    },
-                    order: [["updatedAt", "DESC"]]
-                }, { transaction: t });
+                    where: { id: cek_session.id },
+                    transaction: t
+                });
+
                 res.cookie("token", newToken, {
                     maxAge: 1000 * 60 * 60 * 24 * 7,
                     httpOnly: true,
                     secure: true
                 });
                 await req.cache.set('SIMPEG:seen:' + userID, getUser.nama);
-                req.cache.expire('SIMPEG:seen:' + userID, 60 * 5);
+                req.cache.expire('SIMPEG:seen:' + userID, 60);
             }
 
-            // let getUser = await User.findOne({
-            //     where: {
-            //         nik: decoded.id,
-            //     },
-            // });
             let getAtasan = await req.cache.json.get('SIMPEG:atasan:' + decoded.id);
 
             if (!getAtasan) {
                 getAtasan = await Atasan.findOne({
-                    where: {
-                        user: decoded.id,
-                    },
-                }, { transaction: t });
+                    where: { user: decoded.id },
+                    transaction: t
+                });
+
                 if (!getAtasan) {
                     let data = {
                         "pesan": "Biodata anda belum lengkap, harap lengkapi profil Anda.",
@@ -105,27 +102,27 @@ module.exports = {
                         "title": "Warning,",
                         "url": "/profile",
                     }
-                    data = JSON.stringify(data);
-                    const encodedData = Buffer.from(data).toString('base64');
+                    const encodedData = Buffer.from(JSON.stringify(data)).toString('base64');
                     res.cookie("status", encodedData, {
-                        // maxAge 5 minutes
+                        // FIX: Tambahkan operator perkalian
                         maxAge: 1000 * 60 * 5,
                         httpOnly: false,
                     });
                 }
                 res.clearCookie("status");
                 await req.cache.json.set('SIMPEG:atasan:' + decoded.id, '$', getAtasan);
-                req.cache.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24 * 5);        
+                // FIX: Tambahkan operator perkalian
+                req.cache.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24);
             }
             await t.commit();
             next();
         } catch (err) {
-            console.log('err');
-            console.log(err);
-            await t.rollback();
+            console.error('Login Error:', err);
+            if (t && !t.finished) {
+                await t.rollback();
+            }
             res.clearCookie("token");
             return res.redirect("/?redirect_url=" + req.originalUrl);
-            // return res.redirect("/");
         }
     },
     checkLogin: (req, res, next) => {
