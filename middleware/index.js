@@ -45,22 +45,15 @@ module.exports = {
                     where: {
                         nik: decoded.id,
                         visited_id: userID,
+                        session_token: token
+
                     },
                     order: [["updatedAt", "DESC"]]
                 }, { transaction: t });
-                // console.log(cek_session);
                 if (!cek_session) {
-                    console.log('err');
-                    await Session.create({
-                        nik: decoded.id,
-                        session_token: token,
-                        ip_address: req.headers['x-real-ip'],
-                        visited_id: userID,
-                        user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
-                        status: "online"
-                    }, { transaction: t });
-                    await t.commit();
-                    next();
+                    await t.rollback();
+                    res.clearCookie("token");
+                    return res.redirect("/?redirect_url=" + req.originalUrl);
                 } else if (cek_session.status == 'close' || cek_session.status == 'logout' || cek_session.status == 'expire') {
                     await t.rollback();
                     res.clearCookie("token");
@@ -85,11 +78,11 @@ module.exports = {
                 }, { transaction: t });
                 res.cookie("token", newToken, {
                     maxAge: 1000 * 60 * 60 * 24 * 7,
-                    httpOnly: false,
+                    httpOnly: true,
                     secure: true
                 });
                 await req.cache.set('SIMPEG:seen:' + userID, getUser.nama);
-                req.cache.expire('SIMPEG:seen:' + userID, 60);
+                req.cache.expire('SIMPEG:seen:' + userID, 60 * 5);
             }
 
             // let getUser = await User.findOne({
@@ -129,8 +122,9 @@ module.exports = {
         } catch (err) {
             console.log('err');
             console.log(err);
-            // await t.rollback();
-            // res.clearCookie("token");
+            await t.rollback();
+            res.clearCookie("token");
+            return res.redirect("/?redirect_url=" + req.originalUrl);
             // return res.redirect("/");
         }
     },
@@ -141,11 +135,43 @@ module.exports = {
             if (decoded) {
                 return res.redirect("/daily");
             }
-
             next();
         } catch (err) {
             res.clearCookie("token");
             next();
+        }
+    },
+    checkToken: async (req, res, next) => {
+        try {
+            const token = req.cookies.token;
+            const decoded = jwt.verify(token, secretKey);
+            if (decoded) {
+                let getUser = await req.cache.json.get('SIMPEG:user:' + decoded.id);
+                if (!getUser) {
+                    getUser = await User.findOne({
+                        where: {
+                            nik: decoded.id,
+                        },
+                    }, { transaction: t });
+                    if (!getUser) {
+                        await t.rollback();
+                        res.clearCookie("token");
+                        return res.redirect("/?redirect_url=" + req.originalUrl);
+                    } else {
+                        await req.cache.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
+                        req.cache.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24);
+                        req.account = getUser;
+                    }
+                }
+                req.account = getUser;
+                next();
+            } else {
+                res.clearCookie("token");
+                return res.redirect("/");
+            }
+        } catch (err) {
+            res.clearCookie("token");
+            return res.redirect("/");
         }
     },
     logout: (req, res) => {
@@ -219,11 +245,6 @@ module.exports = {
         return res.json({
             token: newToken
         })
-
-    },
-    noCache: (req, res, next) => {
-        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-        next();
 
     }
     // response: (req, res, data) => {

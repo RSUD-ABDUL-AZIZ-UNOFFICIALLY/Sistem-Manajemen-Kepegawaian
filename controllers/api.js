@@ -204,7 +204,7 @@ module.exports = {
         // set cookie
         res.cookie("token", token, {
           maxAge: 1000 * 60 * 60 * 24 * 7,
-          httpOnly: false,
+          httpOnly: true,
           secure: true
         });
         await req.cache.set('SIMPEG:seen:' + token, user.nik);
@@ -320,14 +320,27 @@ module.exports = {
       console.log(sessions[0].user_agent.split('#')[1]);
       let userAgent = sessions[0].user_agent.split('#')[1]
       let dataSesi = [];
+      let userID = req.cookies.userID;
+      console.log(userID);
       for (let item of sessions) {
-        dataSesi.push({
-          ip_address: item.ip_address,
-          visited_id: item.visited_id,
-          user_agent: item.user_agent.split('#')[1],
-          createdAt: moment(item.createdAt).format('DD MMM YYYY, HH:mm'),
-          updateAt: moment(item.updatedAt, "YYYYMMDD").fromNow()
-        })
+        if (item.visited_id === userID) {
+          dataSesi.push({
+            ip_address: item.ip_address,
+            visited_id: item.visited_id,
+            user_agent: 'Anda',
+            createdAt: moment(item.createdAt).format('DD MMM YYYY, HH:mm'),
+            updateAt: moment(item.updatedAt, "YYYYMMDD").fromNow()
+          })
+        } else {
+          dataSesi.push({
+            ip_address: item.ip_address,
+            visited_id: item.visited_id,
+            user_agent: item.user_agent.split('#')[1],
+            createdAt: moment(item.createdAt).format('DD MMM YYYY, HH:mm'),
+            updateAt: moment(item.updatedAt, "YYYYMMDD").fromNow()
+          })
+        }
+
       }
       return res.status(200).json({
         error: false,
@@ -341,6 +354,22 @@ module.exports = {
         message: error.message,
       });
     }
+  },
+  closeSession: async (req, res) => {
+    let user = req.account;
+    let visited_id = req.params.id;
+    await Session.update({
+      status: 'close'
+    }, {
+      where: {
+        nik: user.nik,
+        visited_id: visited_id
+      }
+    })
+    return res.status(200).json({
+      error: false,
+      message: "success",
+    });
   },
   getUserSimrs: async (req, res) => {
     let token = req.cookies.token;
