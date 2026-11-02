@@ -147,7 +147,7 @@
         let InputActivities = document.getElementById("InputActivities");
         // Limit backdate to 31 days
         Tanggal.max = new Date().toISOString().split("T")[0];
-        Tanggal.min = new Date(new Date().setDate(new Date().getDate() - 31))
+        Tanggal.min = new Date(new Date().setDate(new Date().getDate() - 34))
             .toISOString()
             .split("T")[0];
     </script>
