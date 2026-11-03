@@ -29,23 +29,23 @@ if (!localStorage.getItem("visite")) {
 
 
 
-async function fetchData() {
-    try {
-        let dataSession = sessionStorage.getItem("session");
-        if (!dataSession) {
-            let response = await fetch('/api/session');
+// async function fetchData() {
+//     try {
+//         let dataSession = sessionStorage.getItem("session");
+//         if (!dataSession) {
+//             let response = await fetch('/api/session');
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            sessionStorage.setItem("session", "true");
-        }
+//             if (!response.ok) {
+//                 throw new Error(`HTTP error! Status: ${response.status}`);
+//             }
+//             sessionStorage.setItem("session", "true");
+//         }
 
 
-        console.log("Data berhasil diambil:", data);
-    } catch (error) {
-        console.error("Gagal mengambil data:", error.message);
-    }
-}
+//         console.log("Data berhasil diambil:", data);
+//     } catch (error) {
+//         console.error("Gagal mengambil data:", error.message);
+//     }
+// }
 
-fetchData();
+// fetchData();
