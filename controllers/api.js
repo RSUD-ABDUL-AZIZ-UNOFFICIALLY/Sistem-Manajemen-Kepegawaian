@@ -159,6 +159,15 @@ module.exports = {
   verifyOtp: async (req, res) => {
     let body = req.body;
     let t = await sequelize.transaction();
+    const userID = req.cookies.userID;
+    if (!userID) {
+      userID = uuid.v7();
+      console.log(userID);
+      res.cookie("userID", userID, {
+        httpOnly: true,
+        secure: true,
+      });
+    }
     let user = await User.findOne({
       where: {
         wa: body.phone,
@@ -204,20 +213,12 @@ module.exports = {
         // set cookie
         res.cookie("token", token, {
           maxAge: 1000 * 60 * 60 * 24 * 7,
-          httpOnly: true,
+          httpOnly: false,
           secure: true
         });
         await req.cache.set('SIMPEG:seen:' + token, user.nik);
         req.cache.expire('SIMPEG:seen:' + token, 90);
-        let userID = req.cookies.userID;
-        if (!userID) {
-          userID = uuid.v7();
-          console.log(userID);
-          res.cookie("userID", userID, {
-            httpOnly: true,
-            secure: true,
-          });
-        }
+
         await Session.create({
           nik: user.nik,
           session_token: token,
@@ -280,15 +281,6 @@ module.exports = {
     });
     await req.cache.set('SIMPEG:seen:' + token, user.nik);
     req.cache.expire('SIMPEG:seen:' + token, 90);
-    let userID = req.cookies.userID;
-    if (!userID) {
-      userID = uuid.v7();
-      console.log(userID);
-      res.cookie("userID", userID, {
-        httpOnly: true,
-        secure: true,
-      });
-    }
     await Session.create({
       nik: user.nik,
       session_token: token,

@@ -14,11 +14,13 @@ module.exports = {
             }
             let userID = req.cookies.userID;
             if (!userID) {
-                userID = uuid.v7();
-                res.cookie("userID", userID, {
-                    httpOnly: true,
-                    secure: true,
-                });
+                // userID = uuid.v7();
+                // res.cookie("userID", userID, {
+                //     httpOnly: true,
+                //     secure: true,
+                // });
+                res.clearCookie("token");
+                return res.redirect("/?redirect_url=" + req.originalUrl);
             }
             const decoded = jwt.verify(token, secretKey);
             t = await sequelize.transaction();
@@ -80,7 +82,7 @@ module.exports = {
 
                 res.cookie("token", newToken, {
                     maxAge: 1000 * 60 * 60 * 24 * 7,
-                    httpOnly: true,
+                    httpOnly: false,
                     secure: true
                 });
                 await req.cache.set('SIMPEG:seen:' + userID, getUser.nama);
