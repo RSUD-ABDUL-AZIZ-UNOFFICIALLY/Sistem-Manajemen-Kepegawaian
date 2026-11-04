@@ -159,7 +159,7 @@ module.exports = {
   verifyOtp: async (req, res) => {
     let body = req.body;
     let t = await sequelize.transaction();
-    const userID = req.cookies.userID;
+    let userID = req.cookies.userID;
     if (!userID) {
       userID = uuid.v7();
       console.log(userID);
