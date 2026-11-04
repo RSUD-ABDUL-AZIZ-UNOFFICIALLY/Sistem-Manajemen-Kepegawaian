@@ -196,19 +196,19 @@ module.exports = {
         return async (req, res, next) => {
             try {
                 const token = req.cookies.token;
+                const secretKey = process.env.JWT_SECRET_KEY;
+                const decoded = jwt.verify(token, secretKey);
                 if (!token) {
                     return res.redirect("/");
                 }
-                if (await req.cache.exists(`Token:Accesses:${token}`)) {
-                    let check = await req.cache.hExists(`Token:Accesses:${token}`, data);
+                if (await req.cache.exists(`Token:Accesses:${decoded.id}`)) {
+                    let check = await req.cache.hExists(`Token:Accesses:${decoded.id}`, data);
                     if (check) {
                         next();
                     } else {
                         return res.redirect("/");
                     }
                 } else {
-                    const secretKey = process.env.JWT_SECRET_KEY;
-                    const decoded = jwt.verify(token, secretKey);
                     let Accesses = await Access.findAll({
                         where: {
                             wa: decoded.wa,
@@ -217,9 +217,9 @@ module.exports = {
                     let hakAkses = [];
                     for (const element of Accesses) {
                         hakAkses.push(element.status);
-                        req.cache.hSet(`Token:Accesses:${token}`, element.status, 'true');
+                        req.cache.hSet(`Token:Accesses:${decoded.id}`, element.status, 'true');
                     }
-                    req.cache.expire(`Token:Accesses:${token}`, 60 * 60);
+                    req.cache.expire(`Token:Accesses:${decoded.id}`, 60 * 60);
                     let check = hakAkses.includes(data);
                     if (check) {
                         next();

@@ -114,8 +114,8 @@ router.get('/api/pegawai/status', middleware.checkToken, ajax.getPegawaiStatus);
 router.get('/api/pegawai/count', middleware.checkToken, ajax.getPegawaiCount);
 router.get('/api/pegawai/countDep', middleware.checkToken, ajax.getDepCount);
 router.get('/api/pegawai/gologan/:id', middleware.checkToken, ajax.getGologan);
-router.put('/api/pegawai/data', middleware.checkHakAkses('kepegawaian'), ajax.updateDataPegawai);
-router.post('/api/pegawai/tokenDoc', middleware.checkHakAkses('kepegawaian'), middleware.tokenGen);
+router.put('/api/pegawai/data', middleware.checkToken, middleware.checkHakAkses('kepegawaian'), ajax.updateDataPegawai);
+router.post('/api/pegawai/tokenDoc', middleware.checkToken, middleware.checkHakAkses('kepegawaian'), middleware.tokenGen);
 
 
 router.get('/api/report', middleware.checkToken, report.person);
