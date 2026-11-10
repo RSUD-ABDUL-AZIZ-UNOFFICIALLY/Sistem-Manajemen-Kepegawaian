@@ -157,37 +157,54 @@ function hitungTpp(persen) {
   }
 }
 function convertDataLembur(data) {
-  const grouped = {};
+  // 1. Urutkan data berdasarkan waktu secara ascending 
+  // agar pasangan masuk (4) dan pulang (5) terekam secara kronologis
+  const sortedData = [...data].sort((a, b) =>
+    new Date(a.checktime_wib) - new Date(b.checktime_wib)
+  );
 
-  data.forEach(entry => {
-    // 1. Ambil tanggal (YYYY-MM-DD) dari checktime_wib
+  const result = [];
+  const activeSessions = {}; // Melacak sesi 'masuk' yang belum ada 'pulang' per tanggal
+
+  sortedData.forEach(entry => {
     const [date, timePart] = entry.checktime_wib.split('T');
-    // 2. Ambil waktu (HH:mm:ss)
     const time = timePart.split('.')[0];
 
-    // 2. Inisialisasi grup tanggal bila belum ada
-    if (!grouped[date]) {
-      grouped[date] = {
+    if (entry.checktype === '4') {
+      // Lembur masuk: Buat sesi baru dan simpan referensinya
+      const session = {
         date,
-        lembur_masuk: null,
-        lokasi_masuk: null,
+        lembur_masuk: time,
+        lokasi_masuk: entry.Alias,
         lembur_pulang: null,
         lokasi_pulang: null,
       };
-    }
+      result.push(session);
+      activeSessions[date] = session;
 
-    // 3. Isi data masuk / pulang sesuai checktype
-    if (entry.checktype === '4') {          // lembur masuk
-      grouped[date].lembur_masuk = time;
-      grouped[date].lokasi_masuk = entry.Alias;
-    } else if (entry.checktype === '5') {   // lembur pulang
-      grouped[date].lembur_pulang = time;
-      grouped[date].lokasi_pulang = entry.Alias;
+    } else if (entry.checktype === '5') {
+      // Lembur pulang: Cari sesi 'masuk' terakhir di tanggal tersebut
+      const currentSession = activeSessions[date];
+
+      if (currentSession && !currentSession.lembur_pulang) {
+        // Pasangkan dengan sesi masuk yang masih terbuka
+        currentSession.lembur_pulang = time;
+        currentSession.lokasi_pulang = entry.Alias;
+        activeSessions[date] = null; // Sesi selesai, tutup referensi
+      } else {
+        // Edge case: Data anomali (pulang tanpa absen masuk sebelumnya)
+        result.push({
+          date,
+          lembur_masuk: null,
+          lokasi_masuk: null,
+          lembur_pulang: time,
+          lokasi_pulang: entry.Alias,
+        });
+      }
     }
   });
 
-  // 4. Kembalikan array (bukan objek map)
-  return Object.values(grouped);
+  return result;
 }
 
 module.exports = {
