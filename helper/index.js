@@ -156,6 +156,39 @@ function hitungTpp(persen) {
     return [0, 'WKE MINIMAL TIDAK TERPENUHI'];
   }
 }
+function convertDataLembur(data) {
+  const grouped = {};
+
+  data.forEach(entry => {
+    // 1. Ambil tanggal (YYYY-MM-DD) dari checktime_wib
+    const [date, timePart] = entry.checktime_wib.split('T');
+    // 2. Ambil waktu (HH:mm:ss)
+    const time = timePart.split('.')[0];
+
+    // 2. Inisialisasi grup tanggal bila belum ada
+    if (!grouped[date]) {
+      grouped[date] = {
+        date,
+        lembur_masuk: null,
+        lokasi_masuk: null,
+        lembur_pulang: null,
+        lokasi_pulang: null,
+      };
+    }
+
+    // 3. Isi data masuk / pulang sesuai checktype
+    if (entry.checktype === '4') {          // lembur masuk
+      grouped[date].lembur_masuk = time;
+      grouped[date].lokasi_masuk = entry.Alias;
+    } else if (entry.checktype === '5') {   // lembur pulang
+      grouped[date].lembur_pulang = time;
+      grouped[date].lokasi_pulang = entry.Alias;
+    }
+  });
+
+  // 4. Kembalikan array (bukan objek map)
+  return Object.values(grouped);
+}
 
 module.exports = {
     convertdate,
@@ -168,5 +201,6 @@ module.exports = {
   hitungCepatPulang,
   checkAttendance,
   checkPulang,
-  hitungTpp
+  hitungTpp,
+  convertDataLembur
 }

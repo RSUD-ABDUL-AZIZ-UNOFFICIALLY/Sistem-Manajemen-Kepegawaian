@@ -147,6 +147,7 @@ router.get('/api/presensi/riwayat', middleware.checkToken, presensi.riwayat);
 router.get('/api/presensi/recap', middleware.checkToken, presensi.recap);
 router.get('/api/presensi/recap/:nik', presensi.recapbyNik);
 router.get('/api/presensi/attendance', middleware.checkToken, presensi.attendance);
+router.get('/api/presensi/attendance/overtime', middleware.checkToken, presensi.overtime);
 router.get('/api/presensi/riwayat/:nik', presensi.riwayatByNik);
 router.post('/api/presensi/backdate/:nik', middleware.checkToken, middleware.checkHakAkses('adminAttendence'), presensi.backdate);
 

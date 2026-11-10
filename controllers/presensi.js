@@ -13,11 +13,13 @@ const {
     Cuti,
     Jns_cuti,
     Ledger_cuti,
+    Maps_Absen,
 } = require("../models");
 const { cekLocation } = require("../helper/casting");
 const { formatDateToLocalYMD, hitungMenitTerlambat, hitungCepatPulang, checkAttendance,
-    checkPulang, } = require("../helper");
+    checkPulang, convertDataLembur } = require("../helper");
 const { Op, literal } = require("sequelize");
+const axios = require("axios");
 // const { param } = require("../routes");
 function formatTimeShort(timeString) {
     if (typeof timeString === 'string' && timeString.length > 3) {
@@ -1382,4 +1384,38 @@ module.exports = {
             });
         }
     },
+    overtime: async (req, res) => {
+        try {
+            let { nik, periode } = req.query
+            let findBadgenumber = await Maps_Absen.findOne({
+                where: {
+                    nik: nik
+                },
+                attributes: ['id_finger']
+            })
+            let idFinger = findBadgenumber.id_finger
+
+            // let account = req.account
+            let config = {
+                method: 'get',
+                maxBodyLength: Infinity,
+                url: process.env.HOST_FIGER + '/absensi/lembur?month=' + periode + '&' + 'badgenumber=' + idFinger
+            };
+            let result = await axios(config)
+            let hasil = convertDataLembur(result.data)
+            return res.status(200).json({
+                error: false,
+                message: "Sukses",
+                periode: periode,
+                data: hasil
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                error: true,
+                message: "internal server error",
+                data: error,
+            });
+        }
+    }
 }

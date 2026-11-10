@@ -8,12 +8,14 @@ let periode = periodeElement.value = year + "-" + (month < 10 ? "0" + month : mo
 // console.log(year + "-" + (month < 10 ? "0" + month : month));
 getRiwayat(periode)
 recapAbsen(periode);
+getRiwayatLembur(periode);
 
 // Event listener untuk perubahan nilai pada elemen dengan id 'periode'
 document.getElementById("periode").addEventListener("change", function () {
     console.log(this.value);
     getRiwayat(this.value);
     recapAbsen(this.value);
+    getRiwayatLembur(this.value);
 });
 
 // Fungsi async untuk mengambil data riwayat
@@ -25,6 +27,28 @@ async function getRiwayat(date) {
         if (response.ok) {
             const data = await response.json();
             listRiwayat(data.data);
+        } else {
+            console.error("Error fetching data:", response.status);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+async function getRiwayatLembur(date) {
+    try {
+        let token = getCookie("token");
+        token = token.split('.')
+        let idData = atob(token[1]);
+        idData = JSON.parse(idData);
+        // console.log(idData)
+        let nik = idData.id
+        // console.log(nik);
+        const response = await fetch(`/api/presensi/attendance/overtime?periode=${date}&nik=${nik}`, {
+            method: "GET",
+        });
+        if (response.ok) {
+            const data = await response.json();
+            listRiwayatLembur(data.data);
         } else {
             console.error("Error fetching data:", response.status);
         }
@@ -87,6 +111,125 @@ function getStatusPulang(stt) {
         return `<p class="text-xs text-left text-red-600">${stt}</p>`;
     }
     return `<p class="text-xs text-left text-green-600">${stt ? stt : "-"}</p>`;
+}
+// 1. Fungsi Menghitung Durasi Lembur (Otomatis handle beda hari / lewat tengah malam)
+function hitungDurasi(masuk, pulang) {
+    if (!masuk || !pulang) return "Belum Selesai/Data Tidak Lengkap";
+
+    const [jamM, mntM, dtkM] = masuk.split(':').map(Number);
+    const [jamP, mntP, dtkP] = pulang.split(':').map(Number);
+
+    let totalDetikMasuk = (jamM * 3600) + (mntM * 60) + dtkM;
+    let totalDetikPulang = (jamP * 3600) + (mntP * 60) + dtkP;
+
+    // Jika jam pulang lebih kecil dari jam masuk, berarti pulang di hari berikutnya
+    if (totalDetikPulang < totalDetikMasuk) {
+        totalDetikPulang += 24 * 3600; // Tambah 24 jam (dalam detik)
+    }
+
+    let selisih = totalDetikPulang - totalDetikMasuk;
+
+    const jam = Math.floor(selisih / 3600);
+    const menit = Math.floor((selisih % 3600) / 60);
+    const detik = selisih % 60;
+
+    return `${jam} Jam ${menit} Menit ${detik} Detik`;
+}
+
+// 2. Fungsi Menggabungkan Data (Beda hari ditarik ke tanggal awal)
+function gabungkanDataLembur(rawData) {
+    // Sortir dari tanggal terlama ke terbaru agar mudah divalidasi ke hari berikutnya
+    let sorted = [...rawData].sort((a, b) => new Date(a.date) - new Date(b.date));
+    let result = [];
+
+    for (let i = 0; i < sorted.length; i++) {
+        let current = { ...sorted[i] };
+
+        // Cek jika masuk ada, tapi pulang null
+        if (current.lembur_masuk && !current.lembur_pulang) {
+            // Cek apakah data besoknya ada dan hanya berisi jam pulang
+            if (i + 1 < sorted.length) {
+                let next = sorted[i + 1];
+                let diffTime = new Date(next.date) - new Date(current.date);
+                let diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+                if (diffDays === 1 && !next.lembur_masuk && next.lembur_pulang) {
+                    current.lembur_pulang = next.lembur_pulang;
+                    current.lokasi_pulang = next.lokasi_pulang;
+                    // Skip data besoknya karena sudah digabung ke hari ini
+                    i++;
+                }
+            }
+        }
+
+        current.durasi = hitungDurasi(current.lembur_masuk, current.lembur_pulang);
+        result.push(current);
+    }
+
+    // Kembalikan urutan descending (terbaru di atas)
+    return result.reverse();
+}
+
+// 3. Render ke Template HTML
+function formatTanggal(dateString) {
+    return new Date(dateString).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+function listRiwayatLembur(data) {
+    const renderList = () => {
+        const dataBersih = gabungkanDataLembur(data);
+        const totalDurasi = hitungTotalLembur(dataBersih);
+        document.getElementById('totalDurasi_lembur').innerHTML = totalDurasi;
+        return dataBersih.map((d) => {
+            return `
+        <div class="bg-gray-50 p-4 rounded-lg shadow-sm mb-3 border border-gray-100">
+          <div class="flex justify-between items-center mb-2">
+             <span class="text-xs bg-blue-100 text-blue-700 font-medium px-2 py-0.5 rounded">Lembur</span>
+             <span class="text-xs font-semibold text-gray-700 bg-gray-200 px-2 py-0.5 rounded shadow-sm">⏱ ${d.durasi}</span>
+          </div>
+          <div class="mb-3 font-medium text-gray-700">${formatTanggal(d.date)}</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <p class="text-sm text-left text-gray-600">Masuk: <span class="font-medium text-gray-800">${d.lembur_masuk || "-"}</span></p>
+              <p class="text-xs text-left font-medium text-gray-600 mt-1">Lokasi: <span class="text-gray-800">${d.lokasi_masuk || "-"}</span></p>
+            </div>
+            <div>
+              <p class="text-sm text-left text-gray-600">Pulang: <span class="font-medium text-gray-800">${d.lembur_pulang || "-"}</span></p>
+              <p class="text-xs text-left font-medium text-gray-600 mt-1">Lokasi: <span class="text-gray-800">${d.lokasi_pulang || "-"}</span></p>
+            </div>
+          </div>
+        </div>
+        `;
+        }).join('');
+    };
+
+    // Insert ke container HTML
+    document.getElementById('listKehadiran_lembur').innerHTML = renderList();
+
+}
+function hitungTotalLembur(dataArray) {
+    let totalDetikKeseluruhan = 0;
+
+    dataArray.forEach(d => {
+        if (d.lembur_masuk && d.lembur_pulang) {
+            const [jamM, mntM, dtkM] = d.lembur_masuk.split(':').map(Number);
+            const [jamP, mntP, dtkP] = d.lembur_pulang.split(':').map(Number);
+
+            let totalDetikMasuk = (jamM * 3600) + (mntM * 60) + dtkM;
+            let totalDetikPulang = (jamP * 3600) + (mntP * 60) + dtkP;
+
+            if (totalDetikPulang < totalDetikMasuk) {
+                totalDetikPulang += 24 * 3600;
+            }
+
+            totalDetikKeseluruhan += (totalDetikPulang - totalDetikMasuk);
+        }
+    });
+
+    const jam = Math.floor(totalDetikKeseluruhan / 3600);
+    const menit = Math.floor((totalDetikKeseluruhan % 3600) / 60);
+    const detik = totalDetikKeseluruhan % 60;
+
+    return `${jam} Jam ${menit} Menit`;
 }
 
 async function recapAbsen(date) {
