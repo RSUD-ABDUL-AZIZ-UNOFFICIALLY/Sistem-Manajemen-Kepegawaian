@@ -164,7 +164,7 @@ module.exports = {
       userID = uuid.v7();
       console.log(userID);
       res.cookie("userID", userID, {
-        httpOnly: true,
+        httpOnly: false,
         secure: true,
       });
     }
