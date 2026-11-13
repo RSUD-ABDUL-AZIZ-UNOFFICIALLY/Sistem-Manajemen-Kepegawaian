@@ -19,7 +19,7 @@ module.exports = {
                 //     httpOnly: true,
                 //     secure: true,
                 // });
-                res.clearCookie("token");
+                // res.clearCookie("token");
                 return res.redirect("/?redirect_url=" + req.originalUrl);
             }
             const decoded = jwt.verify(token, secretKey);
@@ -80,11 +80,11 @@ module.exports = {
                     transaction: t
                 });
 
-                res.cookie("token", newToken, {
-                    maxAge: 1000 * 60 * 60 * 24 * 7,
-                    httpOnly: false,
-                    secure: true
-                });
+                // res.cookie("token", newToken, {
+                //     maxAge: 1000 * 60 * 60 * 24 * 7,
+                //     httpOnly: false,
+                //     secure: true
+                // });
                 await req.cache.set('SIMPEG:seen:' + userID, getUser.nama);
                 req.cache.expire('SIMPEG:seen:' + userID, 60);
             }
@@ -160,6 +160,7 @@ module.exports = {
                         await req.cache.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
                         req.cache.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24);
                         req.account = getUser;
+                        next();
                     }
                 }
                 req.account = getUser;
