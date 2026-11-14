@@ -225,7 +225,7 @@ module.exports = {
         });
 
         await req.cache.set('SIMPEG:seen:' + userID, user.nama);
-        req.cache.expire('SIMPEG:seen:' + userID, 90);
+        req.cache.expire('SIMPEG:seen:' + userID, 10);
 
         await Session.create({
           nik: user.nik,
@@ -288,7 +288,7 @@ module.exports = {
       secure: true
     });
     await req.cache.set('SIMPEG:seen:' + userID, user.nik);
-    req.cache.expire('SIMPEG:seen:' + userID, 90);
+    req.cache.expire('SIMPEG:seen:' + userID, 10);
     await Session.create({
       nik: user.nik,
       session_token: token,
