@@ -65,14 +65,14 @@ module.exports = {
                     res.clearCookie("token");
                     return res.redirect("/");
                 }
-                // let newToken = jwt.sign({
-                //     id: getUser.nik,
-                //     nama: getUser.nama,
-                //     wa: getUser.wa,
-                // }, secretKey, { expiresIn: 60 * 60 * 24 * 7 });
+                let newToken = jwt.sign({
+                    id: getUser.nik,
+                    nama: getUser.nama,
+                    wa: getUser.wa,
+                }, secretKey, { expiresIn: 60 * 60 * 24 * 7 });
 
                 await Session.update({
-                    // session_token: newToken,
+                    session_token: newToken,
                     ip_address: req.headers['x-real-ip'],
                     user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
                     status: 'online',
@@ -81,11 +81,11 @@ module.exports = {
                     transaction: t
                 });
 
-                // res.cookie("token", newToken, {
-                //     maxAge: 1000 * 60 * 60 * 24 * 7,
-                //     httpOnly: false,
-                //     secure: true
-                // });
+                res.cookie("token", newToken, {
+                    maxAge: 1000 * 60 * 60 * 24 * 7,
+                    httpOnly: false,
+                    secure: true
+                });
                 await req.cache.set('SIMPEG:seen:' + userID, getUser.nama);
                 req.cache.expire('SIMPEG:seen:' + userID, 60);
             }
@@ -118,7 +118,7 @@ module.exports = {
                 req.cache.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24);
             }
             await t.commit();
-            next();
+            return next();
         } catch (err) {
             console.error('Login Error:', err);
             if (t && !t.finished) {
@@ -131,27 +131,32 @@ module.exports = {
     checkLogin: async (req, res, next) => {
         try {
             const token = req.cookies.token;
+            if (!token) {
+                return next();
+            }
+            const userID = req.cookies.userID;
             const decoded = jwt.verify(token, secretKey);
             if (decoded) {
                 let cek_session = await Session.findOne({
                     where: {
                         nik: decoded.id,
-                        session_token: token
+                        session_token: token,
+                        visited_id: userID
                     },
-                    order: [["updatedAt", "DESC"]],
-                    transaction: t
+                    order: [["updatedAt", "DESC"]]
                 });
 
                 if (!cek_session) {
                     res.clearCookie("token");
-                    next();
+                    return next();
                 }
                 return res.redirect("/daily");
             }
-            next();
+            return next();
         } catch (err) {
+            console.error('Login Error:', err);
             res.clearCookie("token");
-            next();
+            return next();
         }
     },
     checkToken: async (req, res, next) => {
@@ -174,11 +179,11 @@ module.exports = {
                         await req.cache.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
                         req.cache.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24);
                         req.account = getUser;
-                        next();
+                        return next();
                     }
                 }
                 req.account = getUser;
-                next();
+                return next();
             } else {
                 res.clearCookie("token");
                 return res.redirect("/");
@@ -221,7 +226,7 @@ module.exports = {
                 if (await req.cache.exists(`Token:Accesses:${decoded.id}`)) {
                     let check = await req.cache.hExists(`Token:Accesses:${decoded.id}`, data);
                     if (check) {
-                        next();
+                        return next();
                     } else {
                         return res.redirect("/");
                     }
@@ -239,7 +244,7 @@ module.exports = {
                     req.cache.expire(`Token:Accesses:${decoded.id}`, 60 * 60);
                     let check = hakAkses.includes(data);
                     if (check) {
-                        next();
+                        return next();
                     } else {
                         return res.redirect("/");
                     }
