@@ -64,14 +64,14 @@ module.exports = {
                     res.clearCookie("token");
                     return res.redirect("/");
                 }
-                let newToken = jwt.sign({
-                    id: getUser.nik,
-                    nama: getUser.nama,
-                    wa: getUser.wa,
-                }, secretKey, { expiresIn: 60 * 60 * 24 * 7 });
+                // let newToken = jwt.sign({
+                //     id: getUser.nik,
+                //     nama: getUser.nama,
+                //     wa: getUser.wa,
+                // }, secretKey, { expiresIn: 60 * 60 * 24 * 7 });
 
                 await Session.update({
-                    session_token: newToken,
+                    // session_token: newToken,
                     ip_address: req.headers['x-real-ip'],
                     user_agent: req.headers['user-agent'] + '#' + req.headers['sec-ch-ua-platform'] + '#' + req.headers['sec-ch-ua'],
                     status: 'online',
