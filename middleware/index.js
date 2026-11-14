@@ -10,6 +10,7 @@ module.exports = {
         try {
             const token = req.cookies.token;
             if (!token) {
+                res.clearCookie("token");
                 return res.redirect("/?redirect_url=" + req.originalUrl);
             }
             let userID = req.cookies.userID;
