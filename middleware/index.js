@@ -135,6 +135,9 @@ module.exports = {
                 return next();
             }
             const userID = req.cookies.userID;
+            if (!userID) {
+                return next();
+            }
             const decoded = jwt.verify(token, secretKey);
             if (decoded) {
                 let cek_session = await Session.findOne({
@@ -198,6 +201,9 @@ module.exports = {
             const token = req.cookies.token;
             const decoded = jwt.verify(token, secretKey);
             let userID = req.cookies.userID;
+            if (!userID) {
+                return res.clearCookie("token").redirect("/");
+            }
             Session.update({
                 status: 'logout',
             }, {
