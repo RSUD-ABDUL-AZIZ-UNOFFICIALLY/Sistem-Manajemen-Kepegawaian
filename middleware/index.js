@@ -128,11 +128,24 @@ module.exports = {
             return res.redirect("/?redirect_url=" + req.originalUrl);
         }
     },
-    checkLogin: (req, res, next) => {
+    checkLogin: async (req, res, next) => {
         try {
             const token = req.cookies.token;
             const decoded = jwt.verify(token, secretKey);
             if (decoded) {
+                let cek_session = await Session.findOne({
+                    where: {
+                        nik: decoded.id,
+                        session_token: token
+                    },
+                    order: [["updatedAt", "DESC"]],
+                    transaction: t
+                });
+
+                if (!cek_session) {
+                    res.clearCookie("token");
+                    next();
+                }
                 return res.redirect("/daily");
             }
             next();
