@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { User, Atasan, Access, Session, sequelize } = require("../models");
 const { Buffer } = require('buffer');
 const secretKey = process.env.JWT_SECRET_KEY;
-const { validate, version } = require('uuid');
+
 
 module.exports = {
     login: async (req, res, next) => {
@@ -19,8 +19,6 @@ module.exports = {
                 res.clearCookie("token");
                 return res.redirect("/?redirect_url=" + req.originalUrl);
             }
-            console.log(validate(userID));
-            console.log(version(userID));
             const decoded = jwt.verify(token, secretKey);
             t = await sequelize.transaction();
 

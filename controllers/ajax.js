@@ -1824,6 +1824,7 @@ Lampiran   : ${urlLampiran}`
           {
             model: Cuti,
             as: "data_cuti",
+            attributes: ["mulai", "samapi", "jumlah", "keterangan", "createdAt", "updatedAt"],
             include: [
               {
                 model: Jns_cuti,
@@ -1837,30 +1838,28 @@ Lampiran   : ${urlLampiran}`
               },
             ],
           },
+          {
+            model: Cutialamat,
+            as: "cuti_alamat",
+            attributes: ["alamat"],
+            required: false
+          },
+          {
+            model: Cuti_lampiran,
+            as: "lampiran",
+            attributes: ["file"],
+            required: false
+          },
+          {
+            model: Ledger_cuti,
+            as: "ledger_cuti",
+            required: false,
+            attributes: ["sisa_cuti"]
+          },
         ],
         order: [["createdAt", "DESC"]]
       });
-      let id_cutis = data.map((item) => item.id_cuti);
-      let dataAlamat = await Cutialamat.findAll({
-        where: {
-          id_cuti: id_cutis,
-        },
-      });
-      let dataCuti = data.map((item) => {
-        let alamat = dataAlamat.find((alamat) => alamat.id_cuti == item.id_cuti);
-        return {
-          id: item.id,
-          id_cuti: item.id_cuti,
-          nik: item.nik,
-          departement: item.departement,
-          jabatan: item.jabatan,
-          status: item.status,
-          approve_date: item.approve_date,
-          keterangan: item.keterangan,
-          data_cuti: item.data_cuti,
-          alamat: alamat ? alamat.alamat : '-',
-        }
-      });
+
       if (data.length == 0) {
         return res.status(404).json({
           error: true,
@@ -1870,7 +1869,8 @@ Lampiran   : ${urlLampiran}`
       return res.status(200).json({
         error: false,
         message: "success",
-        data: dataCuti,
+        record: data.length,
+        data: data,
       });
     } catch (error) {
       return res.status(400).json({

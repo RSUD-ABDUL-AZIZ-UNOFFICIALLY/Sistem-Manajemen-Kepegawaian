@@ -5,11 +5,11 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch . app.js",
+    "dev": "node --env-file=.env --watch app.js",
     "start:prod": "NODE_ENV=poroduction node -r dotenv/config app.js dotenv_config_path=.env.prod",
     "build": "git pull && npm i",
-    "tail": "npx @tailwindcss/cli -i ./public/css/build.css -o ./public/css/index.css --watch",
-    "tailprod": "npx @tailwindcss/cli -i ./public/css/build.css -o ./public/css/index4.min.css --minify"
+    "tail": "npx @tailwindcss/cli -i ./public/css/build.css -o ./public/css/index6.css --watch",
+    "tailprod": "npx @tailwindcss/cli -i ./public/css/build.css -o ./public/css/index6.css --minify"
   },
   "keywords": [],
   "author": "",

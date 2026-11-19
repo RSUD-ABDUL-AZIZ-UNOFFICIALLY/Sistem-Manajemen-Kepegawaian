@@ -26,7 +26,7 @@
           </div>
           <div class="breadcrumbs text-sm">
             <ul>
-              <li><a href="/">Home</a></li>
+              <li><a href="/daily">Home</a></li>
               <li class="font-semibold">Formulir Cuti</li>
             </ul>
           </div>
@@ -123,46 +123,107 @@
           </div>
 
           <!-- Card Riwayat Cuti -->
-          <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
-            <div class="card-body p-5 md:p-6 space-y-4">
-              
-              <!-- Header / Filter Tahun -->
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-base-200">
-                <h2 class="card-title text-base md:text-lg font-bold text-base-content">
-                  <i class="fas fa-history text-primary mr-2"></i> Riwayat Pengajuan Cuti
-                </h2>
-                <div class="flex items-center gap-2">
-                  <label for="tahun" class="text-sm font-semibold text-base-content/70">Tahun:</label>
-                  <input type="number" id="tahun" min="2024" max="2099" step="1" value="2026" class="input input-bordered input-sm w-28 text-center font-semibold hover:border-primary focus:border-primary transition-colors" />
-                </div>
-              </div>
+      <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
+  <div class="card-body p-4 sm:p-5 md:p-6 space-y-4">
+    
+    <!-- Header & Toolbar Filter -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-base-200">
+      <div>
+        <h2 class="card-title text-base md:text-lg font-bold text-base-content">
+          <i class="fas fa-history text-primary mr-1"></i> Riwayat Pengajuan Cuti
+        </h2>
+        <p class="text-xs text-base-content/60 mt-0.5" id="infoJumlahRiwayat">Menampilkan 0 riwayat cuti</p>
+      </div>
 
-              <!-- Tabel Riwayat Cuti -->
-              <div class="overflow-x-auto w-full">
-                <table class="table table-zebra w-full text-left border-collapse">
-                  <thead>
-                    <tr class="bg-base-200/60 text-xs font-bold text-base-content/70 uppercase tracking-wider">
-                      <th style="width: 10px">#</th>
-                      <th>Tanggal Cuti</th>
-                      <th>Tipe Cuti</th>
-                      <th>Jumlah</th>
-                      <th>Alasan Cuti</th>
-                      <th>Status</th>
-                      <th>Tanggal Persetujuan</th>
-                      <th>Nama Atasan</th>
-                      <th>Keterangan</th>
-                      <th>Tindakan</th>
-                      <th>Lampiran</th>
-                    </tr>
-                  </thead>
-                  <tbody class="text-sm">
-                    <!-- Baris data diisi dinamis via JavaScript -->
-                  </tbody>
-                </table>
-              </div>
+      <!-- Kontrol Pencarian, Filter/Sort, & Tahun -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+        <!-- Pencarian Tipe / Alasan / Atasan -->
+        <label class="input input-bordered input-sm flex items-center gap-2 w-full sm:w-60 focus-within:border-primary">
+          <i class="fas fa-search text-base-content/50 text-xs"></i>
+          <input type="text" id="searchRiwayat" class="grow" placeholder="Cari tipe, alasan, atasan..." />
+          <button type="button" id="clearSearchRiwayat" class="hidden text-base-content/40 hover:text-base-content">
+            <i class="fas fa-times-circle text-xs"></i>
+          </button>
+        </label>
 
-            </div>
-          </div>
+        <!-- Sort Dropdown khusus Mobile -->
+        <select id="mobileSortRiwayat" class="select select-bordered select-sm lg:hidden w-full sm:w-auto">
+          <option value="default">Urutkan: Default</option>
+          <option value="mulai-desc">Tanggal Cuti (Terbaru)</option>
+          <option value="mulai-asc">Tanggal Cuti (Terlama)</option>
+          <option value="tipe-asc">Tipe Cuti (A - Z)</option>
+          <option value="status-asc">Status</option>
+        </select>
+
+        <!-- Filter Tahun -->
+        <div class="flex items-center justify-between sm:justify-start gap-2 bg-base-200/50 sm:bg-transparent px-3 py-1.5 sm:p-0 rounded-lg">
+          <label for="tahun" class="text-xs sm:text-sm font-semibold text-base-content/70 whitespace-nowrap">Tahun:</label>
+          <input type="number" id="tahun" min="2024" max="2099" step="1" value="2026" class="input input-bordered input-sm w-24 text-center font-semibold hover:border-primary focus:border-primary transition-colors" />
+        </div>
+      </div>
+    </div>
+
+    <!-- TAMPILAN DESKTOP: Sticky Header, Lebar Fix, Sortable -->
+    <div class="hidden lg:block max-h-[70vh] overflow-y-auto overflow-x-auto w-full rounded-lg border border-base-200 relative">
+      <table class="table table-zebra table-fixed w-full text-left border-collapse">
+        <thead class="sticky top-0 z-20 bg-base-200 shadow-sm">
+          <tr class="text-[11px] font-bold text-base-content/80 uppercase tracking-wider select-none">
+            <th class="w-10 text-center">#</th>
+            <th class="w-36 cursor-pointer hover:bg-base-300/60 transition-colors" onclick="sortRiwayat('mulai')">
+              <div class="flex items-center justify-between">
+                <span>Tanggal Cuti</span>
+                <i id="sort-icon-mulai" class="fas fa-sort text-base-content/30"></i>
+              </div>
+            </th>
+            <th class="w-28 cursor-pointer hover:bg-base-300/60 transition-colors" onclick="sortRiwayat('tipe')">
+              <div class="flex items-center justify-between">
+                <span>Tipe Cuti</span>
+                <i id="sort-icon-tipe" class="fas fa-sort text-base-content/30"></i>
+              </div>
+            </th>
+            <th class="w-16 text-center cursor-pointer hover:bg-base-300/60 transition-colors" onclick="sortRiwayat('jumlah')">
+              <div class="flex items-center justify-center gap-1">
+                <span>Hari</span>
+                <i id="sort-icon-jumlah" class="fas fa-sort text-base-content/30"></i>
+              </div>
+            </th>
+            <th class="w-36">Alasan Cuti</th>
+            <th class="w-24 text-center cursor-pointer hover:bg-base-300/60 transition-colors" onclick="sortRiwayat('status')">
+              <div class="flex items-center justify-center gap-1">
+                <span>Status</span>
+                <i id="sort-icon-status" class="fas fa-sort text-base-content/30"></i>
+              </div>
+            </th>
+            <th class="w-32 cursor-pointer hover:bg-base-300/60 transition-colors" onclick="sortRiwayat('approve')">
+              <div class="flex items-center justify-between">
+                <span>Tgl Approve</span>
+                <i id="sort-icon-approve" class="fas fa-sort text-base-content/30"></i>
+              </div>
+            </th>
+            <th class="w-36 cursor-pointer hover:bg-base-300/60 transition-colors" onclick="sortRiwayat('atasan')">
+              <div class="flex items-center justify-between">
+                <span>Nama Atasan</span>
+                <i id="sort-icon-atasan" class="fas fa-sort text-base-content/30"></i>
+              </div>
+            </th>
+            <th class="w-28">Keterangan</th>
+            <th class="w-36 text-center">Tindakan</th>
+            <th class="w-20 text-center">Lampiran</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyRiwayatCuti" class="text-xs">
+          <!-- Baris data desktop diisi dinamis via JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TAMPILAN MOBILE: Card List Responsif -->
+    <div id="mobileRiwayatContainer" class="block lg:hidden space-y-3">
+      <!-- Card data mobile diisi dinamis via JavaScript -->
+    </div>
+
+  </div>
+</div>
 
         </div>
       </main>

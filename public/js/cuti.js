@@ -131,94 +131,344 @@ function postCuti(a) {
         }
     });
 }
-
-async function getRiwayatCuti(a) {
-    return await $.ajax({
-        url: "/api/cuti/riwayat?tahun=" + a,
-        method: "GET",
-        success: function (a) {
-            parsingDataCuti(a.data);
-            return a.data;
-        },
-        error: function (a) { console.log(a); }
-    });
+let rawDataRiwayat = [];
+let sortRiwayatState = { key: null, direction: 'asc' };
+function showLoadingRiwayat() {
+    $("#tbodyRiwayatCuti").html(`
+        <tr>
+            <td colspan="11" class="py-10 text-center text-base-content/60">
+                <span class="loading loading-spinner loading-md text-primary mb-2"></span>
+                <p class="text-xs">Memuat riwayat pengajuan cuti...</p>
+            </td>
+        </tr>
+    `);
+    $("#mobileRiwayatContainer").html(`
+        <div class="py-10 text-center text-base-content/60">
+            <span class="loading loading-spinner loading-md text-primary mb-2"></span>
+            <p class="text-xs">Memuat riwayat pengajuan cuti...</p>
+        </div>
+    `);
 }
 
-function parsingDataCuti(a) {
-    $("tbody > tr").remove();
+async function getRiwayatCuti(tahun) {
+    showLoadingRiwayat();
+    try {
+        const response = await $.ajax({
+            url: "/api/cuti/riwayat?tahun=" + tahun,
+            method: "GET"
+        });
+        parsingDataCuti(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        rawDataRiwayat = [];
+        renderRiwayatData();
+    }
+}
 
-    if (!a || a.length === 0) {
-        $("tbody").append(`
+function parsingDataCuti(data) {
+    rawDataRiwayat = Array.isArray(data) ? [...data] : [];
+    renderRiwayatData();
+}
+
+
+function renderRiwayatData() {
+    const keyword = ($("#searchRiwayat").val() || "").toLowerCase().trim();
+
+    // 1. Filter berdasarkan tipe cuti, alasan, status, atau nama atasan
+    let filtered = rawDataRiwayat.filter(item => {
+        const tipe = (item.jenis_cuti?.type_cuti || "").toLowerCase();
+        const alasan = (item.keterangan || "").toLowerCase();
+        const atasan = (item.approval?.atasan?.nama || "").toLowerCase();
+        const status = (item.approval?.status || "").toLowerCase();
+        return tipe.includes(keyword) || alasan.includes(keyword) || atasan.includes(keyword) || status.includes(keyword);
+    });
+
+    // 2. Sorting data
+    if (sortRiwayatState.key) {
+        filtered.sort((a, b) => {
+            let valA = getSortRiwayatValue(a, sortRiwayatState.key);
+            let valB = getSortRiwayatValue(b, sortRiwayatState.key);
+
+            if (valA < valB) return sortRiwayatState.direction === 'asc' ? -1 : 1;
+            if (valA > valB) return sortRiwayatState.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    $("#infoJumlahRiwayat").text(`Menampilkan ${filtered.length} dari ${rawDataRiwayat.length} riwayat cuti`);
+
+    renderDesktopRiwayat(filtered);
+    renderMobileRiwayat(filtered);
+}
+
+function getSortRiwayatValue(item, key) {
+    switch (key) {
+        case 'mulai':
+            return item.mulai || "0000-00-00";
+        case 'tipe':
+            return (item.jenis_cuti?.type_cuti || "").toLowerCase();
+        case 'jumlah':
+            return Number(item.jumlah) || 0;
+        case 'status':
+            return (item.approval?.status || "").toLowerCase();
+        case 'approve':
+            return item.approval?.approve_date || "";
+        case 'atasan':
+            return (item.approval?.atasan?.nama || "").toLowerCase();
+        default:
+            return "";
+    }
+}
+
+function sortRiwayat(key) {
+    if (sortRiwayatState.key === key) {
+        sortRiwayatState.direction = sortRiwayatState.direction === 'asc' ? 'desc' : 'asc';
+    } else {
+        sortRiwayatState.key = key;
+        sortRiwayatState.direction = 'asc';
+    }
+    updateSortRiwayatIcons();
+    renderRiwayatData();
+}
+
+function updateSortRiwayatIcons() {
+    $("[id^='sort-icon-']").removeClass("fa-sort-up fa-sort-down text-primary").addClass("fa-sort text-base-content/30");
+    if (sortRiwayatState.key) {
+        const iconClass = sortRiwayatState.direction === 'asc' ? 'fa-sort-up' : 'fa-sort-down';
+        $(`#sort-icon-${sortRiwayatState.key}`).removeClass("fa-sort text-base-content/30").addClass(`${iconClass} text-primary`);
+    }
+}
+
+// Helper format data tanpa mengubah object asli (immutable)
+function formatItemRiwayat(t, index) {
+    const tglMulai = (!t.mulai || t.mulai === "0000-00-00")
+        ? "-"
+        : new Date(t.mulai).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+
+    const tglSampai = (!t.samapi || t.samapi === "0000-00-00")
+        ? "-"
+        : new Date(t.samapi).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+
+    const rentangTanggal = (tglMulai === tglSampai) ? tglMulai : `${tglMulai} - ${tglSampai}`;
+
+    const approval = t.approval || {};
+    let approveDateFormatted = "-";
+    if (approval.approve_date) {
+        const dApprove = new Date(approval.approve_date);
+        const r = dApprove.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+        const o = dApprove.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+        approveDateFormatted = `${r} ${o}`;
+    }
+
+    const status = approval.status || "-";
+    let badgeClass = "badge-ghost";
+    if (status === "Disetujui") badgeClass = "badge-success text-success-content";
+    else if (status === "Ditolak") badgeClass = "badge-error text-error-content";
+    else if (status === "Menunggu") badgeClass = "badge-warning text-warning-content";
+    else if (status === "Perubahan") badgeClass = "badge-info text-info-content";
+
+    return {
+        nomor: index + 1,
+        id: t.id,
+        rentangTanggal,
+        tipeCuti: t.jenis_cuti?.type_cuti || "-",
+        jumlah: t.jumlah ? `${t.jumlah} Hari` : "-",
+        alasan: t.keterangan || "-",
+        status,
+        badgeClass,
+        approveDateFormatted,
+        namaAtasan: approval.atasan?.nama || "-",
+        ketApproval: approval.keterangan || "-",
+        fileLampiran: t.lampiran?.file || null
+    };
+}
+
+// Render Tabel Desktop
+function renderDesktopRiwayat(data) {
+    const tbody = $("#tbodyRiwayatCuti");
+    tbody.empty();
+
+    if (!data || data.length === 0) {
+        tbody.append(`
             <tr>
-                <td colspan="11" class="py-8 text-center text-base-content/60">
+                <td colspan="11" class="py-10 text-center text-base-content/60">
+                    <i class="fas fa-folder-open text-2xl mb-2 block opacity-40"></i>
                     Tidak ada riwayat cuti yang ditemukan.
                 </td>
             </tr>
         `);
         return;
     }
+    function getTipeCutiBadge(tipeCuti) {
+        const normalized = (tipeCuti || "").toLowerCase().trim();
 
-    for (let t of a) {
-        let e, i, n = a.indexOf(t) + 1;
-        e = null == t.mulai || "0000-00-00" == t.mulai ? "-" : new Date(t.mulai).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
-        i = null == t.samapi || "0000-00-00" == t.samapi ? "-" : new Date(t.samapi).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
-
-        let r = new Date(t.approval.approve_date).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
-            o = new Date(t.approval.approve_date).toLocaleTimeString("id-ID");
-
-        null === t.approval.approve_date ? t.approval.approve_date = "-" : t.approval.approve_date = r + " " + o;
-        null === t.approval.atasan && (t.approval.atasan = { nama: "-" });
-
-        // Badge Status DaisyUI
-        let badgeClass = "badge-ghost";
-        if (t.approval.status === "Disetujui") badgeClass = "badge-success";
-        else if (t.approval.status === "Ditolak") badgeClass = "badge-error";
-        else if (t.approval.status === "Menunggu") badgeClass = "badge-warning";
-
-        let u = $("<tr>").addClass("hover");
-        u.append($("<td>" + n + "</td>").addClass("font-medium"));
-        u.append($("<td>" + e + " - " + i + "</td>"));
-        u.append($("<td><span class='badge badge-sm badge-outline badge-primary'>" + t.jenis_cuti.type_cuti + "</span></td>"));
-        u.append($("<td>" + t.jumlah + " hari</td>"));
-        u.append($("<td>" + t.keterangan + "</td>"));
-        u.append($("<td><span class='badge badge-sm " + badgeClass + "'>" + t.approval.status + "</span></td>"));
-        u.append($("<td>" + t.approval.approve_date + "</td>"));
-        u.append($("<td>" + t.approval.atasan.nama + "</td>"));
-        u.append($("<td>" + (t.approval.keterangan || "-") + "</td>").addClass("text-base-content/70"));
-
-        let actionTd = $("<td>").addClass("space-x-1 space-y-1");
-
-        let l = $("<button>");
-        l.addClass("btn btn-error btn-xs gap-1"),
-            l.attr("onclick", "deleteCuti(" + t.id + ")"),
-            l.html("<i class='fas fa-trash'></i> Batalkan");
-
-        let p = $("<button>");
-        p.addClass("btn btn-primary btn-xs gap-1"),
-            p.attr("onclick", "cetakSuratCuti(" + t.id + ")"),
-            p.html("<i class='fa-solid fa-envelope-open-text'></i> Cetak");
-
-        if ("Menunggu" == t.approval.status) {
-            actionTd.append(p, l);
-        } else if (["Disetujui", "Ditolak", "Perubahan"].includes(t.approval.status)) {
-            actionTd.append(p);
+        if (normalized.includes("sakit")) {
+            return `<span class="badge badge-sm badge-error badge-soft font-medium whitespace-nowrap">
+                    <i class="fa-solid fa-notes-medical mr-1 text-[10px]"></i>${tipeCuti}
+                </span>`;
         }
-        u.append(actionTd);
-
-        let lampiranTd = $("<td>");
-        if (null != t.lampiran) {
-            let lampBtn = $("<button>");
-            lampBtn.addClass("btn btn-info btn-xs gap-1 text-white"),
-                lampBtn.attr("onclick", "downloadLampiran('" + t.lampiran.file + "')"),
-                lampBtn.html("<i class='fa-solid fa-download'></i> File");
-            lampiranTd.append(lampBtn);
-        } else {
-            lampiranTd.text("-");
+        if (normalized.includes("tahunan")) {
+            return `<span class="badge badge-sm badge-primary badge-soft font-medium whitespace-nowrap">
+                    <i class="fa-solid fa-calendar-check mr-1 text-[10px]"></i>${tipeCuti}
+                </span>`;
         }
-        u.append(lampiranTd);
+        if (normalized.includes("melahirkan")) {
+            return `<span class="badge badge-sm badge-secondary badge-soft font-medium whitespace-nowrap">
+                    <i class="fa-solid fa-baby-carriage mr-1 text-[10px]"></i>${tipeCuti}
+                </span>`;
+        }
+        console.log(normalized);
+        if (normalized.includes("penting")) {
+            return `<span class="badge badge-sm badge-warning badge-soft font-medium whitespace-nowrap">
+                    <i class="fa-solid fa-circle-exclamation mr-1 text-[10px]"></i>${tipeCuti}
+                </span>`;
+        }
 
-        $("tbody").append(u);
+        return `<span class="badge badge-sm badge-info badge-soft font-medium whitespace-nowrap">
+                <i class="fa-solid fa-tag mr-1 text-[10px]"></i>${tipeCuti || "-"}
+            </span>`;
     }
+
+    data.forEach((item, index) => {
+        const d = formatItemRiwayat(item, index);
+        const tipeCutiHtml = getTipeCutiBadge(d.tipeCuti);
+
+        // Tombol Tindakan
+        let actionHtml = "-";
+        const btnCetak = `
+            <button type="button" class="btn btn-primary btn-xs gap-1" onclick="cetakSuratCuti(${d.id})" title="Cetak Surat Cuti">
+                <i class="fa-solid fa-envelope-open-text"></i> Cetak
+            </button>`;
+        const btnBatal = `
+            <button type="button" class="btn btn-error btn-xs gap-1" onclick="deleteCuti(${d.id})" title="Batalkan Pengajuan">
+                <i class="fas fa-trash"></i> Batal
+            </button>`;
+
+        if (d.status === "Menunggu") {
+            actionHtml = `<div class="flex items-center justify-center gap-1">${btnCetak}${btnBatal}</div>`;
+        } else if (["Disetujui", "Ditolak", "Perubahan"].includes(d.status)) {
+            actionHtml = btnCetak;
+        }
+
+        // Tombol Lampiran
+        const lampiranHtml = d.fileLampiran
+            ? `<button type="button" class="btn btn-info btn-xs gap-1 text-white" onclick="downloadLampiran('${d.fileLampiran}')" title="Unduh Lampiran">
+                   <i class="fa-solid fa-download"></i> File
+               </button>`
+            : `<span class="text-base-content/40">-</span>`;
+
+        tbody.append(`
+            <tr class="hover">
+                <td class="text-center font-medium text-base-content/60">${d.nomor}</td>
+                <td class="whitespace-nowrap text-[11px] font-medium">${d.rentangTanggal}</td>
+                <td class="whitespace-nowrap" title="${d.tipeCuti}">${tipeCutiHtml}</td>
+                <td class="text-center font-medium">${d.jumlah}</td>
+                <td class="truncate" title="${d.alasan}">${d.alasan}</td>
+                <td class="text-center"><span class="badge badge-xs ${d.badgeClass} font-semibold">${d.status}</span></td>
+                <td class="text-[11px] text-base-content/80">${d.approveDateFormatted}</td>
+                <td class="truncate font-medium text-base-content" title="${d.namaAtasan}">${d.namaAtasan}</td>
+                <td class="truncate text-base-content/70" title="${d.ketApproval}">${d.ketApproval}</td>
+                <td class="text-center">${actionHtml}</td>
+                <td class="text-center">${lampiranHtml}</td>
+            </tr>
+        `);
+    });
+}
+
+// Render Card Mobile
+function renderMobileRiwayat(data) {
+    const container = $("#mobileRiwayatContainer");
+    container.empty();
+
+    if (!data || data.length === 0) {
+        container.append(`
+            <div class="py-10 text-center text-base-content/60 bg-base-200/30 rounded-xl border border-dashed border-base-300">
+                <i class="fas fa-folder-open text-2xl mb-2 block opacity-40"></i>
+                Tidak ada riwayat cuti yang ditemukan.
+            </div>
+        `);
+        return;
+    }
+
+    data.forEach((item, index) => {
+        const d = formatItemRiwayat(item, index);
+
+        // Tombol Aksi Mobile
+        let mobileActions = [];
+        if (["Menunggu", "Disetujui", "Ditolak", "Perubahan"].includes(d.status)) {
+            mobileActions.push(`
+                <button type="button" class="btn btn-sm btn-primary flex-1 gap-1.5" onclick="cetakSuratCuti(${d.id})">
+                    <i class="fa-solid fa-envelope-open-text"></i> Cetak
+                </button>
+            `);
+        }
+        if (d.status === "Menunggu") {
+            mobileActions.push(`
+                <button type="button" class="btn btn-sm btn-outline btn-error gap-1.5" onclick="deleteCuti(${d.id})">
+                    <i class="fas fa-trash"></i> Batalkan
+                </button>
+            `);
+        }
+        if (d.fileLampiran) {
+            mobileActions.push(`
+                <button type="button" class="btn btn-sm btn-info text-white gap-1.5" onclick="downloadLampiran('${d.fileLampiran}')">
+                    <i class="fa-solid fa-download"></i> File
+                </button>
+            `);
+        }
+
+        container.append(`
+            <div class="card bg-base-100 border border-base-200 shadow-sm hover:shadow-md transition-shadow">
+                <div class="card-body p-4 space-y-3">
+                    <!-- Top: Nomor, Tipe Cuti & Status -->
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="badge badge-xs badge-ghost font-mono">#${d.nomor}</span>
+                            <span class="font-bold text-sm text-primary">${d.tipeCuti}</span>
+                            <span class="text-xs font-semibold text-base-content/70">(${d.jumlah})</span>
+                        </div>
+                        <span class="badge badge-sm ${d.badgeClass} font-semibold shrink-0">${d.status}</span>
+                    </div>
+
+                    <!-- Box Tanggal Cuti & Persetujuan -->
+                    <div class="bg-base-200/50 rounded-lg p-2.5 grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <span class="text-[11px] text-base-content/60 block">Tanggal Cuti</span>
+                            <span class="font-semibold text-base-content">${d.rentangTanggal}</span>
+                        </div>
+                        <div>
+                            <span class="text-[11px] text-base-content/60 block">Tgl Persetujuan</span>
+                            <span class="font-semibold text-base-content">${d.approveDateFormatted}</span>
+                        </div>
+                    </div>
+
+                    <!-- Detail Atasan, Alasan & Keterangan -->
+                    <div class="space-y-1.5 text-xs">
+                        <div class="flex items-start gap-2">
+                            <i class="fas fa-user-tie text-base-content/40 mt-0.5 w-3.5"></i>
+                            <p class="text-base-content/80 flex-1"><span class="font-semibold text-base-content">Atasan:</span> ${d.namaAtasan}</p>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fas fa-comment-alt text-base-content/40 mt-0.5 w-3.5"></i>
+                            <p class="text-base-content/80 flex-1"><span class="font-semibold text-base-content">Alasan:</span> ${d.alasan}</p>
+                        </div>
+                        ${d.ketApproval !== "-" ? `
+                        <div class="flex items-start gap-2">
+                            <i class="fas fa-info-circle text-base-content/40 mt-0.5 w-3.5"></i>
+                            <p class="text-base-content/80 flex-1"><span class="font-semibold text-base-content">Ket. Atasan:</span> ${d.ketApproval}</p>
+                        </div>` : ''}
+                    </div>
+
+                    <!-- Action Buttons -->
+                    ${mobileActions.length > 0 ? `
+                    <div class="pt-2 border-t border-base-200 flex items-center justify-between gap-2">
+                        ${mobileActions.join('')}
+                    </div>` : ''}
+                </div>
+            </div>
+        `);
+    });
 }
 
 $("#Cuti").submit(function (a) {
@@ -283,13 +533,41 @@ $("#Cuti").submit(function (a) {
 });
 
 $(document).ready(function () {
-    getRiwayatCuti($("#tahun").val());
+    $(document).ready(function () {
+        let tahun = $('#tahun').val();
+        getRiwayatCuti(tahun);
+
+        $('#tahun').on('change', function () {
+            getRiwayatCuti($(this).val());
+        });
+
+        // Pencarian Real-time
+        $("#searchRiwayat").on("input", function () {
+            const hasVal = $(this).val().length > 0;
+            $("#clearSearchRiwayat").toggleClass("hidden", !hasVal);
+            renderRiwayatData();
+        });
+
+        $("#clearSearchRiwayat").on("click", function () {
+            $("#searchRiwayat").val("").trigger("input").focus();
+        });
+
+        // Sort Mobile
+        $("#mobileSortRiwayat").on("change", function () {
+            const val = $(this).val();
+            if (val === "default") {
+                sortRiwayatState = { key: null, direction: 'asc' };
+            } else {
+                const [key, direction] = val.split("-");
+                sortRiwayatState = { key, direction };
+            }
+            updateSortRiwayatIcons();
+            renderRiwayatData();
+        });
+    });
 });
 
-$("#tahun").change(function () {
-    let a = $(this).val(); $("tbody > tr").remove();
-    getRiwayatCuti(a);
-});
+
 
 window.downloadLampiran = a => {
     window.open(a.trim(), "_blank");

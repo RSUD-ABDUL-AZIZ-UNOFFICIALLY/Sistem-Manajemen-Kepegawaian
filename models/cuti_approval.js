@@ -16,10 +16,25 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'nik',
         as: 'atasan'
       })
-      Cuti_approval.hasOne(models.Cuti, {
+      Cuti_approval.belongsTo(models.Cuti, {
         foreignKey: 'id',
         sourceKey: 'id_cuti',
         as: 'data_cuti'
+      })
+      Cuti_approval.hasOne(models.Cutialamat, {
+        foreignKey: 'id_cuti',
+        sourceKey: 'id_cuti',
+        as: 'cuti_alamat'
+      })
+      Cuti_approval.hasOne(models.Cuti_lampiran, {
+        foreignKey: 'id_cuti',
+        sourceKey: 'id_cuti',
+        as: 'lampiran'
+      })
+      Cuti_approval.hasOne(models.Ledger_cuti, {
+        foreignKey: 'id_cuti',
+        sourceKey: 'id_cuti',
+        as: 'ledger_cuti'
       })
     }
   }
