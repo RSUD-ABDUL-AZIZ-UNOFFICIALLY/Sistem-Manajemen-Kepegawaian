@@ -2,7 +2,7 @@ const { Absen, Dump_Absen, Mesin_Absen, Maps_Absen, Jdldns, Jnsdns, sequelize } 
 const { Op, where } = require("sequelize");
 const cron = require('node-cron');
 const axios = require("axios");
-// require('dotenv').config();
+// 
 // cekIn('2025-06-17');
 // cekOut('2025-06-17');
 console.log(process.env.HOST_FIGER);

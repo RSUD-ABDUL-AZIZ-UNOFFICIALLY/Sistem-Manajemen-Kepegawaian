@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { User, Atasan, Access, Session, sequelize } = require("../models");
 const { Buffer } = require('buffer');
 const secretKey = process.env.JWT_SECRET_KEY;
-const uuid = require('uuid');
+const { validate, version } = require('uuid');
 
 module.exports = {
     login: async (req, res, next) => {
@@ -15,18 +15,16 @@ module.exports = {
             }
             let userID = req.cookies.userID;
             if (!userID) {
-                // userID = uuid.v7();
-                // res.cookie("userID", userID, {
-                //     httpOnly: true,
-                //     secure: true,
-                // });
-                // res.clearCookie("token");
+
+                res.clearCookie("token");
                 return res.redirect("/?redirect_url=" + req.originalUrl);
             }
+            console.log(validate(userID));
+            console.log(version(userID));
             const decoded = jwt.verify(token, secretKey);
             t = await sequelize.transaction();
 
-            let getUser = await req.cache.json.get('SIMPEG:user:' + decoded.id);
+            let getUser = await req.app.locals.cache.json.get('SIMPEG:user:' + decoded.id);
             if (!getUser) {
                 getUser = await User.findOne({
                     where: { nik: decoded.id },
@@ -38,13 +36,13 @@ module.exports = {
                     res.clearCookie("token");
                     return res.redirect("/?redirect_url=" + req.originalUrl);
                 } else {
-                    await req.cache.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
-                    req.cache.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24);
+                    await req.app.locals.cache.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
+                    req.app.locals.cache.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24);
                     req.account = getUser;
                 }
             }
             req.account = getUser;
-            const value = await req.cache.get('SIMPEG:seen:' + userID);
+            const value = await req.app.locals.cache.get('SIMPEG:seen:' + userID);
             if (!value) {
                 let cek_session = await Session.findOne({
                     where: {
@@ -86,11 +84,11 @@ module.exports = {
                     httpOnly: false,
                     secure: true
                 });
-                await req.cache.set('SIMPEG:seen:' + userID, getUser.nama);
-                req.cache.expire('SIMPEG:seen:' + userID, 60);
+                await req.app.locals.cache.set('SIMPEG:seen:' + userID, getUser.nama);
+                req.app.locals.cache.expire('SIMPEG:seen:' + userID, 60);
             }
 
-            let getAtasan = await req.cache.json.get('SIMPEG:atasan:' + decoded.id);
+            let getAtasan = await req.app.locals.cache.json.get('SIMPEG:atasan:' + decoded.id);
 
             if (!getAtasan) {
                 getAtasan = await Atasan.findOne({
@@ -113,9 +111,9 @@ module.exports = {
                     });
                 }
                 res.clearCookie("status");
-                await req.cache.json.set('SIMPEG:atasan:' + decoded.id, '$', getAtasan);
+                await req.app.locals.cache.json.set('SIMPEG:atasan:' + decoded.id, '$', getAtasan);
                 // FIX: Tambahkan operator perkalian
-                req.cache.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24);
+                req.app.locals.cache.expire('SIMPEG:atasan:' + decoded.id, 60 * 60 * 24);
             }
             await t.commit();
             return next();
@@ -167,7 +165,7 @@ module.exports = {
             const token = req.cookies.token;
             const decoded = jwt.verify(token, secretKey);
             if (decoded) {
-                let getUser = await req.cache.json.get('SIMPEG:user:' + decoded.id);
+                let getUser = await req.app.locals.cache.json.get('SIMPEG:user:' + decoded.id);
                 if (!getUser) {
                     getUser = await User.findOne({
                         where: {
@@ -179,8 +177,8 @@ module.exports = {
                         res.clearCookie("token");
                         return res.redirect("/?redirect_url=" + req.originalUrl);
                     } else {
-                        await req.cache.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
-                        req.cache.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24);
+                        await req.app.locals.cache.json.set('SIMPEG:user:' + decoded.id, '$', getUser);
+                        req.app.locals.cache.expire('SIMPEG:user:' + decoded.id, 60 * 60 * 24);
                         req.account = getUser;
                         return next();
                     }
@@ -229,8 +227,8 @@ module.exports = {
                 if (!token) {
                     return res.redirect("/");
                 }
-                if (await req.cache.exists(`Token:Accesses:${decoded.id}`)) {
-                    let check = await req.cache.hExists(`Token:Accesses:${decoded.id}`, data);
+                if (await req.app.locals.cache.exists(`Token:Accesses:${decoded.id}`)) {
+                    let check = await req.app.locals.cache.hExists(`Token:Accesses:${decoded.id}`, data);
                     if (check) {
                         return next();
                     } else {
@@ -245,9 +243,9 @@ module.exports = {
                     let hakAkses = [];
                     for (const element of Accesses) {
                         hakAkses.push(element.status);
-                        req.cache.hSet(`Token:Accesses:${decoded.id}`, element.status, 'true');
+                        req.app.locals.cache.hSet(`Token:Accesses:${decoded.id}`, element.status, 'true');
                     }
-                    req.cache.expire(`Token:Accesses:${decoded.id}`, 60 * 60);
+                    req.app.locals.cache.expire(`Token:Accesses:${decoded.id}`, 60 * 60);
                     let check = hakAkses.includes(data);
                     if (check) {
                         return next();

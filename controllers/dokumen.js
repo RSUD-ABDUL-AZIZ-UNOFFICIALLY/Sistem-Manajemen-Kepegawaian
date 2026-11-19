@@ -1,5 +1,5 @@
 "use strict";
-require('dotenv').config();
+
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const secretKey = process.env.JWT_SECRET_KEY;
@@ -146,7 +146,7 @@ module.exports = {
     },
     gaji: async (req, res) => {
         let account = req.account;
-        let cache = await req.cache.get('SIMPEG:gaji:' + account.nik);
+        let cache = await req.app.locals.cache.get('SIMPEG:gaji:' + account.nik);
         if (cache) {
             return res.status(200).json({
                 error: false,
@@ -190,8 +190,8 @@ module.exports = {
                     }
                     data.push(y);
                 }
-                req.cache.set('SIMPEG:gaji:' + account.nik, JSON.stringify(data));
-                req.cache.expire('SIMPEG:gaji:' + account.nik, 604800);
+                req.app.locals.cache.set('SIMPEG:gaji:' + account.nik, JSON.stringify(data));
+                req.app.locals.cache.expire('SIMPEG:gaji:' + account.nik, 604800);
                 return res.status(200).json({
                     error: false,
                     message: "success",
@@ -214,7 +214,7 @@ module.exports = {
     },
     tpp: async (req, res) => {
         let account = req.account;
-        let cache = await req.cache.get('SIMPEG:tpp:' + account.nik);
+        let cache = await req.app.locals.cache.get('SIMPEG:tpp:' + account.nik);
         if (cache) {
             return res.status(200).json({
                 error: false,
@@ -262,8 +262,8 @@ module.exports = {
                     }
                     data.push(y);
                 }
-                req.cache.set('SIMPEG:tpp:' + account.nik, JSON.stringify(data));
-                req.cache.expire('SIMPEG:tpp:' + account.nik, 604800);
+                req.app.locals.cache.set('SIMPEG:tpp:' + account.nik, JSON.stringify(data));
+                req.app.locals.cache.expire('SIMPEG:tpp:' + account.nik, 604800);
                 return res.status(200).json({
                     error: false,
                     message: "success",

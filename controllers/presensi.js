@@ -908,7 +908,7 @@ module.exports = {
                     message: "Periode tidak boleh lebih besar dari bulan ini",
                 });
             }
-            let cache = await req.cache.json.get(`SIMPEG:recapAbens:${query.periode}:${account.nik}`, '$');
+            let cache = await req.app.locals.cache.json.get(`SIMPEG:recapAbens:${query.periode}:${account.nik}`, '$');
             if (cache != null) {
                 return res.status(200).json({
                     error: false,
@@ -1078,8 +1078,8 @@ module.exports = {
                 telatmasuk: telatmasuk,
                 cepatPulang: cepatPulang
             }
-            req.cache.json.set(`SIMPEG:recapAbens:${query.periode}:${account.nik}`, '$', result);
-            req.cache.expire(`SIMPEG:recapAbens:${query.periode}:${account.nik}`, 60 * 10);
+            req.app.locals.cache.json.set(`SIMPEG:recapAbens:${query.periode}:${account.nik}`, '$', result);
+            req.app.locals.cache.expire(`SIMPEG:recapAbens:${query.periode}:${account.nik}`, 60 * 10);
 
             return res.status(200).json({
                 error: false,
@@ -1115,7 +1115,7 @@ module.exports = {
                     message: "Periode tidak boleh lebih besar dari bulan ini",
                 });
             }
-            let cache = await req.cache.json.get(`SIMPEG:recapAbens:${query.periode}:${params.nik}`, '$');
+            let cache = await req.app.locals.cache.json.get(`SIMPEG:recapAbens:${query.periode}:${params.nik}`, '$');
             if (cache != null) {
                 console.log("Cache Hit")
                 return res.status(200).json({
@@ -1285,8 +1285,8 @@ module.exports = {
                 telatmasuk: telatmasuk,
                 cepatPulang: cepatPulang
             }
-            let caches = await req.cache.json.set(`SIMPEG:recapAbens:${query.periode}:${params.nik}`, '$', result);
-            await req.cache.expire(`SIMPEG:recapAbens:${query.periode}:${params.nik}`, 60);
+            let caches = await req.app.locals.cache.json.set(`SIMPEG:recapAbens:${query.periode}:${params.nik}`, '$', result);
+            await req.app.locals.cache.expire(`SIMPEG:recapAbens:${query.periode}:${params.nik}`, 60);
             console.log(caches)
             return res.status(200).json({
                 error: false,

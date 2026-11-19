@@ -22,10 +22,10 @@ module.exports = {
             nik: decoded.id,
             last_seen: datetime
         });
-        req.cache.set(`seen:${decoded.id}`, data);
-        req.cache.set(`user:${decoded.id}`, data);
-        req.cache.expire(`user:${decoded.id}`, 20);
-        req.cache.quit();
+        req.app.locals.cache.set(`seen:${decoded.id}`, data);
+        req.app.locals.cache.set(`user:${decoded.id}`, data);
+        req.app.locals.cache.expire(`user:${decoded.id}`, 20);
+        req.app.locals.cache.quit();
         // await client.disconnect();
         return res.status(200).json({
             message: 'success',
@@ -34,10 +34,10 @@ module.exports = {
     },
     online: async (req, res) => {
 
-        let keys = await req.cache.keys('user:*');
+        let keys = await req.app.locals.cache.keys('user:*');
         let users = [];
         for (let key of keys) {
-            let user = await req.cache.get(key);
+            let user = await req.app.locals.cache.get(key);
             users.push(JSON.parse(user));
         }
         return res.status(200).json({
@@ -51,11 +51,11 @@ module.exports = {
     },
     last_seen: async (req, res) => {
 
-        let seen = await req.cache.keys('seen:*');
-        let online = await req.cache.keys('user:*');
+        let seen = await req.app.locals.cache.keys('seen:*');
+        let online = await req.app.locals.cache.keys('user:*');
         let users = [];
         for (let key of seen) {
-            let user = await req.cache.get(key);
+            let user = await req.app.locals.cache.get(key);
             users.push(JSON.parse(user));
         }
         return res.status(200).json({

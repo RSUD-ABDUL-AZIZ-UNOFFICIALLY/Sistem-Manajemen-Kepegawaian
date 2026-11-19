@@ -37,9 +37,9 @@ module.exports = {
                     message: pesan,
                     telp: phone
                 });
-                req.cache.hSet(`hardinOnline:OTP`, phone, random);
-                req.cache.set(`hardinOnline:OTP:${phone}`, random);
-                req.cache.expire(`hardinOnline:OTP:${phone}`, 5 * 60);
+                req.app.locals.cache.hSet(`hardinOnline:OTP`, phone, random);
+                req.app.locals.cache.set(`hardinOnline:OTP:${phone}`, random);
+                req.app.locals.cache.expire(`hardinOnline:OTP:${phone}`, 5 * 60);
                 console.log(data)
                 await sendWa(data);
                 return res.status(200).json({
@@ -94,7 +94,7 @@ module.exports = {
                     message: "Nomor telepon telah terdaftar",
                 });
             }
-            let otpRedis = await req.cache.get(`hardinOnline:OTP:${phone}`);
+            let otpRedis = await req.app.locals.cache.get(`hardinOnline:OTP:${phone}`);
             if (otpRedis != otp) {
                 return res.status(400).json({
                     error: true,
@@ -149,9 +149,9 @@ module.exports = {
                     message: pesan,
                     telp: phone
                 });
-                req.cache.hSet(`hardinOnline:OTP`, phone, random);
-                req.cache.set(`hardinOnline:OTP:${phone}`, random);
-                req.cache.expire(`hardinOnline:OTP:${phone}`, 5 * 60);
+                req.app.locals.cache.hSet(`hardinOnline:OTP`, phone, random);
+                req.app.locals.cache.set(`hardinOnline:OTP:${phone}`, random);
+                req.app.locals.cache.expire(`hardinOnline:OTP:${phone}`, 5 * 60);
                 console.log(data)
                 await sendWa(data);
                 return res.status(200).json({
@@ -197,7 +197,7 @@ module.exports = {
                     message: "Nomor telepon belum terdaftar",
                 });
             }
-            let otpRedis = await req.cache.get(`hardinOnline:OTP:${phone}`);
+            let otpRedis = await req.app.locals.cache.get(`hardinOnline:OTP:${phone}`);
             if (otpRedis != otp) {
                 return res.status(400).json({
                     error: true,

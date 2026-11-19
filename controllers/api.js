@@ -10,7 +10,7 @@ const payload = {
   gid: "Server Side",
 };
 moment.locale('id'); 
-const uuid = require('uuid');
+const { v7: uuidv7 } = require('uuid');
 
 module.exports = {
   sendOtp: async (req, res) => {
@@ -127,7 +127,7 @@ module.exports = {
   mobileOtp: async (req, res) => {
     try {
       let { phone } = req.body;
-      let cacheLid = await req.cache.get('SIMPEG:phone:' + phone);
+      let cacheLid = await req.app.locals.cache.get('SIMPEG:phone:' + phone);
       if (!cacheLid) {
         let token = jwt.sign(payload, secretKey, { expiresIn: '1m' });
         let cekKontak = await axios.post(process.env.HOSTWA + "/api/wa/cek", {
@@ -135,10 +135,10 @@ module.exports = {
         }, { headers: { Authorization: "Bearer " + token } });
         if (cekKontak.data.id.isRegistered) {
           await Promise.all([
-            req.cache.set('SIMPEG:phone:' + phone, cekKontak.data.id._serialized),
-            req.cache.set('SIMPEG:lid:' + cekKontak.data.id._serialized, phone.toString()),
-            req.cache.expire('SIMPEG:phone:' + phone, 604800),
-            req.cache.expire('SIMPEG:lid:' + cekKontak.data.id._serialized, 604800),
+            req.app.locals.cache.set('SIMPEG:phone:' + phone, cekKontak.data.id._serialized),
+            req.app.locals.cache.set('SIMPEG:lid:' + cekKontak.data.id._serialized, phone.toString()),
+            req.app.locals.cache.expire('SIMPEG:phone:' + phone, 604800),
+            req.app.locals.cache.expire('SIMPEG:lid:' + cekKontak.data.id._serialized, 604800),
           ]);
         }
       }
@@ -157,7 +157,7 @@ module.exports = {
   },
   verifyOtp: async (req, res) => {
     let body = req.body;
-    const userID = uuid.v7();
+    const userID = uuidv7();
     const tokenMaxAgeSec = 60 * 60 * 24 * 7; // 7 hari
     const phone = String(req.body?.phone || "").trim();
     const otp = String(req.body?.otp || "").trim();
@@ -224,8 +224,8 @@ module.exports = {
           secure: true
         });
 
-        await req.cache.set('SIMPEG:seen:' + userID, user.nama);
-        req.cache.expire('SIMPEG:seen:' + userID, 10);
+        await req.app.locals.cache.set('SIMPEG:seen:' + userID, user.nama);
+        req.app.locals.cache.expire('SIMPEG:seen:' + userID, 10);
 
         await Session.create({
           nik: user.nik,
@@ -287,8 +287,8 @@ module.exports = {
       httpOnly: false,
       secure: true
     });
-    await req.cache.set('SIMPEG:seen:' + userID, user.nik);
-    req.cache.expire('SIMPEG:seen:' + userID, 10);
+    await req.app.locals.cache.set('SIMPEG:seen:' + userID, user.nik);
+    req.app.locals.cache.expire('SIMPEG:seen:' + userID, 10);
     await Session.create({
       nik: user.nik,
       session_token: token,
