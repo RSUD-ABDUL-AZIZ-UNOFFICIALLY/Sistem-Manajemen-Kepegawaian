@@ -6,28 +6,28 @@ const axios = require("axios");
 // cekIn('2025-06-17');
 // cekOut('2025-06-17');
 console.log(process.env.HOST_FIGER);
-(async () => {
-    for (let i = 15; i <= 20; i++) {
-        await cekIn(`2026-11-${i < 10 ? '0' + i : i}`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        await cekOut(`2026-11-${i < 10 ? '0' + i : i}`);
-        await console.log(`Selesai 2026-02-${i < 10 ? '0' + i : i}`);
-    }
-})();
+// (async () => {
+//     for (let i = 15; i <= 20; i++) {
+//         await cekIn(`2026-11-${i < 10 ? '0' + i : i}`);
+//         await new Promise(resolve => setTimeout(resolve, 1000));
+//         await cekOut(`2026-11-${i < 10 ? '0' + i : i}`);
+//         await console.log(`Selesai 2026-02-${i < 10 ? '0' + i : i}`);
+//     }
+// })();
 
-// cron.schedule('*/3 * * * *', () => {
-//     let onlyDate = new Date().toISOString().slice(0, 10);
-//     // let date = onlyDate.slice(5, 10);
-//     console.log(onlyDate + ' cekIn');
-//     cekIn(onlyDate);
-//     console.log(onlyDate);
-// });
-// cron.schedule('*/5 * * * *', () => {
-//     let onlyDate = new Date().toISOString().slice(0, 10);
-//     // let date = onlyDate.slice(5, 10);
-//     console.log(onlyDate + ' cekOut')
-//     cekOut(onlyDate);
-// });
+cron.schedule('*/3 * * * *', () => {
+    let onlyDate = new Date().toISOString().slice(0, 10);
+    // let date = onlyDate.slice(5, 10);
+    console.log(onlyDate + ' cekIn');
+    cekIn(onlyDate);
+    console.log(onlyDate);
+});
+cron.schedule('*/5 * * * *', () => {
+    let onlyDate = new Date().toISOString().slice(0, 10);
+    // let date = onlyDate.slice(5, 10);
+    console.log(onlyDate + ' cekOut')
+    cekOut(onlyDate);
+});
 
 async function cekIn(date) {
     let find_jdl = await Jdldns.findAll({
