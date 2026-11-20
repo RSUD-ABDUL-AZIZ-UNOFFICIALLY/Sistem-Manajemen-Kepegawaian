@@ -132,9 +132,9 @@ async function findUsersSisaCuti(sesi) {
     let users = await User.findAll({
         where: {
             status: 'PPPK',
-            nik: "6112035712930003",
+            nik: "6172022108920001",
             dep: {
-                [Op.not]: [47, 5]
+                [Op.not]: [47, 57]
             }
         },
         // limit: 1
