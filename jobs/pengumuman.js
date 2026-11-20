@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const { User, Lpkp, Rekap, Notif } = require("../models");
 const { Op } = require("sequelize");
 const readline = require('node:readline');

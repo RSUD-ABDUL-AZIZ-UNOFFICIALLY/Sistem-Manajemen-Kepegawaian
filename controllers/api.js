@@ -10,7 +10,7 @@ const payload = {
   gid: "Server Side",
 };
 moment.locale('id'); 
-const uuid = require('uuid');
+const { v7: uuidv7 } = require('uuid');
 
 module.exports = {
   sendOtp: async (req, res) => {
@@ -127,8 +127,7 @@ module.exports = {
   mobileOtp: async (req, res) => {
     try {
       let { phone } = req.body;
-      console.log(phone);
-      let cacheLid = await req.cache.get('SIMPEG:phone:' + phone);
+      let cacheLid = await req.app.locals.cache.get('SIMPEG:phone:' + phone);
       if (!cacheLid) {
         let token = jwt.sign(payload, secretKey, { expiresIn: '1m' });
         let cekKontak = await axios.post(process.env.HOSTWA + "/api/wa/cek", {
@@ -136,10 +135,10 @@ module.exports = {
         }, { headers: { Authorization: "Bearer " + token } });
         if (cekKontak.data.id.isRegistered) {
           await Promise.all([
-            req.cache.set('SIMPEG:phone:' + phone, cekKontak.data.id._serialized),
-            req.cache.set('SIMPEG:lid:' + cekKontak.data.id._serialized, phone.toString()),
-            req.cache.expire('SIMPEG:phone:' + phone, 604800),
-            req.cache.expire('SIMPEG:lid:' + cekKontak.data.id._serialized, 604800),
+            req.app.locals.cache.set('SIMPEG:phone:' + phone, cekKontak.data.id._serialized),
+            req.app.locals.cache.set('SIMPEG:lid:' + cekKontak.data.id._serialized, phone.toString()),
+            req.app.locals.cache.expire('SIMPEG:phone:' + phone, 604800),
+            req.app.locals.cache.expire('SIMPEG:lid:' + cekKontak.data.id._serialized, 604800),
           ]);
         }
       }
@@ -158,39 +157,47 @@ module.exports = {
   },
   verifyOtp: async (req, res) => {
     let body = req.body;
-    let t = await sequelize.transaction();
-    let userID = req.cookies.userID;
-    if (!userID) {
-      userID = uuid.v7();
-      console.log(userID);
-      res.cookie("userID", userID, {
-        httpOnly: true,
-        secure: true,
+    const userID = uuidv7();
+    const tokenMaxAgeSec = 60 * 60 * 24 * 7; // 7 hari
+    const phone = String(req.body?.phone || "").trim();
+    const otp = String(req.body?.otp || "").trim();
+
+    // Fase 1: Fail-fast input validation sebelum menyentuh DB
+    if (!phone || !otp) {
+      return res.status(400).json({
+        error: true,
+        message: "Nomor telepon dan OTP wajib diisi",
       });
     }
     let user = await User.findOne({
       where: {
-        wa: body.phone,
+        wa: phone,
       },
-    }, { transaction: t });
+    });
+
+
     if (!user) {
-      await t.rollback();
       return res.status(404).json({
         error: true,
-        message: "Invalid OTP",
+        message: "OTP atau nomor telepon tidak valid",
       });
     }
+
+    let t = await sequelize.transaction();
+    res.cookie("userID", userID, {
+      httpOnly: false,
+      secure: true,
+    });
     let PasskeyIsexist = await Passkey.findOne({
       where: {
-        nowa: body.phone
+        nowa: phone
       }
     })
     if (PasskeyIsexist) {
-      console.log(PasskeyIsexist)
       let tokenValidates = speakeasy.totp.verify({
         secret: PasskeyIsexist.passkey,
         encoding: 'base32',
-        token: body.otp,
+        token: otp,
         window: 0
       });
       if (!tokenValidates) {
@@ -208,16 +215,17 @@ module.exports = {
             wa: user.wa,
           },
           secretKey,
-          { expiresIn: 60 * 60 * 24 * 7 }
+          { expiresIn: tokenMaxAgeSec }
         );
         // set cookie
         res.cookie("token", token, {
-          maxAge: 1000 * 60 * 60 * 24 * 7,
+          maxAge: 1000 * tokenMaxAgeSec,
           httpOnly: false,
           secure: true
         });
-        await req.cache.set('SIMPEG:seen:' + token, user.nik);
-        req.cache.expire('SIMPEG:seen:' + token, 90);
+
+        await req.app.locals.cache.set('SIMPEG:seen:' + userID, user.nama);
+        req.app.locals.cache.expire('SIMPEG:seen:' + userID, 10);
 
         await Session.create({
           nik: user.nik,
@@ -235,14 +243,14 @@ module.exports = {
       }
 
     }
-    let cekOTP = verifyToken(body.otp, body.phone);
+    let cekOTP = verifyToken(otp, phone);
     if (!cekOTP) {
       let checkOtp = await Otp.findOne({
         where: {
           token: body.otp,
           wa: body.phone,
         },
-      }, { transaction: t });
+      });
       if (!checkOtp) {
         await t.rollback();
         return res.status(401).json({
@@ -271,16 +279,16 @@ module.exports = {
         wa: user.wa,
       },
       secretKey,
-      { expiresIn: 60 * 60 * 24 * 7 }
+      { expiresIn: tokenMaxAgeSec }
     );
     // set cookie
     res.cookie("token", token, {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * tokenMaxAgeSec,
       httpOnly: false,
       secure: true
     });
-    await req.cache.set('SIMPEG:seen:' + token, user.nik);
-    req.cache.expire('SIMPEG:seen:' + token, 90);
+    await req.app.locals.cache.set('SIMPEG:seen:' + userID, user.nik);
+    req.app.locals.cache.expire('SIMPEG:seen:' + userID, 10);
     await Session.create({
       nik: user.nik,
       session_token: token,

@@ -1,120 +1,111 @@
-require('dotenv').config();
+const http = require('node:http');
+const path = require('node:path');
 const express = require('express');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const favicon = require('serve-favicon');
 const morgan = require('morgan');
 const useragent = require('express-useragent');
-// const cors = require('cors');
-const app = express();
-const path = require('path');
-const fs = require('fs');
-
-const package = JSON.parse(fs.readFileSync('package.json'));
-console.log(package.name + ' ' + package.version);
 const { createClient } = require('redis');
-// app.use(cors());
+const pkg = require('./package.json');
 
-app.use(useragent.express());
-
-const http = require('http');
+const app = express();
 const server = http.createServer(app);
-console.log("mode = " + process.env.NODE_ENV);
-// Buat token custom untuk IP dari header `x-real-ip`
-morgan.token('real-ip', (req) => req.headers['x-real-ip'] || req.ip);
-// 2. Buat custom token bernama :device
-morgan.token('device', (req) => {
-    if (req.useragent) {
-        if (req.useragent.isMobile) return 'Mobile';
-        if (req.useragent.isTablet) return 'Tablet';
-        if (req.useragent.isDesktop) return 'Desktop';
-        if (req.useragent.isBot) return 'Bot';
-    }
-    return 'Unknown-Device';
-});
-// Format custom: IP + method + url + status + response-time
-const customFormat = ':real-ip :device :method  :url :status :response-time ms';
-app.use(morgan(customFormat));
-// app.use(morgan(MORGAN_FORMAT));
-app.use(express.json());
+const isDev = process.env.NODE_ENV !== 'production';
+const publicDir = path.join(__dirname, 'public');
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json({ type: 'application/*+json' }));
-app.use(cookieParser())
+console.log(`${pkg.name} v${pkg.version} | mode=${process.env.NODE_ENV} | isDev=${isDev}`);
 
-
+// 1. Konfigurasi dasar & Proxy (otomatis mengisi req.ip dari X-Forwarded-For / X-Real-IP)
+app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 
-const isDev = process.env.NODE_ENV !== 'production';
-console.log('isDev = ' + isDev);
-app.use(favicon(path.join(__dirname + '/public/', 'favicon.ico')));
-// app.use("/service-worker.js", express.static(path.join(__dirname + '/public/js/service-worker.js')));
+// 2. Aset statis di paling atas agar tidak membebani middleware parser & logger
+app.use(favicon(path.join(publicDir, 'favicon.ico')));
+app.use('/asset', express.static(publicDir, {
+    maxAge: isDev ? 0 : '7d',
+    index: false // Mencegah akses langsung ke index.html jika ada
+}));
+
+// 3. Service Worker route (sebelum logger jika tidak ingin memenuhi log)
+const swKillSwitch = `
+  self.addEventListener('install', () => self.skipWaiting());
+  self.addEventListener('activate', (e) => {
+    e.waitUntil(self.registration.unregister().then(() => self.clients.claim()));
+  });
+`;
+
 app.get('/service-worker.js', (req, res) => {
     if (isDev) {
-        // Mode Development: Kirim kill-switch dan paksa no-cache
         res.set({
             'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
             'Content-Type': 'application/javascript'
         });
-
-        // Script ini memastikan SW apa pun yang masih "nyangkut" akan langsung mati
-        res.send(`
-      self.addEventListener('install', (e) => self.skipWaiting());
-      self.addEventListener('activate', (e) => {
-        e.waitUntil(self.registration.unregister().then(() => self.clients.claim()));
-      });
-    `);
-    } else {
-        // Mode Production: Kirim file sw.js yang sebenarnya
-        res.status(200).sendFile((path.join(__dirname, '/public/js/service-worker.js')));
+        return res.send(swKillSwitch);
     }
-});
-app.use("/asset/js/", express.static(path.join(__dirname + '/public/js/')));
-app.use("/asset/img/", express.static(path.join(__dirname + '/public/img/')));
-app.use("/asset/css/", express.static(path.join(__dirname + '/public/css/')));
-app.use("/asset/site.webmanifest", express.static(path.join(__dirname + '/public/site.webmanifest')))
-app.use("/asset/favicon.ico", express.static(path.join(__dirname + '/public/favicon.ico')))
+    res.sendFile(path.join(publicDir, 'js', 'service-worker.js'));
+}); 
 
+// 4. User-Agent & Logger
+app.use(useragent.express());
 
-const client = createClient({
-    password: process.env.REDIS_PASSWORD,
-    socket: {
-        host: process.env.REDIS_URL,
-        port: process.env.REDIS_URL_PORT
-    }
-});
-client.connect();
-client.on('connect', () => {
-    console.log('Redis client connected');
-});
-client.on('error', (err) => {
-    console.log('Something went wrong ' + err);
+morgan.token('real-ip', (req) => req.headers['x-real-ip'] || req.ip);
+morgan.token('device', (req) => {
+    const ua = req.useragent;
+    if (!ua) return 'Unknown-Device';
+    if (ua.isMobile) return 'Mobile';
+    if (ua.isTablet) return 'Tablet';
+    if (ua.isDesktop) return 'Desktop';
+    if (ua.isBot) return 'Bot';
+    return 'Unknown-Device';
 });
 
-app.use((req, res, next) => {
-    req.cache = client;
-    next();
-});
+app.use(morgan(':real-ip :device :method :url :status :response-time ms'));
 
-const routes = require('./routes');
-app.use('/', routes);
+// 5. Body & Cookie Parsers (Native Express)
+app.use(express.json({ type: ['application/json', 'application/*+json'] }));
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-const routeRest = require('./routes/rest');
-app.use('/rest', routeRest);
+// 6. Routes
+app.use('/', require('./routes'));
+app.use('/rest', require('./routes/rest'));
+app.use('/rest/hardin', require('./routes/hardin'));
 
-const hardin = require('./routes/hardin');
-app.use('/rest/hardin', hardin);
-// Middleware 404
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, '/public/404.html'));
+// 7. Error & 404 Handlers
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(publicDir, '404.html'));
 });
 
 app.use((err, req, res, next) => {
-    console.error(err.stack)
-    res.status(500).send('Something broke!')
-})
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`listening on *:${PORT}`);
+// 8. Inisialisasi Redis & Startup Server secara berurutan
+async function bootstrap() {
+    const redisClient = createClient({
+        password: process.env.REDIS_PASSWORD,
+        socket: {
+            host: process.env.REDIS_URL,
+            port: Number(process.env.REDIS_URL_PORT) || 6379
+        }
+    });
+
+    redisClient.on('error', (err) => console.error('Redis Client Error:', err));
+
+    await redisClient.connect();
+    console.log('Redis client connected');
+
+    // Tersedia di semua route via req.app.locals.cache tanpa middleware tambahan
+    app.locals.cache = redisClient;
+
+    const PORT = process.env.PORT || 3000;
+    server.listen(PORT, () => {
+        console.log(`Listening on *:${PORT}`);
+    });
+}
+
+bootstrap().catch((err) => {
+    console.error('Failed to start server:', err);
+    process.exit(1);
 });

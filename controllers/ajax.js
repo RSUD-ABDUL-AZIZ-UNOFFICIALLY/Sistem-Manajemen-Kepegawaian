@@ -33,8 +33,8 @@ module.exports = {
     let body = req.body;
     let token = req.cookies.token;
     let decoded = jwt.verify(token, secretKey);
-    req.cache.del('SIMPEG:user:' + decoded.id);
-    req.cache.del('SIMPEG:atasan:' + decoded.id);
+    req.app.locals.cache.del('SIMPEG:user:' + decoded.id);
+    req.app.locals.cache.del('SIMPEG:atasan:' + decoded.id);
     try {
       await User.update(
         {
@@ -1137,7 +1137,7 @@ module.exports = {
       body.nik = decoded.id;
       // console.log(body);
       let addTemplate = await Template.create(body);
-      req.cache.json.del(`SIMPEG:template:bynik:${decoded.id}`);
+      req.app.locals.cache.json.del(`SIMPEG:template:bynik:${decoded.id}`);
       return res.status(200).json({
         error: false,
         message: "success",
@@ -1161,7 +1161,7 @@ module.exports = {
     let query = req.query;
     if (query.id == undefined) {
       try {
-        let cacheTemplate = await req.cache.json.get(`SIMPEG:template:bynik:${decoded.id}`, '$');
+        let cacheTemplate = await req.app.locals.cache.json.get(`SIMPEG:template:bynik:${decoded.id}`, '$');
         if (cacheTemplate) {
           return res.status(200).json({
             error: false,
@@ -1177,8 +1177,8 @@ module.exports = {
             nik: decoded.id,
           },
         });
-        req.cache.json.set(`SIMPEG:template:bynik:${decoded.id}`, '$', getTemplate);
-        req.cache.expire(`SIMPEG:template:bynik:${decoded.id}`, 60 * 60 * 48);
+        req.app.locals.cache.json.set(`SIMPEG:template:bynik:${decoded.id}`, '$', getTemplate);
+        req.app.locals.cache.expire(`SIMPEG:template:bynik:${decoded.id}`, 60 * 60 * 48);
         return res.status(200).json({
           error: false,
           message: "success",
@@ -1197,7 +1197,7 @@ module.exports = {
       }
     } else {
       try {
-        let cacheTemplate = await req.cache.json.get(`SIMPEG:template:bynik:${decoded.id}`, {
+        let cacheTemplate = await req.app.locals.cache.json.get(`SIMPEG:template:bynik:${decoded.id}`, {
           path: [`$[?(@.id==${query.id})]`]  // Gunakan ID yang ingin dicari
         });
         // console.log(cacheTemplate);
@@ -1239,7 +1239,7 @@ module.exports = {
           id: body.id,
         },
       });
-      req.cache.json.del(`SIMPEG:template:bynik:${decoded.id}`);
+      req.app.locals.cache.json.del(`SIMPEG:template:bynik:${decoded.id}`);
       return res.status(200).json({
         error: false,
         message: "success",
@@ -1824,6 +1824,7 @@ Lampiran   : ${urlLampiran}`
           {
             model: Cuti,
             as: "data_cuti",
+            attributes: ["mulai", "samapi", "jumlah", "keterangan", "createdAt", "updatedAt"],
             include: [
               {
                 model: Jns_cuti,
@@ -1837,30 +1838,28 @@ Lampiran   : ${urlLampiran}`
               },
             ],
           },
+          {
+            model: Cutialamat,
+            as: "cuti_alamat",
+            attributes: ["alamat"],
+            required: false
+          },
+          {
+            model: Cuti_lampiran,
+            as: "lampiran",
+            attributes: ["file"],
+            required: false
+          },
+          {
+            model: Ledger_cuti,
+            as: "ledger_cuti",
+            required: false,
+            attributes: ["sisa_cuti"]
+          },
         ],
         order: [["createdAt", "DESC"]]
       });
-      let id_cutis = data.map((item) => item.id_cuti);
-      let dataAlamat = await Cutialamat.findAll({
-        where: {
-          id_cuti: id_cutis,
-        },
-      });
-      let dataCuti = data.map((item) => {
-        let alamat = dataAlamat.find((alamat) => alamat.id_cuti == item.id_cuti);
-        return {
-          id: item.id,
-          id_cuti: item.id_cuti,
-          nik: item.nik,
-          departement: item.departement,
-          jabatan: item.jabatan,
-          status: item.status,
-          approve_date: item.approve_date,
-          keterangan: item.keterangan,
-          data_cuti: item.data_cuti,
-          alamat: alamat ? alamat.alamat : '-',
-        }
-      });
+
       if (data.length == 0) {
         return res.status(404).json({
           error: true,
@@ -1870,7 +1869,8 @@ Lampiran   : ${urlLampiran}`
       return res.status(200).json({
         error: false,
         message: "success",
-        data: dataCuti,
+        record: data.length,
+        data: data,
       });
     } catch (error) {
       return res.status(400).json({
@@ -2085,7 +2085,7 @@ Lampiran   : ${urlLampiran}`
     let search = req.query.search;
 
     try {
-      let cache = await req.cache.json.get(`SIMPEG:getProfiles:${search}`, '$');
+      let cache = await req.app.locals.cache.json.get(`SIMPEG:getProfiles:${search}`, '$');
       if (cache != null) {
         return res.status(200).json({
           error: false,
@@ -2141,8 +2141,8 @@ Lampiran   : ${urlLampiran}`
         };
         data.push(x);
       }
-      req.cache.json.set(`SIMPEG:getProfiles:${search}`, '$', data);
-      req.cache.expire(`SIMPEG:getProfiles:${search}`, 60);
+      req.app.locals.cache.json.set(`SIMPEG:getProfiles:${search}`, '$', data);
+      req.app.locals.cache.expire(`SIMPEG:getProfiles:${search}`, 60);
 
       return res.status(200).json({
         error: false,

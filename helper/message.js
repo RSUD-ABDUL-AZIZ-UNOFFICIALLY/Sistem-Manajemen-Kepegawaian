@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const secretKey = process.env.SECRET_WA;
