@@ -98,72 +98,83 @@
                 </div>
 
                 <!-- TAMPILAN DESKTOP: Tabel Lebar Fix & Sortable -->
-                <div class="hidden lg:block max-h-[70vh] overflow-auto w-full rounded-lg border border-base-200 relative">
-                  <table class="table table-zebra table-auto w-full text-left border-collapse">
+                <!-- TAMPILAN DESKTOP: Tabel Lebar Fix & Sortable -->
+                <div
+                  class="hidden lg:block max-h-[70vh] overflow-auto w-full rounded-lg border border-base-200 relative">
+                  <table
+                    class="table table-zebra table-auto w-full text-left border-collapse">
                     <thead class="sticky top-0 z-20 bg-base-200 shadow-sm">
-                      <tr class="text-[11px] font-bold text-base-content/80 uppercase tracking-wider select-none whitespace-nowrap">
+                      <tr
+                        class="text-[11px] font-bold text-base-content/80 uppercase tracking-wider select-none whitespace-nowrap">
                         <th class="w-12 text-center">#</th>
                         <th
-                          class="min-w-[180px] cursor-pointer hover:bg-base-300/60 transition-colors"
+                          class="min-w-45 cursor-pointer hover:bg-base-300/60 transition-colors"
                           onclick="sortTable('nama')">
                           <div class="flex items-center justify-between gap-2">
                             <span>Nama</span>
-                            <i id="sort-icon-nama" class="fas fa-sort text-base-content/30"></i>
+                            <i id="sort-icon-nama"
+                              class="fas fa-sort text-base-content/30"></i>
                           </div>
                         </th>
                         <th
-                          class="min-w-[140px] cursor-pointer hover:bg-base-300/60 transition-colors"
+                          class="min-w-35 cursor-pointer hover:bg-base-300/60 transition-colors"
                           onclick="sortTable('mulai')">
                           <div class="flex items-center justify-between gap-2">
                             <span>Tanggal Cuti</span>
-                            <i id="sort-icon-mulai" class="fas fa-sort text-base-content/30"></i>
+                            <i id="sort-icon-mulai"
+                              class="fas fa-sort text-base-content/30"></i>
                           </div>
                         </th>
                         <th
-                          class="min-w-[110px] cursor-pointer hover:bg-base-300/60 transition-colors"
+                          class="min-w-28 cursor-pointer hover:bg-base-300/60 transition-colors"
                           onclick="sortTable('tipe')">
                           <div class="flex items-center justify-between gap-2">
                             <span>Tipe</span>
-                            <i id="sort-icon-tipe" class="fas fa-sort text-base-content/30"></i>
+                            <i id="sort-icon-tipe"
+                              class="fas fa-sort text-base-content/30"></i>
                           </div>
                         </th>
                         <th
-                          class="min-w-[70px] text-center cursor-pointer hover:bg-base-300/60 transition-colors"
+                          class="min-w-18 text-center cursor-pointer hover:bg-base-300/60 transition-colors"
                           onclick="sortTable('jumlah')">
                           <div class="flex items-center justify-center gap-1">
                             <span>Hari</span>
-                            <i id="sort-icon-jumlah" class="fas fa-sort text-base-content/30"></i>
+                            <i id="sort-icon-jumlah"
+                              class="fas fa-sort text-base-content/30"></i>
                           </div>
                         </th>
                         <th
-                          class="min-w-[70px] text-center cursor-pointer hover:bg-base-300/60 transition-colors"
+                          class="min-w-18 text-center cursor-pointer hover:bg-base-300/60 transition-colors"
                           onclick="sortTable('sisa')">
                           <div class="flex items-center justify-center gap-1">
                             <span>Sisa</span>
-                            <i id="sort-icon-sisa" class="fas fa-sort text-base-content/30"></i>
+                            <i id="sort-icon-sisa"
+                              class="fas fa-sort text-base-content/30"></i>
                           </div>
                         </th>
-                        <th class="min-w-[180px]">Alasan Cuti</th>
-                        <th class="min-w-[150px]">Alamat</th>
+                        <th class="min-w-45">Alasan Cuti</th>
+                        <th class="min-w-38">Alamat</th>
                         <th
-                          class="min-w-[110px] text-center cursor-pointer hover:bg-base-300/60 transition-colors"
+                          class="min-w-28 text-center cursor-pointer hover:bg-base-300/60 transition-colors"
                           onclick="sortTable('status')">
                           <div class="flex items-center justify-center gap-1">
                             <span>Status</span>
-                            <i id="sort-icon-status" class="fas fa-sort text-base-content/30"></i>
+                            <i id="sort-icon-status"
+                              class="fas fa-sort text-base-content/30"></i>
                           </div>
                         </th>
                         <th
-                          class="min-w-[125px] cursor-pointer hover:bg-base-300/60 transition-colors"
+                          class="min-w-31 cursor-pointer hover:bg-base-300/60 transition-colors"
                           onclick="sortTable('approve')">
                           <div class="flex items-center justify-between gap-2">
                             <span>Tgl Approve</span>
-                            <i id="sort-icon-approve" class="fas fa-sort text-base-content/30"></i>
+                            <i id="sort-icon-approve"
+                              class="fas fa-sort text-base-content/30"></i>
                           </div>
                         </th>
-                        <th class="min-w-[100px] text-center">Pratinjau</th>
-                        <th class="min-w-[150px]">Keterangan</th>
-                        <th class="min-w-[95px] text-center">Lampiran</th>
+                        <th class="min-w-25 text-center">Pratinjau</th>
+                        <th class="min-w-38">Keterangan</th>
+                        <th class="min-w-24 text-center">Lampiran</th>
                       </tr>
                     </thead>
                     <tbody id="tbodyCuti" class="text-xs align-top">
@@ -171,41 +182,36 @@
                     </tbody>
                   </table>
                 </div>
-
-                <!-- TAMPILAN MOBILE: Card List Responsif -->
-                <div id="mobileCutiContainer" class="block lg:hidden space-y-3">
-                  <!-- Card data mobile diisi via JS -->
-                </div>
-
               </div>
             </div>
+          </main>
 
-          </div>
-        </main>
+          <!-- Footer -->
+          <footer
+            class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
+            <aside>
+              <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul
+                Aziz</p>
+            </aside>
+          </footer>
+        </div>
 
-        <!-- Footer -->
-        <footer
-          class="footer footer-center p-4 bg-base-100 text-base-content border-t border-base-300 mt-auto">
-          <aside>
-            <p>Copyright © <%= new Date().getFullYear() %> RSUD dr. Abdul
-              Aziz</p>
-          </aside>
-        </footer>
+        <!-- Sidebar Utama -->
+        <%- include('template/sidebar'); %>
       </div>
 
-      <!-- Sidebar Utama -->
-      <%- include('template/sidebar'); %>
-    </div>
+      <!-- Modal Template DaisyUI Native (Menggantikan modal Bootstrap jika diperlukan, atau kompatibel dengan modalTemplate Anda) -->
+      <%- include('modal/modalTemplate'); %>
 
-    <!-- Modal Template DaisyUI Native (Menggantikan modal Bootstrap jika diperlukan, atau kompatibel dengan modalTemplate Anda) -->
-    <%- include('modal/modalTemplate'); %>
+      <!-- Footer Scripts -->
+      <%- include('template/footer'); %>
+      <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+      <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+      <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+      <script src="/asset/js/aprovementcuti_2.min.js"></script>
+    </body>
 
-    <!-- Footer Scripts -->
-    <%- include('template/footer'); %>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="/asset/js/aprovementcuti_2.min.js"></script>
-  </body>
-
-</html>
+  </html>
