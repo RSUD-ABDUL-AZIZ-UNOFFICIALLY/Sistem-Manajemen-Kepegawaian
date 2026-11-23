@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     session_token: DataTypes.TEXT,
     ip_address: DataTypes.STRING,
     user_agent: DataTypes.TEXT,
-    visited_id: DataTypes.STRING,
+    visited_id: DataTypes.UUID,
     status: DataTypes.ENUM('login', 'logout', 'expire', 'close', 'online')
   }, {
     sequelize,
