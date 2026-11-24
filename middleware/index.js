@@ -79,7 +79,8 @@ module.exports = {
 
                 res.cookie("token", newToken, {
                     maxAge: 1000 * 60 * 60 * 24 * 7,
-                    httpOnly: false,
+                    httpOnly: true,
+                    sameSite: 'lax',
                     secure: true
                 });
                 await req.app.locals.cache.set('SIMPEG:seen:' + userID, getUser.nama);

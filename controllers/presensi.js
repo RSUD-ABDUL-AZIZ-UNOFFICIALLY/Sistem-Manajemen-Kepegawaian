@@ -1387,6 +1387,10 @@ module.exports = {
     overtime: async (req, res) => {
         try {
             let { nik, periode } = req.query
+            // console.log(req.account)
+            if (nik == null) {
+                nik = req.account.nik
+            }
             let findBadgenumber = await Maps_Absen.findOne({
                 where: {
                     nik: nik

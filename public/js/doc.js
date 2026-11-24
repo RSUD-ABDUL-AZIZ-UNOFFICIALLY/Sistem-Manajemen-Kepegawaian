@@ -1,3 +1,19 @@
+let token = null
+async function getToken() {
+    const url = "/api/auth/token";
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        token = result.token
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+getToken()
 document.addEventListener('DOMContentLoaded', function () {
     const modalUploadArea = document.getElementById('modalUploadArea');
     const modalFileInput = document.getElementById('modalFileInput');
@@ -201,7 +217,6 @@ async function saveDocument() {
         filedoc.append('file', selectedFile);
 
         // Asumsi fungsi getCookie sudah ada di sistem / file lain
-        let token = typeof getCookie === 'function' ? getCookie("token") : "";
         let myHeaders = new Headers();
         if (token) myHeaders.append("Authorization", "Bearer " + token);
 

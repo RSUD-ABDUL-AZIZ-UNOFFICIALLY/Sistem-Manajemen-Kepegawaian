@@ -185,7 +185,8 @@ module.exports = {
 
     let t = await sequelize.transaction();
     res.cookie("userID", userID, {
-      httpOnly: false,
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 30,
       secure: true,
     });
     let PasskeyIsexist = await Passkey.findOne({
@@ -220,7 +221,8 @@ module.exports = {
         // set cookie
         res.cookie("token", token, {
           maxAge: 1000 * tokenMaxAgeSec,
-          httpOnly: false,
+          httpOnly: true,
+          sameSite: 'lax',
           secure: true
         });
 
@@ -284,7 +286,8 @@ module.exports = {
     // set cookie
     res.cookie("token", token, {
       maxAge: 1000 * tokenMaxAgeSec,
-      httpOnly: false,
+      httpOnly: true,
+      sameSite: 'lax',
       secure: true
     });
     await req.app.locals.cache.set('SIMPEG:seen:' + userID, user.nik);

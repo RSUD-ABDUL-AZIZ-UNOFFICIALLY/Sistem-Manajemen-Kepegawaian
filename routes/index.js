@@ -51,6 +51,7 @@ router.get('/document/pegawaian/:id', middleware.login, controller.dataDokument)
 router.post('/api/send-otp', api.sendOtp);
 router.post('/api/mobile-otp', api.mobileOtp);
 router.post('/api/verify-otp', api.verifyOtp);
+router.get('/api/auth/token', middleware.checkToken, middleware.tokenGen);
 router.get('/api/lastActivity', middleware.checkToken, api.lastActivity);
 router.delete('/api/closeSession/:id', middleware.checkToken, api.closeSession);
 router.get('/api/simrs/userpas', middleware.checkToken, api.getUserSimrs);

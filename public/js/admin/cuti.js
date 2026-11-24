@@ -1,3 +1,19 @@
+let token = null
+async function getToken() {
+    const url = "/api/auth/token";
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        token = result.token
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+getToken()
 $("#button-findID").on("click", function () {
     let findID = $("#findID").val();
     identias(findID);
@@ -114,9 +130,8 @@ $('#jnsCuti').change(function () {
     }
 });
 
-let token = getCookie("token");
 
-$('#Cuti').submit(function (event) {
+$('#Cuti').submit(async function (event) {
     event.preventDefault();
     $('#btnSubmit').prop('disabled', true);
 

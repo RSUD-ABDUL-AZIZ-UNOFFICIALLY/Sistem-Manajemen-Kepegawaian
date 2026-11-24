@@ -104,7 +104,22 @@ $("#jnsCuti").change(async function () {
     });
 });
 
-let token = getCookie("token");
+let token = null
+async function getToken() {
+    const url = "/api/auth/token";
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        token = result.token
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+getToken()
 
 function postCuti(a) {
     $.ajax({
