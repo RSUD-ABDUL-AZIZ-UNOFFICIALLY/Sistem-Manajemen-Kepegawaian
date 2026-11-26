@@ -65,37 +65,48 @@ function getRelativeAssetPath(urlPath) {
 
 function extractJsReferences(viewFiles) {
     const referencedJs = new Set();
+
+    // Pola 1: Menangkap pemanggilan helper EJS, misal: assetJs('/asset/js/simrs-antrian.js')
+    const helperRegex = /\bassetJs\s*\(\s*["']([^"']+\.js)(?:\?[^"']*)?["']\s*\)/gi;
+
+    // Pola 2: Menangkap tag <script src="/asset/js/..."> statis biasa
     const scriptRegex = /<script\b[^>]*\bsrc\s*=\s*["']([^"']+\.js)(?:\?[^"']*)?["'][^>]*>/gi;
+
+    const addIfValid = (rawSrc) => {
+        const cleanSrc = rawSrc.trim();
+        if (
+            cleanSrc.startsWith('http://') ||
+            cleanSrc.startsWith('https://') ||
+            cleanSrc.startsWith('//') ||
+            cleanSrc.includes('<%') ||
+            /\.min\.js$/i.test(cleanSrc)
+        ) {
+            return;
+        }
+
+        const normalizedUrl = cleanSrc.startsWith('/') ? cleanSrc : `/${cleanSrc}`;
+        if (CONFIG.urlPrefix && !normalizedUrl.startsWith(`${CONFIG.urlPrefix}/`)) {
+            return;
+        }
+
+        referencedJs.add(normalizedUrl);
+    };
 
     for (const file of viewFiles) {
         const content = fs.readFileSync(file, 'utf8');
         let match;
 
+        while ((match = helperRegex.exec(content)) !== null) {
+            addIfValid(match[1]);
+        }
+
         while ((match = scriptRegex.exec(content)) !== null) {
-            const rawSrc = match[1].trim();
-
-            if (
-                rawSrc.startsWith('http://') ||
-                rawSrc.startsWith('https://') ||
-                rawSrc.startsWith('//') ||
-                rawSrc.includes('<%') ||
-                /\.min\.js$/i.test(rawSrc)
-            ) {
-                continue;
-            }
-
-            const normalizedUrl = rawSrc.startsWith('/') ? rawSrc : `/${rawSrc}`;
-            if (CONFIG.urlPrefix && !normalizedUrl.startsWith(`${CONFIG.urlPrefix}/`)) {
-                continue;
-            }
-
-            referencedJs.add(normalizedUrl);
+            addIfValid(match[1]);
         }
     }
 
     return Array.from(referencedJs);
 }
-
 async function buildMinifiedAssets(jsUrls) {
     const manifest = {};
 

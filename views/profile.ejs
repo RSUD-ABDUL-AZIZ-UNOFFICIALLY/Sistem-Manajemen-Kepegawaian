@@ -299,8 +299,8 @@
 
   <!-- Scripts -->
   <%- include('template/footer'); %>
-  <script src="/asset/js/src/profile.min.js"></script>
-  <script src="/asset/js/src/biodata-2.min.js"></script>
+  <script src="<%= assetJs('/asset/js/profile.js') %>"></script>
+  <script src="<%= assetJs('/asset/js/biodata.js') %>"></script>
   <script>
     async function fetchData() {
       try {
