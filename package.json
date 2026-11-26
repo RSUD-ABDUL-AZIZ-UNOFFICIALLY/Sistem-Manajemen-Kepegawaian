@@ -8,7 +8,7 @@
     "dev": "node --env-file=.env --watch app.js",
     "start:prod": "NODE_ENV=poroduction node -r dotenv/config app.js dotenv_config_path=.env.prod",
     "build": "git pull && npm i",
-    "tail": "npx @tailwindcss/cli -i ./public/css/build.css -o ./public/css/index7.css --watch",
+    "tail": "npx @tailwindcss/cli -i ./public/css/build.css -o ./public/css/index.css --watch",
     "tailprod": "npx @tailwindcss/cli -i ./public/css/build.css -o ./public/css/index7.css --minify"
   },
   "keywords": [],
