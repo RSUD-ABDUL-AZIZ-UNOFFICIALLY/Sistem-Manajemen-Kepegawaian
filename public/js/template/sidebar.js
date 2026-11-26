@@ -76,6 +76,7 @@ async function cekElemnet() {
 
 function menuAkses() {
     let a = JSON.parse(decode(sessionStorage.getItem("elemnet")));
+    console.log(a)
 
     // Ambil elemen parent
     const navbar = document.getElementById("navbar");
