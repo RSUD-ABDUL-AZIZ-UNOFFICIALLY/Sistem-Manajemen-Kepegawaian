@@ -7,7 +7,7 @@ const morgan = require('morgan');
 const useragent = require('express-useragent');
 const { createClient } = require('redis');
 const pkg = require('./package.json');
-
+const fs = require('fs');
 const app = express();
 const server = http.createServer(app);
 const isDev = process.env.NODE_ENV !== 'production';
@@ -22,9 +22,24 @@ app.set('view engine', 'ejs');
 // 2. Aset statis di paling atas agar tidak membebani middleware parser & logger
 app.use(favicon(path.join(publicDir, 'favicon.ico')));
 app.use('/asset', express.static(publicDir, {
-    maxAge: isDev ? 0 : '7d',
     index: false // Mencegah akses langsung ke index.html jika ada
 }));
+// Load manifest sekali saat startup
+let jsManifest = {};
+const manifestPath = path.join(publicDir, 'js-manifest.json');
+if (fs.existsSync(manifestPath)) {
+    jsManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+}
+
+app.use((req, res, next) => {
+    res.locals.assetJs = (urlPath) => {
+        if (process.env.NODE_ENV === 'production' && jsManifest[urlPath]) {
+            return jsManifest[urlPath];
+        }
+        return urlPath;
+    };
+    next();
+});
 
 // 3. Service Worker route (sebelum logger jika tidak ingin memenuhi log)
 const swKillSwitch = `

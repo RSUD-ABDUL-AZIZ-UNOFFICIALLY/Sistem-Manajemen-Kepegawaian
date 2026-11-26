@@ -207,10 +207,9 @@
     <%- include('../modal/modalJadwal'); %>
 
     <%- include('../template/footer'); %>
-    <!-- fullCalendar -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
-    <script src="/asset/js/fullcalendar/riwayat.js"></script>
-    <script src="/asset/js/fullcalendar/jdl.js"></script>
-    <script src="/asset/js/fullcalendar/jdldnsme.js"></script>
+    <script src="<%= assetJs('/asset/js/presensi/riwayat.js') %>"></script>
+    <script src="<%= assetJs('/asset/js/presensi/jdl.js') %>"></script>
+    <script src="<%= assetJs('/asset/js/presensi/jdldnsme.js') %>"></script>
 </body>
 </html>

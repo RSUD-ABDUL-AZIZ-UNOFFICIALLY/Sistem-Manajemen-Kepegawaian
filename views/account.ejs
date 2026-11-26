@@ -100,8 +100,8 @@
 
     <!-- Scripts -->
     <%- include('template/footer'); %>
-    <script src="/asset/js/simrs.js"></script>
-    <script type="text/javascript" src="/asset/js/lib/qrcode.min.js"></script>
-    <script src="/asset/js/passkey.js"></script>
+    <script src="<%= assetJs('/asset/js/simrs.js') %>"></script>
+    <script type="text/javascript" src="/asset/src/lib/qrcode.min.js"></script>
+    <script src="<%= assetJs('/asset/js/passkey.js') %>"></script>
 </body>
 </html>
